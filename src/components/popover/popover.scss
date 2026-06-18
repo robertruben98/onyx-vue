@@ -1,0 +1,41 @@
+// Popover styles — ported from the Angular lib. References ONLY semantic /
+// component tokens (CLAUDE.md §3). The Angular `:host` selectors are mapped to
+// the root class `.ui-popover`; the connected positioning + backdrop are owned
+// by the overlay markup (Teleport + hand-rolled focus trap), not by the panel.
+
+// --- Ported verbatim from popover.component.scss with the host transform -----
+// (`:host` had no styles in the Angular source; the panel class is shared.)
+
+.ui-popover__panel {
+  max-width: var(--ui-popover-max-width);
+  padding: var(--ui-popover-padding-y) var(--ui-popover-padding-x);
+  color: var(--ui-popover-text);
+  background-color: var(--ui-popover-bg);
+  border: var(--ui-popover-border-width) solid var(--ui-popover-border);
+  border-radius: var(--ui-popover-radius);
+  box-shadow: var(--ui-popover-shadow);
+}
+
+.ui-popover__panel:focus {
+  outline: none;
+}
+
+// --- Overlay shell ----------------------------------------------------------
+// The CDK owned positioning + backdrop in the Angular build; here we hand-roll
+// the equivalent connected overlay with no extra deps. The trigger anchors the
+// panel via fixed positioning computed in script.
+
+.ui-popover {
+  display: contents;
+}
+
+.ui-popover__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-popover-z);
+}
+
+.ui-popover__pane {
+  position: fixed;
+  z-index: var(--ui-popover-z);
+}

@@ -1,0 +1,11 @@
+// Accordion container styles — ported from the Angular lib. References ONLY
+// semantic / component tokens (no raw colors / sizes / radii). Angular `:host`
+// is mapped to the root class `.ui-accordion`; the markup carries that class
+// exactly like the Angular host bindings.
+
+.ui-accordion {
+  display: block;
+  border: var(--ui-accordion-border-width) solid var(--ui-accordion-border);
+  border-radius: var(--ui-accordion-radius);
+  overflow: hidden;
+}

@@ -1,0 +1,42 @@
+// Progress bar styles — ported from the Angular lib. References ONLY semantic /
+// component tokens (no raw colors / sizes / radii). Angular `:host` selectors
+// are mapped to the root class `.ui-progress-bar` and its modifier classes; the
+// markup carries those classes exactly like the Angular host bindings.
+
+.ui-progress-bar {
+  display: block;
+}
+
+.ui-progress__track {
+  height: var(--ui-progress-height);
+  background-color: var(--ui-progress-track-bg);
+  border-radius: var(--ui-progress-radius);
+  overflow: hidden;
+}
+
+.ui-progress__fill {
+  height: inherit;
+  background-color: var(--ui-progress-fill-bg);
+  border-radius: var(--ui-progress-radius);
+  transition: width 200ms ease;
+}
+
+.ui-progress--indeterminate .ui-progress__fill {
+  width: var(--ui-progress-indeterminate-width);
+  animation: ui-progress-indeterminate 1200ms ease-in-out infinite;
+}
+
+@keyframes ui-progress-indeterminate {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-progress--indeterminate .ui-progress__fill {
+    animation-duration: 0s;
+  }
+}

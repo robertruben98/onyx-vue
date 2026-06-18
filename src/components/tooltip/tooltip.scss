@@ -1,0 +1,34 @@
+// Tooltip styles — ported from the Angular lib. References ONLY semantic /
+// component tokens (CLAUDE.md §3). The Angular `:host` selectors are mapped to
+// the root class `.ui-tooltip`; the connected positioning is owned by the
+// overlay markup (Teleport), not by the tooltip surface itself.
+
+// --- Ported verbatim from tooltip.component.scss with the host transform -----
+// Tooltip styles — semantic / component tokens only (CLAUDE.md §3).
+
+.ui-tooltip {
+  display: block;
+  max-width: var(--ui-tooltip-max-width);
+  padding: var(--ui-tooltip-padding-y) var(--ui-tooltip-padding-x);
+  font-size: var(--ui-tooltip-font-size);
+  line-height: 1.4;
+  color: var(--ui-tooltip-text);
+  background-color: var(--ui-tooltip-bg);
+  border-radius: var(--ui-tooltip-radius);
+  box-shadow: var(--ui-tooltip-shadow);
+}
+
+// --- Overlay shell ----------------------------------------------------------
+// The CDK owned positioning in the Angular build; here we hand-roll the
+// equivalent connected overlay with no extra deps. The trigger anchors the
+// tooltip via fixed positioning computed in script.
+
+.ui-tooltip-host {
+  display: contents;
+}
+
+.ui-tooltip__pane {
+  position: fixed;
+  z-index: var(--ui-tooltip-z);
+  pointer-events: none;
+}
