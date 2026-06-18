@@ -1,0 +1,42 @@
+{
+  "name": "onyx-vue",
+  "version": "0.0.0",
+  "description": "Vue 3 port of Onyx UI — accessible, token-themed components (styled mode).",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/onyx-vue.umd.js",
+  "module": "./dist/onyx-vue.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/onyx-vue.es.js",
+      "require": "./dist/onyx-vue.umd.js"
+    },
+    "./style.css": "./dist/onyx-vue.css"
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@testing-library/user-event": "^14.5.2",
+    "@testing-library/vue": "^8.1.0",
+    "@types/jest-axe": "^3.5.9",
+    "@types/node": "^22.19.21",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "jest-axe": "^9.0.0",
+    "jsdom": "^25.0.1",
+    "sass": "^1.83.0",
+    "typescript": "~5.6.3",
+    "vite": "^6.0.7",
+    "vitest": "^2.1.8",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.0"
+  }
+}

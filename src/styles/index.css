@@ -1,0 +1,7 @@
+/* Framework-agnostic Onyx token layer — reused verbatim from the Angular lib.
+   Theming (light/dark, client presets) happens entirely here, never in a
+   component. Toggle `.app-dark` on the root for dark mode; add `.ui-theme-acme`
+   for the acme preset. */
+@import "./tokens.css";
+@import "./dark.css";
+@import "./acme.css";
