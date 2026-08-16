@@ -30,7 +30,7 @@
     "@types/jest-axe": "^3.5.9",
     "@types/node": "^22.19.21",
     "@vitejs/plugin-vue": "^6.0.8",
-    "jest-axe": "^9.0.0",
+    "jest-axe": "^11.0.0",
     "jsdom": "^30.0.1",
     "sass": "^1.83.0",
     "typescript": "~5.6.3",
