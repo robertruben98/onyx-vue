@@ -32,7 +32,7 @@
     "@vitejs/plugin-vue": "^6.0.8",
     "jest-axe": "^11.0.0",
     "jsdom": "^30.0.1",
-    "sass": "^1.83.0",
+    "sass": "^1.102.0",
     "typescript": "~5.6.3",
     "vite": "^8.2.1",
     "vitest": "^4.1.9",
