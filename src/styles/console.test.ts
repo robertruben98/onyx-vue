@@ -40,6 +40,24 @@ describe("console preset", () => {
     expect(faltan).toEqual([]);
   });
 
+  it("remaps the state tokens the console look depends on", () => {
+    // Los atomos de estado son el vocabulario de la consola: si el preset se
+    // deja uno, hereda el valor del tema claro y saca un elemento claro en
+    // mitad de una pagina negra. No falla, que es lo peor que puede hacer.
+    const exigidos = [
+      "--ui-status-dot-off",
+      "--ui-status-dot-unknown",
+      "--ui-severity-badge-critical-bg",
+      "--ui-severity-badge-high-bg",
+      "--ui-tri-state-count-quiet",
+      "--ui-relative-time-color",
+      "--ui-tag-muted-bg",
+      "--ui-tag-muted-text",
+    ];
+    const faltan = exigidos.filter((t) => !assigned(console_).has(t));
+    expect(faltan).toEqual([]);
+  });
+
   it("kills every shadow", () => {
     // Sobre #0c0d10 una sombra no se ve y solo ensucia el filete.
     const sombras = [...assigned(tokens)].filter((t) => t.endsWith("-shadow"));
