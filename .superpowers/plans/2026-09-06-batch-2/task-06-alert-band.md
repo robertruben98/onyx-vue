@@ -32,7 +32,32 @@ Append beside the existing `--ui-alert-*` group in `src/styles/tokens.css`:
 
 - [ ] **Step 2: Extend the test**
 
-Add to `src/components/alert/Alert.test.ts`, inside the existing `describe`. Also add `"band"` coverage to the axe loop by wrapping the existing `it.each` variants with both appearances, or by adding a second `it.each` — either is fine, but every variant must go through `jest-axe` in the band appearance too, which is the constraint that returned a task in batch 1.
+Add to `src/components/alert/Alert.test.ts`, inside the existing `describe`.
+
+**The axe loop.** Verified: it is an inline literal at `Alert.test.ts:59` —
+`it.each(["neutral", "info", "success", "warning", "danger"] as const)` — with no
+`variants` array to extend. Every variant must go through `jest-axe` in the band
+appearance too; that constraint is what returned a task in batch 1. Replace the
+loop with a cross-product so both axes are covered:
+
+```ts
+  it.each(
+    (["neutral", "info", "success", "warning", "danger"] as const).flatMap(
+      (variant) =>
+        (["boxed", "band"] as const).map(
+          (appearance) => [variant, appearance] as const,
+        ),
+    ),
+  )("has no axe violations (%s, %s)", async (variant, appearance) => {
+    const { container } = render(Alert, {
+      props: { variant, appearance, title: "Title", dismissible: true },
+      slots: { default: "Body" },
+    });
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+```
+
+That turns 5 axe cases into 10.
 
 ```ts
   it("is boxed by default, so nothing that exists today moves", () => {
@@ -101,7 +126,7 @@ Add to `src/components/alert/Alert.test.ts`, inside the existing `describe`. Als
   });
 ```
 
-If `screen` is not already imported in that file, add it to the `@testing-library/vue` import.
+`screen` is already imported at `Alert.test.ts:1` — nothing to add.
 
 - [ ] **Step 3: Run it and watch it fail**
 
