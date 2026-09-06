@@ -416,7 +416,7 @@ export type { EmptyStateRole } from "./EmptyState.vue";
 export { emptyStateDoc } from "./empty-state.docs";
 ```
 
-`EmptyStateRole` is declared inside `<script setup>`, which cannot produce a named type export at runtime — but a **type** export is erased at compile time and works from `<script setup>`. Verify with `npm run typecheck`; if it complains, move the type to a plain `<script lang="ts">` block as `SeverityBadge.vue` does for its runtime export.
+`export type` from `<script setup>` is fine and needs no second script block — `src/components/status-dot/StatusDot.vue` exports `StatusDotState` exactly this way and its barrel re-exports it with typecheck clean. The second block is only needed for a **runtime** export like `severityRank`, which `SeverityBadge.vue` has.
 
 Add to `src/index.ts`, alphabetically between `./components/divider` and `./components/group-header`:
 
