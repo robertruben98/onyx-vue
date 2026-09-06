@@ -301,12 +301,13 @@ Add to `src/index.ts`, alphabetically between `./components/select` and `./compo
 export * from "./components/severity-badge";
 ```
 
-**Register the doc in `src/docs-model.test.ts`.** That file validates every
-`ComponentDoc` through `describe.each(TODOS)` over a hand-written `TODOS` array,
-and it has an explicit case asserting no component is left without metadata. Add
-the import and the `TODOS` entry for this component, keeping both lists in the
-order they already use. This is why the suite grows by six more than this
-component's own test count.
+**Nothing to register for `src/docs-model.test.ts`.** That file discovers
+components on its own — `readdirSync` over `src/components` for the directory
+contract, and `Object.entries(onyx).filter(([n]) => n.endsWith("Doc"))` for the
+metadata, against the live library index. It runs six `it.each(docs…)` blocks, so
+exporting `xxxDoc` through the component barrel and `src/index.ts` — which the
+steps above already do — makes six more tests appear by themselves. That is why
+the suite grows by six more than this component's own test file.
 
 - [ ] **Step 9: Run the whole suite and typecheck**
 
