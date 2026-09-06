@@ -409,4 +409,19 @@
   --ui-card-text: var(--ui-color-text);
   --ui-card-border: var(--ui-color-border);
   --ui-focus-ring: var(--ui-color-primary);
+  --ui-severity-badge-padding-x: var(--ui-space-2);
+  --ui-severity-badge-padding-y: var(--ui-space-1);
+  --ui-severity-badge-font-size: var(--ui-font-size-sm);
+  --ui-severity-badge-font-weight: var(--ui-font-weight-medium);
+  --ui-severity-badge-radius: var(--ui-radii-sm);
+  --ui-severity-badge-critical-bg: var(--ui-color-danger);
+  --ui-severity-badge-critical-text: var(--ui-color-on-primary);
+  --ui-severity-badge-high-bg: var(--ui-color-danger-surface);
+  --ui-severity-badge-high-text: var(--ui-color-danger);
+  --ui-severity-badge-moderate-bg: var(--ui-color-warning-surface);
+  --ui-severity-badge-moderate-text: var(--ui-color-warning);
+  --ui-severity-badge-low-bg: var(--ui-color-info-surface);
+  --ui-severity-badge-low-text: var(--ui-color-info);
+  --ui-severity-badge-unknown-bg: var(--ui-color-neutral-surface);
+  --ui-severity-badge-unknown-text: var(--ui-color-neutral);
 }
