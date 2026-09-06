@@ -24,12 +24,14 @@ const guideRoutes: RouteRecordRaw[] = [
   },
 ];
 
-// One route per registered component page, generated from the registry so the
-// router never drifts from the pages on disk.
+// Una ruta por componente documentado, todas a la MISMA pagina: la plantilla
+// generica lee el id de la ruta y busca sus metadatos. No hay un modulo de
+// pagina que pueda faltar.
 const componentRoutes: RouteRecordRaw[] = COMPONENT_DOCS.map((doc) => ({
   path: `/components/${doc.id}`,
   name: `component-${doc.id}`,
-  component: doc.loader,
+  component: () => import("../pages/ComponentPage.vue"),
+  props: { id: doc.id },
 }));
 
 const routes: RouteRecordRaw[] = [

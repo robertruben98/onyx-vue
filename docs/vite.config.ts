@@ -10,6 +10,12 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
+      // Compilador de plantillas en caliente. Cada demo se define por su
+      // `code`, que es a la vez lo que se ensena y lo que se pinta; con el
+      // build runtime-only (el de por defecto) esa plantilla no compilaria y
+      // la galeria saldria vacia. Es la app de documentacion: el peso extra
+      // del compilador no viaja a ningun consumidor de la libreria.
+      vue: "vue/dist/vue.esm-bundler.js",
       "@onyx/vue": fileURLToPath(new URL("../src/index.ts", import.meta.url)),
       "@lib": fileURLToPath(new URL("../src", import.meta.url)),
       "@": fileURLToPath(new URL("./src", import.meta.url)),

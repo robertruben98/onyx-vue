@@ -15,12 +15,12 @@ export interface NavSection {
 }
 
 /**
- * Single source of truth for the docs navigation. The sidebar renders this and
- * the router derives its component routes from {@link COMPONENT_DOCS}.
+ * La unica fuente de la navegacion. La barra lateral pinta esto y el router
+ * saca sus rutas de componente de {@link COMPONENT_DOCS}.
  *
- * The "Getting Started" group is the three hand-written guide pages; the
- * "Components" group is generated from the page-module registry, so it always
- * mirrors exactly the pages present under `pages/components/`.
+ * "Getting Started" son las tres guias escritas a mano; "Components" sale del
+ * registro de metadatos, asi que refleja exactamente los `*.docs.ts` que hay
+ * en la libreria — no las paginas que alguien se haya acordado de escribir.
  */
 export const NAV: NavSection[] = [
   {
