@@ -3,6 +3,7 @@ import "./styles/index.css";
 
 export * from "./docs-model";
 export * from "./components/accordion";
+export * from "./components/action-cluster";
 export * from "./components/alert";
 export * from "./components/avatar";
 export * from "./components/badge";
