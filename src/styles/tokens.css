@@ -452,4 +452,15 @@
   --ui-section-header-title-color-quiet: var(--ui-color-text-muted);
   --ui-section-header-count-size: var(--ui-font-size-sm);
   --ui-section-header-count-color: var(--ui-color-text-muted);
+  --ui-group-header-height: 1.875rem;
+  --ui-group-header-gap: var(--ui-space-3);
+  --ui-group-header-padding-x: var(--ui-space-4);
+  --ui-group-header-bg: var(--ui-color-surface);
+  --ui-group-header-bg-hover: var(--ui-color-surface-hover);
+  --ui-group-header-border: var(--ui-color-border);
+  --ui-group-header-name-size: var(--ui-font-size-sm);
+  --ui-group-header-name-weight: var(--ui-font-weight-bold);
+  --ui-group-header-name-tracking: 0.14em;
+  --ui-group-header-meta-size: var(--ui-font-size-sm);
+  --ui-group-header-meta-color: var(--ui-color-text-muted);
 }

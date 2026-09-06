@@ -1,0 +1,63 @@
+// Group header — the band that opens a group inside a list. References ONLY
+// semantic / component tokens.
+//
+// The interactive form is a real <button>, not a div with a click handler as in
+// the page this is extracted from: a group you can only open with a mouse is
+// unreachable in a list whose whole argument is that it is driven from the
+// keyboard.
+
+.ui-group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-group-header-gap);
+  width: 100%;
+  min-height: var(--ui-group-header-height);
+  padding: 0 var(--ui-group-header-padding-x);
+  background-color: var(--ui-group-header-bg);
+  border: 0;
+  border-bottom: var(--ui-border-width) solid var(--ui-group-header-border);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.ui-group-header--interactive {
+  cursor: pointer;
+}
+
+.ui-group-header--interactive:hover {
+  background-color: var(--ui-group-header-bg-hover);
+}
+
+.ui-group-header--interactive:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-group-header__name {
+  font-size: var(--ui-group-header-name-size);
+  font-weight: var(--ui-group-header-name-weight);
+  letter-spacing: var(--ui-group-header-name-tracking);
+  text-transform: uppercase;
+}
+
+.ui-group-header__marks {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-group-header-gap);
+  font-size: var(--ui-group-header-meta-size);
+}
+
+.ui-group-header__full {
+  margin-left: auto;
+  font-size: var(--ui-group-header-meta-size);
+  color: var(--ui-group-header-meta-color);
+}
+
+// The long form is the first thing to go when the row narrows: the short name
+// already identifies the group. 77.5rem is where the /prs/ grid stops fitting.
+@media (max-width: 77.5rem) {
+  .ui-group-header__full {
+    display: none;
+  }
+}

@@ -12,6 +12,7 @@ export * from "./components/checkbox";
 export * from "./components/data-table";
 export * from "./components/dialog";
 export * from "./components/divider";
+export * from "./components/group-header";
 export * from "./components/input";
 export * from "./components/menu";
 export * from "./components/popover";
