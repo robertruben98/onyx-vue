@@ -95,7 +95,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 29 files, 474 tests passed; typecheck clean.
+Expected: 29 files, 476 tests passed; typecheck clean.
 
 - [ ] **Step 7: Verify the gallery renders all five new pages**
 
