@@ -15,6 +15,7 @@ export * from "./components/divider";
 export * from "./components/empty-state";
 export * from "./components/group-header";
 export * from "./components/input";
+export * from "./components/load-more-row";
 export * from "./components/menu";
 export * from "./components/popover";
 export * from "./components/progress-bar";

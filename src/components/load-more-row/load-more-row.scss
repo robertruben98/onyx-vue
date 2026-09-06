@@ -1,0 +1,9 @@
+// Load-more row — closes a truncated list. References ONLY semantic /
+// component tokens.
+
+.ui-load-more-row {
+  display: flex;
+  align-items: center;
+  padding: var(--ui-load-more-row-padding-y) var(--ui-load-more-row-padding-x);
+  border-bottom: var(--ui-border-width) solid var(--ui-load-more-row-border);
+}

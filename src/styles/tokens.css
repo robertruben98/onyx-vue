@@ -476,4 +476,7 @@
   --ui-empty-state-actions-gap: var(--ui-space-2);
   --ui-empty-state-color: var(--ui-color-text);
   --ui-empty-state-description-color: var(--ui-color-text-muted);
+  --ui-load-more-row-padding-x: var(--ui-space-4);
+  --ui-load-more-row-padding-y: var(--ui-space-3);
+  --ui-load-more-row-border: var(--ui-color-border);
 }
