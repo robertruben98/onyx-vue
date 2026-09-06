@@ -373,6 +373,13 @@ Add to `src/index.ts`, alphabetically **after** `./components/tooltip` — `tool
 export * from "./components/tri-state-count";
 ```
 
+**Register the doc in `src/docs-model.test.ts`.** That file validates every
+`ComponentDoc` through `describe.each(TODOS)` over a hand-written `TODOS` array,
+and it has an explicit case asserting no component is left without metadata. Add
+the import and the `TODOS` entry for this component, keeping both lists in the
+order they already use. This is why the suite grows by six more than this
+component's own test count.
+
 - [ ] **Step 9: Run the whole suite and typecheck**
 
 ```bash
@@ -380,7 +387,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 27 files, 420 tests passed; typecheck clean. The same `<script setup>` export caveat from Task 2 Step 9 applies to `resolveTriState`.
+Expected: 27 files, 438 tests passed; typecheck clean. The same `<script setup>` export caveat from Task 2 Step 9 applies to `resolveTriState`.
 
 - [ ] **Step 10: Commit**
 

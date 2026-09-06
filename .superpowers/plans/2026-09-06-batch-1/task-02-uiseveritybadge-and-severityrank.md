@@ -301,6 +301,13 @@ Add to `src/index.ts`, alphabetically between `./components/select` and `./compo
 export * from "./components/severity-badge";
 ```
 
+**Register the doc in `src/docs-model.test.ts`.** That file validates every
+`ComponentDoc` through `describe.each(TODOS)` over a hand-written `TODOS` array,
+and it has an explicit case asserting no component is left without metadata. Add
+the import and the `TODOS` entry for this component, keeping both lists in the
+order they already use. This is why the suite grows by six more than this
+component's own test count.
+
 - [ ] **Step 9: Run the whole suite and typecheck**
 
 ```bash
@@ -308,7 +315,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 26 files, 402 tests passed; typecheck clean.
+Expected: 26 files, 414 tests passed; typecheck clean.
 
 If typecheck complains that `severityRank` is not exported from an SFC, the named export must be moved out of `<script setup>` into a plain `<script lang="ts">` block in the same file — `<script setup>` only exports the default component. Both blocks may coexist in one SFC.
 

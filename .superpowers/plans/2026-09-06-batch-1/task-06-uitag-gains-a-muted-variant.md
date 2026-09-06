@@ -108,7 +108,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 29 files, 443 tests passed; typecheck clean.
+Expected: 29 files, 473 tests passed; typecheck clean.
 
 - [ ] **Step 9: Commit**
 

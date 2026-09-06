@@ -224,6 +224,13 @@ Add to `src/index.ts`, keeping the list alphabetical — between `./components/s
 export * from "./components/status-dot";
 ```
 
+**Register the doc in `src/docs-model.test.ts`.** That file validates every
+`ComponentDoc` through `describe.each(TODOS)` over a hand-written `TODOS` array,
+and it has an explicit case asserting no component is left without metadata. Add
+the import and the `TODOS` entry for this component, keeping both lists in the
+order they already use. This is why the suite grows by six more than this
+component's own test count.
+
 - [ ] **Step 9: Run the whole suite and typecheck**
 
 ```bash
@@ -231,7 +238,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 25 files, 388 tests passed; typecheck clean.
+Expected: 25 files, 394 tests passed; typecheck clean.
 
 - [ ] **Step 10: Commit**
 
