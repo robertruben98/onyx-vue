@@ -17,6 +17,7 @@ export * from "./components/menu";
 export * from "./components/popover";
 export * from "./components/progress-bar";
 export * from "./components/radio-group";
+export * from "./components/relative-time";
 export * from "./components/select";
 export * from "./components/severity-badge";
 export * from "./components/spinner";

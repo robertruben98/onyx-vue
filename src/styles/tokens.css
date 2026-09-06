@@ -431,4 +431,7 @@
   --ui-tri-state-count-warn: var(--ui-color-warning);
   --ui-tri-state-count-danger: var(--ui-color-danger);
   --ui-tri-state-count-quiet: var(--ui-color-disabled-text);
+  --ui-relative-time-font-size: var(--ui-font-size-sm);
+  --ui-relative-time-color: var(--ui-color-text-muted);
+  --ui-relative-time-stale-color: var(--ui-color-warning);
 }
