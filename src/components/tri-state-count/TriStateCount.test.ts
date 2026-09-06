@@ -75,6 +75,33 @@ describe("TriStateCount (Vue)", () => {
     expect(screen.getByText("…")).toBeTruthy();
   });
 
+  it("renders the pending glyph with no props at all, never a 0", () => {
+    const { container } = render(TriStateCount);
+    expect(screen.getByText("·")).toBeTruthy();
+    expect(screen.queryByText("0")).toBeNull();
+    expect(
+      container.querySelector(".ui-tri-state-count")?.getAttribute("aria-label"),
+    ).toBe("loading");
+  });
+
+  it("renders the pending glyph when value is null with no state given", () => {
+    render(TriStateCount, { props: { value: null } });
+    expect(screen.getByText("·")).toBeTruthy();
+  });
+
+  it("still renders a real zero as 0, not as pending", () => {
+    render(TriStateCount, { props: { value: 0 } });
+    expect(screen.getByText("0")).toBeTruthy();
+  });
+
+  it("agrees with resolveTriState for the same input", () => {
+    // The regression that would have caught this: the component and its own
+    // sibling helper disagreeing about what { value: null } means.
+    expect(resolveTriState({ value: null })).toBe("pending");
+    render(TriStateCount, { props: { state: "known", value: null } });
+    expect(screen.getByText("·")).toBeTruthy();
+  });
+
   it.each(["known", "pending", "unrequested"] as const)(
     "has no axe violations (%s)",
     async (state) => {

@@ -53,9 +53,23 @@ const props = withDefaults(
   },
 );
 
+/**
+ * `state` alone is not enough: `known` with no value on hand is the exact
+ * conflation this component exists to prevent — "no open alerts" and "we
+ * never looked for alerts" must not render the same. `resolveTriState`
+ * already treats a null/undefined value as pending; the component has to
+ * agree with its own helper.
+ */
+const effectiveState = computed<TriState>(() => {
+  if (props.state === "known" && (props.value === null || props.value === undefined)) {
+    return "pending";
+  }
+  return props.state;
+});
+
 const text = computed(() => {
-  if (props.state === "pending") return props.pendingGlyph;
-  if (props.state === "unrequested") return props.unrequestedGlyph;
+  if (effectiveState.value === "pending") return props.pendingGlyph;
+  if (effectiveState.value === "unrequested") return props.unrequestedGlyph;
   return String(props.value ?? 0);
 });
 
@@ -64,8 +78,8 @@ const text = computed(() => {
  * "em dash" tells the user nothing; "not requested" tells them everything.
  */
 const ariaLabel = computed(() => {
-  if (props.state === "pending") return "loading";
-  if (props.state === "unrequested") return "not requested";
+  if (effectiveState.value === "pending") return "loading";
+  if (effectiveState.value === "unrequested") return "not requested";
   const n = String(props.value ?? 0);
   return props.label ? `${n} ${props.label}` : n;
 });
@@ -74,7 +88,7 @@ const ariaLabel = computed(() => {
  * Tone is a claim about the number, so a state with no number gets no tone:
  * a red "·" would report a problem that has not been measured yet.
  */
-const known = computed(() => props.state === "known");
+const known = computed(() => effectiveState.value === "known");
 
 const rootClasses = computed(() => ({
   "ui-tri-state-count": true,
