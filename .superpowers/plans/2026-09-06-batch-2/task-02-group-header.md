@@ -178,8 +178,8 @@ Create `src/components/group-header/group-header.scss`:
   color: var(--ui-group-header-meta-color);
 }
 
-// El nombre largo es lo primero que sobra cuando la fila se estrecha: el corto
-// ya identifica el grupo. 77.5rem es donde la rejilla de /prs/ deja de caber.
+// The long form is the first thing to go when the row narrows: the short name
+// already identifies the group. 77.5rem is where the /prs/ grid stops fitting.
 @media (max-width: 77.5rem) {
   .ui-group-header__full {
     display: none;

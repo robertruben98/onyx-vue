@@ -117,12 +117,11 @@ Expected: FAIL — `Failed to resolve import "./ActionCluster.vue"`.
 // Action cluster — the micro-buttons at the end of a list row. References ONLY
 // semantic / component tokens.
 //
-// Se atenua a proposito: con veinte filas en pantalla, ochenta iconos a plena
-// tinta compiten con el dato que tienen al lado. Lo que NO se hace es atenuarlos
-// y dejarlos inalcanzables — las dos implementaciones de las que sale esto
-// revelan en `:hover` y en fila seleccionada y en nada mas, asi que en una
-// pagina que se conduce con el teclado las acciones de fila no existian.
-// `:focus-within` es la mitad que faltaba.
+// Dimmed on purpose: with twenty rows on screen, eighty icons at full ink
+// compete with the data beside them. What it does NOT do is dim them and leave
+// them unreachable — both implementations this comes from reveal on `:hover`
+// and on the selected row and on nothing else, so on a page driven from the
+// keyboard the row actions did not exist. `:focus-within` is the missing half.
 
 .ui-action-cluster {
   display: flex;
@@ -141,9 +140,9 @@ Expected: FAIL — `Failed to resolve import "./ActionCluster.vue"`.
   opacity: 1;
 }
 
-// Un consumidor que quiera revelar al pasar por encima de la FILA entera
-// escribe una linea, porque CSS no sabe seleccionar por el hover de un
-// ancestro:  .mi-fila:hover .ui-action-cluster { opacity: 1; }
+// A consumer that wants the whole ROW's hover to reveal writes one line,
+// because CSS cannot select on an ancestor's hover:
+//   .my-row:hover .ui-action-cluster { opacity: 1; }
 ```
 
 - [ ] **Step 5: Write the component**

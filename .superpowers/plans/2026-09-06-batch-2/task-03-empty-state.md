@@ -238,7 +238,7 @@ Create `src/components/empty-state/empty-state.scss`. This is the original's lay
   gap: var(--ui-empty-state-actions-gap);
 }
 
-// Bajo 30rem los botones dejan de caber uno al lado del otro.
+// Below 30rem the two buttons stop fitting side by side.
 @media (max-width: 30rem) {
   .ui-empty-state__actions {
     width: var(--ui-empty-state-full-width);

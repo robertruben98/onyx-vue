@@ -187,9 +187,9 @@ Append to `src/components/alert/alert.scss`. Do not modify any existing rule:
   align-items: center;
 }
 
-// La banda: a sangre, sin radio y sin acento lateral, separada de lo que sigue
-// por un filete. Es lo que hace que varias seguidas se lean como una lista de
-// avisos y no como una pila de tarjetas.
+// The band: full-bleed, square, no side accent, ruled off from what follows.
+// That is what makes several in a row read as a list of notices rather than a
+// stack of cards.
 .ui-alert--band .ui-alert__el {
   padding: var(--ui-alert-band-padding-y) var(--ui-alert-band-padding-x);
   border-left: 0;

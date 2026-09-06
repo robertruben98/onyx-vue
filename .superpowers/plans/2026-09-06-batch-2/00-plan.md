@@ -20,6 +20,7 @@
 - **Semantic variant vocabulary is the family's** — `neutral | info | success | warning | danger`.
 - **Colour is never the only carrier of meaning**, and nothing interactive is reachable by mouse only.
 - **Tests are written before the implementation** and every variant goes through `jest-axe`.
+- **Comments inside component SCSS are in English**, matching every existing component (`badge`, `tag`, `alert`, and all five from batch 1). Spanish is for the theme files (`console.css`) and internal notes, not for `src/components/**`.
 - **Commit messages are Spanish, Conventional Commits, single line, no AI trailers.** A PreToolUse hook rejects `Co-Authored-By: Claude` and `Generated with Claude Code`, and another rejects any commit over 1000 changed lines.
 - **Baseline to hold:** 29 test files, 484 tests green at `99ba327`; 27 components. Every task ends with the full suite green.
 
