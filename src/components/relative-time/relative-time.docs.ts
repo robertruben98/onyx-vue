@@ -5,7 +5,7 @@ export const relativeTimeDoc: ComponentDoc = {
   title: "Relative Time",
   description:
     "A compact age — 5m, 3h, 2d, 4mo — with the absolute date in the title and a stale flag past a threshold. Takes its clock as a prop so it can be tested.",
-  imports: ["UiRelativeTime"],
+  imports: ["UiRelativeTime", "formatRelative"],
   api: [
     {
       name: "date",
@@ -24,6 +24,13 @@ export const relativeTimeDoc: ComponentDoc = {
       type: "Date",
       default: "new Date()",
       description: "Clock, injectable for deterministic tests.",
+    },
+    {
+      name: "formatRelative(date: string | Date, now: Date): string",
+      type: "exported function",
+      default: "—",
+      description:
+        "Compact age — 0m, 5m, 3h, 2d, 4mo. A future date clamps to 0m rather than going negative. Takes `now` as a parameter, same as the component, so it stays testable.",
     },
   ],
   demos: [

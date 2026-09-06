@@ -5,7 +5,7 @@ export const triStateCountDoc: ComponentDoc = {
   title: "Tri-State Count",
   description:
     "A number, or the reason there is no number. Zero is a fact, a dot means the data is in flight, and a dash means nobody asked for it — three states a plain counter collapses into one misleading zero.",
-  imports: ["UiTriStateCount"],
+  imports: ["UiTriStateCount", "resolveTriState"],
   api: [
     {
       name: "state",
@@ -42,6 +42,13 @@ export const triStateCountDoc: ComponentDoc = {
       type: "string",
       default: "'—'",
       description: "Stand-in shown when the data was never requested.",
+    },
+    {
+      name: "resolveTriState(input: { value?: number | null; loading?: boolean; requested?: boolean }): TriState",
+      type: "exported function",
+      default: "—",
+      description:
+        "Derives the state from the shape a data layer usually reports: `requested: false` is unrequested, `loading` or a null/undefined value is pending, anything else — zero included — is known.",
     },
   ],
   demos: [
