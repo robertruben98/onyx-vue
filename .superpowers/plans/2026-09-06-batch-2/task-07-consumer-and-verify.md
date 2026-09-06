@@ -45,11 +45,16 @@ The app resolves `@onyx/vue` through a Vite alias to `../../onyx/onyx-vue/src/in
 
 ```bash
 cd /home/arobertdev/Workspaces/robertdev/control-panel/web
-npx vitest run
-npx vue-tsc --noEmit -p tsconfig.json
+npm run test
+npm run typecheck
 ```
 
-Expected: green. If `vue-tsc` is not installed there, say so rather than skipping silently.
+Both scripts exist and both tools are installed — verified. The consumer's
+baseline **before** your change, measured on this branch: **5 test files, 26
+tests green, typecheck clean**. That typecheck passing is itself worth noting:
+the app resolves `@onyx/vue` to the library's working tree, so it compiles
+against whatever this branch currently holds. If either goes red after your
+swap, it is your swap — there was nothing broken to inherit.
 
 Then commit in that repo:
 
