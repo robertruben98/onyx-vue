@@ -51,6 +51,12 @@
 
 Execute in order. Tasks 1–6 have no dependency on each other; task 7 needs task 5.
 
+Task 8 was **added mid-batch**, not planned. Reviewing task 3 surfaced that a
+counter declared inside `<script setup>` is scoped to `setup()` rather than to the
+module, and probing the shipped library found five components already carrying the
+same defect. It is a fix to existing code rather than an extraction, so it is last
+and independent of everything above.
+
 | Brief | Deliverable |
 |---|---|
 | [`task-00-branch.md`](task-00-branch.md) | `feat/console-lists` branched off `feat/console-atoms` |
@@ -61,3 +67,4 @@ Execute in order. Tasks 1–6 have no dependency on each other; task 7 needs tas
 | [`task-05-action-cluster.md`](task-05-action-cluster.md) | `UiActionCluster` |
 | [`task-06-alert-band.md`](task-06-alert-band.md) | `AlertAppearance`, `#icon` and `#action` slots |
 | [`task-07-consumer-and-verify.md`](task-07-consumer-and-verify.md) | `RowActions.vue` swapped, gallery checked, batch PR |
+| [`task-08-id-collisions.md`](task-08-id-collisions.md) | unique ids in five shipped components, plus a static guard |
