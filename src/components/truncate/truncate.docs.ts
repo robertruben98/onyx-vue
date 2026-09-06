@@ -8,7 +8,13 @@ export const truncateDoc: ComponentDoc = {
   imports: ["UiTruncate"],
   api: [
     { name: "text", type: "string", default: "—", description: "The text, and the default tooltip." },
-    { name: "lines", type: "number", default: "1", description: "Lines kept before clamping." },
+    {
+      name: "lines",
+      type: "number",
+      default: "1",
+      description:
+        "Lines kept before clamping. 0 or a negative number falls back to single-line, same as 1.",
+    },
     {
       name: "title",
       type: "string",
