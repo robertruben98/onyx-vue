@@ -3,11 +3,18 @@ import { computed, ref } from "vue";
 import "./alert.scss";
 
 export type AlertVariant = "neutral" | "info" | "success" | "warning" | "danger";
+export type AlertAppearance = "boxed" | "band";
 
 const props = withDefaults(
   defineProps<{
     /** Visual variant (semantic role). */
     variant?: AlertVariant;
+    /**
+     * Layout. `boxed` is a self-contained card; `band` is full-bleed, square,
+     * and separated from what follows by a rule — the console pages' notice.
+     * Orthogonal to `variant`, which stays semantic.
+     */
+    appearance?: AlertAppearance;
     /** Optional bold title rendered above the content. */
     title?: string;
     /** Whether a dismiss (close) button is shown. */
@@ -17,6 +24,7 @@ const props = withDefaults(
   }>(),
   {
     variant: "info",
+    appearance: "boxed",
     title: "",
     dismissible: false,
     dismissLabel: "Dismiss",
@@ -39,6 +47,8 @@ const rootClasses = computed(() => ({
   "ui-alert--success": props.variant === "success",
   "ui-alert--warning": props.variant === "warning",
   "ui-alert--danger": props.variant === "danger",
+  "ui-alert--boxed": props.appearance === "boxed",
+  "ui-alert--band": props.appearance === "band",
 }));
 
 function dismiss(): void {
@@ -50,10 +60,16 @@ function dismiss(): void {
 <template>
   <div :class="rootClasses" :hidden="hidden || undefined">
     <div class="ui-alert__el" :role="role">
+      <span v-if="$slots.icon" class="ui-alert__icon" aria-hidden="true">
+        <slot name="icon" />
+      </span>
       <div class="ui-alert__body">
         <p v-if="title" class="ui-alert__title">{{ title }}</p>
         <div class="ui-alert__content"><slot /></div>
       </div>
+      <span v-if="$slots.action" class="ui-alert__action">
+        <slot name="action" />
+      </span>
       <button
         v-if="dismissible"
         type="button"

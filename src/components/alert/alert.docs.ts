@@ -13,6 +13,13 @@ export const alertDoc: ComponentDoc = {
       default: "'info'",
       description: "Semantic variant. Also decides the ARIA role — see above.",
     },
+    {
+      name: "appearance",
+      type: "'boxed' | 'band'",
+      default: "'boxed'",
+      description:
+        "Layout. `boxed` is a self-contained card; `band` is full-bleed, square, and separated from what follows by a rule.",
+    },
     { name: "title", type: "string", default: "''", description: "Bold title above the content." },
     {
       name: "dismissible",
@@ -33,6 +40,8 @@ export const alertDoc: ComponentDoc = {
       description: "Emitted after dismissal. The alert hides itself.",
     },
     { name: "#default", type: "slot", default: "—", description: "Message body." },
+    { name: "#icon", type: "slot", default: "—", description: "Optional icon, typically a spinner in a band appearance." },
+    { name: "#action", type: "slot", default: "—", description: "Optional action button or control, typically in a band appearance." },
   ],
   demos: [
     {
@@ -49,6 +58,16 @@ export const alertDoc: ComponentDoc = {
     {
       title: "Without a title",
       code: `<UiAlert variant="neutral">Just the body, no heading.</UiAlert>`,
+    },
+    {
+      title: "Band with an icon and an action",
+      description:
+        "Full-bleed, square, ruled off from what follows. The icon can be a spinner while the data it is talking about is still in flight.",
+      code: `<UiAlert appearance="band" variant="info">
+  <template #icon><UiSpinner size="sm" /></template>
+  Pidiendo alertas a GitHub: una peticion por repo. Tarda unos segundos.
+  <template #action><UiButton size="sm" variant="secondary">cancelar</UiButton></template>
+</UiAlert>`,
     },
   ],
 };

@@ -330,6 +330,9 @@
   --ui-alert-warning-accent: var(--ui-color-warning);
   --ui-alert-danger-bg: var(--ui-color-danger-surface);
   --ui-alert-danger-accent: var(--ui-color-danger);
+  --ui-alert-band-padding-x: var(--ui-space-4);
+  --ui-alert-band-padding-y: var(--ui-space-3);
+  --ui-alert-band-border: var(--ui-color-border);
   --ui-dialog-bg: var(--ui-color-surface);
   --ui-dialog-text: var(--ui-color-text);
   --ui-dialog-border: var(--ui-color-border);
