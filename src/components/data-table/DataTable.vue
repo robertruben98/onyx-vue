@@ -6,7 +6,19 @@ import "./data-table.scss";
 export type RowKey = string | number;
 export type CellAlign = "start" | "center" | "end";
 export type SortDirection = "asc" | "desc";
-export type DataTableMode = "paginated" | "virtual";
+/**
+ * Como se reparten las filas por la pantalla.
+ *
+ * - `paginated`: una pagina cada vez, con pie de paginacion.
+ * - `virtual`: ventana deslizante sobre miles de filas; exige un `rowHeight`
+ *   que case EXACTAMENTE con el alto renderizado.
+ * - `plain`: todas las filas, sin pie y sin ventana. Para tablas cortas que se
+ *   leen de un vistazo — un panel de servicios, un resumen — donde paginar
+ *   veinte filas estorba y virtualizarlas obliga a cuadrar un alto que sale de
+ *   la tipografia y cambia con el tema. Con `maxHeight` sigue teniendo scroll
+ *   interno y cabecera pegada.
+ */
+export type DataTableMode = "paginated" | "virtual" | "plain";
 export type SelectionMode = "none" | "single" | "multiple";
 
 /** One level of the (multi-)column sort. */
@@ -170,7 +182,8 @@ const currentPage = computed(() =>
 
 /** Rows currently rendered (sorted, then paged in paginated mode). */
 const visibleRows = computed<T[]>(() => {
-  if (props.mode === "virtual") return sorted.value;
+  // `virtual` recorta luego, por scroll; `plain` no recorta nunca.
+  if (props.mode === "virtual" || props.mode === "plain") return sorted.value;
   const start = currentPage.value * pageSize.value;
   return sorted.value.slice(start, start + pageSize.value);
 });

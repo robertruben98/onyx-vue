@@ -13,7 +13,10 @@ export interface MenuItem {
 
 let nextMenuId = 0;
 
-const props = withDefaults(
+// Sin asignar a una variable: en `<script setup>` las props llegan solas a la
+// plantilla, y este binding no lo leia nadie. Solo se notaba desde fuera, al
+// tipar la libreria con `noUnusedLocals`.
+withDefaults(
   defineProps<{
     /** Menu items. */
     items?: MenuItem[];

@@ -585,3 +585,52 @@ describe("DataTable (Vue) — sticky header", () => {
     expect(grid.style.overflowY).toBe("auto");
   });
 });
+
+describe("DataTable · modo plain", () => {
+  const columns = [
+    { id: "name", header: "Name", field: "name" },
+    { id: "port", header: "Port", field: "port" },
+  ];
+  const rows = Array.from({ length: 19 }, (_, i) => ({
+    id: i,
+    name: `svc-${i}`,
+    port: 3000 + i,
+  }));
+
+  it("pinta TODAS las filas, sin recortar por pagina", () => {
+    // En `paginated` un pageSize de 10 dejaria nueve fuera sin decirlo.
+    const { container } = render(DataTable, {
+      props: { columns, rows, mode: "plain", rowKey: "id" },
+    });
+    const filas = container.querySelectorAll(".ui-dt__tr");
+    expect(filas.length).toBe(19);
+  });
+
+  it("no saca pie de paginacion", () => {
+    // Es el motivo de que exista el modo: para veinte filas que se leen de un
+    // vistazo, el pie solo estorba.
+    const { container } = render(DataTable, {
+      props: { columns, rows, mode: "plain", rowKey: "id" },
+    });
+    expect(container.querySelector(".ui-dt__footer")).toBeNull();
+  });
+
+  it("no monta la ventana virtual, asi que no depende de rowHeight", () => {
+    // La trampa que hace falta esquivar: `viewportHeight` entra por parseFloat
+    // y el alto real de la fila sale de la tipografia, que cambia con el tema.
+    // Si no cuadran, o sobra scroll o faltan filas.
+    const { container } = render(DataTable, {
+      props: { columns, rows, mode: "plain", rowKey: "id" },
+    });
+    expect(container.querySelector(".ui-dt__viewport")).toBeNull();
+  });
+
+  it("sigue anunciando el total real a lectores de pantalla", () => {
+    const { container } = render(DataTable, {
+      props: { columns, rows, mode: "plain", rowKey: "id", caption: "Servicios" },
+    });
+    const grid = container.querySelector('[role="grid"]');
+    // cabecera + 19 filas
+    expect(grid?.getAttribute("aria-rowcount")).toBe("20");
+  });
+});
