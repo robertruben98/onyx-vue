@@ -424,4 +424,11 @@
   --ui-severity-badge-low-text: var(--ui-color-info);
   --ui-severity-badge-unknown-bg: var(--ui-color-neutral-surface);
   --ui-severity-badge-unknown-text: var(--ui-color-neutral);
+  --ui-tri-state-count-font-size: var(--ui-font-size-sm);
+  --ui-tri-state-count-font-weight: var(--ui-font-weight-medium);
+  --ui-tri-state-count-neutral: var(--ui-color-text-muted);
+  --ui-tri-state-count-ok: var(--ui-color-success);
+  --ui-tri-state-count-warn: var(--ui-color-warning);
+  --ui-tri-state-count-danger: var(--ui-color-danger);
+  --ui-tri-state-count-quiet: var(--ui-color-disabled-text);
 }

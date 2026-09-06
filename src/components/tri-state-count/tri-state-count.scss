@@ -1,0 +1,28 @@
+// Tri-state count — a number, or the reason there is no number. References
+// ONLY semantic / component tokens. Tabular figures so a column of counts
+// does not shuffle sideways as the numbers change.
+
+.ui-tri-state-count {
+  display: inline-block;
+  font-size: var(--ui-tri-state-count-font-size);
+  font-weight: var(--ui-tri-state-count-font-weight);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--ui-tri-state-count-neutral);
+}
+
+.ui-tri-state-count--ok {
+  color: var(--ui-tri-state-count-ok);
+}
+.ui-tri-state-count--warn {
+  color: var(--ui-tri-state-count-warn);
+}
+.ui-tri-state-count--danger {
+  color: var(--ui-tri-state-count-danger);
+}
+
+// Pending and unrequested are deliberately quiet: a glyph standing in for a
+// number must not compete with the real numbers around it.
+.ui-tri-state-count--quiet {
+  color: var(--ui-tri-state-count-quiet);
+}
