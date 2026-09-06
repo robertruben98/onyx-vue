@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { h } from "vue";
 import RadioGroup from "./RadioGroup.vue";
 import type { RadioOption } from "./RadioGroup.vue";
 
@@ -91,5 +92,33 @@ describe("RadioGroup (Vue)", () => {
       props: { label: "Size", options: OPTIONS },
     });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+
+  it("does not let one group's selection affect another via colliding radio names", async () => {
+    render({
+      render() {
+        return h("div", [
+          h(RadioGroup, { label: "Size", options: OPTIONS, modelValue: "sm" }),
+          h(RadioGroup, {
+            label: "Color",
+            options: [
+              { label: "Red", value: "red" },
+              { label: "Blue", value: "blue" },
+            ],
+          }),
+        ]);
+      },
+    });
+    const groupNames = new Set(
+      screen.getAllByRole("radio").map((r) => (r as HTMLInputElement).name),
+    );
+    // One name per group — a shared name would make the browser treat both
+    // groups as a single mutually-exclusive set.
+    expect(groupNames.size).toBe(2);
+
+    const small = screen.getByRole("radio", { name: /small/i }) as HTMLInputElement;
+    expect(small.checked).toBe(true);
+    await fireEvent.click(screen.getByRole("radio", { name: /red/i }));
+    expect(small.checked).toBe(true);
   });
 });

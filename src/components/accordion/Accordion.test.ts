@@ -83,4 +83,20 @@ describe("Accordion (Vue)", () => {
     const { container } = renderAccordion();
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it("gives every item its own header/panel ids (no collision across siblings)", () => {
+    renderAccordion();
+    const buttons = screen.getAllByRole("button");
+    const headerIds = buttons.map((b) => b.id);
+    expect(new Set(headerIds).size).toBe(headerIds.length);
+
+    // Each trigger's aria-controls must resolve to its OWN panel, not a
+    // sibling's — the exact failure mode of a shared counter.
+    const panelIds = buttons.map((b) => b.getAttribute("aria-controls"));
+    expect(new Set(panelIds).size).toBe(panelIds.length);
+    buttons.forEach((button, i) => {
+      const panel = document.getElementById(panelIds[i]!);
+      expect(panel?.getAttribute("aria-labelledby")).toBe(headerIds[i]);
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { defineComponent, ref } from "vue";
+import { defineComponent, h, ref } from "vue";
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import Input from "./Input.vue";
@@ -120,6 +120,22 @@ describe("Input (Vue)", () => {
     seleccionar!();
     expect(nativo.selectionStart).toBe(0);
     expect(nativo.selectionEnd).toBe("hola".length);
+  });
+
+  it("gives independent ids to two instances so each label targets its own input", () => {
+    const { container } = render({
+      render() {
+        return h("div", [h(Input, { label: "First" }), h(Input, { label: "Second" })]);
+      },
+    });
+    const inputs = [...container.querySelectorAll("input")];
+    const labels = [...container.querySelectorAll("label")];
+    expect(inputs.length).toBe(2);
+    const ids = inputs.map((i) => i.id);
+    expect(new Set(ids).size).toBe(2);
+    labels.forEach((label, i) => {
+      expect(label.getAttribute("for")).toBe(inputs[i].id);
+    });
   });
 
 });

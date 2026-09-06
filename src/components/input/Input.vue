@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, useId } from "vue";
 import "./input.scss";
 
 export type InputType =
@@ -11,8 +11,6 @@ export type InputType =
   | "url"
   | "search";
 export type InputSize = "sm" | "md" | "lg";
-
-let nextId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -48,7 +46,8 @@ const emit = defineEmits<{ valueChange: [value: string] }>();
 /** Two-way bound value (v-model). */
 const value = defineModel<string>({ default: "" });
 
-const inputId = `ui-input-${nextId++}`;
+const uid = useId();
+const inputId = `ui-input-${uid}`;
 
 const rootClasses = computed(() => ({
   "ui-input": true,
