@@ -12,7 +12,10 @@ export function formatRelative(date: string | Date, now: Date): string {
   const then = date instanceof Date ? date : new Date(date);
   const mins = Math.max(0, Math.round((now.getTime() - then.getTime()) / MINUTE));
   if (mins < 60) return `${mins}m`;
-  if (mins < 1440) return `${Math.round(mins / 60)}h`;
+  // 1410 and not 1440: `Math.round(mins / 60)` reaches 24 for any mins in
+  // [1410, 1440), which would render "24h" — a rung nobody wants, since the
+  // scale must read 23h then 1d, never 23h → 24h → 1d.
+  if (mins < 1410) return `${Math.round(mins / 60)}h`;
   const days = Math.round(mins / 1440);
   if (days < 31) return `${days}d`;
   return `${Math.round(days / 30)}mo`;

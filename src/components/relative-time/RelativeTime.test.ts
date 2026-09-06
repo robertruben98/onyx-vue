@@ -34,6 +34,21 @@ describe("formatRelative", () => {
   it("never goes negative when a clock runs ahead", () => {
     expect(formatRelative(new Date(now.getTime() + HOUR), now)).toBe("0m");
   });
+
+  it("pins the minutes/hours boundary: 59 stays minutes, 60 rolls to hours", () => {
+    expect(formatRelative(ago(59 * MIN), now)).toBe("59m");
+    expect(formatRelative(ago(60 * MIN), now)).toBe("1h");
+  });
+
+  it("pins the hours/days boundary: neither side ever reads 24h", () => {
+    expect(formatRelative(ago(1439 * MIN), now)).toBe("1d");
+    expect(formatRelative(ago(1440 * MIN), now)).toBe("1d");
+  });
+
+  it("never renders 24h — 23h is followed directly by 1d", () => {
+    expect(formatRelative(ago(1409 * MIN), now)).toBe("23h");
+    expect(formatRelative(ago(1410 * MIN), now)).toBe("1d");
+  });
 });
 
 describe("RelativeTime (Vue)", () => {
@@ -69,6 +84,13 @@ describe("RelativeTime (Vue)", () => {
 
   it("counts a month as stale, which the string-matching original did not", () => {
     const { container } = render(RelativeTime, { props: { date: ago(30 * DAY), now } });
+    expect(
+      container.querySelector("time")?.classList.contains("ui-relative-time--stale"),
+    ).toBe(true);
+  });
+
+  it("marks a row stale exactly at the threshold, not only past it", () => {
+    const { container } = render(RelativeTime, { props: { date: ago(3 * DAY), now } });
     expect(
       container.querySelector("time")?.classList.contains("ui-relative-time--stale"),
     ).toBe(true);
