@@ -264,13 +264,25 @@ Mapping from batch to the files it retires:
 
 | Batch | Retires from `control-panel/web/src/` |
 |---|---|
-| 2 | `RowActions.vue` |
+| 2 | `RowActions.vue`'s reveal CSS (the file stays — see below) |
 | 3 | `FilterBar.vue` |
 | 4 | `SettingsPanel.vue` |
 | 5 | `LogDrawer.vue` |
 | 6 | `composables/useSettings.ts` |
 
 Batch 1 retires nothing: it is the vocabulary the app never had.
+
+`RowActions.vue` is the one entry that does not disappear outright. It is
+domain-coupled — it takes a `Service`, hardcodes four SVG icons and emits
+`abrir`/`reiniciar`/`logs`/`power` — so what the library can own is its reveal
+behaviour and layout, not its buttons. After the swap the file keeps its icons
+and wraps them in `<UiActionCluster>`, losing its own opacity rules and its
+`:global(.ui-dt__tr:hover)` coupling to `UiDataTable`'s internal class.
+
+That coupling is only half-fixed by batch 2. CSS cannot express "reveal when my
+ancestor row is hovered" without a hook on the ancestor, so the consumer still
+writes one line for the hover case while the library owns focus-within. Batch 6
+owns the rest, when `UiDataTable` gains real row state.
 
 ## Testing
 
