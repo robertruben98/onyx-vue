@@ -38,8 +38,12 @@ describe("Truncate (Vue)", () => {
     );
   });
 
-  it("has no axe violations", async () => {
-    const { container } = render(Truncate, { props: { text: long } });
+  it.each([
+    ["single line", { text: long }],
+    ["clamped", { text: long, lines: 2 }],
+    ["explicit title", { text: long, title: "the full repository path" }],
+  ] as const)("has no axe violations (%s)", async (_name, props) => {
+    const { container } = render(Truncate, { props });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
