@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
+import { computed, useId, useSlots } from "vue";
 import { UiButton } from "../button";
 import "./empty-state.scss";
 
 export type EmptyStateRole = "region" | "status";
-
-let nextId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -32,22 +30,35 @@ const emit = defineEmits<{
 
 const slots = useSlots();
 
-const uid = nextId++;
+// `let nextId = 0` at the top of `<script setup>` compiles into the
+// component's `setup()` closure, not a module-level binding — unlike the
+// Angular original's true module-scope counter. Every instance got a fresh
+// `nextId = 0`, so two `EmptyState`s on one page both rendered
+// `id="ui-empty-state-title-0"`. `useId()` (Vue 3.5+) is the actual fix: it
+// draws from a counter shared by every component instance in the same app
+// tree, so calls across sibling instances return distinct values.
+const uid = useId();
 const titleId = `ui-empty-state-title-${uid}`;
 const descriptionId = `ui-empty-state-description-${uid}`;
 
 const hasVisual = computed(() => !!slots.icon || !!slots.illustration);
+const hasTitle = computed(() => !!slots.title);
 const hasDescription = computed(() => !!slots.description);
 const hasPrimary = computed(() => !!slots.primaryAction);
 const hasSecondary = computed(() => !!slots.secondaryAction);
 const hasActions = computed(() => hasPrimary.value || hasSecondary.value);
 
 /**
- * An explicit name wins; otherwise the title labels the region. Pointing
- * `aria-describedby` at a description that was never given is the wart this
- * port fixes — the Angular original always renders the paragraph.
+ * An explicit name wins; otherwise the title labels the region — but only
+ * when a title was actually given, so `aria-labelledby` never dangles at an
+ * id that was never rendered.
+ *
+ * Pointing `aria-describedby` at a description that was never given is the
+ * wart this port fixes — the Angular original always renders the paragraph.
  */
-const labelledBy = computed(() => (props.ariaLabel ? undefined : titleId));
+const labelledBy = computed(() =>
+  props.ariaLabel || !hasTitle.value ? undefined : titleId,
+);
 const describedBy = computed(() => (hasDescription.value ? descriptionId : undefined));
 </script>
 
@@ -67,7 +78,7 @@ const describedBy = computed(() => (hasDescription.value ? descriptionId : undef
     </div>
 
     <div class="ui-empty-state__content">
-      <h2 :id="titleId" class="ui-empty-state__title"><slot name="title" /></h2>
+      <h2 v-if="hasTitle" :id="titleId" class="ui-empty-state__title"><slot name="title" /></h2>
       <p v-if="hasDescription" :id="descriptionId" class="ui-empty-state__description">
         <slot name="description" />
       </p>

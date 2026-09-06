@@ -41,6 +41,14 @@
   margin: 0;
 }
 
+// The original hides an empty title with `.ui-empty-state__title:empty`.
+// That selector can never match here: a Vue `<slot>` outlet always compiles
+// to a fragment with anchor text nodes on either side, present even when the
+// slot itself renders nothing, so the element is never truly childless. The
+// component omits the whole `<h2>` with `v-if="hasTitle"` instead — the same
+// "known at setup" approach already used for the visual, description and
+// actions below — so an omitted title claims no layout space and this rule
+// stays out rather than shipping unreachable CSS.
 .ui-empty-state__title {
   font-size: var(--ui-empty-state-title-font-size);
   font-weight: var(--ui-empty-state-title-font-weight);

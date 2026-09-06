@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/vue";
+import { h } from "vue";
 import { axe } from "jest-axe";
 import EmptyState from "./EmptyState.vue";
 
@@ -99,6 +100,34 @@ describe("EmptyState (Vue)", () => {
     });
     (container.querySelector("button") as HTMLButtonElement).click();
     expect(emitted().primaryAction).toBeFalsy();
+  });
+
+  it("omits the title element entirely when no title slot was given", () => {
+    const { container } = render(EmptyState, { props: { ariaLabel: "Vacio" } });
+    expect(container.querySelector(".ui-empty-state__title")).toBeNull();
+  });
+
+  it("does not dangle aria-labelledby at an unrendered title", () => {
+    const { container } = render(EmptyState, {});
+    const root = container.querySelector(".ui-empty-state")!;
+    expect(root.getAttribute("aria-labelledby")).toBe(null);
+  });
+
+  it("gives independent ids to two instances rendered together", () => {
+    const { container } = render({
+      render() {
+        return h("div", [
+          h(EmptyState, null, { title: () => "Uno" }),
+          h(EmptyState, null, { title: () => "Dos" }),
+        ]);
+      },
+    });
+    const roots = [...container.querySelectorAll(".ui-empty-state")];
+    expect(roots.length).toBe(2);
+    const [firstId, secondId] = roots.map((r) => r.getAttribute("aria-labelledby"));
+    expect(firstId).toBeTruthy();
+    expect(secondId).toBeTruthy();
+    expect(firstId).not.toBe(secondId);
   });
 
   it("hides the visual from assistive tech", () => {
