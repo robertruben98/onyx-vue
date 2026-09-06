@@ -463,4 +463,17 @@
   --ui-group-header-name-tracking: 0.14em;
   --ui-group-header-meta-size: var(--ui-font-size-sm);
   --ui-group-header-meta-color: var(--ui-color-text-muted);
+  --ui-empty-state-max-width: 32rem;
+  --ui-empty-state-full-width: 100%;
+  --ui-empty-state-visual-size: 4rem;
+  --ui-empty-state-padding-x: var(--ui-space-4);
+  --ui-empty-state-padding-y: var(--ui-space-5);
+  --ui-empty-state-gap: var(--ui-space-4);
+  --ui-empty-state-content-gap: var(--ui-space-2);
+  --ui-empty-state-title-font-size: var(--ui-font-size-lg);
+  --ui-empty-state-title-font-weight: var(--ui-font-weight-medium);
+  --ui-empty-state-description-font-size: var(--ui-font-size-md);
+  --ui-empty-state-actions-gap: var(--ui-space-2);
+  --ui-empty-state-color: var(--ui-color-text);
+  --ui-empty-state-description-color: var(--ui-color-text-muted);
 }

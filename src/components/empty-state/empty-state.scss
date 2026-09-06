@@ -1,0 +1,67 @@
+// EmptyState — ported from the Angular lib. References ONLY semantic /
+// component tokens. The Angular `:host` maps to the root class.
+//
+// The original's `:has()` rules for hiding empty slots are gone: Vue knows at
+// setup whether a slot was filled, so the elements are not rendered at all
+// rather than rendered and hidden. Its action styling is gone too — UiButton
+// already carries it, and fifteen of the original's tokens existed only to
+// feed a second copy of it.
+
+.ui-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  width: var(--ui-empty-state-full-width);
+  max-width: var(--ui-empty-state-max-width);
+  padding: var(--ui-empty-state-padding-y) var(--ui-empty-state-padding-x);
+  gap: var(--ui-empty-state-gap);
+  color: var(--ui-empty-state-color);
+  text-align: center;
+}
+
+.ui-empty-state__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-empty-state-visual-size);
+  height: var(--ui-empty-state-visual-size);
+  color: var(--ui-color-primary);
+}
+
+.ui-empty-state__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-empty-state-content-gap);
+}
+
+.ui-empty-state__title,
+.ui-empty-state__description {
+  margin: 0;
+}
+
+.ui-empty-state__title {
+  font-size: var(--ui-empty-state-title-font-size);
+  font-weight: var(--ui-empty-state-title-font-weight);
+}
+
+.ui-empty-state__description {
+  font-size: var(--ui-empty-state-description-font-size);
+  color: var(--ui-empty-state-description-color);
+}
+
+.ui-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ui-empty-state-actions-gap);
+}
+
+// Below 30rem the two buttons stop fitting side by side.
+@media (max-width: 30rem) {
+  .ui-empty-state__actions {
+    width: var(--ui-empty-state-full-width);
+    flex-direction: column;
+  }
+}
