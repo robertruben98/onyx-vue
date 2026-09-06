@@ -1,6 +1,7 @@
 // Token layer (theming) — imported once so consumers get the CSS variables.
 import "./styles/index.css";
 
+export * from "./docs-model";
 export * from "./components/accordion";
 export * from "./components/alert";
 export * from "./components/avatar";
