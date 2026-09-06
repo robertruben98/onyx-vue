@@ -9,7 +9,7 @@ export const tagDoc: ComponentDoc = {
   api: [
     {
       name: "variant",
-      type: "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
+      type: "'neutral' | 'muted' | 'info' | 'success' | 'warning' | 'danger'",
       default: "'neutral'",
       description: "Semantic variant.",
     },
@@ -42,6 +42,12 @@ export const tagDoc: ComponentDoc = {
 <UiTag variant="success">Success</UiTag>
 <UiTag variant="warning">Warning</UiTag>
 <UiTag variant="danger">Danger</UiTag>`,
+    },
+    {
+      title: "Muted",
+      description:
+        "For a tag that states what a row is rather than warning about it — a draft, an archived item.",
+      code: `<UiTag variant="muted">draft</UiTag>`,
     },
     {
       title: "Removable",

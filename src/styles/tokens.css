@@ -393,6 +393,8 @@
   --ui-tag-warning-text: var(--ui-color-warning);
   --ui-tag-danger-bg: var(--ui-color-danger-surface);
   --ui-tag-danger-text: var(--ui-color-danger);
+  --ui-tag-muted-bg: var(--ui-color-disabled-bg);
+  --ui-tag-muted-text: var(--ui-color-disabled-text);
   --ui-status-dot-size: 0.5rem;
   --ui-status-dot-live: var(--ui-color-success);
   --ui-status-dot-dead: var(--ui-color-danger);
