@@ -40,6 +40,24 @@ describe("console preset", () => {
     expect(faltan).toEqual([]);
   });
 
+  it("never reaches past its own palette for colour", () => {
+    // "el color reservado para el estado: verde/ambar/rojo/azul y nada mas"
+    // (cabecera del fichero): la consola tiene su PROPIA paleta de doce
+    // colores (--ui-console-*) y cada semantico ya cuelga de ella. Si un
+    // remapeo tira en cambio de un primitivo generico (--ui-red-600,
+    // --ui-slate-400...) mete un segundo rojo de "danger" distinto al de
+    // --ui-console-down, y nadie lo nota hasta que dos pantallas no
+    // concuerdan. La regla no es "que color", es "de donde sale el color":
+    // de --ui-console-* o de otro semantico ya remapeado, nunca del generico.
+    const genericos = ["slate", "red", "amber", "blue", "green", "emerald"];
+    const patron = new RegExp(
+      `var\\(--ui-(?:(?:${genericos.join("|")})-[0-9]+|white|black)\\)`,
+      "g",
+    );
+    const encontrados = [...console_.matchAll(patron)].map((m) => m[0]);
+    expect(encontrados).toEqual([]);
+  });
+
   it("kills every shadow", () => {
     // Sobre #0c0d10 una sombra no se ve y solo ensucia el filete.
     const sombras = [...assigned(tokens)].filter((t) => t.endsWith("-shadow"));

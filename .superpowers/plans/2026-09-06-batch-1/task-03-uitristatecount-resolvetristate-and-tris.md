@@ -373,6 +373,14 @@ Add to `src/index.ts`, alphabetically **after** `./components/tooltip` — `tool
 export * from "./components/tri-state-count";
 ```
 
+**Nothing to register for `src/docs-model.test.ts`.** That file discovers
+components on its own — `readdirSync` over `src/components` for the directory
+contract, and `Object.entries(onyx).filter(([n]) => n.endsWith("Doc"))` for the
+metadata, against the live library index. It runs six `it.each(docs…)` blocks, so
+exporting `xxxDoc` through the component barrel and `src/index.ts` — which the
+steps above already do — makes six more tests appear by themselves. That is why
+the suite grows by six more than this component's own test file.
+
 - [ ] **Step 9: Run the whole suite and typecheck**
 
 ```bash
@@ -380,7 +388,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 27 files, 420 tests passed; typecheck clean. The same `<script setup>` export caveat from Task 2 Step 9 applies to `resolveTriState`.
+Expected: 27 files, 438 tests passed; typecheck clean. The same `<script setup>` export caveat from Task 2 Step 9 applies to `resolveTriState`.
 
 - [ ] **Step 10: Commit**
 

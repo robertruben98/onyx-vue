@@ -95,11 +95,26 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 29 files, 444 tests passed; typecheck clean.
+Expected: 29 files, 476 tests passed; typecheck clean.
 
 - [ ] **Step 7: Verify the gallery renders all five new pages**
 
-The docs site is a systemd user unit serving the Vite dev server; it reads this working tree, so no build is needed.
+The docs site is a systemd user unit serving the Vite dev server; it reads this
+working tree, so no build is needed.
+
+**Restart the unit first — this is not optional.** `docs/src/registry.ts` finds
+component pages with `import.meta.glob("../../src/components/*/*.docs.ts")`, and
+that path is **outside the Vite root** (`docs/`). Vite's watcher does not notice
+directories added there while the server runs, so a running gallery keeps serving
+the component list it booted with. Measured during this batch: with four new
+components on disk, all tests green and the site answering `200`, the transformed
+registry module still listed **22** docs — the new pages were simply absent, with
+nothing anywhere reporting a problem. After `systemctl --user restart onyx-docs`
+it listed 26. A green unit and a `200` are not evidence the gallery is current.
+
+```bash
+systemctl --user restart onyx-docs && sleep 4
+```
 
 ```bash
 systemctl --user status onyx-docs --no-pager

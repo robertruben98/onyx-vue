@@ -10,15 +10,15 @@
 
 ## Test-count arithmetic
 
-The running totals in each task's Step 9 assume every preceding task landed and that the baseline is 379. If tasks are executed out of order the totals shift; the invariant that matters is that the suite is **green** and the count only ever goes up.
+The running totals in each task's Step 9 assume every preceding task landed and that the baseline is 379. Each new component contributes its own test file **plus six** cases in `src/docs-model.test.ts`, which runs `describe.each(TODOS)` over the component registry — the first version of this table missed that and under-counted every row by six per component. If tasks are executed out of order the totals shift; the invariant that matters is that the suite is **green** and the count only ever goes up.
 
 | After task | Files | Tests |
 |---|---|---|
 | baseline | 24 | 379 |
-| 1 | 25 | 388 |
-| 2 | 26 | 402 |
-| 3 | 27 | 420 |
-| 4 | 28 | 434 |
-| 5 | 29 | 440 |
-| 6 | 29 | 443 |
-| 7 | 29 | 444 |
+| 1 | 25 | 394 |
+| 2 | 26 | 414 |
+| 3 | 27 | 438 |
+| 4 | 28 | 458 |
+| 5 | 29 | 470 |
+| 6 | 29 | 473 |
+| 7 | 29 | 474 |

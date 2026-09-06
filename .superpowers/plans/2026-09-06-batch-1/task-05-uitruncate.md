@@ -213,6 +213,14 @@ Add to `src/index.ts` as the last export line. The tail of the file, sorted by d
 export * from "./components/truncate";
 ```
 
+**Nothing to register for `src/docs-model.test.ts`.** That file discovers
+components on its own — `readdirSync` over `src/components` for the directory
+contract, and `Object.entries(onyx).filter(([n]) => n.endsWith("Doc"))` for the
+metadata, against the live library index. It runs six `it.each(docs…)` blocks, so
+exporting `xxxDoc` through the component barrel and `src/index.ts` — which the
+steps above already do — makes six more tests appear by themselves. That is why
+the suite grows by six more than this component's own test file.
+
 - [ ] **Step 9: Run the whole suite and typecheck**
 
 ```bash
@@ -220,7 +228,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 29 files, 440 tests passed; typecheck clean.
+Expected: 29 files, 470 tests passed; typecheck clean.
 
 - [ ] **Step 10: Commit**
 

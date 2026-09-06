@@ -2,7 +2,13 @@
 import { computed } from "vue";
 import "./tag.scss";
 
-export type TagVariant = "neutral" | "info" | "success" | "warning" | "danger";
+export type TagVariant =
+  | "neutral"
+  | "muted"
+  | "info"
+  | "success"
+  | "warning"
+  | "danger";
 
 const props = withDefaults(
   defineProps<{
@@ -26,6 +32,7 @@ const emit = defineEmits<{ removed: [] }>();
 const rootClasses = computed(() => ({
   "ui-tag": true,
   "ui-tag--neutral": props.variant === "neutral",
+  "ui-tag--muted": props.variant === "muted",
   "ui-tag--info": props.variant === "info",
   "ui-tag--success": props.variant === "success",
   "ui-tag--warning": props.variant === "warning",

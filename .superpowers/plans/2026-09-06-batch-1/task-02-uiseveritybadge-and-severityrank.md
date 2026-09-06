@@ -301,6 +301,14 @@ Add to `src/index.ts`, alphabetically between `./components/select` and `./compo
 export * from "./components/severity-badge";
 ```
 
+**Nothing to register for `src/docs-model.test.ts`.** That file discovers
+components on its own — `readdirSync` over `src/components` for the directory
+contract, and `Object.entries(onyx).filter(([n]) => n.endsWith("Doc"))` for the
+metadata, against the live library index. It runs six `it.each(docs…)` blocks, so
+exporting `xxxDoc` through the component barrel and `src/index.ts` — which the
+steps above already do — makes six more tests appear by themselves. That is why
+the suite grows by six more than this component's own test file.
+
 - [ ] **Step 9: Run the whole suite and typecheck**
 
 ```bash
@@ -308,7 +316,7 @@ npx vitest run
 npm run typecheck
 ```
 
-Expected: 26 files, 402 tests passed; typecheck clean.
+Expected: 26 files, 414 tests passed; typecheck clean.
 
 If typecheck complains that `severityRank` is not exported from an SFC, the named export must be moved out of `<script setup>` into a plain `<script lang="ts">` block in the same file — `<script setup>` only exports the default component. Both blocks may coexist in one SFC.
 
