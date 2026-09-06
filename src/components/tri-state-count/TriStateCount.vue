@@ -1,6 +1,15 @@
 <script lang="ts">
+/**
+ * The three things a counter can be.
+ *
+ * `known` is a fact — including zero. `pending` means the data is in flight.
+ * `unrequested` means nobody asked for it. Collapsing the last two into a
+ * zero is the bug this type exists to prevent: "no open alerts" and "we never
+ * looked for alerts" render identically and mean opposite things.
+ */
 export type TriState = "known" | "pending" | "unrequested";
 
+/** Semantic tone for a known value — ignored when state is pending or unrequested. */
 export type TriStateTone = "neutral" | "ok" | "warn" | "danger";
 
 /** Derive the state from the shape a data layer usually reports. */
@@ -18,15 +27,6 @@ export function resolveTriState(input: {
 <script setup lang="ts">
 import { computed } from "vue";
 import "./tri-state-count.scss";
-
-/**
- * The three things a counter can be.
- *
- * `known` is a fact — including zero. `pending` means the data is in flight.
- * `unrequested` means nobody asked for it. Collapsing the last two into a
- * zero is the bug this type exists to prevent: "no open alerts" and "we never
- * looked for alerts" render identically and mean opposite things.
- */
 
 const props = withDefaults(
   defineProps<{
