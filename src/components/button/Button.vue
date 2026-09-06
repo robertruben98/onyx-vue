@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import "./button.scss";
 
-export type ButtonVariant = "primary" | "secondary" | "text";
+export type ButtonVariant = "primary" | "secondary" | "danger" | "text";
 export type ButtonSize = "sm" | "md" | "lg";
 export type ButtonType = "button" | "submit" | "reset";
 
@@ -37,6 +37,7 @@ const rootClasses = computed(() => ({
   "ui-button": true,
   "ui-button--primary": props.variant === "primary",
   "ui-button--secondary": props.variant === "secondary",
+  "ui-button--danger": props.variant === "danger",
   "ui-button--text": props.variant === "text",
   "ui-button--sm": props.size === "sm",
   "ui-button--lg": props.size === "lg",

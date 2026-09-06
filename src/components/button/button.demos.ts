@@ -10,6 +10,7 @@ export interface Demo {
 export const buttonDemos: Demo[] = [
   { title: "Primary", slot: "Primary" },
   { title: "Secondary", props: { variant: "secondary" }, slot: "Secondary" },
+  { title: "Danger", props: { variant: "danger" }, slot: "Danger" },
   { title: "Text", props: { variant: "text" }, slot: "Text" },
   { title: "Small", props: { size: "sm" }, slot: "Small" },
   { title: "Large", props: { size: "lg" }, slot: "Large" },
