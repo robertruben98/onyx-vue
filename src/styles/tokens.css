@@ -90,6 +90,7 @@
   --ui-font-size-md: 1rem;
   --ui-font-size-lg: 1.125rem;
   --ui-font-weight-medium: 600;
+  --ui-font-weight-bold: 700;
   --ui-border-width: 1px;
   --ui-border-width-thick: 2px;
   --ui-button-padding-x: var(--ui-space-4);
@@ -442,4 +443,13 @@
   --ui-relative-time-color: var(--ui-color-text-muted);
   --ui-relative-time-stale-color: var(--ui-color-warning);
   --ui-truncate-lines: 1;
+  --ui-section-header-height: 2.125rem;
+  --ui-section-header-gap: var(--ui-space-3);
+  --ui-section-header-title-size: var(--ui-font-size-sm);
+  --ui-section-header-title-weight: var(--ui-font-weight-bold);
+  --ui-section-header-title-tracking: 0.16em;
+  --ui-section-header-title-color: var(--ui-color-text);
+  --ui-section-header-title-color-quiet: var(--ui-color-text-muted);
+  --ui-section-header-count-size: var(--ui-font-size-sm);
+  --ui-section-header-count-color: var(--ui-color-text-muted);
 }
