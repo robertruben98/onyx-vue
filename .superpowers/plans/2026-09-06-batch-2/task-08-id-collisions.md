@@ -44,7 +44,7 @@ import { join } from "node:path";
 // control, and aria-labelledby/aria-describedby resolve to the wrong element.
 //
 // This guard is static on purpose. Rendering every component twice would need
-//每 component's required props; reading where the counter is declared needs
+// every component's required props; reading where the counter is declared needs
 // nothing and catches the mistake at the place it is made.
 const COMPONENTES = join(process.cwd(), "src", "components");
 
