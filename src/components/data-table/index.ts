@@ -8,4 +8,4 @@ export type {
   SelectionMode,
   DataTableColumn,
 } from "./DataTable.vue";
-export { dataTableDemos } from "./data-table.demos";
+export { dataTableDoc } from "./data-table.docs";
