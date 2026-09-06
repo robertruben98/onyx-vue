@@ -1,6 +1,6 @@
-### Task 8: Unique ids in five shipped components, and a guard so it stops happening
+### Task 8: Unique ids in nine shipped components, and a guard so it stops happening
 
-Five components already in the library generate DOM ids from a counter declared inside `<script setup>`. Vue compiles that body into `setup()`, so the counter is **per instance**, not per module, and it resets to zero for every component created. Two of the same component on one page therefore render the same `id`.
+Nine components already in the library generate DOM ids from a counter declared inside `<script setup>`. Vue compiles that body into `setup()`, so the counter is **per instance**, not per module, and it resets to zero for every component created. Two of the same component on one page therefore render the same `id`.
 
 This is not theoretical and it is not new code:
 
@@ -14,13 +14,28 @@ Measured with a throwaway probe on this branch. `UiCheckbox` is correct because 
 What it breaks: `<label for>` resolves to the first matching id, so clicking the second field's label focuses the first field. `aria-labelledby` and `aria-describedby` resolve the same way. For `UiInput` and `UiSelect`, "two on one page" is not an edge case — it is a form.
 
 **Files:**
-- Modify: `src/components/select/Select.vue` — `let nextSelectId = 0` at `:11`, consumed at `:40`, feeding `listboxId` (`:41`) and per-option ids (`:61`)
-- Modify: `src/components/input/Input.vue` — `let nextId = 0` at `:15`, consumed at `:51`
-- Modify: `src/components/textarea/Textarea.vue` — `let nextId = 0` at `:5`, consumed at `:38`
-- Modify: `src/components/radio-group/RadioGroup.vue` — `let nextId = 0` at `:11`
-- Modify: `src/components/dialog/Dialog.vue` — `let nextId = 0` at `:7`, consumed at `:45`
-- Modify: each of those five components' `*.test.ts` — one two-instance case each
+
+Nine components to fix. The line numbers are where the counter is declared:
+
+| Component | Declaration | Notes |
+|---|---|---|
+| `accordion/AccordionItem.vue` | `let nextItemId = 0` at `:6` | consumed at `:29` |
+| `dialog/Dialog.vue` | `let nextId = 0` at `:7` | consumed at `:45` |
+| `input/Input.vue` | `let nextId = 0` at `:15` | consumed at `:51` |
+| `menu/Menu.vue` | `let nextMenuId = 0` at `:14` | consumed at `:32` |
+| `radio-group/RadioGroup.vue` | `let nextId = 0` at `:11` | check what consumes it — see below |
+| `select/Select.vue` | `let nextSelectId = 0` at `:11` | consumed at `:40`, feeds `listboxId` (`:41`) **and** per-option ids (`:61`) |
+| `switch/Switch.vue` | `let nextId = 0` at `:5` | consumed at `:32` |
+| `textarea/Textarea.vue` | `let nextId = 0` at `:5` | consumed at `:38` |
+| `tooltip/Tooltip.vue` | `let nextTooltipId = 0` at `:7` | consumed at `:29` |
+
+- Modify: each of those nine components' `*.test.ts` — one two-instance case each
 - Create: `src/id-scope.test.ts` — the guard
+
+**Two components look like they belong on that list and do not:**
+
+- **`checkbox/Checkbox.vue`** declares `let nextCheckboxId = 0` in a **plain `<script lang="ts">` block** at `:80` and increments it inside `<script setup>` at `:60`. That is the correct pattern — module-scoped declaration, per-instance increment — and it is measurably fine (`ui-checkbox-0`, `ui-checkbox-1`). **Do not touch it.**
+- **`empty-state/EmptyState.vue`** already uses `useId()`. The string `let nextId = 0` appears in it only inside a **comment** explaining this very bug. Your guard must not flag it.
 
 **Interfaces:**
 - Consumes: `useId` from `vue` (3.5+; this repo is on `^3.5.13`), already used by `src/components/empty-state/EmptyState.vue`.
@@ -32,7 +47,17 @@ Fixing five files without a guard means the sixth person repeats it. Write the g
 
 - [ ] **Step 1: Write the failing guard**
 
-Create `src/id-scope.test.ts`:
+Create `src/id-scope.test.ts`. Two details in it are not incidental — I got both
+wrong on the first draft and measured my way out:
+
+**It strips comments before scanning.** `EmptyState.vue` quotes `let nextId = 0`
+inside a comment explaining this bug. A guard that reads raw text flags the one
+component that already fixed itself.
+
+**It checks the declaration only, never the increment.** `Checkbox.vue`
+increments its counter inside `<script setup>` and is correct, because the
+declaration lives in a plain `<script>` block. Where the counter is *declared* is
+the whole defect; where it is incremented says nothing.
 
 ```ts
 import { readdirSync, readFileSync } from "node:fs";
@@ -43,15 +68,23 @@ import { join } from "node:path";
 // on one page render the same DOM id. `<label for>` then points at the wrong
 // control, and aria-labelledby/aria-describedby resolve to the wrong element.
 //
-// This guard is static on purpose. Rendering every component twice would need
+// The check is static on purpose. Rendering every component twice would need
 // every component's required props; reading where the counter is declared needs
 // nothing and catches the mistake at the place it is made.
 const COMPONENTES = join(process.cwd(), "src", "components");
 
-/** The `<script setup>` block's body, or "" when the file has none. */
+/**
+ * The `<script setup>` body with comments removed.
+ *
+ * Comments matter: a component that documents this very bug quotes the broken
+ * line, and a guard that reads raw text would flag the fix as the defect.
+ */
 function cuerpoDeScriptSetup(sfc: string): string {
   const m = /<script setup[^>]*>([\s\S]*?)<\/script>/.exec(sfc);
-  return m ? m[1] : "";
+  if (!m) return "";
+  return m[1]
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
 }
 
 const sfcs = readdirSync(COMPONENTES, { withFileTypes: true })
@@ -64,21 +97,13 @@ const sfcs = readdirSync(COMPONENTES, { withFileTypes: true })
 
 describe("id generation is not scoped to setup()", () => {
   it("finds the component files", () => {
-    expect(sfcs.length).toBeGreaterThan(20);
+    // Guards the guard: a broken glob would make the check below vacuously pass.
+    expect(sfcs.length).toBeGreaterThan(30);
   });
 
   it("declares no id counter inside <script setup>", () => {
     const infractores = sfcs
       .filter(([, sfc]) => /\blet\s+next\w*[Ii]d\b/.test(cuerpoDeScriptSetup(sfc)))
-      .map(([nombre]) => nombre);
-    expect(infractores).toEqual([]);
-  });
-
-  it("calls no bare increment of such a counter inside <script setup>", () => {
-    // `const uid = nextId++` is the other half of the same mistake, and it can
-    // appear even when the declaration was moved out correctly.
-    const infractores = sfcs
-      .filter(([, sfc]) => /\bnext\w*[Ii]d\+\+/.test(cuerpoDeScriptSetup(sfc)))
       .map(([nombre]) => nombre);
     expect(infractores).toEqual([]);
   });
@@ -88,11 +113,25 @@ describe("id generation is not scoped to setup()", () => {
 - [ ] **Step 2: Run it and watch it fail with a named list**
 
 Run: `npx vitest run src/id-scope.test.ts`
-Expected: FAIL. The second case must name exactly five files — `select/Select.vue`, `input/Input.vue`, `textarea/Textarea.vue`, `radio-group/RadioGroup.vue`, `dialog/Dialog.vue`. `checkbox/Checkbox.vue` must **not** appear: its counter is in a plain `<script>` block and is legitimate.
 
-If the list differs from those five, stop and report it — the population changed and the fix list needs to change with it.
+Expected: the first case passes (34 `.vue` files exist today) and the second
+fails naming **exactly these nine**:
 
-- [ ] **Step 3: Fix the five with `useId()`**
+```
+accordion/AccordionItem.vue   input/Input.vue          select/Select.vue
+dialog/Dialog.vue             menu/Menu.vue            switch/Switch.vue
+radio-group/RadioGroup.vue    textarea/Textarea.vue    tooltip/Tooltip.vue
+```
+
+`checkbox/Checkbox.vue` and `empty-state/EmptyState.vue` must **not** appear. If
+either does, the comment-stripping or the declaration-only rule is not working
+and the guard is wrong — stop and report rather than "fixing" a healthy file.
+
+If the list differs from those nine in any other way, stop and report: the
+population changed since this brief was written and the fix list must change
+with it.
+
+- [ ] **Step 3: Fix the nine with `useId()`**
 
 For each file: delete the `let next…Id = 0` declaration, import `useId` from `vue` alongside the existing imports, and derive the ids from it. `EmptyState.vue:40-42` is the worked example already in the tree:
 
@@ -107,7 +146,9 @@ Keep each component's existing id **prefix** so the shape stays recognisable —
 
 `RadioGroup.vue` declares a counter at `:11` — check what actually consumes it before assuming. If nothing does, delete the declaration rather than converting it, and say so.
 
-**Do not touch `Checkbox.vue`.** It is correct. Its module-scoped counter is a second legitimate pattern; converting it would be changing working code for consistency alone, which is not what this task is for. Note it in your report as the odd one out.
+**Do not touch `Checkbox.vue` or `EmptyState.vue`.** Checkbox is correct — module-scoped declaration, per-instance increment — and converting it would be changing working code for consistency alone. EmptyState already uses `useId()`. Note both in your report as the two that look like candidates and are not.
+
+The commit will be large. If the hook that rejects commits over 1000 changed lines fires, split by component into two or three commits rather than bypassing it.
 
 - [ ] **Step 4: Run the guard and watch it pass**
 
@@ -116,7 +157,7 @@ Expected: PASS.
 
 - [ ] **Step 5: Prove the behaviour, not just the shape**
 
-The guard is static — it proves where the counter lives, not that ids differ. Add one case to each of the five components' existing test files rendering **two** instances under one tree and asserting the ids differ. `EmptyState.test.ts` already has this shape from task 3's fix round; follow it.
+The guard is static — it proves where the counter lives, not that ids differ. Add one case to each of the nine components' existing test files rendering **two** instances under one tree and asserting the ids differ. `EmptyState.test.ts` already has this shape from task 3's fix round; follow it.
 
 Two instances must share one app tree for `useId()` to distinguish them — mounting two separate roots resets the counter, which is documented Vue behaviour and not a bug. Use a wrapper component with `h()`, as `EmptyState.test.ts` does.
 
@@ -145,7 +186,9 @@ Baseline measured on this branch before this task: **5 test files, 26 tests gree
 
 ```bash
 cd /home/arobertdev/Workspaces/robertdev/onyx/onyx-vue
-git add src/components/select src/components/input src/components/textarea \
-        src/components/radio-group src/components/dialog src/id-scope.test.ts
-git commit -m "fix(a11y): ids unicos por instancia en los cinco componentes que colisionaban"
+git add src/components/accordion src/components/dialog src/components/input \
+        src/components/menu src/components/radio-group src/components/select \
+        src/components/switch src/components/textarea src/components/tooltip \
+        src/id-scope.test.ts
+git commit -m "fix(a11y): ids unicos por instancia en los nueve componentes que colisionaban"
 ```
