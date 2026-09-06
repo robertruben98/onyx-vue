@@ -1,0 +1,148 @@
+/*
+ * Preset "console".
+ *
+ * El look del svc-dashboard (dashboard.local.com) traido a onyx-vue como preset
+ * seleccionable, para que deje de ser CSS de una sola pagina. Una familia
+ * monoespaciada, filetes de un pixel, esquinas casi rectas, cero sombras, y el
+ * color reservado para el estado: verde/ambar/rojo/azul y nada mas. Densidad
+ * alta: la rejilla de servicios existe para leer veinte filas de un vistazo,
+ * no para respirar.
+ *
+ * Como los demas presets, es un re-mapeo de tokens y NO toco ningun componente.
+ *
+ * Uso: la clase va en la RAIZ (<html> o <body>), no en un contenedor interior.
+ * Dialog, Select, Tooltip, Popover y Menu hacen `<Teleport to="body">`: desde un
+ * div intermedio saldrian del ambito de la clase y se pintarian con el tema por
+ * defecto, blancos, en mitad de una pagina negra.
+ *
+ *   <html class="ui-theme-console">
+ *
+ * Es un tema oscuro completo y se basta solo: no hace falta acompanarlo de
+ * `.app-dark`, aunque combinarlos no rompe nada porque este gana por orden.
+ *
+ * Las dos familias son las del dashboard. Si no estan instaladas o no se cargan
+ * de Google Fonts, las dos cadenas caen en la monoespaciada del sistema y el
+ * conjunto se sostiene: lo que hace al tema no es la fuente, es la retícula.
+ */
+.ui-theme-console {
+  /* --- tipografia ------------------------------------------------------- */
+  /* Tokens nuevos, definidos aqui y no en la capa base a proposito: anadir una
+     regla `font-family` global habria cambiado el aspecto de los consumidores
+     que hoy heredan la fuente de su propia pagina. */
+  --ui-font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+  --ui-font-family-display: "Martian Mono", "IBM Plex Mono", ui-monospace,
+    monospace;
+
+  font-family: var(--ui-font-family);
+  /* Las ligaduras de una mono en una tabla de puertos y codigos HTTP juntan
+     glifos que hay que poder leer de uno en uno. */
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+
+  /* Densidad: 13px de cuerpo y controles de 30px, no de 40. */
+  --ui-font-size-sm: 11.5px;
+  --ui-font-size-md: 12.5px;
+  --ui-font-size-lg: 13px;
+  --ui-size-control-sm: 26px;
+  --ui-size-control-md: 30px;
+  --ui-size-control-lg: 36px;
+
+  /* --- geometria -------------------------------------------------------- */
+  /* Se remapea la ESCALA, no `--ui-radius`: la mayoria de componentes tira de
+     --ui-radii-* directamente (dialog de xl, card de xl, menu-panel de lg), asi
+     que tocar solo --ui-radius habria dejado media libreria redondeada. */
+  --ui-radii-sm: 2px;
+  --ui-radii-md: 3px;
+  --ui-radii-lg: 3px;
+  --ui-radii-xl: 4px;
+  /* --ui-radii-full se queda en 9999px: el punto de estado, el spinner y el
+     pulgar del switch son redondos por significado, no por decoracion. */
+  --ui-radius: var(--ui-radii-md);
+  /* El badge SI se cuadra. Tira de --ui-radii-full y salia en pildora, que es
+     el unico sitio donde el preset se despegaba del dashboard: alli `.badge`
+     mide 3px y comparte forma con los chips y los botones. Visto en pantalla,
+     no deducido. */
+  --ui-badge-radius: var(--ui-radii-md);
+
+  --ui-border-width: 1px;
+  --ui-border-width-thick: 2px;
+
+  /* --- sombras ---------------------------------------------------------- */
+  /* Ninguna. La profundidad la da el filete y el cambio de fondo; una sombra
+     sobre #0c0d10 no se ve y solo ensucia el borde. */
+  --ui-card-shadow: none;
+  --ui-dialog-shadow: none;
+  --ui-menu-shadow: none;
+  --ui-popover-shadow: none;
+  --ui-select-listbox-shadow: none;
+  --ui-tooltip-shadow: none;
+
+  /* --- primitivos del tema ---------------------------------------------- */
+  /* Los mismos valores que `:root` en el style.css del dashboard, con el nombre
+     que tenian alli entre parentesis. */
+  --ui-console-bg: #0c0d10;          /* --bg     fondo de pagina */
+  --ui-console-band: #141619;        /* --band   superficie que se levanta */
+  --ui-console-raise: #16181c;       /* --raise  fila con el cursor encima */
+  --ui-console-rule: #27292d;        /* --rule   filete */
+  --ui-console-rule-hi: #36383c;     /* --rule-hi filete fuerte */
+  --ui-console-txt: #eae7e3;         /* --txt    tinta calida; el blanco puro
+                                        cansa a esta densidad */
+  --ui-console-txt-dim: #9a9894;     /* --txt-dim */
+  --ui-console-txt-faint: #65635f;   /* --txt-faint */
+  --ui-console-ok: #62c37a;          /* --ok     2xx */
+  --ui-console-warn: #ecbd3a;        /* --warn   responde algo que no es 2xx */
+  --ui-console-down: #dc5e59;        /* --down   no responde */
+  --ui-console-accent: #79a1fc;      /* --accent */
+
+  /* --- semanticos ------------------------------------------------------- */
+  /* Los 21 que remapea dark.css: ese es el contrato de un preset completo. */
+  --ui-color-primary: var(--ui-console-accent);
+  --ui-color-primary-hover: #93b3fd;
+  --ui-color-primary-active: #a3bffd;
+  --ui-color-on-primary: var(--ui-console-bg);
+
+  --ui-color-surface: var(--ui-console-band);
+  --ui-color-surface-hover: var(--ui-console-raise);
+  --ui-color-text: var(--ui-console-txt);
+  --ui-color-text-muted: var(--ui-console-txt-dim);
+  --ui-color-border: var(--ui-console-rule);
+
+  /* Los "surface" de estado son un velo del propio color, no una pastilla
+     clara: sobre un fondo casi negro, `--ui-green-50` seria un foco. */
+  --ui-color-success: var(--ui-console-ok);
+  --ui-color-success-surface: rgba(98, 195, 122, 0.12);
+  --ui-color-warning: var(--ui-console-warn);
+  --ui-color-warning-surface: rgba(236, 189, 58, 0.12);
+  --ui-color-danger: var(--ui-console-down);
+  --ui-color-danger-surface: rgba(220, 94, 89, 0.12);
+  --ui-color-info: var(--ui-console-accent);
+  --ui-color-info-surface: rgba(121, 161, 252, 0.14);
+  --ui-color-neutral: var(--ui-console-txt-dim);
+  --ui-color-neutral-surface: rgba(101, 99, 95, 0.12);
+
+  --ui-color-disabled-bg: var(--ui-console-raise);
+  --ui-color-disabled-text: var(--ui-console-txt-faint);
+
+  --ui-focus-ring: var(--ui-console-accent);
+
+  /* --- suelo ------------------------------------------------------------ */
+  /* Painted here so the preset is a whole look and not just component colours;
+     con la clase en <html> esto pinta la pagina. */
+  background-color: var(--ui-console-bg);
+  color: var(--ui-color-text);
+}
+
+/* La cabecera de la tabla y los titulos de seccion en versalitas espaciadas:
+   es la unica pieza que usa la segunda familia, y es lo que hace que la rejilla
+   se lea como un panel y no como una hoja de calculo. */
+.ui-theme-console .ui-data-table__header-cell,
+.ui-theme-console .ui-card__title,
+.ui-theme-console .ui-dialog__title {
+  font-family: var(--ui-font-family-display);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ui-console-txt-faint);
+}
