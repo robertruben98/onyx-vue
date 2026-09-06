@@ -126,33 +126,6 @@
 
   --ui-focus-ring: var(--ui-console-accent);
 
-  /* --- atomos de estado --------------------------------------------------- */
-  /* La consola apaga por contraste, no por opacidad: un token de "apagado"
-     resuelto contra el tema claro sale mas claro que el fondo negro, que es
-     exactamente lo contrario de apagado. */
-  --ui-status-dot-off: var(--ui-slate-600);
-  --ui-status-dot-unknown: var(--ui-slate-700);
-
-  /* `critical` es el unico relleno solido y aqui tiene que seguir siendolo:
-     sobre negro, una superficie tenue de peligro y una de aviso se parecen
-     demasiado para ordenar por gravedad de un vistazo. */
-  --ui-severity-badge-critical-bg: var(--ui-red-600);
-  --ui-severity-badge-critical-text: var(--ui-white);
-  --ui-severity-badge-high-bg: transparent;
-  --ui-severity-badge-high-text: var(--ui-red-400);
-  --ui-severity-badge-moderate-bg: transparent;
-  --ui-severity-badge-moderate-text: var(--ui-amber-400);
-  --ui-severity-badge-low-bg: transparent;
-  --ui-severity-badge-low-text: var(--ui-blue-400);
-  --ui-severity-badge-unknown-bg: transparent;
-  --ui-severity-badge-unknown-text: var(--ui-slate-400);
-
-  --ui-tri-state-count-quiet: var(--ui-slate-600);
-  --ui-relative-time-color: var(--ui-slate-400);
-
-  --ui-tag-muted-bg: transparent;
-  --ui-tag-muted-text: var(--ui-slate-500);
-
   /* --- suelo ------------------------------------------------------------ */
   /* Painted here so the preset is a whole look and not just component colours;
      con la clase en <html> esto pinta la pagina. */
