@@ -28,3 +28,4 @@ export * from "./components/tag";
 export * from "./components/textarea";
 export * from "./components/tooltip";
 export * from "./components/tri-state-count";
+export * from "./components/truncate";

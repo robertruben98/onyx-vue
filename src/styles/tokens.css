@@ -434,4 +434,5 @@
   --ui-relative-time-font-size: var(--ui-font-size-sm);
   --ui-relative-time-color: var(--ui-color-text-muted);
   --ui-relative-time-stale-color: var(--ui-color-warning);
+  --ui-truncate-lines: 1;
 }
