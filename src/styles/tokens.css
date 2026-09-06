@@ -393,6 +393,12 @@
   --ui-tag-warning-text: var(--ui-color-warning);
   --ui-tag-danger-bg: var(--ui-color-danger-surface);
   --ui-tag-danger-text: var(--ui-color-danger);
+  --ui-status-dot-size: 0.5rem;
+  --ui-status-dot-live: var(--ui-color-success);
+  --ui-status-dot-dead: var(--ui-color-danger);
+  --ui-status-dot-warn: var(--ui-color-warning);
+  --ui-status-dot-off: var(--ui-color-disabled-text);
+  --ui-status-dot-unknown: var(--ui-color-border);
   --ui-spinner-color: var(--ui-color-primary);
   --ui-spinner-track: var(--ui-color-border);
   --ui-avatar-bg: var(--ui-color-neutral-surface);

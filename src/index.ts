@@ -19,6 +19,7 @@ export * from "./components/progress-bar";
 export * from "./components/radio-group";
 export * from "./components/select";
 export * from "./components/spinner";
+export * from "./components/status-dot";
 export * from "./components/switch";
 export * from "./components/tabs";
 export * from "./components/tag";
