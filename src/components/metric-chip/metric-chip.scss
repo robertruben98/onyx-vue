@@ -1,0 +1,86 @@
+// Metric chip — one number, its caption, and the reason there is no number.
+// References ONLY semantic / component tokens.
+//
+// It lives in a top bar, so the caption is set small and quiet and the value
+// is the only thing sized to be read across the room. On a narrow viewport the
+// consumer can drop the caption; the value has to survive that.
+
+.ui-metric-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ui-metric-chip-gap);
+  flex: none;
+  padding: var(--ui-metric-chip-padding-y) var(--ui-metric-chip-padding-x);
+  border: var(--ui-border-width) solid var(--ui-metric-chip-border);
+  border-radius: var(--ui-metric-chip-radius);
+  background: transparent;
+  font-family: inherit;
+  white-space: nowrap;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-metric-chip--interactive {
+  cursor: pointer;
+}
+.ui-metric-chip--interactive:hover {
+  border-color: var(--ui-metric-chip-border-hover);
+  color: var(--ui-color-text);
+}
+.ui-metric-chip--interactive:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-metric-chip__label {
+  font-size: var(--ui-metric-chip-label-font-size);
+  letter-spacing: var(--ui-metric-chip-label-tracking);
+  text-transform: uppercase;
+  color: var(--ui-metric-chip-label-color);
+}
+
+// The value re-maps the count's own tokens rather than styling its classes:
+// same seam the theme presets use, so a rename inside TriStateCount cannot
+// silently un-style the chip.
+.ui-metric-chip__value {
+  --ui-tri-state-count-font-size: var(--ui-metric-chip-value-font-size);
+  --ui-tri-state-count-neutral: var(--ui-color-text);
+  font-size: var(--ui-metric-chip-value-font-size);
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-color-text);
+}
+
+.ui-metric-chip--ok {
+  border-color: var(--ui-metric-chip-border-ok);
+}
+.ui-metric-chip--ok .ui-metric-chip__value {
+  --ui-tri-state-count-neutral: var(--ui-color-success);
+  color: var(--ui-color-success);
+}
+.ui-metric-chip--warn {
+  border-color: var(--ui-color-warning);
+}
+.ui-metric-chip--warn .ui-metric-chip__value {
+  --ui-tri-state-count-neutral: var(--ui-color-warning);
+  color: var(--ui-color-warning);
+}
+.ui-metric-chip--danger {
+  border-color: var(--ui-color-danger);
+}
+.ui-metric-chip--danger .ui-metric-chip__value {
+  --ui-tri-state-count-neutral: var(--ui-color-danger);
+  color: var(--ui-color-danger);
+}
+.ui-metric-chip--info {
+  border-color: var(--ui-color-info);
+}
+.ui-metric-chip--info .ui-metric-chip__value {
+  --ui-tri-state-count-neutral: var(--ui-color-info);
+  color: var(--ui-color-info);
+}
+
+// Faded, not greyed: the number is still the last true one, so it keeps its
+// tone and only loses its confidence.
+.ui-metric-chip--stale .ui-metric-chip__value {
+  opacity: var(--ui-metric-chip-stale-opacity);
+}

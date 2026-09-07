@@ -138,7 +138,9 @@
    se lea como un panel y no como una hoja de calculo. */
 .ui-theme-console .ui-data-table__header-cell,
 .ui-theme-console .ui-card__title,
-.ui-theme-console .ui-dialog__title {
+.ui-theme-console .ui-dialog__title,
+.ui-theme-console .ui-metric-chip__label,
+.ui-theme-console .ui-nav-rail__group-label {
   font-family: var(--ui-font-family-display);
   font-size: 9.5px;
   font-weight: 600;

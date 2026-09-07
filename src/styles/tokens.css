@@ -485,4 +485,92 @@
   --ui-action-cluster-gap: var(--ui-space-1);
   --ui-action-cluster-quiet-opacity: 0.32;
   --ui-action-cluster-transition: 0.12s;
+  --ui-filter-chip-gap: var(--ui-space-2);
+  --ui-filter-chip-padding-x: var(--ui-space-3);
+  --ui-filter-chip-padding-y: var(--ui-space-1);
+  --ui-filter-chip-radius: var(--ui-radius);
+  --ui-filter-chip-font-size: var(--ui-font-size-sm);
+  --ui-filter-chip-text: var(--ui-color-text-muted);
+  --ui-filter-chip-text-hover: var(--ui-color-text);
+  --ui-filter-chip-pressed-bg: var(--ui-color-surface-hover);
+  --ui-filter-chip-pressed-text: var(--ui-color-text);
+  --ui-filter-chip-empty-opacity: 0.42;
+  --ui-block-meter-gap: var(--ui-space-2);
+  --ui-block-meter-font-size: var(--ui-font-size-sm);
+  /* The block glyphs carry side bearings meant for prose; at eight in a row
+     the gaps read as a bar broken into pieces. */
+  --ui-block-meter-tracking: -0.5px;
+  --ui-block-meter-filled: var(--ui-color-primary);
+  --ui-block-meter-empty: var(--ui-color-disabled-text);
+  --ui-block-meter-ratio-font-size: var(--ui-font-size-sm);
+  --ui-block-meter-ratio-color: var(--ui-color-text-muted);
+  --ui-metric-chip-gap: var(--ui-space-2);
+  --ui-metric-chip-padding-x: var(--ui-space-3);
+  --ui-metric-chip-padding-y: var(--ui-space-1);
+  --ui-metric-chip-radius: var(--ui-radius);
+  --ui-metric-chip-border: var(--ui-color-border);
+  --ui-metric-chip-border-hover: var(--ui-color-text-muted);
+  --ui-metric-chip-border-ok: var(--ui-color-success);
+  --ui-metric-chip-label-font-size: 0.6875rem;
+  --ui-metric-chip-label-tracking: 0.16em;
+  --ui-metric-chip-label-color: var(--ui-color-text-muted);
+  --ui-metric-chip-value-font-size: var(--ui-font-size-lg);
+  --ui-metric-chip-stale-opacity: 0.55;
+  --ui-heat-strip-gap: 2px;
+  --ui-heat-strip-cell-size: 0.6875rem;
+  --ui-heat-strip-cell-radius: var(--ui-radii-sm);
+  --ui-heat-strip-empty: var(--ui-color-border);
+  /* The ramp is mixed from the success token instead of four frozen rgba
+     values, so a preset that re-routes --ui-color-success gets the whole
+     scale with it. */
+  --ui-heat-strip-l1: color-mix(in srgb, var(--ui-color-success) 30%, transparent);
+  --ui-heat-strip-l2: color-mix(in srgb, var(--ui-color-success) 50%, transparent);
+  --ui-heat-strip-l3: color-mix(in srgb, var(--ui-color-success) 72%, transparent);
+  --ui-heat-strip-l4: var(--ui-color-success);
+  --ui-heat-strip-legend-font-size: 0.625rem;
+  --ui-spark-bars-gap: var(--ui-space-3);
+  --ui-spark-bars-bar-gap: var(--ui-space-1);
+  --ui-spark-bars-bar-width: 2.875rem;
+  --ui-spark-bars-height: 3.25rem;
+  /* Transparent on purpose: the track has to be the page it sits on. A track
+     one step off the background with a fill one step off the track turns
+     seven different values into seven identical blocks. */
+  --ui-spark-bars-track-bg: transparent;
+  --ui-spark-bars-track-border: var(--ui-color-border);
+  --ui-spark-bars-fill: var(--ui-color-text-muted);
+  --ui-spark-bars-value-font-size: var(--ui-font-size-sm);
+  --ui-spark-bars-label-font-size: 0.625rem;
+  --ui-spark-bars-zero-color: var(--ui-color-disabled-text);
+  --ui-check-row-gap: var(--ui-space-3);
+  --ui-check-row-height: 2.25rem;
+  --ui-check-row-padding-y: var(--ui-space-1);
+  --ui-check-row-dense-padding-y: 3px;
+  --ui-check-row-state-width: 1.375rem;
+  --ui-check-row-name-width: 10.75rem;
+  --ui-check-row-name-width-dense: 11.875rem;
+  --ui-check-row-border: var(--ui-color-border);
+  --ui-check-row-name-font-size: var(--ui-font-size-md);
+  --ui-check-row-detail-font-size: var(--ui-font-size-sm);
+  --ui-log-lines-max-height: 12.5rem;
+  --ui-log-lines-font-size: var(--ui-font-size-sm);
+  --ui-log-lines-line-height: 1.6;
+  --ui-log-lines-gap: var(--ui-space-3);
+  --ui-log-lines-action-width: 8.25rem;
+  --ui-bulk-bar-gap: var(--ui-space-2);
+  --ui-bulk-bar-padding-x: var(--ui-space-4);
+  --ui-bulk-bar-padding-y: var(--ui-space-2);
+  --ui-bulk-bar-font-size: var(--ui-font-size-md);
+  --ui-key-hints-font-size: var(--ui-font-size-sm);
+  --ui-key-hints-gap: var(--ui-space-5);
+  --ui-key-hints-pair-gap: var(--ui-space-1);
+  --ui-key-hints-keys-tracking: 0.04em;
+  --ui-key-hints-keys-color: var(--ui-color-text-muted);
+  --ui-nav-rail-padding-x: var(--ui-space-4);
+  --ui-nav-rail-group-padding-y: var(--ui-space-3);
+  --ui-nav-rail-group-font-size: 0.6875rem;
+  --ui-nav-rail-group-tracking: 0.14em;
+  --ui-nav-rail-item-height: 1.875rem;
+  --ui-nav-rail-item-font-size: var(--ui-font-size-md);
+  --ui-nav-rail-marks-gap: var(--ui-space-1);
+  --ui-nav-rail-marks-font-size: var(--ui-font-size-sm);
 }
