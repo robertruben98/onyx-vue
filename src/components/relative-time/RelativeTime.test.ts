@@ -110,3 +110,39 @@ describe("RelativeTime (Vue)", () => {
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
+
+describe("RelativeTime units (Vue)", () => {
+  const now = new Date("2026-09-07T20:00:00Z");
+  const spanish = { minute: "m", hour: "h", day: "d", month: "mes" };
+
+  it("takes the caller's suffixes", () => {
+    // Una consola en espanol que lee "16m", "3h", "5d" y de pronto "1mo" mezcla
+    // idiomas en la celda donde mas se ve.
+    expect(
+      formatRelative(new Date("2026-06-07T20:00:00Z"), now, spanish),
+    ).toBe("3mes");
+  });
+
+  it("keeps English by default", () => {
+    expect(formatRelative(new Date("2026-06-07T20:00:00Z"), now)).toBe("3mo");
+  });
+
+  it("renders the suffixes given to the component", () => {
+    render(RelativeTime, {
+      props: { date: "2026-06-07T20:00:00Z", now, units: spanish },
+    });
+    expect(screen.getByText("3mes")).toBeTruthy();
+  });
+
+  it("uses them on every rung", () => {
+    const rungs: [string, string][] = [
+      ["2026-09-07T19:44:00Z", "16m"],
+      ["2026-09-07T17:00:00Z", "3h"],
+      ["2026-09-02T20:00:00Z", "5d"],
+      ["2026-06-07T20:00:00Z", "3mes"],
+    ];
+    for (const [date, expected] of rungs) {
+      expect(formatRelative(new Date(date), now, spanish)).toBe(expected);
+    }
+  });
+});
