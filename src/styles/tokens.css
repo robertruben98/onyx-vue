@@ -485,6 +485,23 @@
   --ui-action-cluster-gap: var(--ui-space-1);
   --ui-action-cluster-quiet-opacity: 0.32;
   --ui-action-cluster-transition: 0.12s;
+  /* --- Capas de las superficies teletransportadas -----------------------
+     Dialog, Menu, Select, Popover y Tooltip se pintan en `body`, fuera del
+     arbol de la pagina, asi que su orden lo tiene que decir un z-index. Sus
+     hojas ya lo pedian -`z-index: var(--ui-dialog-z)`- pero ningun sitio
+     definia el token: la declaracion era invalida y el valor caia en `auto`,
+     de modo que cualquier cabecera pegajosa con `z-index: 20` se pintaba
+     ENCIMA de un modal. Visto en pantalla en /prs/, y latente en cualquier
+     consumidor con una barra superior.
+
+     El orden es el de apertura: un menu o un select se abren DENTRO de un
+     dialogo y tienen que quedar por encima de el, y el tooltip por encima de
+     todo porque puede salir de cualquiera de los anteriores. */
+  --ui-overlay-z: 1000;
+  --ui-dialog-z: 1100;
+  --ui-menu-z: 1200;
+  --ui-popover-z: 1200;
+  --ui-tooltip-z: 1300;
   /* La fila de detalle se levanta sobre la tabla: sin cambio de fondo, un
      cajon abierto y una fila mas se leen igual. */
   --ui-data-table-detail-bg: var(--ui-color-surface);
