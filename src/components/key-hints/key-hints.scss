@@ -1,0 +1,50 @@
+// Key hints — the shortcut legend of a keyboard-first page. References ONLY
+// semantic / component tokens.
+//
+// It is a definition list wearing a single line: the pairs are the content, and
+// laying them out with flex keeps that structure while still reading as a
+// footer strip.
+
+.ui-key-hints {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: var(--ui-key-hints-font-size);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-key-hints__list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ui-key-hints-gap);
+  margin: 0;
+}
+
+.ui-key-hints__hint {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-key-hints-pair-gap);
+}
+
+.ui-key-hints__keys {
+  margin: 0;
+}
+
+.ui-key-hints__keys kbd {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  letter-spacing: var(--ui-key-hints-keys-tracking);
+  color: var(--ui-key-hints-keys-color);
+}
+
+.ui-key-hints__action {
+  margin: 0;
+}
+
+.ui-key-hints__gap {
+  flex: 1 1 auto;
+}
