@@ -485,6 +485,9 @@
   --ui-action-cluster-gap: var(--ui-space-1);
   --ui-action-cluster-quiet-opacity: 0.32;
   --ui-action-cluster-transition: 0.12s;
+  /* La fila de detalle se levanta sobre la tabla: sin cambio de fondo, un
+     cajon abierto y una fila mas se leen igual. */
+  --ui-data-table-detail-bg: var(--ui-color-surface);
   --ui-filter-chip-gap: var(--ui-space-2);
   --ui-filter-chip-padding-x: var(--ui-space-3);
   --ui-filter-chip-padding-y: var(--ui-space-1);

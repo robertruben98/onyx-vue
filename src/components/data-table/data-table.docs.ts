@@ -106,6 +106,27 @@ export const dataTableDoc: ComponentDoc = {
       default: "—",
       description: "Per-column cell template, receiving `{ row }`.",
     },
+    {
+      name: "rowClass",
+      type: "(row: T) => string | string[] | undefined",
+      default: "undefined",
+      description:
+        "Extra classes for one row — a keyboard cursor, a row that is ready, one the user marked. Selection is already modelled; this is for everything else the consumer knows about a row and the table does not.",
+    },
+    {
+      name: "expanded",
+      type: "Set<RowKey>",
+      default: "new Set()",
+      description:
+        "Expanded row keys (v-model:expanded). Each opens a full-width detail row underneath, filled by #row-detail. Ignored in virtual mode, where every row has to be exactly rowHeight tall.",
+    },
+    {
+      name: "#row-detail",
+      type: "slot({ row })",
+      default: "—",
+      description:
+        "The drawer under an expanded row. The row itself carries no aria-expanded — that is only valid on a treegrid row — so put the disclosure on the control the user actually activates.",
+    },
   ],
   demos: [
     {
@@ -179,6 +200,35 @@ export const dataTableDoc: ComponentDoc = {
       code: `<UiDataTable caption="Team" :columns="columns" :rows="[]" empty-text="No members yet" />
 <UiDataTable caption="Team" :columns="columns" :rows="[]" loading />`,
       setup: () => ({ columns: PLAIN }),
+    },
+    {
+      title: "A drawer under its own row",
+      description:
+        "The adjacency is the point: a panel that opens somewhere else on the page makes the reader find their row again.",
+      code: `<UiDataTable
+  :columns="cols"
+  :rows="rows"
+  row-key="id"
+  mode="plain"
+  caption="Pull requests"
+  :expanded="open"
+  :row-class="(row) => (row.ready ? 'lista' : undefined)"
+>
+  <template #row-detail="{ row }">
+    <div style="padding: 12px 16px">workflow de {{ row.title }}</div>
+  </template>
+</UiDataTable>`,
+      setup: () => ({
+        cols: [
+          { id: "title", header: "titulo", field: "title" },
+          { id: "state", header: "merge", field: "state", width: "120px" },
+        ],
+        rows: [
+          { id: 1, title: "feat: contador de commits", state: "limpio", ready: true },
+          { id: 2, title: "fix: dedupe de worktrees", state: "bloqueado", ready: false },
+        ],
+        open: new Set([1]),
+      }),
     },
   ],
 };
