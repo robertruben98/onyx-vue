@@ -1,0 +1,50 @@
+// Check tree — a two-level list of what counts. References ONLY semantic /
+// component tokens.
+//
+// The note column is pushed to the end rather than trailing the label: the
+// counts are meant to be compared down the column, and a figure that starts
+// wherever its name happens to end cannot be.
+
+.ui-check-tree__group {
+  padding: var(--ui-check-tree-group-gap) 0;
+  border-bottom: var(--ui-border-width) solid var(--ui-check-tree-border);
+}
+
+.ui-check-tree__group:last-of-type {
+  border-bottom: 0;
+}
+
+.ui-check-tree__row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-check-tree-gap);
+  min-height: var(--ui-check-tree-row-height);
+  min-width: 0;
+}
+
+.ui-check-tree__items {
+  padding-left: var(--ui-check-tree-indent);
+}
+
+.ui-check-tree__gap {
+  flex: 1 1 auto;
+}
+
+.ui-check-tree__note {
+  flex: none;
+  font-size: var(--ui-check-tree-note-font-size);
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+// Un grupo apagado deja ver sus hojas, pero ninguna cuenta: se atenuan enteras
+// para que la marca que conserven no se lea como que siguen contando.
+.ui-check-tree__row--muted .ui-check-tree__note {
+  color: var(--ui-check-tree-muted-text);
+}
+
+.ui-check-tree__empty {
+  margin: 0;
+  font-size: var(--ui-check-tree-note-font-size);
+  color: var(--ui-color-text-muted);
+}

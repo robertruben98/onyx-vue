@@ -12,6 +12,7 @@ export * from "./components/bulk-bar";
 export * from "./components/button";
 export * from "./components/card";
 export * from "./components/check-row";
+export * from "./components/check-tree";
 export * from "./components/checkbox";
 export * from "./components/data-table";
 export * from "./components/dialog";

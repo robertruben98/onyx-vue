@@ -571,6 +571,13 @@
   --ui-check-row-border: var(--ui-color-border);
   --ui-check-row-name-font-size: var(--ui-font-size-md);
   --ui-check-row-detail-font-size: var(--ui-font-size-sm);
+  --ui-check-tree-gap: var(--ui-space-2);
+  --ui-check-tree-group-gap: var(--ui-space-2);
+  --ui-check-tree-indent: var(--ui-space-6);
+  --ui-check-tree-row-height: 1.5rem;
+  --ui-check-tree-border: var(--ui-color-border);
+  --ui-check-tree-note-font-size: var(--ui-font-size-sm);
+  --ui-check-tree-muted-text: var(--ui-color-disabled-text);
   --ui-log-lines-max-height: 12.5rem;
   --ui-log-lines-font-size: var(--ui-font-size-sm);
   --ui-log-lines-line-height: 1.6;
