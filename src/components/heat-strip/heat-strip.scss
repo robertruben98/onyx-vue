@@ -1,0 +1,40 @@
+// Heat strip — one cell per bucket, shaded by how busy the bucket was.
+// References ONLY semantic / component tokens.
+//
+// The steps are built with colour-mix over the success token instead of five
+// hard-coded rgba values: a preset that re-routes --ui-color-success gets the
+// whole ramp for free, which is the point of having a token layer at all.
+
+.ui-heat-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ui-heat-strip-gap);
+}
+
+.ui-heat-strip__cell {
+  width: var(--ui-heat-strip-cell-size);
+  height: var(--ui-heat-strip-cell-size);
+  border-radius: var(--ui-heat-strip-cell-radius);
+  background: var(--ui-heat-strip-empty);
+}
+
+.ui-heat-strip__cell--l1 {
+  background: var(--ui-heat-strip-l1);
+}
+.ui-heat-strip__cell--l2 {
+  background: var(--ui-heat-strip-l2);
+}
+.ui-heat-strip__cell--l3 {
+  background: var(--ui-heat-strip-l3);
+}
+.ui-heat-strip__cell--l4 {
+  background: var(--ui-heat-strip-l4);
+}
+
+.ui-heat-strip__legend {
+  margin-left: var(--ui-space-2);
+  font-size: var(--ui-heat-strip-legend-font-size);
+  letter-spacing: 0.08em;
+  color: var(--ui-color-text-muted);
+}

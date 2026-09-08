@@ -32,6 +32,13 @@ export const relativeTimeDoc: ComponentDoc = {
       description:
         "Compact age — 0m, 5m, 3h, 2d, 4mo. A future date clamps to 0m rather than going negative. Takes `now` as a parameter, same as the component, so it stays testable.",
     },
+    {
+      name: "units",
+      type: "RelativeUnits",
+      default: "{ minute: 'm', hour: 'h', day: 'd', month: 'mo' }",
+      description:
+        "Suffixes for the four rungs. The only words the component renders, and so the only part a page in another language has to change — a Spanish console reading 16m, 3h, 5d and then 1mo mixes languages in the cell where it shows most.",
+    },
   ],
   demos: [
     {
@@ -51,6 +58,11 @@ export const relativeTimeDoc: ComponentDoc = {
           hace40d: atras(40 * 86_400_000),
         };
       },
+    },
+    {
+      title: "In another language",
+      code: `<UiRelativeTime :date="hace" :units="{ minute: 'm', hour: 'h', day: 'd', month: 'mes' }" />`,
+      setup: () => ({ hace: new Date(Date.now() - 90 * 24 * 3600 * 1000) }),
     },
   ],
 };

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 // Se resuelve desde la raiz del proyecto, no desde `import.meta.url`: bajo
@@ -104,5 +104,46 @@ describe("console preset", () => {
     // Dialog, Select, Tooltip, Popover y Menu hacen Teleport to="body": desde un
     // contenedor interior saldrian del ambito y se pintarian con el tema claro.
     expect(console_).toMatch(/Teleport|RAIZ|root/i);
+  });
+});
+
+describe("capas de las superficies teletransportadas", () => {
+  // Dialog, Menu, Select, Popover y Tooltip se pintan en `body`. Sus hojas
+  // pedian un z-index por token y ningun sitio lo definia: la declaracion salia
+  // invalida, el valor caia en `auto`, y una cabecera pegajosa con `z-index: 20`
+  // se pintaba encima de un modal.
+  const capas = [
+    "--ui-overlay-z",
+    "--ui-dialog-z",
+    "--ui-menu-z",
+    "--ui-popover-z",
+    "--ui-tooltip-z",
+  ];
+
+  it.each(capas)("%s esta definido", (token) => {
+    expect(assigned(tokens).has(token)).toBe(true);
+  });
+
+  it("todos los z-index que piden los componentes existen como token", () => {
+    const dir = join(process.cwd(), "src", "components");
+    const usados = new Set<string>();
+    for (const componente of readdirSync(dir)) {
+      const hoja = join(dir, componente, `${componente}.scss`);
+      if (!existsSync(hoja)) continue;
+      const css = readFileSync(hoja, "utf8");
+      for (const m of css.matchAll(/z-index:[^;]*var\((--[\w-]+)/g)) {
+        usados.add(m[1]);
+      }
+    }
+    const sinDefinir = [...usados].filter((t) => !assigned(tokens).has(t));
+    expect(sinDefinir).toEqual([]);
+  });
+
+  it("un modal queda por debajo de lo que se abre desde dentro de el", () => {
+    // Un select o un menu abiertos DENTRO de un dialogo tienen que verse.
+    const valor = (t: string) => Number(valueOf(tokens, t));
+    expect(valor("--ui-dialog-z")).toBeGreaterThan(valor("--ui-overlay-z"));
+    expect(valor("--ui-menu-z")).toBeGreaterThan(valor("--ui-dialog-z"));
+    expect(valor("--ui-tooltip-z")).toBeGreaterThan(valor("--ui-menu-z"));
   });
 });

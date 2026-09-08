@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { inject, onBeforeUnmount, onMounted, ref } from "vue";
+import { inject, onBeforeUnmount, onMounted, ref, useId } from "vue";
 import { ACCORDION_HOST, type AccordionItemRef } from "./accordion-host";
 import "./accordion-item.scss";
-
-let nextItemId = 0;
 
 /**
  * A single collapsible section. Renders a header button (`aria-expanded` +
@@ -26,7 +24,7 @@ const expanded = ref(false);
 
 const selfRef: AccordionItemRef = { expanded };
 
-const uid = nextItemId++;
+const uid = useId();
 const headerId = `ui-accordion-header-${uid}`;
 const panelId = `ui-accordion-panel-${uid}`;
 

@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { h } from "vue";
 import Textarea from "./Textarea.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -78,5 +79,21 @@ describe("Textarea (Vue)", () => {
       props: { label: "Bio", invalid: true },
     });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+
+  it("gives independent ids to two instances so each label targets its own control", () => {
+    const { container } = render({
+      render() {
+        return h("div", [h(Textarea, { label: "First" }), h(Textarea, { label: "Second" })]);
+      },
+    });
+    const controls = [...container.querySelectorAll("textarea")];
+    const labels = [...container.querySelectorAll("label")];
+    expect(controls.length).toBe(2);
+    const ids = controls.map((c) => c.id);
+    expect(new Set(ids).size).toBe(2);
+    labels.forEach((label, i) => {
+      expect(label.getAttribute("for")).toBe(controls[i].id);
+    });
   });
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, ref, useId, watch } from "vue";
 import "./menu.scss";
 
 export interface MenuItem {
@@ -10,8 +10,6 @@ export interface MenuItem {
   /** Whether the item is disabled. */
   disabled?: boolean;
 }
-
-let nextMenuId = 0;
 
 // Sin asignar a una variable: en `<script setup>` las props llegan solas a la
 // plantilla, y este binding no lo leia nadie. Solo se notaba desde fuera, al
@@ -29,7 +27,8 @@ withDefaults(
 /** Emitted with the chosen item on activation. */
 const emit = defineEmits<{ itemSelect: [item: MenuItem] }>();
 
-const menuId = `ui-menu-${nextMenuId++}`;
+const uid = useId();
+const menuId = `ui-menu-${uid}`;
 const open = ref(false);
 
 const triggerEl = ref<HTMLButtonElement | null>(null);

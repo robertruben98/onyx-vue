@@ -1,0 +1,67 @@
+// Spark bars — a short labelled series, the context a single number does not
+// carry. References ONLY semantic / component tokens.
+//
+// The track is the PAGE ground with a rule around it, not a slightly lighter
+// grey: with a track one step off the background and a fill one step off the
+// track, seven bars of different values read as seven identical blocks. Seen
+// on screen, not deduced.
+
+.ui-spark-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ui-spark-bars-gap);
+}
+
+.ui-spark-bars__bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-spark-bars-bar-gap);
+  width: var(--ui-spark-bars-bar-width);
+  flex: none;
+}
+
+.ui-spark-bars__value {
+  font-size: var(--ui-spark-bars-value-font-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-spark-bars__track {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: var(--ui-spark-bars-height);
+  background: var(--ui-spark-bars-track-bg);
+  border: var(--ui-border-width) solid var(--ui-spark-bars-track-border);
+  border-radius: var(--ui-radii-sm);
+}
+
+.ui-spark-bars__fill {
+  width: 100%;
+  background: var(--ui-spark-bars-fill);
+  border-radius: var(--ui-radii-sm);
+}
+
+.ui-spark-bars__label {
+  font-size: var(--ui-spark-bars-label-font-size);
+  letter-spacing: 0.06em;
+  color: var(--ui-color-text-muted);
+}
+
+// The bar the reader is standing on is the only one in colour: everything
+// else is context.
+.ui-spark-bars__bar--current .ui-spark-bars__fill {
+  background: var(--ui-color-success);
+}
+.ui-spark-bars__bar--current .ui-spark-bars__value {
+  color: var(--ui-color-success);
+  font-weight: var(--ui-font-weight-medium);
+}
+.ui-spark-bars__bar--current .ui-spark-bars__label {
+  color: var(--ui-color-text);
+}
+
+.ui-spark-bars__bar--zero .ui-spark-bars__value {
+  color: var(--ui-spark-bars-zero-color);
+}

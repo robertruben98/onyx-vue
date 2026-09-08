@@ -634,3 +634,134 @@ describe("DataTable · modo plain", () => {
     expect(grid?.getAttribute("aria-rowcount")).toBe("20");
   });
 });
+
+describe("DataTable row detail (Vue)", () => {
+  const columns = [
+    { id: "name", header: "Name", field: "name" },
+    { id: "port", header: "Port", field: "port" },
+  ];
+  const rows = [
+    { id: "a", name: "payment", port: 8001 },
+    { id: "b", name: "oidc", port: 8002 },
+  ];
+
+  function renderTable(props: Record<string, unknown> = {}) {
+    return render(DataTable, {
+      props: { columns, rows, mode: "plain", caption: "Services", ...props },
+      slots: { "row-detail": ({ row }: { row: { name: string } }) => `drawer de ${row.name}` },
+    });
+  }
+
+  it("renders no detail row until a key is expanded", () => {
+    const { container } = renderTable();
+    expect(container.querySelector(".ui-dt__detail")).toBeNull();
+  });
+
+  it("opens the detail directly under its own row", () => {
+    // La adyacencia es el motivo de existir del cajon: un panel en otro sitio
+    // obliga a volver a buscar la fila.
+    const { container } = renderTable({ expanded: new Set(["a"]) });
+    const body = container.querySelector(".ui-dt__body");
+    const kids = [...(body?.children ?? [])];
+    const rowIndex = kids.findIndex((el) => el.classList.contains("ui-dt__tr"));
+    expect(kids[rowIndex + 1].classList.contains("ui-dt__detail")).toBe(true);
+  });
+
+  it("renders the slot content with its row", () => {
+    const { getByText } = renderTable({ expanded: new Set(["b"]) });
+    expect(getByText("drawer de oidc")).toBeTruthy();
+  });
+
+  it("opens only the rows that were asked for", () => {
+    const { container } = renderTable({ expanded: new Set(["a"]) });
+    expect(container.querySelectorAll(".ui-dt__detail").length).toBe(1);
+  });
+
+  it("spans the detail cell across every column", () => {
+    // Sin esto el cajon hereda la rejilla de la tabla y sale troceado en celdas.
+    const { container } = renderTable({ expanded: new Set(["a"]) });
+    expect(container.querySelector(".ui-dt__detail-cell")).toBeTruthy();
+    expect(
+      container.querySelector(".ui-dt__detail")?.getAttribute("role"),
+    ).toBe("row");
+  });
+
+  it("marks the open row so it can be styled with its drawer", () => {
+    const { container } = renderTable({ expanded: new Set(["a"]) });
+    const trs = container.querySelectorAll(".ui-dt__tr");
+    expect(trs[0].classList.contains("ui-dt__tr--expanded")).toBe(true);
+    expect(trs[1].classList.contains("ui-dt__tr--expanded")).toBe(false);
+  });
+
+  it("never puts aria-expanded on a grid row", () => {
+    // Solo vale en una fila de `treegrid`; axe lo rechaza en una de `grid`. El
+    // desplegado lo anuncia el control que el consumidor pone en la celda.
+    const { container } = renderTable({ expanded: new Set(["a"]) });
+    expect(
+      container.querySelector(".ui-dt__tr")?.hasAttribute("aria-expanded"),
+    ).toBe(false);
+  });
+
+  it("renders no detail row without the slot, whatever is expanded", () => {
+    const { container } = render(DataTable, {
+      props: {
+        columns,
+        rows,
+        mode: "plain",
+        caption: "Services",
+        expanded: new Set(["a"]),
+      },
+    });
+    expect(container.querySelector(".ui-dt__detail")).toBeNull();
+  });
+
+  it("ignores expansion in virtual mode, where a variable row height cannot work", () => {
+    const { container } = renderTable({ mode: "virtual", expanded: new Set(["a"]) });
+    expect(container.querySelector(".ui-dt__detail")).toBeNull();
+  });
+
+  it("has no axe violations with a row open", async () => {
+    const { container } = renderTable({ expanded: new Set(["a"]) });
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe("DataTable rowClass (Vue)", () => {
+  const columns = [{ id: "name", header: "Name", field: "name" }];
+  const rows = [
+    { id: "a", name: "payment" },
+    { id: "b", name: "oidc" },
+  ];
+
+  it("puts the consumer's classes on the row it names", () => {
+    const { container } = render(DataTable, {
+      props: {
+        columns,
+        rows,
+        mode: "plain",
+        caption: "Services",
+        rowClass: (row: { id: string }) => (row.id === "a" ? "lista" : undefined),
+      },
+    });
+    const trs = container.querySelectorAll(".ui-dt__tr");
+    expect(trs[0].classList.contains("lista")).toBe(true);
+    expect(trs[1].classList.contains("lista")).toBe(false);
+  });
+
+  it("keeps the selection class alongside the consumer's own", () => {
+    const { container } = render(DataTable, {
+      props: {
+        columns,
+        rows,
+        mode: "plain",
+        caption: "Services",
+        selectable: "multiple",
+        selected: new Set(["a"]),
+        rowClass: () => "cursor",
+      },
+    });
+    const tr = container.querySelector(".ui-dt__tr");
+    expect(tr?.classList.contains("ui-dt__tr--selected")).toBe(true);
+    expect(tr?.classList.contains("cursor")).toBe(true);
+  });
+});

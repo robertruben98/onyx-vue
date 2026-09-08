@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import "./radio-group.scss";
 
 export interface RadioOption {
@@ -7,8 +7,6 @@ export interface RadioOption {
   value: string;
   disabled?: boolean;
 }
-
-let nextId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -37,7 +35,8 @@ const value = defineModel<string>({ default: "" });
 /** Emitted on every selection change. */
 const emit = defineEmits<{ valueChange: [value: string] }>();
 
-const name = `ui-radio-${nextId++}`;
+const uid = useId();
+const name = `ui-radio-${uid}`;
 
 const rootClasses = computed(() => ({
   "ui-radio-group": true,

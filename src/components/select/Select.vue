@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
 import "./select.scss";
 
 export interface SelectOption {
@@ -7,8 +7,6 @@ export interface SelectOption {
   label: string;
   disabled?: boolean;
 }
-
-let nextSelectId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -37,7 +35,7 @@ const emit = defineEmits<{
   change: [value: string | null];
 }>();
 
-const uid = nextSelectId++;
+const uid = useId();
 const listboxId = `ui-select-listbox-${uid}`;
 
 const open = ref(false);

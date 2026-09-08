@@ -1,0 +1,48 @@
+// Block meter — progress drawn in text. References ONLY semantic / component
+// tokens.
+//
+// Negative tracking on purpose: the block glyphs are drawn with side bearings
+// meant for prose, and at eight in a row the gaps make the meter look broken
+// into pieces instead of reading as one bar.
+
+.ui-block-meter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ui-block-meter-gap);
+  font-size: var(--ui-block-meter-font-size);
+  line-height: 1;
+}
+
+.ui-block-meter__blocks {
+  letter-spacing: var(--ui-block-meter-tracking);
+  white-space: nowrap;
+}
+
+.ui-block-meter__filled {
+  color: var(--ui-block-meter-filled);
+}
+
+// The empty part is a track, not a value: it stays quiet whatever the tone.
+.ui-block-meter__empty {
+  color: var(--ui-block-meter-empty);
+}
+
+.ui-block-meter__ratio {
+  font-size: var(--ui-block-meter-ratio-font-size);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: normal;
+  color: var(--ui-block-meter-ratio-color);
+}
+
+.ui-block-meter--ok .ui-block-meter__filled {
+  color: var(--ui-color-success);
+}
+.ui-block-meter--warn .ui-block-meter__filled {
+  color: var(--ui-color-warning);
+}
+.ui-block-meter--danger .ui-block-meter__filled {
+  color: var(--ui-color-danger);
+}
+.ui-block-meter--info .ui-block-meter__filled {
+  color: var(--ui-color-info);
+}
