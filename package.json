@@ -28,7 +28,7 @@
     "@testing-library/user-event": "^14.6.7",
     "@testing-library/vue": "^8.1.0",
     "@types/jest-axe": "^3.5.9",
-    "@types/node": "^26.2.0",
+    "@types/node": "^26.4.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "jest-axe": "^11.0.0",
     "jsdom": "^30.0.1",
