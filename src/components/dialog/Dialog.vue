@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, ref, useId, watch } from "vue";
 import "./dialog.scss";
 
 export type DialogSize = "sm" | "md" | "lg";
-
-let nextId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -42,7 +40,8 @@ const emit = defineEmits<{
 }>();
 
 /** Stable id wiring the title to `aria-labelledby`. */
-const headingId = `ui-dialog-title-${nextId++}`;
+const uid = useId();
+const headingId = `ui-dialog-title-${uid}`;
 
 const panel = ref<HTMLElement | null>(null);
 // Element to restore focus to when the dialog closes.

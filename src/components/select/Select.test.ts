@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { h } from "vue";
 import Select, { type SelectOption } from "./Select.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -106,5 +107,27 @@ describe("Select (Vue)", () => {
     await fireEvent.click(screen.getByRole("combobox"));
     await screen.findByRole("listbox");
     expect(await axe(document.body, axeOptions)).toHaveNoViolations();
+  });
+
+  it("gives independent listbox ids to two selects open together", async () => {
+    render({
+      render() {
+        return h("div", [
+          h(Select, { options: OPTIONS }),
+          h(Select, { options: [{ value: "x", label: "Other" }] }),
+        ]);
+      },
+    });
+    const triggers = screen.getAllByRole("combobox");
+    await fireEvent.click(triggers[0]);
+    await fireEvent.click(triggers[1]);
+
+    const controlsA = triggers[0].getAttribute("aria-controls");
+    const controlsB = triggers[1].getAttribute("aria-controls");
+    expect(controlsA).toBeTruthy();
+    expect(controlsB).toBeTruthy();
+    expect(controlsA).not.toBe(controlsB);
+    expect(document.getElementById(controlsA!)?.textContent).toContain("Angular");
+    expect(document.getElementById(controlsB!)?.textContent).toContain("Other");
   });
 });

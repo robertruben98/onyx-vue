@@ -1,0 +1,36 @@
+// Bulk bar — what is selected, and what can be done to it. References ONLY
+// semantic / component tokens.
+//
+// It sits on the primary surface while it is offering actions and on the
+// warning surface while it is asking: the phase change has to be visible
+// without reading, because the second phase is the one that acts on N rows at
+// once.
+
+.ui-bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-bulk-bar-gap);
+  padding: var(--ui-bulk-bar-padding-y) var(--ui-bulk-bar-padding-x);
+  background: var(--ui-color-info-surface);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+  font-size: var(--ui-bulk-bar-font-size);
+  color: var(--ui-color-info);
+}
+
+.ui-bulk-bar__count {
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-bulk-bar__gap {
+  flex: 1 1 auto;
+}
+
+.ui-bulk-bar--asking {
+  background: var(--ui-color-warning-surface);
+  color: var(--ui-color-warning);
+}
+
+.ui-bulk-bar__question {
+  color: var(--ui-color-text);
+}

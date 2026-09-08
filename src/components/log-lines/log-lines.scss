@@ -1,0 +1,56 @@
+// Log lines — what was tried, and what came back. References ONLY semantic /
+// component tokens.
+//
+// Three fixed-start columns instead of a flowing paragraph: the value of a log
+// is that you can run your eye down one column, and a line that wraps its
+// action under its own timestamp takes that away.
+
+.ui-log-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: var(--ui-log-lines-max-height);
+  overflow: auto;
+  font-size: var(--ui-log-lines-font-size);
+  line-height: var(--ui-log-lines-line-height);
+}
+
+.ui-log-lines__line {
+  display: flex;
+  gap: var(--ui-log-lines-gap);
+}
+
+.ui-log-lines__time {
+  flex: none;
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-log-lines__action {
+  flex: none;
+  min-width: var(--ui-log-lines-action-width);
+  color: var(--ui-color-primary);
+}
+
+.ui-log-lines__result {
+  min-width: 0;
+  color: var(--ui-color-text);
+}
+
+.ui-log-lines__result--ok {
+  color: var(--ui-color-success);
+}
+.ui-log-lines__result--error {
+  color: var(--ui-color-danger);
+}
+// Still waiting is not a result: it stays quiet so the settled lines are the
+// ones that catch the eye.
+.ui-log-lines__result--pending {
+  color: var(--ui-color-text-muted);
+}
+
+.ui-log-lines__empty {
+  margin: 0;
+  font-size: var(--ui-log-lines-font-size);
+  color: var(--ui-color-text-muted);
+}

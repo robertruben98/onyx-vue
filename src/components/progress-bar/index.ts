@@ -1,2 +1,2 @@
 export { default as UiProgressBar } from "./ProgressBar.vue";
-export { progressBarDemos } from "./progress-bar.demos";
+export { progressBarDoc } from "./progress-bar.docs";

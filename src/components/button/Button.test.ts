@@ -32,6 +32,31 @@ describe("Button (Vue)", () => {
     expect(emitted().clicked).toBeFalsy();
   });
 
+  it.each([
+    ["primary", "ui-button--primary"],
+    ["secondary", "ui-button--secondary"],
+    ["danger", "ui-button--danger"],
+    ["text", "ui-button--text"],
+  ])("puts the %s variant class on the root", (variant, clase) => {
+    const { container } = render(Button, {
+      props: { variant: variant as "primary" },
+      slots: { default: "Go" },
+    });
+    expect(container.querySelector(`.${clase}`)).toBeTruthy();
+  });
+
+  // Una variante destructiva que sigue emitiendo `clicked` cuando esta
+  // deshabilitada es peor que no tenerla: el boton rojo es justo el que no
+  // debe dispararse por accidente.
+  it("does not emit clicked when the danger variant is disabled", async () => {
+    const { emitted } = render(Button, {
+      props: { variant: "danger", disabled: true },
+      slots: { default: "Parar" },
+    });
+    await fireEvent.click(screen.getByRole("button"));
+    expect(emitted().clicked).toBeFalsy();
+  });
+
   it("marks the button aria-busy when loading", () => {
     render(Button, { props: { loading: true }, slots: { default: "Go" } });
     expect(screen.getByRole("button").getAttribute("aria-busy")).toBe("true");

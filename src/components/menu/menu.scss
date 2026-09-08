@@ -29,10 +29,14 @@
 
 .ui-menu__backdrop {
   position: fixed;
+  z-index: var(--ui-menu-z);
   inset: 0;
 }
 
 .ui-menu__panel {
+  /* Un escalon por encima de su propio fondo: los dos son hermanos dentro del
+     Teleport, y sin esto el panel solo queda arriba por orden de aparicion. */
+  z-index: calc(var(--ui-menu-z) + 1);
   display: flex;
   flex-direction: column;
   min-inline-size: var(--ui-menu-min-width);

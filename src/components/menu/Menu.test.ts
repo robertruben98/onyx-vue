@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { h } from "vue";
 import Menu, { type MenuItem } from "./Menu.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -81,5 +82,26 @@ describe("Menu (Vue)", () => {
     await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
     await screen.findByRole("menu");
     expect(await axe(document.body, axeOptions)).toHaveNoViolations();
+  });
+
+  it("gives independent panel ids to two menus open together", async () => {
+    render({
+      render() {
+        return h("div", [
+          h(Menu, { items: [{ id: "a1", label: "Alpha" }] }, { default: () => "Menu A" }),
+          h(Menu, { items: [{ id: "b1", label: "Beta" }] }, { default: () => "Menu B" }),
+        ]);
+      },
+    });
+    await fireEvent.click(screen.getByRole("button", { name: "Menu A" }));
+    await fireEvent.click(screen.getByRole("button", { name: "Menu B" }));
+
+    const controlsA = screen.getByRole("button", { name: "Menu A" }).getAttribute("aria-controls");
+    const controlsB = screen.getByRole("button", { name: "Menu B" }).getAttribute("aria-controls");
+    expect(controlsA).toBeTruthy();
+    expect(controlsB).toBeTruthy();
+    expect(controlsA).not.toBe(controlsB);
+    expect(document.getElementById(controlsA!)?.textContent).toContain("Alpha");
+    expect(document.getElementById(controlsB!)?.textContent).toContain("Beta");
   });
 });

@@ -1,3 +1,4 @@
+import { defineComponent, h, ref } from "vue";
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import Input from "./Input.vue";
@@ -81,4 +82,60 @@ describe("Input (Vue)", () => {
     });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
+
+  // Un `ref` sobre <UiInput> apunta a la INSTANCIA del componente, no a un
+  // elemento: el intento natural de enfocar (`ref.querySelector("input")`)
+  // lanza "querySelector is not a function" y el foco se queda en el body.
+  it("focuses the native input through the exposed focus()", async () => {
+    let enfocar: (() => void) | null = null;
+    const Host = defineComponent({
+      components: { Input },
+      setup() {
+        const caja = ref<{ focus: () => void } | null>(null);
+        enfocar = () => caja.value?.focus();
+        return { caja };
+      },
+      template: '<Input ref="caja" aria-label="Filtrar" />',
+    });
+    render(Host);
+    const nativo = screen.getByRole("textbox");
+    expect(document.activeElement).not.toBe(nativo);
+    enfocar!();
+    expect(document.activeElement).toBe(nativo);
+  });
+
+  it("selects the current value through the exposed select()", async () => {
+    let seleccionar: (() => void) | null = null;
+    const Host = defineComponent({
+      components: { Input },
+      setup() {
+        const caja = ref<{ select: () => void } | null>(null);
+        seleccionar = () => caja.value?.select();
+        return { caja };
+      },
+      template: '<Input ref="caja" aria-label="Filtrar" model-value="hola" />',
+    });
+    render(Host);
+    const nativo = screen.getByRole("textbox") as HTMLInputElement;
+    seleccionar!();
+    expect(nativo.selectionStart).toBe(0);
+    expect(nativo.selectionEnd).toBe("hola".length);
+  });
+
+  it("gives independent ids to two instances so each label targets its own input", () => {
+    const { container } = render({
+      render() {
+        return h("div", [h(Input, { label: "First" }), h(Input, { label: "Second" })]);
+      },
+    });
+    const inputs = [...container.querySelectorAll("input")];
+    const labels = [...container.querySelectorAll("label")];
+    expect(inputs.length).toBe(2);
+    const ids = inputs.map((i) => i.id);
+    expect(new Set(ids).size).toBe(2);
+    labels.forEach((label, i) => {
+      expect(label.getAttribute("for")).toBe(inputs[i].id);
+    });
+  });
+
 });

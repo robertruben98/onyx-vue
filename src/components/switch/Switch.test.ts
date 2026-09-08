@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
+import { h } from "vue";
 import Switch from "./Switch.vue";
 
 describe("Switch (Vue)", () => {
@@ -76,5 +77,21 @@ describe("Switch (Vue)", () => {
       props: { label: "A", disabled: true },
     });
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("gives independent ids to two instances so each label targets its own switch", () => {
+    const { container } = render({
+      render() {
+        return h("div", [h(Switch, { label: "First" }), h(Switch, { label: "Second" })]);
+      },
+    });
+    const inputs = [...container.querySelectorAll('input[type="checkbox"]')] as HTMLInputElement[];
+    const labels = [...container.querySelectorAll("label")];
+    expect(inputs.length).toBe(2);
+    const ids = inputs.map((i) => i.id);
+    expect(new Set(ids).size).toBe(2);
+    labels.forEach((label, i) => {
+      expect(label.getAttribute("for")).toBe(inputs[i].id);
+    });
   });
 });

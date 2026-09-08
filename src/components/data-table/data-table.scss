@@ -69,6 +69,26 @@
   border-bottom: none;
 }
 
+// --- Row detail -------------------------------------------------------------
+// The row above an open detail keeps its rule: it is what ties the drawer to
+// the row it belongs to.
+.ui-dt__detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-bottom: var(--ui-data-table-border-width) solid
+    var(--ui-data-table-row-border);
+  background-color: var(--ui-data-table-detail-bg);
+}
+
+.ui-dt__detail:last-child {
+  border-bottom: none;
+}
+
+.ui-dt__detail-cell {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
 .ui-dt__tr:hover {
   background-color: var(--ui-data-table-row-hover-bg);
 }
