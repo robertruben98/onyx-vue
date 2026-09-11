@@ -1,0 +1,46 @@
+// Readout — one large instrument figure. Semantic tokens only.
+//
+// `--ui-matrix-glow` is referenced with a fallback of `none`: under the matrix
+// preset the figure carries phosphor bloom, and under every other preset it is
+// simply a large number. A component that hard-coded the glow would look broken
+// on a light theme.
+
+.ui-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ui-readout__label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-readout__value {
+  font-family: var(--ui-font-family-display, var(--ui-font-family, inherit));
+  font-size: var(--ui-readout-size, 21px);
+  font-weight: 400;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-color-text);
+  text-shadow: var(--ui-matrix-glow, none);
+  overflow-wrap: anywhere;
+}
+
+.ui-readout__unit {
+  font-size: 0.55em;
+  margin-left: 0.25em;
+  color: var(--ui-color-text-muted);
+  text-shadow: none;
+}
+
+.ui-readout--success .ui-readout__value { color: var(--ui-color-success); }
+.ui-readout--warning .ui-readout__value { color: var(--ui-color-warning); }
+.ui-readout--danger  .ui-readout__value { color: var(--ui-color-danger); }
+.ui-readout--muted   .ui-readout__value {
+  color: var(--ui-color-text-muted);
+  text-shadow: none;
+}
