@@ -32,6 +32,13 @@ export const NAV: NavSection[] = [
     ],
   },
   {
+    // Una vista entera montada con la libreria. No es la documentacion de un
+    // componente: es la prueba de que los componentes componen, que es lo que
+    // una pagina por componente nunca llega a ensenar.
+    title: "Patterns",
+    items: [{ path: "/patterns/run-view", label: "Run view" }],
+  },
+  {
     title: "Components",
     items: COMPONENT_DOCS.map((d) => ({
       path: `/components/${d.id}`,

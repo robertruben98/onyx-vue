@@ -22,6 +22,11 @@ const guideRoutes: RouteRecordRaw[] = [
     name: "theming",
     component: () => import("../pages/ThemingPage.vue"),
   },
+  {
+    path: "/patterns/run-view",
+    name: "run-view",
+    component: () => import("../pages/RunViewPage.vue"),
+  },
 ];
 
 // Una ruta por componente documentado, todas a la MISMA pagina: la plantilla
