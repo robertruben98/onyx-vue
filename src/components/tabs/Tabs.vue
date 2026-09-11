@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { computed, provide, ref, useSlots, type VNode } from "vue";
+import { cloneVNode, computed, provide, ref, useSlots, type VNode } from "vue";
 import "./tabs.scss";
-import {
-  TABS_CONTEXT,
-  type TabHandle,
-  type TabRegistration,
-  type TabsContext,
-} from "./context";
+import { TABS_CONTEXT, type TabRegistration, type TabsContext } from "./context";
 import Tab from "./Tab.vue";
 
 withDefaults(
@@ -35,7 +30,7 @@ const slots = useSlots();
  * 7 failures.
  */
 const tabs = computed<TabRegistration[]>(() => {
-  const nodes = flattenTabs(slots.default?.() ?? []);
+  const nodes = tabNodes();
   return nodes.map((vnode, uid) => {
     const tabProps = (vnode.props ?? {}) as {
       label?: string;
@@ -53,22 +48,7 @@ const tabs = computed<TabRegistration[]>(() => {
   });
 });
 
-// Mount-order counter. `Tab` children run their setup in slot order, so this
-// index matches the slot-derived trigger index — keeping panel ids aligned
-// with the triggers' `aria-controls`.
-let mountIndex = 0;
-
 const context: TabsContext = {
-  register(): TabHandle {
-    const index = mountIndex++;
-    return {
-      index,
-      tabId: `ui-tab-${index}`,
-      panelId: `ui-tabpanel-${index}`,
-      isActive: () => index === selectedIndex.value,
-      unregister: () => {},
-    };
-  },
   isActive(index) {
     return index === selectedIndex.value;
   },
@@ -122,6 +102,32 @@ function nextEnabled(from: number, step: number): number | null {
   return null;
 }
 
+/**
+ * The panels, each one carrying ITS OWN position in the list.
+ *
+ * This is the whole point: triggers and panels are numbered from the same
+ * array, in the same pass, so there is no second numbering that can drift from
+ * the first. The child used to work out its own index with a counter that went
+ * up on mount, which matches the slot order only while the list is fixed. Add
+ * a tab to a list already on screen — a console that grows a tab per kind of
+ * result the run produces — and the newcomer mounts LAST while it is listed in
+ * the middle: from there on, every trigger after it opened the wrong panel,
+ * silently and with the right label on top.
+ *
+ * It is a function and not a `computed` on purpose: caching vnodes buys
+ * nothing here and a stale entry would be a panel showing the previous run.
+ */
+function panels(): VNode[] {
+  return tabNodes().map((vnode, index) =>
+    cloneVNode(vnode, { index, key: vnode.key ?? `ui-tabpanel-${index}` }),
+  );
+}
+
+/** The `Tab` children of the default slot, in slot order. */
+function tabNodes(): VNode[] {
+  return flattenTabs(slots.default?.() ?? []);
+}
+
 /** Collect the `Tab` vnodes from the slot, flattening fragments/arrays. */
 function flattenTabs(nodes: VNode[]): VNode[] {
   const out: VNode[] = [];
@@ -159,7 +165,7 @@ function flattenTabs(nodes: VNode[]): VNode[] {
       </button>
     </div>
     <div class="ui-tabs__panels">
-      <slot />
+      <component :is="panel" v-for="panel in panels()" :key="panel.key ?? 0" />
     </div>
   </div>
 </template>

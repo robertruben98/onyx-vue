@@ -4,7 +4,7 @@ export const tabsDoc: ComponentDoc = {
   id: "tabs",
   title: "Tabs",
   description:
-    "Tab list plus panels. The parent assigns the ids in mount order so every trigger's `aria-controls` lines up with its panel; arrow keys move between tabs and skip the disabled ones.",
+    "Tab list plus panels. Triggers and panels are numbered from the same list, by position, so a list that grows while it is on screen keeps every trigger's `aria-controls` on its own panel; arrow keys move between tabs and skip the disabled ones.",
   imports: ["UiTabs", "UiTab"],
   api: [
     {

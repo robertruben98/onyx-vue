@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
-import { defineComponent, h, nextTick } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 import Tabs from "./Tabs.vue";
 import Tab from "./Tab.vue";
 
@@ -135,6 +135,106 @@ describe("Tabs (Vue)", () => {
  * render de prueba, porque ahi todo mide cero. Lo que si se puede fijar es la
  * decision que evita el desbordamiento, y es la que se perdio una vez.
  */
+/**
+ * Una lista de pestanas que CRECE mientras se mira.
+ *
+ * `ORDEN` es fijo -- las pestanas no se mueven de sitio entre ejecuciones-, y
+ * cada una aparece cuando hay algo que ensenar en ella. Es la vista de consola
+ * de un banco de pruebas: «Completadas» no existe hasta que el run completa
+ * algo, y para entonces «Info» puede llevar rato en pantalla.
+ */
+const ORDEN = ["Fallos", "Completadas", "Info"];
+
+/** Las pestanas que hay ahora mismo. Fuera del componente para moverla desde el test. */
+const presentes = ref<string[]>([]);
+
+/** Llega una pestana nueva, en el sitio que le toca de ORDEN. */
+async function aparece(nombre: string) {
+  presentes.value = [...presentes.value, nombre];
+  await nextTick();
+}
+
+function renderCreciente() {
+  presentes.value = ["Fallos"];
+  const Harness = defineComponent({
+    components: { Tabs, Tab },
+    data() {
+      return { index: 0 };
+    },
+    render() {
+      return h(
+        Tabs,
+        {
+          ariaLabel: "Resultados",
+          selectedIndex: this.index,
+          "onUpdate:selectedIndex": (v: number) => {
+            this.index = v;
+          },
+        },
+        () =>
+          ORDEN.filter((n) => presentes.value.includes(n)).map((n) =>
+            h(Tab, { label: n, key: n }, () => `panel ${n}`),
+          ),
+      );
+    },
+  });
+  return render(Harness);
+}
+
+describe("Tabs (Vue) with a list that grows", () => {
+  it("opens the panel of the tab that was clicked, not the one that mounted in its place", async () => {
+    // El orden de APARICION es el reves del de la lista: "Info" llega antes que
+    // "Completadas", que va delante de ella. Con el indice contado al montar,
+    // "Completadas" se quedaba con el numero de "Info" y abria el panel de
+    // "Info" -- con su propia etiqueta encima, que es lo que lo hacia dificil
+    // de ver: el rotulo lo pinta quien lo sabe, el panel lo elegia otro.
+    renderCreciente();
+    await aparece("Info");
+    await aparece("Completadas");
+
+    expect(screen.getAllByRole("tab").map((t) => t.textContent?.trim())).toEqual(
+      ORDEN,
+    );
+
+    await fireEvent.click(screen.getByRole("tab", { name: "Completadas" }));
+    await nextTick();
+
+    // Un unico panel visible, y es el suyo.
+    expect(screen.getByRole("tabpanel").textContent).toBe("panel Completadas");
+  });
+
+  it("keeps aria-controls pointing at the panel that is shown", async () => {
+    // La otra mitad del mismo fallo, y la que ningun ojo ve: un lector de
+    // pantalla sigue `aria-controls` y llegaba a un panel escondido.
+    renderCreciente();
+    await aparece("Info");
+    await aparece("Completadas");
+
+    await fireEvent.click(screen.getByRole("tab", { name: "Info" }));
+    await nextTick();
+
+    const trigger = screen.getByRole("tab", { name: "Info" });
+    const panel = screen.getByRole("tabpanel");
+    expect(panel.id).toBe(trigger.getAttribute("aria-controls"));
+    expect(panel.textContent).toBe("panel Info");
+  });
+
+  it("survives a tab leaving and another arriving", async () => {
+    // Con un contador que solo sube, una pestana que se va y otra que llega
+    // dejaban el numero fuera del rango de la lista: ningun panel activo y el
+    // tablist entero en blanco por debajo.
+    renderCreciente();
+    await aparece("Info");
+    presentes.value = ["Fallos", "Completadas"];
+    await nextTick();
+
+    await fireEvent.click(screen.getByRole("tab", { name: "Completadas" }));
+    await nextTick();
+
+    expect(screen.getByRole("tabpanel").textContent).toBe("panel Completadas");
+  });
+});
+
 describe("tabs stylesheet", () => {
   // Desde la raiz del proyecto y no desde `import.meta.url`: bajo jsdom vitest
   // lo reescribe a una URL de navegador y el `.pathname` no existe en disco.
