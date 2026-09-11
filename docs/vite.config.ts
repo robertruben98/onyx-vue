@@ -16,6 +16,12 @@ export default defineConfig({
       // la galeria saldria vacia. Es la app de documentacion: el peso extra
       // del compilador no viaja a ningun consumidor de la libreria.
       vue: "vue/dist/vue.esm-bundler.js",
+      // ANTES que "@onyx/vue": los alias de cadena de Vite sustituyen por
+      // prefijo y se prueban en orden, asi que con el generico delante
+      // "@onyx/vue/styles/x.css" acabaria en ".../src/index.ts/styles/x.css".
+      "@onyx/vue/styles": fileURLToPath(
+        new URL("../src/styles", import.meta.url),
+      ),
       "@onyx/vue": fileURLToPath(new URL("../src/index.ts", import.meta.url)),
       "@lib": fileURLToPath(new URL("../src", import.meta.url)),
       "@": fileURLToPath(new URL("./src", import.meta.url)),

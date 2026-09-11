@@ -1,7 +1,7 @@
 {
   "name": "onyx-vue",
   "version": "0.0.0",
-  "description": "Vue 3 port of Onyx UI — accessible, token-themed components (styled mode).",
+  "description": "Vue 3 port of Onyx UI \u2014 accessible, token-themed components (styled mode).",
   "license": "MIT",
   "type": "module",
   "files": [
@@ -38,5 +38,9 @@
     "vitest": "^2.1.8",
     "vue": "^3.5.13",
     "vue-tsc": "^2.2.0"
-  }
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ]
 }
