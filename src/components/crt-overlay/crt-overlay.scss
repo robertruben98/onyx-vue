@@ -1,0 +1,41 @@
+// CRT overlay — scanlines and a vignette above the page.
+//
+// The scanlines multiply rather than paint: a translucent black stripe over a
+// near-black ground is invisible, but multiplying darkens what is already
+// there, so the lines only show where the page is bright. That is also why they
+// never wash out text — they modulate it instead of covering it.
+
+// Literal and not a token, for the same reason as the rain: 1 puts the glass
+// over ordinary page content and stays far below every teleported surface
+// (--ui-overlay-z is 1000), so a dialog is never seen through the scanlines.
+.ui-crt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ui-crt-overlay__scanlines,
+.ui-crt-overlay__vignette {
+  position: absolute;
+  inset: 0;
+}
+
+.ui-crt-overlay__scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, var(--ui-crt-overlay-scanline-alpha, 0.22)) 3px,
+    rgba(0, 0, 0, var(--ui-crt-overlay-scanline-alpha, 0.22)) 4px
+  );
+  mix-blend-mode: multiply;
+}
+
+.ui-crt-overlay__vignette {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 45%,
+    rgba(0, 0, 0, var(--ui-crt-overlay-vignette-alpha, 0.65)) 100%
+  );
+}

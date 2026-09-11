@@ -1,5 +1,12 @@
-// Token layer (theming) — imported once so consumers get the CSS variables.
-import "./styles/index.css";
+// La hoja NO se importa aqui, a proposito, y el README ya lo documenta asi
+// (`import "onyx-vue/style.css"`). Importarla desde el indice obligaba a que
+// cualquier `import { UiButton } from "@onyx/vue"` arrastrase los cuatro
+// presets, usara uno o ninguno.
+//
+//   import "@onyx/vue/styles/base.css";     // tokens
+//   import "@onyx/vue/styles/console.css";  // y el preset que uses
+//
+// O `styles/index.css` si los quieres todos.
 
 export * from "./docs-model";
 export * from "./components/accordion";
@@ -15,12 +22,15 @@ export * from "./components/check-row";
 export * from "./components/check-tree";
 export * from "./components/checkbox";
 export * from "./components/data-table";
+export * from "./components/crt-overlay";
 export * from "./components/dialog";
+export * from "./components/digital-rain";
 export * from "./components/divider";
 export * from "./components/empty-state";
 export * from "./components/filter-chip";
 export * from "./components/group-header";
 export * from "./components/heat-strip";
+export * from "./components/hud-frame";
 export * from "./components/input";
 export * from "./components/key-hints";
 export * from "./components/load-more-row";
@@ -31,12 +41,15 @@ export * from "./components/nav-rail";
 export * from "./components/popover";
 export * from "./components/progress-bar";
 export * from "./components/radio-group";
+export * from "./components/readout";
+export * from "./components/run-state";
 export * from "./components/relative-time";
 export * from "./components/section-header";
 export * from "./components/select";
 export * from "./components/severity-badge";
 export * from "./components/spark-bars";
 export * from "./components/spinner";
+export * from "./components/state-bar";
 export * from "./components/status-dot";
 export * from "./components/switch";
 export * from "./components/tabs";
