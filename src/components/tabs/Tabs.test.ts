@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import { defineComponent, h, nextTick } from "vue";
@@ -123,5 +125,47 @@ describe("Tabs (Vue)", () => {
   it("has no axe violations", async () => {
     const { container } = await renderTabs();
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+/**
+ * La hoja, leida como fuente.
+ *
+ * jsdom no calcula layout: no hay forma de preguntarle "¿se sale la tira?" a un
+ * render de prueba, porque ahi todo mide cero. Lo que si se puede fijar es la
+ * decision que evita el desbordamiento, y es la que se perdio una vez.
+ */
+describe("tabs stylesheet", () => {
+  // Desde la raiz del proyecto y no desde `import.meta.url`: bajo jsdom vitest
+  // lo reescribe a una URL de navegador y el `.pathname` no existe en disco.
+  const hoja = readFileSync(
+    join(process.cwd(), "src", "components", "tabs", "tabs.scss"),
+    "utf8",
+  );
+
+  // Los comentarios fuera ANTES de mirar: la cabecera de cada regla explica el
+  // fallo que evita, y escanear la prosa acusaria a la hoja de cometerlo.
+  const css = hoja.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+
+  /** El cuerpo de una regla, ya sin comentarios. */
+  function regla(selector: string): string {
+    const m = new RegExp(`\\${selector}\\s*\\{([^}]*)\\}`).exec(css);
+    expect(m, `no hay regla para ${selector}`).toBeTruthy();
+    return m![1];
+  }
+
+  it("wraps the strip instead of letting tabs spill out of it", () => {
+    // Un flex en fila sin esto NO recorta lo que no cabe: lo pinta fuera del
+    // contenedor, encima de lo que tenga al lado. Con siete pestanas en un
+    // panel estrecho, las dos ultimas acababan fuera de la ventana.
+    expect(regla(".ui-tabs__list")).toMatch(/flex-wrap:\s*wrap/);
+  });
+
+  it("keeps each label on one line rather than shrinking it", () => {
+    // Encoger es lo que hace un item de flex por defecto, y aqui es la peor de
+    // las dos salidas: parte la etiqueta en dos lineas y ni asi cabe la tira.
+    const tab = regla(".ui-tabs__tab");
+    expect(tab).toMatch(/flex:\s*0\s+0\s+auto/);
+    expect(tab).toMatch(/white-space:\s*nowrap/);
   });
 });

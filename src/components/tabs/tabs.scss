@@ -9,11 +9,22 @@
 
 .ui-tabs__list {
   display: flex;
+  // Una tira que no cabe REPARTE, no se sale. Sin esto los ultimos botones se
+  // pintan fuera del contenedor -- no recortados, sino por encima de lo que
+  // haya al lado-, y son justo los que nadie encuentra: la pestana que se sale
+  // por la derecha no existe para quien mira la pagina.
+  flex-wrap: wrap;
   gap: var(--ui-tabs-gap);
   border-bottom: var(--ui-tabs-border-width) solid var(--ui-tabs-border);
 }
 
 .ui-tabs__tab {
+  // Ni encoge ni parte la etiqueta: un boton es una etiqueta entera o no se
+  // lee. Con el encogido por defecto, "Sin concluir" caia en dos lineas para
+  // ganar unos pixeles que de todas formas no bastaban, asi que la tira seguia
+  // sobresaliendo Y ademas se leia peor. Reparte antes de encoger.
+  flex: 0 0 auto;
+  white-space: nowrap;
   padding: var(--ui-tabs-padding-y) var(--ui-tabs-padding-x);
   font-family: inherit;
   font-size: var(--ui-tabs-font-size);
