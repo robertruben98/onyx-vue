@@ -1,0 +1,100 @@
+// Run state — the seven-outcome scale of a run step. References ONLY semantic
+// tokens, so it reads correctly under every preset and not just under `matrix`.
+//
+// Weight is the whole design here. Seven chips at equal strength are a wall of
+// colour in which nothing is worse than anything else, which is exactly the
+// failure the scale exists to avoid. So:
+//
+// - `fallo` is the only solid fill. Something broke NOW; it should be the first
+//   thing the eye lands on in a list of thirty-five rows.
+// - `defecto` is the same red, outlined. Known and documented, still bad.
+// - `aviso` is amber, outlined.
+// - `arreglado` is the only one with a leading rule: it is good news that has
+//   to be *findable*, because "did any defect move?" is the question a deploy
+//   is really asking.
+// - `ok` is the quietest thing on the screen. Nineteen of them must not shout.
+// - `omitido` is dashed, not dimmed. A dimmed chip reads as "a faint pass";
+//   dashed reads as "incomplete", which is what it means.
+// - `info` is neutral and quiet.
+
+.ui-run-state {
+  --ui-run-state-padding-y: 2px;
+  --ui-run-state-padding-x: 6px;
+  --ui-run-state-font-size: var(--ui-font-size-sm, 11.5px);
+  --ui-run-state-border-width: var(--ui-border-width, 1px);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: var(--ui-run-state-padding-y) var(--ui-run-state-padding-x);
+  font-size: var(--ui-run-state-font-size);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-radius: var(--ui-badge-radius, var(--ui-radii-sm, 2px));
+  border: var(--ui-run-state-border-width) solid transparent;
+  background-color: var(--ui-color-neutral-surface);
+  color: var(--ui-color-neutral);
+}
+
+.ui-run-state__mark {
+  font-variant-ligatures: none;
+  opacity: 0.75;
+}
+
+// Something broke now: the only solid fill in the scale.
+.ui-run-state--fallo {
+  background-color: var(--ui-color-danger);
+  border-color: var(--ui-color-danger);
+  color: var(--ui-color-on-primary);
+  font-weight: 700;
+}
+
+// Known and documented, still carried by this deployment.
+.ui-run-state--defecto {
+  background-color: var(--ui-color-danger-surface);
+  border-color: var(--ui-color-danger);
+  color: var(--ui-color-danger);
+}
+
+.ui-run-state--aviso {
+  background-color: var(--ui-color-warning-surface);
+  border-color: var(--ui-color-warning);
+  color: var(--ui-color-warning);
+}
+
+// Good news that has to be findable — hence the leading rule, which no other
+// state has.
+.ui-run-state--arreglado {
+  background-color: var(--ui-color-success-surface);
+  border-color: transparent;
+  border-left-color: var(--ui-color-success);
+  border-left-width: var(--ui-border-width-thick, 2px);
+  color: var(--ui-color-success);
+}
+
+// The quietest thing on the screen: no fill, no border.
+.ui-run-state--ok {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--ui-color-success);
+  font-weight: 400;
+}
+
+// Dashed, not dimmed: "did not conclude", not "a faint pass".
+.ui-run-state--omitido {
+  background-color: transparent;
+  border-style: dashed;
+  border-color: var(--ui-color-neutral);
+  color: var(--ui-color-neutral);
+  font-weight: 400;
+}
+
+.ui-run-state--info {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--ui-color-info);
+  font-weight: 400;
+}
