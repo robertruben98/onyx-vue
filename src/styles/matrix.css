@@ -1,0 +1,177 @@
+/*
+ * Preset "matrix".
+ *
+ * Una pantalla de fosforo verde para las vistas de ejecucion: el banco de
+ * pruebas OIDC lanza un runner y hay que leer, mientras corre, si algo se ha
+ * roto. El tema esta al servicio de eso, no al reves. Lo que hace el look no es
+ * el verde: es que el color esta RESERVADO al estado y el resto de la pantalla
+ * es fosforo apagado, asi que un rojo se ve desde el otro lado de la mesa.
+ *
+ * Como los demas presets, es un re-mapeo de tokens y NO toca ningun componente.
+ *
+ * Uso: la clase va en la RAIZ (<html> o <body>), no en un contenedor interior.
+ * Dialog, Select, Tooltip, Popover y Menu hacen `<Teleport to="body">`: desde un
+ * div intermedio saldrian del ambito de la clase y se pintarian con el tema por
+ * defecto, blancos, en mitad de una pagina negra.
+ *
+ *   <html class="ui-theme-matrix">
+ *
+ * Es un tema oscuro completo y se basta solo: no hace falta `.app-dark`.
+ *
+ * La atmosfera (lluvia digital, scanlines) NO vive aqui a proposito. Va en los
+ * componentes `UiDigitalRain` y `UiCrtOverlay`, que se ponen donde se quieran.
+ * Metida en el preset, cualquier pagina que activara el tema se comeria un
+ * canvas animado detras, y hay vistas de este mismo tema que no lo quieren.
+ *
+ * Las escuadras de HUD tampoco estan aqui, y no por gusto: un preset re-mapea
+ * tokens y no pinta dentro de un componente. Dibujarlas sobre `.ui-card` desde
+ * esta hoja habria sido un parche con forma de tema, y el propio test de
+ * `console` lo prohibe. Viven en `UiHudFrame`, que es un componente y por tanto
+ * dueno de su propio borde.
+ *
+ * Las dos familias vienen de Google Fonts. Si no cargan, las dos cadenas caen
+ * en la monoespaciada del sistema y el conjunto aguanta: lo que sostiene al
+ * tema es el contraste del fosforo, no la fuente.
+ */
+.ui-theme-matrix {
+  /* --- tipografia ------------------------------------------------------- */
+  /* Tokens nuevos, definidos aqui y no en la capa base por el mismo motivo que
+     en `console`: una `font-family` global cambiaria el aspecto de los
+     consumidores que hoy heredan la fuente de su propia pagina. */
+  --ui-font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+  /* Share Tech Mono tiene un solo grosor y una caja muy estrecha: sirve para
+     rotulos y lecturas grandes, y es ilegible en un parrafo. Por eso es la
+     familia de display y nunca la del cuerpo. */
+  --ui-font-family-display: "Share Tech Mono", "JetBrains Mono", ui-monospace,
+    monospace;
+
+  font-family: var(--ui-font-family);
+  /* Una mono con ligaduras junta `!=` y `->` en un glifo. En un log de fallos
+     hay que poder leer los caracteres de uno en uno. */
+  font-variant-ligatures: none;
+  -webkit-font-smoothing: antialiased;
+
+  /* Densidad alta: la lista de pasos existe para leer treinta y cinco filas de
+     un vistazo, no para respirar. */
+  --ui-font-size-sm: 11.5px;
+  --ui-font-size-md: 12.5px;
+  --ui-font-size-lg: 13px;
+  --ui-size-control-sm: 26px;
+  --ui-size-control-md: 30px;
+  --ui-size-control-lg: 36px;
+
+  /* --- geometria -------------------------------------------------------- */
+  /* Se remapea la ESCALA y no solo `--ui-radius`: la mayoria de componentes
+     tira de --ui-radii-* directamente, asi que tocar uno solo habria dejado
+     media libreria redondeada. Aqui va mas cuadrado que en `console`: esto
+     imita un bufer de caracteres, y un buffer no tiene esquinas. */
+  --ui-radii-sm: 0px;
+  --ui-radii-md: 0px;
+  --ui-radii-lg: 1px;
+  --ui-radii-xl: 1px;
+  /* --ui-radii-full se queda en 9999px: el punto de estado, el spinner y el
+     pulgar del switch son redondos por significado, no por decoracion. */
+  --ui-radius: var(--ui-radii-md);
+  --ui-badge-radius: var(--ui-radii-md);
+
+  --ui-border-width: 1px;
+  --ui-border-width-thick: 2px;
+
+  /* --- sombras ---------------------------------------------------------- */
+  /* Ninguna. Sobre #040705 una sombra no existe; la profundidad la da el filete
+     y, donde hace falta jerarquia, el resplandor de fosforo (--ui-matrix-glow),
+     que es luz que sale y no sombra que cae. */
+  --ui-card-shadow: none;
+  --ui-dialog-shadow: none;
+  --ui-menu-shadow: none;
+  --ui-popover-shadow: none;
+  --ui-select-listbox-shadow: none;
+  --ui-tooltip-shadow: none;
+
+  /* --- primitivos del tema ---------------------------------------------- */
+  /* Seis verdes y no uno. Una pantalla de fosforo tiene rango: el destello de
+     la cabeza casi blanco, el cuerpo saturado, la cola casi negra. Con un solo
+     verde el conjunto se aplana y parece un `color: lime` sobre negro. */
+  --ui-matrix-void: #040705; /* suelo de pagina, negro con sesgo verde */
+  --ui-matrix-panel: #070d09; /* superficie que se levanta */
+  --ui-matrix-raise: #0a130d; /* fila con el cursor encima */
+  --ui-matrix-edge: #12301d; /* filete */
+  --ui-matrix-edge-hi: #1d5533; /* filete fuerte, esquinas de HUD */
+
+  --ui-matrix-flare: #f2fff7; /* lo mas claro que da el fosforo, para hover */
+  --ui-matrix-head: #d6ffe4; /* destello: cabeza de la lluvia, cifras grandes */
+  --ui-matrix-bright: #22ff6a; /* fosforo vivo */
+  --ui-matrix-green: #00c246; /* tinta de cuerpo */
+  --ui-matrix-mid: #0b8f39; /* texto secundario */
+  --ui-matrix-dim: #0a5c28; /* texto apagado */
+  --ui-matrix-deep: #07331a; /* fondo de canal, filete interior */
+
+  /* El ambar y el rojo son los otros dos fosforos que existieron de verdad en
+     un CRT, asi que no rompen el mundo. Se reservan para estado y no aparecen
+     en ningun sitio decorativo. */
+  --ui-matrix-amber: #ffb000;
+  --ui-matrix-alert: #ff4a4a;
+
+  /* Resplandor. Un token y no un valor suelto porque lo usan el preset, las
+     lecturas grandes y los componentes de atmosfera, y tienen que apagarse
+     todos a la vez si alguien lo baja. */
+  --ui-matrix-glow: 0 0 12px rgba(34, 255, 106, 0.45),
+    0 0 30px rgba(0, 194, 70, 0.18);
+
+  /* --- semanticos ------------------------------------------------------- */
+  /* Los 21 que remapea dark.css: ese es el contrato de un preset completo. */
+  --ui-color-primary: var(--ui-matrix-bright);
+  --ui-color-primary-hover: var(--ui-matrix-flare);
+  --ui-color-primary-active: var(--ui-matrix-head);
+  --ui-color-on-primary: var(--ui-matrix-void);
+
+  --ui-color-surface: var(--ui-matrix-panel);
+  --ui-color-surface-hover: var(--ui-matrix-raise);
+  --ui-color-text: var(--ui-matrix-green);
+  --ui-color-text-muted: var(--ui-matrix-mid);
+  --ui-color-border: var(--ui-matrix-edge);
+
+  /* Los "surface" de estado son un velo del propio color y no una pastilla
+     clara: sobre un fondo casi negro, un `--ui-green-50` seria un foco. */
+  --ui-color-success: var(--ui-matrix-bright);
+  --ui-color-success-surface: rgba(34, 255, 106, 0.12);
+  --ui-color-warning: var(--ui-matrix-amber);
+  --ui-color-warning-surface: rgba(255, 176, 0, 0.12);
+  --ui-color-danger: var(--ui-matrix-alert);
+  --ui-color-danger-surface: rgba(255, 74, 74, 0.13);
+  --ui-color-info: var(--ui-matrix-mid);
+  --ui-color-info-surface: rgba(11, 143, 57, 0.14);
+  --ui-color-neutral: var(--ui-matrix-dim);
+  --ui-color-neutral-surface: rgba(10, 92, 40, 0.12);
+
+  --ui-color-disabled-bg: var(--ui-matrix-raise);
+  --ui-color-disabled-text: var(--ui-matrix-deep);
+
+  --ui-focus-ring: var(--ui-matrix-bright);
+
+  /* --- suelo ------------------------------------------------------------ */
+  /* Con la clase en <html>, esto pinta la pagina. Sin esto el preset seria solo
+     color de componente y el fondo lo pondria el consumidor. */
+  background-color: var(--ui-matrix-void);
+  color: var(--ui-color-text);
+}
+
+/*
+ * Rotulos en versalitas espaciadas con la familia de display. Misma pieza que
+ * en `console` y por la misma razon: es lo que hace que un bloque se lea como
+ * un panel de instrumentos y no como una hoja de calculo.
+ */
+.ui-theme-matrix .ui-data-table__header-cell,
+.ui-theme-matrix .ui-card__title,
+.ui-theme-matrix .ui-dialog__title,
+.ui-theme-matrix .ui-metric-chip__label,
+.ui-theme-matrix .ui-section-header__title,
+.ui-theme-matrix .ui-nav-rail__group-label {
+  font-family: var(--ui-font-family-display);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ui-matrix-mid);
+}

@@ -33,6 +33,39 @@
   --docs-page-bg: var(--ui-console-bg);
 }
 
+/* Igual para `matrix`. El fondo sale de su propio primitivo y no de un gris
+   generico: el suelo del tema es negro con sesgo verde, y un #0c0d10 al lado
+   se nota. */
+.ui-theme-matrix {
+  --docs-font: var(--ui-font-family);
+  --docs-mono: var(--ui-font-family);
+  --docs-page-bg: var(--ui-matrix-void);
+}
+
+/* Los titulares toman la familia de display y el resplandor de fosforo. Es la
+   otra mitad del tema: con los titulos en la mono del cuerpo la pagina se lee
+   como "verde sobre negro", y lo que hace a una pantalla de fosforo es que lo
+   brillante emite. Va aqui, en el cromo de la doc, y no en el preset: el preset
+   ya expone --ui-font-family-display y --ui-matrix-glow, y decidir que un <h1>
+   de un consumidor brilla no le corresponde. */
+.ui-theme-matrix h1,
+.ui-theme-matrix h2,
+.ui-theme-matrix h3 {
+  font-family: var(--ui-font-family-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--ui-color-primary);
+  text-shadow: var(--ui-matrix-glow);
+}
+
+/* El cuerpo tiene demasiadas lineas para que el resplandor ayude: ahi solo
+   emborrona. Se queda en los titulos y en las cifras de UiReadout. */
+.ui-theme-matrix p,
+.ui-theme-matrix li,
+.ui-theme-matrix td {
+  text-shadow: none;
+}
+
 * {
   box-sizing: border-box;
 }

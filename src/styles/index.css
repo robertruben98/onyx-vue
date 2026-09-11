@@ -1,10 +1,17 @@
-/* Framework-agnostic Onyx token layer — reused verbatim from the Angular lib.
+/* El paquete completo: la capa de tokens MAS los cuatro presets.
+   Comodo para un sitio que los ofrece todos -la documentacion tiene un
+   selector-, pero si tu pagina usa un solo preset importa `base.css` y el suyo:
+   asi un preset nuevo no engorda a quien no lo usa.
+
+   Framework-agnostic Onyx token layer — reused verbatim from the Angular lib.
    Theming (light/dark, client presets) happens entirely here, never in a
    component. Toggle `.app-dark` on the root for dark mode; add `.ui-theme-acme`
-   for the acme preset, or `.ui-theme-console` for the mono console look.
+   for the acme preset, `.ui-theme-console` for the mono console look, or
+   `.ui-theme-matrix` for the phosphor-green run views.
    Presets that teleport (dialog, select, tooltip, popover, menu render into
    `body`) need the class on the ROOT element, not on an inner container. */
-@import "./tokens.css";
+@import "./base.css";
 @import "./dark.css";
 @import "./acme.css";
 @import "./console.css";
+@import "./matrix.css";

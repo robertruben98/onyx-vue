@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { UiCrtOverlay, UiDigitalRain } from "@onyx/vue";
 import { NAV } from "./nav";
 
 // Dark-mode toggle, persisted (the pre-paint script in index.html reads this).
@@ -25,6 +26,7 @@ const PRESETS = [
   { id: "default", label: "Default" },
   { id: "acme", label: "Acme" },
   { id: "console", label: "Console" },
+  { id: "matrix", label: "Matrix" },
 ] as const;
 
 const preset = ref(
@@ -32,6 +34,17 @@ const preset = ref(
     localStorage.getItem("onyx-preset")) ||
     "default",
 );
+
+/**
+ * La atmosfera del preset `matrix` para TODA la doc.
+ *
+ * No vive en el tema a proposito: un preset re-mapea tokens, y colgarle un
+ * canvas animado a cualquier pagina que lo active seria decidir por el
+ * consumidor. Aqui, en cambio, la doc SI quiere ensenar el tema entero — sin la
+ * lluvia y las scanlines el preset se lee como "verde sobre negro" y no como la
+ * pantalla que es.
+ */
+const atmosfera = computed(() => preset.value === "matrix");
 
 function applyPreset(id: string) {
   const root = document.documentElement;
@@ -47,6 +60,17 @@ function applyPreset(id: string) {
 </script>
 
 <template>
+  <!-- Opacidad mas baja que en una vista de ejecucion: estas paginas son texto
+       largo, y por encima de ~0.15 la lluvia empieza a competir con lo que hay
+       que leer.
+
+       Las scanlines, mas bajas todavia. Multiplican, asi que solo se ven sobre
+       lo claro — y en una galeria de componentes lo claro son los rellenos
+       solidos de los botones, que a 0.16 salian a rayas y parecian un fallo de
+       pintado en vez de un tubo. A 0.09 el tubo sigue ahi y el boton no. -->
+  <UiDigitalRain v-if="atmosfera" :opacity="0.13" />
+  <UiCrtOverlay v-if="atmosfera" :scanlines="0.09" :vignette="0.5" />
+
   <div class="docs">
     <aside class="docs__sidebar">
       <RouterLink class="docs__brand" to="/introduction">Onyx UI</RouterLink>
