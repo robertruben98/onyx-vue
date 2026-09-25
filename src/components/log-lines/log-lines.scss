@@ -32,8 +32,11 @@
   color: var(--ui-color-primary);
 }
 
+// A detail is often a URL or a path with no spaces to break at: without this
+// it widens the list past its container and the page gets a sideways scroll.
 .ui-log-lines__result {
   min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--ui-color-text);
 }
 
