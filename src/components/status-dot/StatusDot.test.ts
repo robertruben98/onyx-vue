@@ -13,6 +13,13 @@ describe("StatusDot (Vue)", () => {
     ).toBe(true);
   });
 
+  it("draws off as a ring only when asked, and only for off", async () => {
+    const { container, rerender } = render(StatusDot, { props: { state: "off", offStyle: "ring" } });
+    expect(container.querySelector(".ui-status-dot--ring")).toBeTruthy();
+    await rerender({ state: "live", offStyle: "ring" });
+    expect(container.querySelector(".ui-status-dot--ring")).toBeNull();
+  });
+
   it("applies the state class on the root", () => {
     const { container } = render(StatusDot, { props: { state: "live" } });
     expect(
