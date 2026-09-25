@@ -250,8 +250,10 @@ describe("tabs stylesheet", () => {
   /** El cuerpo de una regla, ya sin comentarios. */
   function regla(selector: string): string {
     const m = new RegExp(`\\${selector}\\s*\\{([^}]*)\\}`).exec(css);
-    expect(m, `no hay regla para ${selector}`).toBeTruthy();
-    return m![1];
+    // A throw rather than `expect(m, msg)`: the globals typing in this repo
+    // takes a single argument, and the two-argument call broke the typecheck.
+    if (!m) throw new Error(`no rule for ${selector}`);
+    return m[1];
   }
 
   it("wraps the strip instead of letting tabs spill out of it", () => {
