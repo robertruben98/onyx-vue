@@ -1,0 +1,67 @@
+// Brand mark — the rail's head. References ONLY semantic / component tokens.
+//
+// `font-family` comes from the display token with the body family as the
+// fallback, so the mark reads as a label under presets that define a display
+// face and as plain bold caps under those that do not.
+
+.ui-brand-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-brand-mark-gap);
+  min-height: var(--ui-brand-mark-height);
+  padding: 0 var(--ui-brand-mark-padding-x);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+  color: var(--ui-color-text);
+  text-decoration: none;
+  min-width: 0;
+}
+
+a.ui-brand-mark:hover .ui-brand-mark__name {
+  color: var(--ui-color-primary);
+}
+
+a.ui-brand-mark:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-brand-mark__tile {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-brand-mark-tile-size);
+  height: var(--ui-brand-mark-tile-size);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radii-sm);
+  font-family: var(--ui-font-family-display, inherit);
+  font-size: var(--ui-brand-mark-tile-font-size);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.04em;
+  color: var(--ui-color-primary);
+}
+
+.ui-brand-mark__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-brand-mark__name {
+  font-family: var(--ui-font-family-display, inherit);
+  font-size: var(--ui-brand-mark-font-size);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-brand-mark__sub {
+  font-size: var(--ui-brand-mark-sub-font-size);
+  color: var(--ui-color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
