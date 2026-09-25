@@ -623,4 +623,18 @@
   --ui-fieldset-legend-size: 0.625rem;
   --ui-fieldset-row-gap: 2px;
   --ui-fieldset-column-gap: var(--ui-space-3);
+  /* --- Overlays: drawer and toast ----------------------------------- */
+  /* A rule one step above --ui-color-border, for the edge of something that
+     sits over the page. Presets with their own strong rule re-map it. */
+  --ui-color-border-strong: var(--ui-color-text-muted);
+  --ui-drawer-width: 55rem;
+  --ui-drawer-padding-x: var(--ui-space-5);
+  --ui-drawer-bg: var(--ui-color-surface);
+  --ui-drawer-edge: var(--ui-color-border-strong);
+  --ui-drawer-backdrop: rgba(15, 23, 42, 0.45);
+  --ui-drawer-duration: 200ms;
+  --ui-drawer-title-size: var(--ui-font-size-md);
+  --ui-toast-offset: 1.625rem;
+  --ui-toast-bg: var(--ui-color-surface);
+  --ui-toast-border: var(--ui-color-border-strong);
 }

@@ -131,6 +131,10 @@
   --ui-color-text: var(--ui-matrix-green);
   --ui-color-text-muted: var(--ui-matrix-mid);
   --ui-color-border: var(--ui-matrix-edge);
+  /* El filete fuerte: borde de un cajon o de un aviso que flota sobre la
+     pagina. */
+  --ui-color-border-strong: var(--ui-matrix-edge-hi);
+  --ui-drawer-backdrop: rgba(4, 7, 5, 0.72);
 
   /* Los "surface" de estado son un velo del propio color y no una pastilla
      clara: sobre un fondo casi negro, un `--ui-green-50` seria un foco. */
