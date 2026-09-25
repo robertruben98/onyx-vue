@@ -1,6 +1,6 @@
 {
   "name": "onyx-vue",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Vue 3 port of Onyx UI \u2014 accessible, token-themed components (styled mode).",
   "license": "MIT",
   "type": "module",
