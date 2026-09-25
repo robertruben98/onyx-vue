@@ -16,6 +16,11 @@ const props = withDefaults(
     placeholder?: string;
     /** Accessible name for the combobox (falls back to the placeholder). */
     ariaLabel?: string;
+    /**
+     * Id of an element that names the combobox, e.g. the label of a
+     * `UiFieldRow`. Wins over `ariaLabel`: a visible label is the better name.
+     */
+    ariaLabelledby?: string;
     /** Disabled state. */
     disabled?: boolean;
   }>(),
@@ -23,6 +28,7 @@ const props = withDefaults(
     options: () => [],
     placeholder: "Select…",
     ariaLabel: "",
+    ariaLabelledby: "",
     disabled: false,
   },
 );
@@ -199,7 +205,8 @@ onBeforeUnmount(() => {
       aria-haspopup="listbox"
       :aria-expanded="open ? 'true' : 'false'"
       :aria-controls="open ? listboxId : undefined"
-      :aria-label="ariaLabel || placeholder"
+      :aria-labelledby="ariaLabelledby || undefined"
+      :aria-label="ariaLabelledby ? undefined : ariaLabel || placeholder"
       :disabled="isDisabled"
       @click="toggle"
       @keydown="onTriggerKeydown"

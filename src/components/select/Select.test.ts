@@ -16,6 +16,18 @@ function renderSelect(props: Record<string, unknown> = {}) {
 }
 
 describe("Select (Vue)", () => {
+  it("takes its name from a visible label when given its id", () => {
+    // Un UiFieldRow pinta la etiqueta al lado; nombrar el combobox con ella en
+    // vez de con un aria-label repetido es lo que hace que no se separen.
+    render({
+      components: { Select },
+      template: `<div><span id="lbl">refresco</span><Select :options="options" aria-labelledby="lbl" aria-label="otro" /></div>`,
+      data: () => ({ options: OPTIONS }),
+    });
+    const trigger = screen.getByRole("combobox", { name: "refresco" });
+    expect(trigger.getAttribute("aria-label")).toBeNull();
+  });
+
   it("shows the placeholder and a collapsed combobox", () => {
     renderSelect();
     const trigger = screen.getByRole("combobox");
