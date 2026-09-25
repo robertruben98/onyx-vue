@@ -1,0 +1,86 @@
+// App bar — the top of a console page. References ONLY semantic / component
+// tokens.
+
+.ui-app-bar {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-app-bar-gap);
+  min-height: var(--ui-app-bar-height);
+  padding: var(--ui-space-2) var(--ui-app-bar-padding-x);
+  background-color: var(--ui-app-bar-bg);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+  color: var(--ui-color-text);
+}
+
+.ui-app-bar--sticky {
+  position: sticky;
+  top: 0;
+  z-index: var(--ui-app-bar-z);
+}
+
+.ui-app-bar__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ui-app-bar__heading {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.ui-app-bar__eyebrow {
+  font-size: var(--ui-app-bar-eyebrow-size);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-app-bar__title {
+  margin: 0;
+  font-family: var(--ui-font-family-display, inherit);
+  font-size: var(--ui-app-bar-title-size);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+// The subtitle is what gives way first: a long repo name used to push the
+// title onto two lines and the actions off the bar.
+.ui-app-bar__subtitle {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-app-bar__gap {
+  flex: 1 1 auto;
+}
+
+.ui-app-bar__status,
+.ui-app-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-app-bar-gap);
+  min-width: 0;
+}
+
+.ui-app-bar__status {
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-app-bar__actions {
+  gap: var(--ui-space-2);
+}

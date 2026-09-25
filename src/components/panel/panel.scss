@@ -1,0 +1,44 @@
+// Panel — a titled block of a console page. References ONLY semantic /
+// component tokens.
+//
+// The header's side padding and the empty line's share one token, so the text
+// of an empty panel starts exactly under its title.
+
+.ui-panel {
+  width: 100%;
+  margin-bottom: var(--ui-panel-gap);
+  min-width: 0;
+}
+
+.ui-panel__header {
+  padding: 0 var(--ui-panel-padding-x);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+  // A header with a select and three buttons wraps instead of overflowing.
+  flex-wrap: wrap;
+}
+
+.ui-panel__body {
+  min-width: 0;
+}
+
+.ui-panel--padded .ui-panel__body {
+  padding: var(--ui-space-3) var(--ui-panel-padding-x);
+}
+
+.ui-panel__empty {
+  margin: 0;
+  padding: var(--ui-space-4) var(--ui-panel-padding-x);
+  font-size: var(--ui-font-size-md);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-panel__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--ui-panel-padding-x);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
