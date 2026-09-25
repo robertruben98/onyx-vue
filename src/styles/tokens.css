@@ -600,4 +600,27 @@
   --ui-nav-rail-item-font-size: var(--ui-font-size-md);
   --ui-nav-rail-marks-gap: var(--ui-space-1);
   --ui-nav-rail-marks-font-size: var(--ui-font-size-sm);
+  /* --- Layout of a console page (app shell, brand mark, app bar, panel,
+     fieldset) ---------------------------------------------------------- */
+  --ui-app-shell-rail-width: 14.5rem;
+  --ui-app-shell-rule: var(--ui-color-border);
+  --ui-brand-mark-gap: var(--ui-space-2);
+  --ui-brand-mark-height: 3.25rem;
+  --ui-brand-mark-padding-x: var(--ui-space-4);
+  --ui-brand-mark-tile-size: 1.375rem;
+  --ui-brand-mark-tile-font-size: 0.5625rem;
+  --ui-brand-mark-font-size: 0.6875rem;
+  --ui-brand-mark-sub-font-size: var(--ui-font-size-sm);
+  --ui-app-bar-height: 3.25rem;
+  --ui-app-bar-gap: var(--ui-space-3);
+  --ui-app-bar-padding-x: var(--ui-space-5);
+  --ui-app-bar-bg: var(--ui-color-surface);
+  --ui-app-bar-z: 20;
+  --ui-app-bar-title-size: 0.75rem;
+  --ui-app-bar-eyebrow-size: 0.625rem;
+  --ui-panel-gap: 1.625rem;
+  --ui-panel-padding-x: var(--ui-space-4);
+  --ui-fieldset-legend-size: 0.625rem;
+  --ui-fieldset-row-gap: 2px;
+  --ui-fieldset-column-gap: var(--ui-space-3);
 }
