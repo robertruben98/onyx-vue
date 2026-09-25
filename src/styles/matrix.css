@@ -113,6 +113,15 @@
   --ui-matrix-amber: #ffb000;
   --ui-matrix-alert: #ff4a4a;
 
+  /* Rellenos de grafica: un paso mas oscuros que los fosforos de estado, que
+     caen fuera de la banda de luminosidad de un relleno sobre negro. Elegidos
+     por separacion bajo protanopia (peor pareja dE 13,8), no a ojo. */
+  --ui-matrix-data-ok: #35935a;
+  --ui-matrix-data-warn: #d8ab2e;
+  --ui-matrix-data-bad: #b8433f;
+  --ui-matrix-data-none: #4a4d52;
+  --ui-matrix-data-one: #2a78d6;
+
   /* Resplandor. Un token y no un valor suelto porque lo usan el preset, las
      lecturas grandes y los componentes de atmosfera, y tienen que apagarse
      todos a la vez si alguien lo baja. */
@@ -138,6 +147,15 @@
   /* La terminal va sobre el suelo, no sobre la superficie: es la salida
      de otro programa, no un panel de la pagina. */
   --ui-ansi-terminal-bg: var(--ui-matrix-void);
+  /* La paleta de datos del panel de agentes (antes --data-* en agents.css):
+     elegida por separacion bajo protanopia, no a ojo. */
+  --ui-chart-ok: var(--ui-matrix-data-ok);
+  --ui-chart-warn: var(--ui-matrix-data-warn);
+  --ui-chart-bad: var(--ui-matrix-data-bad);
+  --ui-chart-none: var(--ui-matrix-data-none);
+  --ui-chart-one: var(--ui-matrix-data-one);
+  --ui-chart-inseg: var(--ui-matrix-void);
+  --ui-chart-inseg-light: var(--ui-matrix-flare);
 
   /* Los "surface" de estado son un velo del propio color y no una pastilla
      clara: sobre un fondo casi negro, un `--ui-green-50` seria un foco. */
