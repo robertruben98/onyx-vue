@@ -1,0 +1,55 @@
+// Icon button — a glyph-only button. References ONLY semantic / component
+// tokens.
+
+.ui-icon-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-icon-button-size);
+  height: var(--ui-icon-button-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius);
+  background: transparent;
+  color: var(--ui-color-text-muted);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.ui-icon-button--sm {
+  width: var(--ui-icon-button-size-sm);
+  height: var(--ui-icon-button-size-sm);
+}
+
+.ui-icon-button:hover:not(:disabled),
+.ui-icon-button--pressed {
+  background-color: var(--ui-color-surface-hover);
+  color: var(--ui-color-text);
+}
+
+.ui-icon-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-icon-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ui-icon-button__svg {
+  width: var(--ui-icon-button-glyph);
+  height: var(--ui-icon-button-glyph);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ui-icon-button__glyph {
+  font-size: var(--ui-font-size-sm);
+}
