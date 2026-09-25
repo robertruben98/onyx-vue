@@ -135,6 +135,9 @@
      pagina. */
   --ui-color-border-strong: var(--ui-matrix-edge-hi);
   --ui-drawer-backdrop: rgba(4, 7, 5, 0.72);
+  /* La terminal va sobre el suelo, no sobre la superficie: es la salida
+     de otro programa, no un panel de la pagina. */
+  --ui-ansi-terminal-bg: var(--ui-matrix-void);
 
   /* Los "surface" de estado son un velo del propio color y no una pastilla
      clara: sobre un fondo casi negro, un `--ui-green-50` seria un foco. */
