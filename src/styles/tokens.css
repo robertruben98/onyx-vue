@@ -655,4 +655,15 @@
   --ui-code-block-font-size: var(--ui-font-size-sm);
   --ui-code-block-bg: var(--ui-color-surface);
   --ui-status-dot-ring: var(--ui-color-neutral);
+  /* --- Console: ANSI terminal ---------------------------------------- */
+  --ui-ansi-terminal-font-size: var(--ui-font-size-sm);
+  --ui-ansi-terminal-bg: var(--ui-color-surface);
+  --ui-terminal-black: var(--ui-color-text-muted);
+  --ui-terminal-red: var(--ui-color-danger);
+  --ui-terminal-green: var(--ui-color-success);
+  --ui-terminal-yellow: var(--ui-color-warning);
+  --ui-terminal-blue: var(--ui-color-primary);
+  --ui-terminal-magenta: #c58af9;
+  --ui-terminal-cyan: #5fd7d7;
+  --ui-terminal-white: var(--ui-color-text);
 }

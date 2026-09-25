@@ -12,6 +12,7 @@ export * from "./docs-model";
 export * from "./components/accordion";
 export * from "./components/action-cluster";
 export * from "./components/alert";
+export * from "./components/ansi-terminal";
 export * from "./components/app-bar";
 export * from "./components/app-shell";
 export * from "./components/avatar";
