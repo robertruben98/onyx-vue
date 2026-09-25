@@ -14,6 +14,12 @@ export const tagDoc: ComponentDoc = {
       description: "Semantic variant.",
     },
     {
+      name: "appearance",
+      type: "'filled' | 'outline'",
+      default: "'filled'",
+      description: "Outline draws only a hairline in the variant's colour, for small facts inside table cells.",
+    },
+    {
       name: "removable",
       type: "boolean",
       default: "false",
@@ -62,6 +68,12 @@ export const tagDoc: ComponentDoc = {
 >{{ t }}</UiTag>
 <span v-if="!tags.length">All removed.</span>`,
       setup: () => ({ tags: ["Vue", "Angular", "React"] }),
+    },
+    {
+      title: "Outline",
+      code: `<UiTag appearance="outline">draft</UiTag>
+<UiTag appearance="outline" variant="warning">sin review</UiTag>
+<UiTag appearance="outline" variant="danger">3 checks rojos</UiTag>`,
     },
   ],
 };
