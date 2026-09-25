@@ -1,0 +1,137 @@
+// Drawer — a modal side sheet. References ONLY semantic / component tokens.
+
+.ui-drawer {
+  display: contents;
+}
+
+.ui-drawer__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-dialog-z);
+  display: flex;
+  justify-content: flex-end;
+  background-color: var(--ui-drawer-backdrop);
+}
+
+.ui-drawer__panel {
+  display: flex;
+  flex-direction: column;
+  width: var(--ui-drawer-width);
+  max-width: 100%;
+  height: 100%;
+  background-color: var(--ui-drawer-bg);
+  color: var(--ui-color-text);
+  border-left: var(--ui-border-width) solid var(--ui-drawer-edge);
+  box-shadow: var(--ui-dialog-shadow);
+  animation: ui-drawer-in var(--ui-drawer-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ui-drawer__panel:focus {
+  outline: none;
+}
+
+.ui-drawer__panel--left {
+  margin-right: auto;
+  border-left: 0;
+  border-right: var(--ui-border-width) solid var(--ui-drawer-edge);
+  animation-name: ui-drawer-in-left;
+}
+
+@keyframes ui-drawer-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes ui-drawer-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-drawer__panel {
+    animation: none;
+  }
+}
+
+.ui-drawer__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-3) var(--ui-drawer-padding-x);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-drawer__titles {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ui-drawer__title {
+  margin: 0;
+  font-family: var(--ui-font-family-display, inherit);
+  font-size: var(--ui-drawer-title-size);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
+}
+
+.ui-drawer__subtitle {
+  margin: var(--ui-space-1) 0 0;
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.ui-drawer__close {
+  flex: none;
+  padding: 2px 6px;
+  font-size: var(--ui-dialog-close-size);
+  line-height: 1;
+  color: var(--ui-color-text-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.ui-drawer__close:hover {
+  color: var(--ui-color-text);
+}
+
+.ui-drawer__close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-drawer__toolbar {
+  padding: var(--ui-space-2) var(--ui-drawer-padding-x);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-drawer__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--ui-space-4) var(--ui-drawer-padding-x) var(--ui-space-5);
+}
+
+.ui-drawer__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--ui-drawer-padding-x);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+// On a phone the sheet is the page: 16px gutters instead of the desktop ones.
+@media (max-width: 40rem) {
+  .ui-drawer__header,
+  .ui-drawer__toolbar,
+  .ui-drawer__body,
+  .ui-drawer__footer {
+    padding-left: var(--ui-space-4);
+    padding-right: var(--ui-space-4);
+  }
+}
