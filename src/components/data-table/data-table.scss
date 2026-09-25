@@ -202,3 +202,9 @@
   color: var(--ui-data-table-muted-text);
   cursor: not-allowed;
 }
+
+// Rows that open something: the pointer says so. The hover background is
+// already there for every row.
+.ui-dt__tr--activatable {
+  cursor: pointer;
+}

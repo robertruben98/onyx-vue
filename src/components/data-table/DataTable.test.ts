@@ -807,3 +807,44 @@ describe("DataTable (Vue) — hideBelow", () => {
     expect(screen.queryByRole("columnheader", { name: "Role" })).toBeNull();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Activatable rows
+// ---------------------------------------------------------------------------
+describe("DataTable (Vue) — activatable", () => {
+  function renderIt(props: Record<string, unknown> = {}, slots: Record<string, string> = {}) {
+    return render(DataTable, {
+      props: { caption: "People", columns: COLUMNS, rows: ROWS, rowKey: "id", mode: "plain", activatable: true, ...props },
+      slots,
+    });
+  }
+
+  it("emits rowActivated with the row on a click anywhere on it", async () => {
+    const { container, emitted } = renderIt();
+    const cell = container.querySelectorAll(".ui-dt__tr")[1].querySelector(".ui-dt__td") as HTMLElement;
+    await fireEvent.click(cell);
+    expect((emitted().rowActivated[0] as unknown[])[0]).toEqual(ROWS[1]);
+  });
+
+  it("leaves the clicks of controls inside the row alone", async () => {
+    const { container, emitted } = renderIt({}, { "cell-role": "<button type='button'>act</button>" });
+    await fireEvent.click(container.querySelector(".ui-dt__tr button") as HTMLElement);
+    expect(emitted().rowActivated).toBeUndefined();
+  });
+
+  it("emits on Enter from a cell without its own control", async () => {
+    const { container, emitted } = renderIt();
+    const cell = container.querySelector('[data-row="1"][data-col="0"]') as HTMLElement;
+    await fireEvent.click(cell);
+    await fireEvent.keyDown(cell, { key: "Enter" });
+    const calls = emitted().rowActivated as unknown[][];
+    expect(calls[calls.length - 1][0]).toEqual(ROWS[0]);
+  });
+
+  it("does nothing unless asked", async () => {
+    const { container, emitted } = renderIt({ activatable: false });
+    await fireEvent.click(container.querySelector(".ui-dt__tr .ui-dt__td") as HTMLElement);
+    expect(emitted().rowActivated).toBeUndefined();
+    expect(container.querySelector(".ui-dt__tr--activatable")).toBeNull();
+  });
+});

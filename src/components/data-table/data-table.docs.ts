@@ -46,6 +46,12 @@ export const dataTableDoc: ComponentDoc = {
       default: "— (required)",
       description: "`{ id, header, field?, sortable?, align?, width?, hideBelow? }` per column. `hideBelow` (px) drops the column, header and cells together, on narrower viewports.",
     },
+    {
+      name: "activatable",
+      type: "boolean",
+      default: "false",
+      description: "Rows open something: a click on a row, or Enter on a cell without its own control, emits @rowActivated(row, event). Controls inside a row keep their clicks.",
+    },
     { name: "rows", type: "T[]", default: "[]", description: "All rows; sorting and paging are client-side." },
     {
       name: "rowKey",
