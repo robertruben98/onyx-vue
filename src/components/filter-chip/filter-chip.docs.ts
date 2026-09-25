@@ -45,6 +45,12 @@ export const filterChipDoc: ComponentDoc = {
       description: "A disabled chip never emits toggled.",
     },
     {
+      name: "dashed",
+      type: "boolean",
+      default: "false",
+      description: "Dashed outline in the tone's colour, for a notice about the filters (e.g. rows hidden by settings).",
+    },
+    {
       name: "@toggled",
       type: "(pressed: boolean) => void",
       default: "—",

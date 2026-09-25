@@ -112,6 +112,13 @@ describe("FilterChip (Vue)", () => {
     ).toBe("5 hilos");
   });
 
+  it("draws a dashed outline for a notice chip", () => {
+    const { container } = render(FilterChip, {
+      props: { label: "oculto", count: 2, tone: "warn", dashed: true },
+    });
+    expect(container.querySelector(".ui-filter-chip--dashed")).toBeTruthy();
+  });
+
   it("has no axe violations", async () => {
     const { container } = render(FilterChip, {
       props: { label: "aprobado", count: 7, tone: "ok", pressed: true },
