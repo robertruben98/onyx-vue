@@ -1,0 +1,73 @@
+// ANSI terminal — raw program output with its SGR colours. References ONLY
+// semantic / component tokens.
+//
+// Six of the eight colours map to semantic tokens, so the output sits inside
+// the theme. Magenta and cyan keep their own tokens with fixed defaults: this
+// is another program's output, and re-painting its colours would change what
+// it meant, like translating a quote.
+
+.ui-ansi-terminal {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: var(--ui-space-3) var(--ui-space-3);
+  overflow-y: auto;
+  font-family: var(--ui-font-family-mono, var(--ui-font-family, ui-monospace, monospace));
+  font-size: var(--ui-ansi-terminal-font-size);
+  line-height: 1.65;
+  color: var(--ui-color-text);
+  background-color: var(--ui-ansi-terminal-bg);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ui-ansi-terminal:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-ansi-terminal__empty {
+  color: var(--ui-color-text-muted);
+}
+
+.ui-ansi-terminal .ui-ansi-fg-30,
+.ui-ansi-terminal .ui-ansi-fg-90 { color: var(--ui-terminal-black); }
+.ui-ansi-terminal .ui-ansi-fg-31,
+.ui-ansi-terminal .ui-ansi-fg-91 { color: var(--ui-terminal-red); }
+.ui-ansi-terminal .ui-ansi-fg-32,
+.ui-ansi-terminal .ui-ansi-fg-92 { color: var(--ui-terminal-green); }
+.ui-ansi-terminal .ui-ansi-fg-33,
+.ui-ansi-terminal .ui-ansi-fg-93 { color: var(--ui-terminal-yellow); }
+.ui-ansi-terminal .ui-ansi-fg-34,
+.ui-ansi-terminal .ui-ansi-fg-94 { color: var(--ui-terminal-blue); }
+.ui-ansi-terminal .ui-ansi-fg-35,
+.ui-ansi-terminal .ui-ansi-fg-95 { color: var(--ui-terminal-magenta); }
+.ui-ansi-terminal .ui-ansi-fg-36,
+.ui-ansi-terminal .ui-ansi-fg-96 { color: var(--ui-terminal-cyan); }
+.ui-ansi-terminal .ui-ansi-fg-37,
+.ui-ansi-terminal .ui-ansi-fg-97 { color: var(--ui-terminal-white); }
+.ui-ansi-terminal .ui-ansi-bold { font-weight: var(--ui-font-weight-medium); }
+.ui-ansi-terminal .ui-ansi-dim { color: var(--ui-color-text-muted); }
+
+.ui-ansi-terminal__caret {
+  display: inline-block;
+  width: 0.45em;
+  height: 1.1em;
+  vertical-align: -0.15em;
+  background-color: var(--ui-color-primary);
+  animation: ui-ansi-caret 1.1s steps(2, start) infinite;
+}
+
+@keyframes ui-ansi-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+// Output that arrives is data, not animation, and keeps arriving; what stops
+// under reduced motion is only the blink.
+@media (prefers-reduced-motion: reduce) {
+  .ui-ansi-terminal__caret {
+    animation: none;
+  }
+}
