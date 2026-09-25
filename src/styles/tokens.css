@@ -666,4 +666,16 @@
   --ui-terminal-magenta: #c58af9;
   --ui-terminal-cyan: #5fd7d7;
   --ui-terminal-white: var(--ui-color-text);
+  /* --- Charts --------------------------------------------------------
+     Mixed from the semantic tones one step darker, not the tones themselves:
+     fills need a lower lightness than text, and the plain tones fall outside
+     the fill band on dark presets. */
+  --ui-chart-ok: color-mix(in srgb, var(--ui-color-success) 78%, black);
+  --ui-chart-warn: color-mix(in srgb, var(--ui-color-warning) 85%, black);
+  --ui-chart-bad: color-mix(in srgb, var(--ui-color-danger) 78%, black);
+  --ui-chart-none: var(--ui-color-neutral);
+  --ui-chart-one: var(--ui-color-info);
+  --ui-chart-grid: var(--ui-color-border);
+  --ui-chart-inseg: var(--ui-color-surface);
+  --ui-chart-inseg-light: var(--ui-color-on-primary);
 }

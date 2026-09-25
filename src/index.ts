@@ -17,6 +17,8 @@ export * from "./components/app-bar";
 export * from "./components/app-shell";
 export * from "./components/avatar";
 export * from "./components/badge";
+export * from "./components/bar-chart";
+export * from "./components/bar-list";
 export * from "./components/block-meter";
 export * from "./components/brand-mark";
 export * from "./components/breadcrumb";
