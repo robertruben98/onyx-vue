@@ -1,0 +1,22 @@
+// Confirm button — a two-step button. References ONLY semantic / component
+// tokens. The look of the armed state comes from UiButton's own variant; this
+// sheet only hides the announcement.
+
+.ui-confirm-button {
+  display: inline-flex;
+  position: relative;
+}
+
+// Visually hidden, still read: the label change alone is not announced by
+// every screen reader, the live region is.
+.ui-confirm-button__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
