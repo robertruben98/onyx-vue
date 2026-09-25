@@ -34,6 +34,12 @@ const props = withDefaults(
     pressed?: boolean;
     /** Disabled state — a disabled chip never emits `toggled`. */
     disabled?: boolean;
+    /**
+     * Dashed outline in the tone's colour. For a chip that is not a filter but
+     * a notice about one — "2 hidden by settings" — and has to look different
+     * from the chips it sits next to.
+     */
+    dashed?: boolean;
   }>(),
   {
     count: null,
@@ -41,6 +47,7 @@ const props = withDefaults(
     tone: "neutral",
     pressed: false,
     disabled: false,
+    dashed: false,
   },
 );
 
@@ -77,6 +84,7 @@ const rootClasses = computed(() => ({
   "ui-filter-chip--info": props.tone === "info",
   "ui-filter-chip--muted": props.tone === "muted",
   "ui-filter-chip--pressed": props.pressed,
+  "ui-filter-chip--dashed": props.dashed,
   "ui-filter-chip--empty": empty.value && !props.pressed,
 }));
 

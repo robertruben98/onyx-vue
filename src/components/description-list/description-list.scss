@@ -1,0 +1,53 @@
+// Description list — terms and values in a grid. References ONLY semantic /
+// component tokens.
+
+.ui-description-list {
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--ui-description-list-min), 1fr));
+  margin: 0;
+  padding: 0;
+}
+
+.ui-description-list--fixed {
+  grid-template-columns: repeat(var(--ui-description-list-columns, 2), minmax(0, 1fr));
+}
+
+@media (max-width: 40rem) {
+  .ui-description-list--fixed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ui-description-list__pair {
+  min-width: 0;
+  padding: var(--ui-space-2) var(--ui-description-list-padding-x);
+}
+
+.ui-description-list--ruled .ui-description-list__pair {
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-description-list--dense .ui-description-list__pair {
+  padding-top: var(--ui-space-1);
+  padding-bottom: var(--ui-space-1);
+}
+
+.ui-description-list__term {
+  font-size: var(--ui-description-list-term-size);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-description-list__value {
+  margin: var(--ui-space-1) 0 0;
+  font-size: var(--ui-font-size-md);
+  overflow-wrap: anywhere;
+}
+
+.ui-description-list__value--muted { color: var(--ui-color-text-muted); }
+.ui-description-list__value--success { color: var(--ui-color-success); }
+.ui-description-list__value--warning { color: var(--ui-color-warning); }
+.ui-description-list__value--danger { color: var(--ui-color-danger); }

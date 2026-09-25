@@ -59,3 +59,17 @@
   background-color: var(--ui-tag-danger-bg);
   color: var(--ui-tag-danger-text);
 }
+
+// --- Outline ----------------------------------------------------------------
+// Same colour as the variant, no fill: the rule is the variant's text colour
+// mixed down, the recipe the heat strip uses, so a preset re-routes both.
+.ui-tag--outline {
+  background-color: transparent;
+  border: var(--ui-border-width) solid color-mix(in srgb, currentColor 45%, transparent);
+  padding-top: calc(var(--ui-tag-padding-y) - var(--ui-border-width));
+  padding-bottom: calc(var(--ui-tag-padding-y) - var(--ui-border-width));
+}
+.ui-tag--outline.ui-tag--neutral {
+  color: var(--ui-color-text-muted);
+  border-color: var(--ui-color-border);
+}

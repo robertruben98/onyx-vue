@@ -10,10 +10,19 @@ export type TagVariant =
   | "warning"
   | "danger";
 
+/** Filled (a pastille) or outline (a hairline box around the text). */
+export type TagAppearance = "filled" | "outline";
+
 const props = withDefaults(
   defineProps<{
     /** Visual variant (semantic role). */
     variant?: TagVariant;
+    /**
+     * `outline` draws only a hairline in the variant's colour. For the small
+     * facts that sit inside a table cell — "draft", "3 checks rojos" — where a
+     * row of filled pastilles would outshout the data next to them.
+     */
+    appearance?: TagAppearance;
     /** Whether a remove (close) button is shown. */
     removable?: boolean;
     /** Accessible name for the remove button. */
@@ -21,6 +30,7 @@ const props = withDefaults(
   }>(),
   {
     variant: "neutral",
+    appearance: "filled",
     removable: false,
     removeLabel: "Remove",
   },
@@ -37,6 +47,7 @@ const rootClasses = computed(() => ({
   "ui-tag--success": props.variant === "success",
   "ui-tag--warning": props.variant === "warning",
   "ui-tag--danger": props.variant === "danger",
+  "ui-tag--outline": props.appearance === "outline",
 }));
 
 function remove(): void {

@@ -1,0 +1,97 @@
+// Stepper — the steps of a flow. References ONLY semantic / component tokens.
+//
+// The rules around the state icons are mixed from the tone at 30%, the same
+// recipe as the heat strip's ramp, so a preset that re-routes a tone re-routes
+// its step too.
+
+.ui-stepper {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-stepper__step {
+  display: flex;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-stepper__step:last-child {
+  border-bottom: 0;
+}
+
+.ui-stepper__icon {
+  display: flex;
+  flex: 0 0 var(--ui-stepper-icon-size);
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-stepper-icon-size);
+  height: var(--ui-stepper-icon-size);
+  margin-top: 1px;
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radii-full);
+  font-size: 0.625rem;
+  font-weight: var(--ui-font-weight-bold);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-stepper__step--done .ui-stepper__icon {
+  color: var(--ui-color-success);
+  border-color: color-mix(in srgb, var(--ui-color-success) 30%, transparent);
+  background-color: var(--ui-color-success-surface);
+}
+.ui-stepper__step--active .ui-stepper__icon {
+  color: var(--ui-color-primary);
+  border-color: var(--ui-color-primary);
+  background-color: color-mix(in srgb, var(--ui-color-primary) 12%, transparent);
+}
+.ui-stepper__step--warn .ui-stepper__icon {
+  color: var(--ui-color-warning);
+  border-color: color-mix(in srgb, var(--ui-color-warning) 30%, transparent);
+  background-color: var(--ui-color-warning-surface);
+}
+.ui-stepper__step--error .ui-stepper__icon {
+  color: var(--ui-color-danger);
+  border-color: color-mix(in srgb, var(--ui-color-danger) 30%, transparent);
+  background-color: var(--ui-color-danger-surface);
+}
+
+.ui-stepper__text {
+  min-width: 0;
+}
+
+.ui-stepper__label {
+  font-size: var(--ui-font-size-md);
+}
+
+.ui-stepper__step--pending .ui-stepper__label,
+.ui-stepper__step--skipped .ui-stepper__label {
+  color: var(--ui-color-text-muted);
+}
+
+.ui-stepper__meta {
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+// Spoken, not shown: the icon already draws the state.
+.ui-stepper__state {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.ui-stepper__note {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+  overflow-wrap: anywhere;
+}

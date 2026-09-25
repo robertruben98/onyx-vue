@@ -641,4 +641,18 @@
   --ui-icon-button-size: var(--ui-size-control-sm);
   --ui-icon-button-size-sm: 1.375rem;
   --ui-icon-button-glyph: 0.875rem;
+  /* --- Data and disclosure: filter bar, description list, KPI strip,
+     stepper, code block, status-dot ring -------------------------------- */
+  --ui-filter-bar-height: 3rem;
+  --ui-filter-bar-padding-x: var(--ui-space-4);
+  --ui-filter-bar-search-width: 17.5rem;
+  --ui-description-list-min: 16rem;
+  --ui-description-list-padding-x: var(--ui-space-4);
+  --ui-description-list-term-size: 0.625rem;
+  --ui-kpi-strip-label-size: 0.625rem;
+  --ui-kpi-strip-value-size: 1.1875rem;
+  --ui-stepper-icon-size: 1.125rem;
+  --ui-code-block-font-size: var(--ui-font-size-sm);
+  --ui-code-block-bg: var(--ui-color-surface);
+  --ui-status-dot-ring: var(--ui-color-neutral);
 }

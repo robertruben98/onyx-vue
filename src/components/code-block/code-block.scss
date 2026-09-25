@@ -1,0 +1,40 @@
+// Code block — monospaced output. References ONLY semantic / component tokens.
+
+.ui-code-block {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--ui-space-3) var(--ui-space-3);
+  overflow: auto;
+  font-family: var(--ui-font-family-mono, var(--ui-font-family, ui-monospace, monospace));
+  font-size: var(--ui-code-block-font-size);
+  line-height: 1.55;
+  color: var(--ui-color-text);
+  background-color: var(--ui-code-block-bg);
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radius);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ui-code-block--nowrap {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.ui-code-block--muted {
+  color: var(--ui-color-text-muted);
+}
+
+.ui-code-block--danger {
+  color: var(--ui-color-danger);
+}
+
+.ui-code-block:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-code-block__empty {
+  color: var(--ui-color-text-muted);
+}

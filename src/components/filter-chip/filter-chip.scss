@@ -78,3 +78,13 @@
 .ui-filter-chip--empty:hover {
   opacity: 1;
 }
+
+// --- Dashed ---------------------------------------------------------------
+// A notice about the filters rather than a filter: outlined in its own tone.
+.ui-filter-chip--dashed {
+  border-style: dashed;
+  border-color: currentColor;
+}
+.ui-filter-chip--dashed.ui-filter-chip--empty {
+  opacity: 1;
+}
