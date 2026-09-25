@@ -113,6 +113,12 @@ const props = withDefaults(
      * renders it.
      */
     rowClass?(row: T): string | string[] | undefined;
+    /**
+     * Rows are things you open: a click anywhere on a row, or Enter on a cell
+     * with no control of its own, emits `rowActivated`. Clicks on the
+     * buttons, links and inputs inside a row stay theirs.
+     */
+    activatable?: boolean;
   }>(),
   {
     rows: () => [],
@@ -128,8 +134,24 @@ const props = withDefaults(
     viewportHeight: "400px",
     maxHeight: "",
     rowClass: undefined,
+    activatable: false,
   },
 );
+
+const emit = defineEmits<{
+  /** A row was opened: clicked, or Enter on a cell without its own control. */
+  rowActivated: [row: T, event: Event];
+}>();
+
+/** What inside a row keeps its own click: activating the row would steal it. */
+const INTERACTIVE = 'button, a, input, select, textarea, label, summary, [role="checkbox"], [role="button"]';
+
+function onRowClick(row: T, event: MouseEvent): void {
+  if (!props.activatable) return;
+  const target = event.target as HTMLElement | null;
+  if (target?.closest(INTERACTIVE)) return;
+  emit("rowActivated", row, event);
+}
 
 const slots = useSlots();
 
@@ -474,6 +496,12 @@ function activateCell(): void {
   cell?.focus();
 }
 
+/** The row behind a data-row index (0-based over what is rendered). */
+function rowAt(index: number): T | undefined {
+  if (props.mode === "virtual") return sorted.value[index];
+  return visibleRows.value[index];
+}
+
 function onGridKeydown(event: KeyboardEvent): void {
   const a = activeCell.value;
   const rowMax = visibleRows.value.length; // header = 0, data rows = 1..N
@@ -507,10 +535,20 @@ function onGridKeydown(event: KeyboardEvent): void {
       row = Math.max(0, row - pageJump());
       break;
     case "Enter":
-    case " ":
+    case " ": {
       event.preventDefault();
+      const cell = root.value?.querySelector<HTMLElement>(
+        `[data-row="${a.row}"][data-col="${a.col}"]`,
+      );
+      const hasControl = !!cell?.querySelector(INTERACTIVE);
+      if (props.activatable && a.row > 0 && !hasControl) {
+        const r = rowAt(a.row - 1);
+        if (r !== undefined) emit("rowActivated", r, event);
+        return;
+      }
       activateCell();
       return;
+    }
     default:
       return;
   }
@@ -624,9 +662,11 @@ function onGridKeydown(event: KeyboardEvent): void {
                   {
                     'ui-dt__tr--selected':
                       selectable !== 'none' && isSelected(item.row),
+                    'ui-dt__tr--activatable': activatable,
                   },
                   rowClass ? rowClass(item.row) : undefined,
                 ]"
+                @click="onRowClick(item.row, $event)"
                 :style="{
                   height: rowHeight + 'px',
                   gridTemplateColumns: templateColumns,
@@ -685,9 +725,11 @@ function onGridKeydown(event: KeyboardEvent): void {
               {
                 'ui-dt__tr--selected': selectable !== 'none' && isSelected(row),
                 'ui-dt__tr--expanded': isExpanded(row),
+                'ui-dt__tr--activatable': activatable,
               },
               rowClass ? rowClass(row) : undefined,
             ]"
+            @click="onRowClick(row, $event)"
             :style="{ gridTemplateColumns: templateColumns }"
           >
             <div
