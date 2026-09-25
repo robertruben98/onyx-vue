@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, watch, nextTick , useSlots } from "vue";
+import { computed, ref, watch, nextTick, onBeforeUnmount, onMounted, useSlots } from "vue";
 import UiCheckbox from "../checkbox/Checkbox.vue";
 import "./data-table.scss";
 
@@ -58,6 +58,13 @@ export interface DataTableColumn<T> {
   sortable?: boolean;
   /** Sort key accessor; defaults to the `value`/`field` value. */
   sortAccessor?(row: T): string | number;
+  /**
+   * Drops the column — header and cells together — when the viewport is
+   * narrower than this many pixels. A narrow window loses its least useful
+   * columns instead of squeezing every track into an ellipsis or scrolling
+   * the page sideways.
+   */
+  hideBelow?: number;
 }
 
 const props = withDefaults(
@@ -233,9 +240,33 @@ const rangeEnd = computed(() =>
   Math.min((currentPage.value + 1) * pageSize.value, total.value),
 );
 
+// ----------------------------------------------------------------------------
+// Responsive columns (`hideBelow`)
+// ----------------------------------------------------------------------------
+const viewportWidth = ref(typeof window === "undefined" ? Infinity : window.innerWidth);
+const wantsWidth = computed(() => props.columns.some((c) => c.hideBelow != null));
+
+function onResize(): void {
+  viewportWidth.value = window.innerWidth;
+}
+
+onMounted(() => {
+  if (typeof window !== "undefined") window.addEventListener("resize", onResize);
+});
+onBeforeUnmount(() => {
+  if (typeof window !== "undefined") window.removeEventListener("resize", onResize);
+});
+
+/** The columns that fit the current viewport. */
+const shownColumns = computed<DataTableColumn<T>[]>(() =>
+  wantsWidth.value
+    ? props.columns.filter((c) => c.hideBelow == null || viewportWidth.value >= c.hideBelow)
+    : props.columns,
+);
+
 /** CSS grid track template derived from column widths (+ selection column). */
 const templateColumns = computed(() => {
-  const tracks = props.columns.map((c) => c.width ?? "minmax(0, 1fr)");
+  const tracks = shownColumns.value.map((c) => c.width ?? "minmax(0, 1fr)");
   if (props.selectable !== "none") {
     tracks.unshift("var(--ui-data-table-select-col-width)");
   }
@@ -243,7 +274,7 @@ const templateColumns = computed(() => {
 });
 
 const colCount = computed(
-  () => props.columns.length + (props.selectable !== "none" ? 1 : 0),
+  () => shownColumns.value.length + (props.selectable !== "none" ? 1 : 0),
 );
 
 const ariaRowCount = computed(() => props.rows.length + 1);
@@ -530,7 +561,7 @@ function onGridKeydown(event: KeyboardEvent): void {
         </div>
 
         <div
-          v-for="(col, ci) in columns"
+          v-for="(col, ci) in shownColumns"
           :key="col.id"
           role="columnheader"
           class="ui-dt__th"
@@ -617,7 +648,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                   />
                 </div>
                 <div
-                  v-for="(col, ci) in columns"
+                  v-for="(col, ci) in shownColumns"
                   :key="col.id"
                   role="gridcell"
                   class="ui-dt__td"
@@ -675,7 +706,7 @@ function onGridKeydown(event: KeyboardEvent): void {
               />
             </div>
             <div
-              v-for="(col, ci) in columns"
+              v-for="(col, ci) in shownColumns"
               :key="col.id"
               role="gridcell"
               class="ui-dt__td"

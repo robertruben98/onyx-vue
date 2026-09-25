@@ -1,3 +1,4 @@
+import { afterEach } from "vitest";
 import { render, screen, within, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import { reactive } from "vue";
@@ -763,5 +764,46 @@ describe("DataTable rowClass (Vue)", () => {
     const tr = container.querySelector(".ui-dt__tr");
     expect(tr?.classList.contains("ui-dt__tr--selected")).toBe(true);
     expect(tr?.classList.contains("cursor")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Responsive columns
+// ---------------------------------------------------------------------------
+describe("DataTable (Vue) — hideBelow", () => {
+  const cols: DataTableColumn<Person>[] = [
+    { id: "name", header: "Name", field: "name" },
+    { id: "role", header: "Role", field: "role", hideBelow: 1000 },
+  ];
+
+  function at(width: number) {
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: width });
+  }
+
+  afterEach(() => at(1024));
+
+  it("keeps the column on a wide viewport", () => {
+    at(1200);
+    render(DataTable, { props: { caption: "People", columns: cols, rows: ROWS, rowKey: "id" } });
+    expect(screen.getByRole("columnheader", { name: "Role" })).toBeTruthy();
+    expect(screen.getByText("Lead")).toBeTruthy();
+  });
+
+  it("drops header and cells together on a narrow one", () => {
+    at(800);
+    render(DataTable, { props: { caption: "People", columns: cols, rows: ROWS, rowKey: "id" } });
+    expect(screen.queryByRole("columnheader", { name: "Role" })).toBeNull();
+    expect(screen.queryByText("Lead")).toBeNull();
+    expect(screen.getByRole("grid").getAttribute("aria-colcount")).toBe("1");
+  });
+
+  it("follows a resize", async () => {
+    at(1200);
+    render(DataTable, { props: { caption: "People", columns: cols, rows: ROWS, rowKey: "id" } });
+    at(800);
+    window.dispatchEvent(new Event("resize"));
+    await Promise.resolve();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(screen.queryByRole("columnheader", { name: "Role" })).toBeNull();
   });
 });

@@ -44,7 +44,7 @@ export const dataTableDoc: ComponentDoc = {
       name: "columns",
       type: "DataTableColumn<T>[]",
       default: "— (required)",
-      description: "`{ id, header, field?, sortable?, align?, width? }` per column.",
+      description: "`{ id, header, field?, sortable?, align?, width?, hideBelow? }` per column. `hideBelow` (px) drops the column, header and cells together, on narrower viewports.",
     },
     { name: "rows", type: "T[]", default: "[]", description: "All rows; sorting and paging are client-side." },
     {
