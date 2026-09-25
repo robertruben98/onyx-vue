@@ -1,0 +1,48 @@
+// Breadcrumb — where the page sits. References ONLY semantic / component
+// tokens.
+
+.ui-breadcrumb {
+  min-width: 0;
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-breadcrumb__item {
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.ui-breadcrumb__link {
+  color: var(--ui-color-primary);
+  text-decoration: none;
+}
+
+.ui-breadcrumb__link:hover {
+  text-decoration: underline;
+}
+
+.ui-breadcrumb__link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-breadcrumb__text--current {
+  color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.ui-breadcrumb__sep {
+  margin: 0 var(--ui-space-2);
+  color: var(--ui-color-border-strong, var(--ui-color-border));
+}
