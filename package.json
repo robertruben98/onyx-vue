@@ -4,20 +4,40 @@
   "description": "Vue 3 port of Onyx UI — accessible, token-themed components (styled mode).",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertruben98/onyx-vue.git"
+  },
+  "homepage": "https://vue.a-robertdev.com",
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "ui",
+    "design-tokens",
+    "accessibility",
+    "onyx"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "files": [
     "dist"
   ],
   "main": "./dist/onyx-vue.umd.js",
   "module": "./dist/onyx-vue.es.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/onyx-vue.es.js",
       "require": "./dist/onyx-vue.umd.js"
     },
-    "./style.css": "./dist/onyx-vue.css"
+    "./style.css": "./dist/onyx-vue.css",
+    "./styles/*": "./dist/styles/*"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vue-tsc -p tsconfig.build.json",
     "test": "vitest run",
     "typecheck": "vue-tsc --noEmit",
     "score": "node scorecard/run.mjs"

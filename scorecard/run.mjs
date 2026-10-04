@@ -44,7 +44,7 @@ if (!quick || !existsSync(join(OUT, "coverage", "coverage-summary.json"))) {
 }
 const meta = {
   typecheckOk: step("vue-tsc --noEmit", "npx vue-tsc --noEmit"),
-  buildOk: step("library build", "npx vite build"),
+  buildOk: step("library build (bundle + type declarations)", "npm run build"),
   docsBuildOk: step("docs build", "npx vite build", { cwd: join(ROOT, "docs") }),
 };
 meta.dtsBuilt =
