@@ -49,3 +49,23 @@ describe("KpiStrip (Vue)", () => {
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
+
+describe("KpiStrip (Vue) — tone vocabulary", () => {
+  it("paints neutral, default and no tone the same, and keeps the other tones", () => {
+    const { container } = render(KpiStrip, {
+      props: {
+        items: [
+          { label: "a", value: 1, tone: "neutral" },
+          { label: "b", value: 2, tone: "default" },
+          { label: "c", value: 3 },
+          { label: "d", value: 4, tone: "danger" },
+        ],
+      },
+    });
+    const classes = [...container.querySelectorAll(".ui-kpi-strip__value")].map((v) => v.className);
+    expect(classes[0]).toBe(classes[1]);
+    expect(classes[1]).toBe(classes[2]);
+    expect(classes[0]).toContain("ui-kpi-strip__value--default");
+    expect(classes[3]).toContain("ui-kpi-strip__value--danger");
+  });
+});

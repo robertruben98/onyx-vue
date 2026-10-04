@@ -5,14 +5,15 @@ export interface DescriptionItem {
   term: string;
   /** The value, already formatted. */
   value: string | number | null | undefined;
-  /** Semantic tone of the value. */
-  tone?: "default" | "muted" | "success" | "warning" | "danger";
+  /** Semantic tone of the value. `default` is the deprecated name of `neutral`. */
+  tone?: "neutral" | "muted" | "success" | "warning" | "danger" | "default";
   /** Tooltip for the value: the full path, the raw timestamp. */
   title?: string;
 }
 </script>
 
 <script setup lang="ts">
+import { canonicalTone } from "../../internal/tone";
 import { computed } from "vue";
 import "./description-list.scss";
 
@@ -58,6 +59,15 @@ const rootStyle = computed(() =>
 function shown(v: DescriptionItem["value"]): string {
   return v === null || v === undefined || v === "" ? props.emptyValue : String(v);
 }
+
+/**
+ * La clase del tono. `neutral` pinta la clase `--default` de siempre: los
+ * estilos (y los que un consumidor sobrescriba) no cambian de nombre.
+ */
+function toneClass(tone: string | undefined): string {
+  const t = canonicalTone(tone ?? "neutral");
+  return t === "neutral" ? "default" : t;
+}
 </script>
 
 <template>
@@ -68,7 +78,7 @@ function shown(v: DescriptionItem["value"]): string {
     <div v-for="item in items" :key="item.term" class="ui-description-list__pair">
       <dt class="ui-description-list__term">{{ item.term }}</dt>
       <dd
-        :class="['ui-description-list__value', `ui-description-list__value--${item.tone ?? 'default'}`]"
+        :class="['ui-description-list__value', `ui-description-list__value--${toneClass(item.tone)}`]"
         :title="item.title || undefined"
       >
         <slot :name="`value-${item.term}`" :item="item">{{ shown(item.value) }}</slot>

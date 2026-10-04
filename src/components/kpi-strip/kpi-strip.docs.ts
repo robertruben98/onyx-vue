@@ -7,7 +7,7 @@ export const kpiStripDoc: ComponentDoc = {
     "A row of headline figures above a list, drawn as one bordered instrument rather than separate cards. Folds to two columns below 1080px. Each cell reads label first, then value, then its sub-line.",
   imports: ["UiKpiStrip"],
   api: [
-    { name: "items", type: "{ label, value, sub?, tone?, title? }[]", default: "—", description: "The figures." },
+    { name: "items", type: "{ label, value, sub?, tone?, title? }[]", default: "—", description: "The figures. `tone` is neutral | muted | success | warning | danger (`default` still works as the deprecated name of neutral)." },
     { name: "label", type: "string", default: "'Summary'", description: "Accessible name of the list." },
     { name: "columns", type: "number | null", default: "null", description: "Columns on wide screens; one per item by default." },
     { name: "#item-<index>", type: "slot { item }", default: "—", description: "Custom rendering of one value." },

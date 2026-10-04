@@ -7,14 +7,15 @@ export interface KpiItem {
   value: string | number;
   /** A line under the label: the comparison, the window, the unit. */
   sub?: string;
-  /** Semantic tone of the figure. */
-  tone?: "default" | "muted" | "success" | "warning" | "danger";
+  /** Semantic tone of the figure. `default` is the deprecated name of `neutral`. */
+  tone?: "neutral" | "muted" | "success" | "warning" | "danger" | "default";
   /** Tooltip: how the figure is computed. */
   title?: string;
 }
 </script>
 
 <script setup lang="ts">
+import { canonicalTone } from "../../internal/tone";
 import { computed } from "vue";
 import "./kpi-strip.scss";
 
@@ -44,13 +45,22 @@ const props = withDefaults(
 const rootStyle = computed(() => ({
   "--ui-kpi-strip-columns": String(props.columns ?? Math.max(props.items.length, 1)),
 }));
+
+/**
+ * La clase del tono. `neutral` pinta la clase `--default` de siempre: los
+ * estilos (y los que un consumidor sobrescriba) no cambian de nombre.
+ */
+function toneClass(tone: string | undefined): string {
+  const t = canonicalTone(tone ?? "neutral");
+  return t === "neutral" ? "default" : t;
+}
 </script>
 
 <template>
   <ul class="ui-kpi-strip" :aria-label="label" :style="rootStyle">
     <li v-for="(item, i) in items" :key="`${i}-${item.label}`" class="ui-kpi-strip__cell" :title="item.title || undefined">
       <span class="ui-kpi-strip__label">{{ item.label }}</span>
-      <span :class="['ui-kpi-strip__value', `ui-kpi-strip__value--${item.tone ?? 'default'}`]">
+      <span :class="['ui-kpi-strip__value', `ui-kpi-strip__value--${toneClass(item.tone)}`]">
         <slot :name="`item-${i}`" :item="item">{{ item.value }}</slot>
       </span>
       <span v-if="item.sub" class="ui-kpi-strip__sub">{{ item.sub }}</span>

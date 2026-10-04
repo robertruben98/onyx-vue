@@ -7,7 +7,7 @@ export const descriptionListDoc: ComponentDoc = {
     "Terms and values in a grid — the facts of a service, a run, an agent. A real <dl>, values wrap anywhere (they are usually paths and ids), and an empty value shows an em dash instead of a blank that reads as 'not loaded'.",
   imports: ["UiDescriptionList"],
   api: [
-    { name: "items", type: "{ term, value, tone?, title? }[]", default: "—", description: "The pairs in reading order." },
+    { name: "items", type: "{ term, value, tone?, title? }[]", default: "—", description: "The pairs in reading order. `tone` is neutral | muted | success | warning | danger (`default` still works as the deprecated name of neutral)." },
     { name: "columns", type: "number | 'auto'", default: "'auto'", description: "Columns of pairs; auto fits 16rem columns." },
     { name: "dense", type: "boolean", default: "false", description: "Tighter rows." },
     { name: "ruled", type: "boolean", default: "true", description: "A rule under every pair." },

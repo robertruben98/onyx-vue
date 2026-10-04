@@ -50,3 +50,22 @@ describe("DescriptionList (Vue)", () => {
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
+
+describe("DescriptionList (Vue) — tone vocabulary", () => {
+  it("paints neutral, default and no tone the same, and keeps the other tones", () => {
+    const { container } = render(DescriptionList, {
+      props: {
+        items: [
+          { term: "a", value: 1, tone: "neutral" },
+          { term: "b", value: 2, tone: "default" },
+          { term: "c", value: 3 },
+          { term: "d", value: 4, tone: "warning" },
+        ],
+      },
+    });
+    const classes = [...container.querySelectorAll(".ui-description-list__value")].map((v) => v.className);
+    expect(classes[0]).toBe(classes[1]);
+    expect(classes[1]).toBe(classes[2]);
+    expect(classes[3]).toContain("ui-description-list__value--warning");
+  });
+});
