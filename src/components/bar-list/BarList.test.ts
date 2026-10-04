@@ -185,11 +185,9 @@ describe("BarList (Vue) — scale and segments", () => {
     expect(rows).toEqual(["a4", "sin dato0"]);
   });
 
-  // BUG (ver informe agent-charts-datatable.md, BarList #1): una fila sin `value`
-  // ni `segments` (el tipo lo permite: `value?: number`) muestra en el tooltip
-  // "sin dato · undefined" y deja vacio el texto tras la barra, mientras la tabla
-  // gemela dice 0.
-  it.skip("names a row with no value as 0 in its tooltip and after its bar", async () => {
+  // Una fila sin `value` ni `segments` (el tipo lo permite: `value?: number`)
+  // decia "sin dato · undefined" en el tooltip mientras la tabla gemela decia 0.
+  it("names a row with no value as 0 in its tooltip and after its bar", async () => {
     const { container } = render(BarList, {
       props: { items: [{ label: "a", value: 4 }, { label: "sin dato" }], label: "x" },
     });
