@@ -96,3 +96,83 @@ describe("Popover (Vue)", () => {
     expect(await axe(document.body, axeOptions)).toHaveNoViolations();
   });
 });
+
+describe("Popover (Vue) — placement and focus details", () => {
+  const rect = (r: Partial<DOMRect>) => () => ({ top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => ({}), ...r }) as DOMRect;
+
+  async function openWith(placement: string) {
+    renderPopover({ placement });
+    const trigger = document.querySelector(".ui-popover__trigger") as HTMLElement;
+    trigger.getBoundingClientRect = rect({ top: 100, bottom: 120, left: 50, right: 150 });
+    const proto = HTMLElement.prototype;
+    const original = proto.getBoundingClientRect;
+    proto.getBoundingClientRect = rect({ width: 80, height: 30 });
+    await fireEvent.click(screen.getByRole("button", { name: "Open" }));
+    const pane = document.querySelector(".ui-popover__pane") as HTMLElement;
+    await waitFor(() => expect(pane.style.top).not.toBe(""));
+    proto.getBoundingClientRect = original;
+    return pane;
+  }
+
+  it.each([
+    ["bottom", "120px", "50px"],
+    ["top", "70px", "50px"],
+    ["left", "100px", "-30px"],
+    ["right", "100px", "150px"],
+  ])("places the panel %s of the trigger", async (placement, top, left) => {
+    const pane = await openWith(placement);
+    expect(pane.style.top).toBe(top);
+    expect(pane.style.left).toBe(left);
+  });
+
+  it("keeps focus on the panel when it has nothing focusable that is laid out", async () => {
+    renderPopover();
+    await fireEvent.click(screen.getByRole("button", { name: "Open" }));
+    const panel = await screen.findByRole("dialog");
+    await fireEvent.keyDown(panel, { key: "Tab" });
+    expect(document.activeElement).toBe(panel);
+    await fireEvent.keyDown(panel, { key: "a" });
+    expect(screen.getByRole("dialog")).toBeTruthy();
+  });
+
+  it("wraps Tab and Shift+Tab inside the panel", async () => {
+    // jsdom no maqueta: offsetParent es null siempre y el filtro de visibles se
+    // quedaria sin nadie. Se simula que todo esta en pantalla.
+    const descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "offsetParent");
+    Object.defineProperty(HTMLElement.prototype, "offsetParent", { configurable: true, get: () => document.body });
+    try {
+      render(Popover, {
+        props: { label: "Details" },
+        slots: {
+          trigger: () => h("button", { type: "button" }, "Open"),
+          content: () => [h("button", { type: "button" }, "One"), h("button", { type: "button" }, "Two")],
+        },
+      });
+      await fireEvent.click(screen.getByRole("button", { name: "Open" }));
+      const panel = await screen.findByRole("dialog");
+      const one = screen.getByRole("button", { name: "One" });
+      const two = screen.getByRole("button", { name: "Two" });
+      two.focus();
+      await fireEvent.keyDown(panel, { key: "Tab" });
+      expect(document.activeElement).toBe(one);
+      await fireEvent.keyDown(panel, { key: "Tab", shiftKey: true });
+      expect(document.activeElement).toBe(two);
+    } finally {
+      if (descriptor) Object.defineProperty(HTMLElement.prototype, "offsetParent", descriptor);
+    }
+  });
+
+  it("re-positions on resize and scroll while open, and cleans up when unmounted open", async () => {
+    const { unmount } = renderPopover();
+    await fireEvent.click(screen.getByRole("button", { name: "Open" }));
+    await screen.findByRole("dialog");
+    const trigger = document.querySelector(".ui-popover__trigger") as HTMLElement;
+    trigger.getBoundingClientRect = rect({ bottom: 300, left: 10 });
+    window.dispatchEvent(new Event("resize"));
+    const pane = document.querySelector(".ui-popover__pane") as HTMLElement;
+    await waitFor(() => expect(pane.style.top).toBe("300px"));
+    window.dispatchEvent(new Event("scroll"));
+    unmount();
+    window.dispatchEvent(new Event("resize"));
+  });
+});

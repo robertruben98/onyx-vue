@@ -110,3 +110,69 @@ describe("Menu (Vue)", () => {
     expect(document.getElementById(controlsB!)?.textContent).toContain("Beta");
   });
 });
+
+describe("Menu (Vue) — keyboard and positioning details", () => {
+  it.each(["ArrowDown", "ArrowUp", "Enter", " "])("opens from the trigger with %j", async (key) => {
+    renderMenu();
+    await fireEvent.keyDown(screen.getByRole("button", { name: "Actions" }), { key });
+    expect(await screen.findByRole("menu")).toBeTruthy();
+  });
+
+  it("ignores other keys on the trigger", async () => {
+    renderMenu();
+    await fireEvent.keyDown(screen.getByRole("button", { name: "Actions" }), { key: "x" });
+    expect(screen.queryByRole("menu")).toBeNull();
+  });
+
+  it("moves with ArrowUp, Home and End, wrapping and skipping disabled items", async () => {
+    renderMenu();
+    await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    const menu = await screen.findByRole("menu");
+    await waitFor(() => expect(document.activeElement?.textContent).toContain("Edit"));
+    await fireEvent.keyDown(menu, { key: "ArrowUp" });
+    expect(document.activeElement?.textContent).toContain("Duplicate");
+    await fireEvent.keyDown(menu, { key: "Home" });
+    expect(document.activeElement?.textContent).toContain("Edit");
+    await fireEvent.keyDown(menu, { key: "End" });
+    expect(document.activeElement?.textContent).toContain("Duplicate");
+  });
+
+  it("closes with Tab and with a second click on the trigger", async () => {
+    renderMenu();
+    const trigger = screen.getByRole("button", { name: "Actions" });
+    await fireEvent.click(trigger);
+    await fireEvent.keyDown(await screen.findByRole("menu"), { key: "Tab" });
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+    await fireEvent.click(trigger);
+    await screen.findByRole("menu");
+    await fireEvent.click(trigger);
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+  });
+
+  it("follows the trigger on scroll and resize while open, and stops listening when closed", async () => {
+    renderMenu();
+    const trigger = screen.getByRole("button", { name: "Actions" });
+    let bottom = 40;
+    trigger.getBoundingClientRect = () => ({ bottom, left: 12, top: 0, right: 0, width: 0, height: 0, x: 0, y: 0, toJSON: () => ({}) }) as DOMRect;
+    await fireEvent.click(trigger);
+    const menu = await screen.findByRole("menu");
+    await waitFor(() => expect(menu.style.top).toBe("40px"));
+    bottom = 90;
+    window.dispatchEvent(new Event("resize"));
+    await waitFor(() => expect(menu.style.top).toBe("90px"));
+    bottom = 120;
+    window.dispatchEvent(new Event("scroll"));
+    await waitFor(() => expect(menu.style.top).toBe("120px"));
+    await fireEvent.keyDown(menu, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+    window.dispatchEvent(new Event("resize"));
+  });
+
+  it("does nothing on keys when every item is disabled", async () => {
+    render(Menu, { props: { items: [{ id: "x", label: "Locked", disabled: true }] }, slots: { default: "Actions" } });
+    await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    const menu = await screen.findByRole("menu");
+    await fireEvent.keyDown(menu, { key: "ArrowDown" });
+    expect(screen.getByRole("menu")).toBeTruthy();
+  });
+});

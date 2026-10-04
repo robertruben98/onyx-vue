@@ -147,3 +147,87 @@ describe("Select (Vue)", () => {
     expect(document.getElementById(controlsB!)?.textContent).toContain("Other");
   });
 });
+
+describe("Select (Vue) — keyboard and pointer details", () => {
+  const listboxActive = (listbox: HTMLElement) =>
+    document.getElementById(listbox.getAttribute("aria-activedescendant") ?? "")?.textContent?.trim();
+
+  it.each(["ArrowDown", "ArrowUp", "Enter", " "])("opens from the trigger with %j", async (key) => {
+    renderSelect();
+    await fireEvent.keyDown(screen.getByRole("combobox"), { key });
+    expect(await screen.findByRole("listbox")).toBeTruthy();
+  });
+
+  it("ignores other keys on the trigger, and every key when disabled", async () => {
+    const first = renderSelect();
+    await fireEvent.keyDown(screen.getByRole("combobox"), { key: "a" });
+    expect(screen.queryByRole("listbox")).toBeNull();
+    first.unmount();
+    renderSelect({ disabled: true });
+    await fireEvent.keyDown(screen.getByRole("combobox"), { key: "ArrowDown" });
+    expect(screen.queryByRole("listbox")).toBeNull();
+  });
+
+  it("starts on the selected option and moves with Home, End and ArrowUp, wrapping past disabled ones", async () => {
+    renderSelect({ modelValue: "rx" });
+    await fireEvent.click(screen.getByRole("combobox"));
+    const listbox = await screen.findByRole("listbox");
+    expect(listboxActive(listbox)).toBe("RxJS");
+    await fireEvent.keyDown(listbox, { key: "Home" });
+    expect(listboxActive(listbox)).toBe("Angular");
+    await fireEvent.keyDown(listbox, { key: "End" });
+    expect(listboxActive(listbox)).toBe("RxJS"); // the last one is disabled
+    await fireEvent.keyDown(listbox, { key: "ArrowUp" });
+    expect(listboxActive(listbox)).toBe("Angular");
+    await fireEvent.keyDown(listbox, { key: "ArrowUp" });
+    expect(listboxActive(listbox)).toBe("RxJS"); // wraps, skipping the disabled one
+  });
+
+  it("follows the pointer over enabled options only", async () => {
+    renderSelect();
+    await fireEvent.click(screen.getByRole("combobox"));
+    const listbox = await screen.findByRole("listbox");
+    await fireEvent.mouseEnter(screen.getByRole("option", { name: "RxJS" }));
+    expect(listboxActive(listbox)).toBe("RxJS");
+    await fireEvent.mouseEnter(screen.getByRole("option", { name: "Style Dictionary" }));
+    expect(listboxActive(listbox)).toBe("RxJS");
+  });
+
+  it("closes with Tab and with a second click on the trigger", async () => {
+    renderSelect();
+    const trigger = screen.getByRole("combobox");
+    await fireEvent.click(trigger);
+    await fireEvent.keyDown(await screen.findByRole("listbox"), { key: "Tab" });
+    await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
+    await fireEvent.click(trigger);
+    await screen.findByRole("listbox");
+    await fireEvent.click(trigger);
+    await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("keeps focus inside the open listbox", async () => {
+    renderSelect();
+    await fireEvent.click(screen.getByRole("combobox"));
+    const listbox = await screen.findByRole("listbox");
+    const outside = document.createElement("button");
+    document.body.appendChild(outside);
+    await fireEvent.focusOut(listbox, { relatedTarget: outside });
+    await waitFor(() => expect(document.activeElement).toBe(listbox));
+    outside.remove();
+  });
+
+  it("selects nothing when every option is disabled or there are none", async () => {
+    const off = render(Select, {
+      props: { options: [{ value: "a", label: "A", disabled: true }] },
+    });
+    await fireEvent.click(screen.getByRole("combobox"));
+    await fireEvent.keyDown(await screen.findByRole("listbox"), { key: "Enter" });
+    expect(off.emitted().changed).toBeFalsy();
+    off.unmount();
+    const none = render(Select, { props: { options: [] } });
+    await fireEvent.click(screen.getByRole("combobox"));
+    await fireEvent.keyDown(await screen.findByRole("listbox"), { key: "ArrowDown" });
+    expect(none.emitted().changed).toBeFalsy();
+  });
+});
