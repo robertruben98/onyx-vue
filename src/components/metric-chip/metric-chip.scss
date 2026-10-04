@@ -79,8 +79,11 @@
   color: var(--ui-color-info);
 }
 
-// Faded, not greyed: the number is still the last true one, so it keeps its
-// tone and only loses its confidence.
+// Viejo, no apagado: el numero es el ultimo verdadero, asi que conserva su tono
+// y solo pierde la confianza, que se dice con un subrayado punteado. Con
+// opacidad (0.55) el tono quedaba a 2.3:1 y se leia peor justo el numero.
 .ui-metric-chip--stale .ui-metric-chip__value {
   opacity: var(--ui-metric-chip-stale-opacity);
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
 }

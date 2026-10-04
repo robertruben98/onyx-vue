@@ -41,7 +41,9 @@
 
 .ui-run-state__mark {
   font-variant-ligatures: none;
-  opacity: 0.75;
+  /* Sin atenuar: al 75% el glifo de algunos estados quedaba por debajo de
+     4.5:1 en los presets oscuros. */
+  opacity: 1;
 }
 
 // Something broke now: the only solid fill in the scale.
