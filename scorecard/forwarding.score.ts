@@ -17,6 +17,8 @@ const CONTROLS: Record<string, { selector: string; props?: Record<string, unknow
   UiCheckbox: { selector: "input" },
   UiSwitch: { selector: "input, [role=switch]" },
   UiSelect: { selector: "[role=combobox]", props: { options: [{ value: "a", label: "A" }] } },
+  UiSlider: { selector: "input[type=range]", props: { ariaLabel: "probe" } },
+  UiDateInput: { selector: "input", props: { ariaLabel: "probe" } },
 };
 
 const PROBE = {
