@@ -33,12 +33,6 @@
   box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
 }
 
-.ui-button__el:disabled {
-  cursor: not-allowed;
-  background-color: var(--ui-color-disabled-bg);
-  color: var(--ui-color-disabled-text);
-  border-color: transparent;
-}
 
 // --- Variants -------------------------------------------------------------
 .ui-button--primary .ui-button__el {
@@ -115,4 +109,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+// --- Disabled -------------------------------------------------------------
+// Al final y con la raiz delante: con `.ui-button__el:disabled` a secas y al
+// principio del fichero, cada variante (`.ui-button--secondary .ui-button__el`,
+// misma especificidad y escrita despues) le pisaba el fondo y el color, y un
+// boton deshabilitado se veia identico al activo; solo cambiaba el cursor, que
+// ni el teclado ni el movil ven. Lo destapo el pattern del asistente.
+// Cargando tambien deshabilita el <button>, pero conserva el aspecto de su
+// variante con el spinner: un "guardando..." gris parece un boton muerto.
+.ui-button:not(.ui-button--loading) .ui-button__el:disabled {
+  cursor: not-allowed;
+  background-color: var(--ui-color-disabled-bg);
+  color: var(--ui-color-disabled-text);
+  border-color: transparent;
 }
