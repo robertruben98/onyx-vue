@@ -31,6 +31,11 @@ Consumers that build from source (the control-panel dashboard aliases
   never defined.
 - `UiDataTable`: the empty and loading messages sit in a row and a cell
   (valid ARIA), and the virtual viewport is focusable.
+- `UiDataTable` keyboard and layout: a keyboard jump in virtual mode no
+  longer loses focus, a clicked cell becomes the active one (Enter used to
+  act on the header), the grid keeps its tab stop while loading, and the
+  virtual viewport re-measures its height when resized.
+- `UiBarList`: a row with no value reads 0, not "undefined".
 - At 360 px nothing spills: `UiBulkBar`, `UiSectionHeader` and `UiCheckRow`
   wrap, `UiSparkBars` scrolls inside its box, and the docs site no longer
   scrolls sideways.
