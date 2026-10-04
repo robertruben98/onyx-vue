@@ -678,4 +678,41 @@
   --ui-chart-grid: var(--ui-color-border);
   --ui-chart-inseg: var(--ui-color-surface);
   --ui-chart-inseg-light: var(--ui-color-on-primary);
+
+  /* --- Forms and layout (0.2): segmented, slider, date input, form field,
+     pagination, skeleton, stack, grid ------------------------------------ */
+  --ui-segmented-bg: var(--ui-color-surface);
+  --ui-segmented-border: var(--ui-color-border-strong);
+  --ui-segmented-text: var(--ui-color-text);
+  --ui-segmented-selected-bg: var(--ui-color-primary);
+  --ui-segmented-selected-text: var(--ui-color-on-primary);
+  --ui-segmented-hover-bg: var(--ui-color-surface-hover);
+  --ui-segmented-radius: var(--ui-radius);
+  --ui-segmented-padding-x: var(--ui-space-3);
+
+  --ui-slider-track: var(--ui-color-border-strong);
+  --ui-slider-fill: var(--ui-color-primary);
+  --ui-slider-thumb: var(--ui-color-primary);
+  --ui-slider-thumb-border: var(--ui-color-surface);
+  --ui-slider-track-height: 4px;
+  --ui-slider-thumb-size: 16px;
+
+  --ui-form-field-gap: var(--ui-space-1);
+  --ui-form-field-label: var(--ui-color-text);
+  --ui-form-field-help: var(--ui-color-text-muted);
+  --ui-form-field-error: var(--ui-color-danger);
+  --ui-form-field-required: var(--ui-color-danger);
+
+  --ui-pagination-gap: var(--ui-space-1);
+  --ui-pagination-current-bg: var(--ui-color-primary);
+  --ui-pagination-current-text: var(--ui-color-on-primary);
+  --ui-pagination-ellipsis: var(--ui-color-text-muted);
+
+  --ui-skeleton-bg: var(--ui-color-neutral-surface);
+  --ui-skeleton-shine: var(--ui-color-surface);
+  --ui-skeleton-radius: var(--ui-radius);
+  --ui-skeleton-line-height: 0.8em;
+
+  --ui-stack-gap: var(--ui-space-3);
+  --ui-grid-gap: var(--ui-space-4);
 }
