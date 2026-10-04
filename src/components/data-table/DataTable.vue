@@ -632,10 +632,21 @@ function onGridKeydown(event: KeyboardEvent): void {
 
       <!-- Body -->
       <div class="ui-dt__body" :role="mode === 'virtual' ? undefined : 'rowgroup'">
-        <div v-if="loading" class="ui-dt__status" role="status">Loading…</div>
+        <!-- Cargando y vacio van dentro de una fila y una celda que ocupa todas
+             las columnas: un rowgroup solo puede contener filas, y un texto
+             suelto ahi dejaba la rejilla con una estructura ARIA rota (axe:
+             aria-required-children, critico). El aviso de carga sigue siendo
+             un `status` para que se anuncie. -->
+        <div v-if="loading" class="ui-dt__status-row" role="row">
+          <div class="ui-dt__status" role="gridcell" :aria-colspan="colCount">
+            <span role="status">Loading…</span>
+          </div>
+        </div>
 
-        <div v-else-if="!visibleRows.length" class="ui-dt__status">
-          {{ emptyText }}
+        <div v-else-if="!visibleRows.length" class="ui-dt__status-row" role="row">
+          <div class="ui-dt__status" role="gridcell" :aria-colspan="colCount">
+            {{ emptyText }}
+          </div>
         </div>
 
         <!-- Virtual scroll (hand-rolled windowing) -->
@@ -644,6 +655,8 @@ function onGridKeydown(event: KeyboardEvent): void {
           ref="viewport"
           class="ui-dt__viewport"
           role="rowgroup"
+          tabindex="0"
+          :aria-label="caption ? `${caption}, rows` : 'Rows'"
           :style="{ height: viewportHeight }"
           @scroll="onViewportScroll"
         >
