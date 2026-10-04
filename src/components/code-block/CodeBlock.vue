@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { canonicalTone, type LegacyTone } from "../../internal/tone";
+import { canonicalTone } from "../../internal/tone";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { UiSpinner } from "../spinner";
 import "./code-block.scss";
@@ -32,7 +32,8 @@ const props = withDefaults(
     /** Accessible name of the box. */
     label?: string;
     /** Semantic tone of the text, e.g. `danger` for an error body. */
-    tone?: "neutral" | "muted" | "danger" | LegacyTone;
+    /** `default` is the deprecated name of `neutral`. */
+    tone?: "neutral" | "muted" | "danger" | "default";
   }>(),
   {
     text: "",

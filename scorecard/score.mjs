@@ -249,7 +249,7 @@ function deprecatedEvents() {
   const p = join(SRC, "deprecations.ts");
   if (!existsSync(p)) return {};
   const map = {};
-  for (const m of read(p).matchAll(/"([a-zA-Z:]+)"\s*:\s*"([a-zA-Z:]+)"/g)) map[m[1]] = m[2];
+  for (const m of read(p).matchAll(/^\s*["']?([a-zA-Z:]+)["']?\s*:\s*["']([a-zA-Z:]+)["']/gm)) map[m[1]] = m[2];
   return map;
 }
 
