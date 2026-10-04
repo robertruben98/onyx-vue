@@ -1,9 +1,9 @@
-import { afterEach } from "vitest";
+import { afterEach, beforeEach } from "vitest";
 import { render, screen, within, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
 import DataTable from "./DataTable.vue";
-import type { DataTableColumn } from "./DataTable.vue";
+import type { DataTableColumn, RowKey } from "./DataTable.vue";
 
 interface Person {
   id: number;
@@ -88,7 +88,13 @@ describe("DataTable (Vue) — foundation", () => {
   it("shows the empty state when there are no rows", () => {
     renderBasic({ rows: [] });
     expect(screen.getByText("No data")).toBeTruthy();
-    expect(screen.queryAllByRole("row")).toHaveLength(1); // header only
+    // La cabecera y una fila con una celda que ocupa todo el ancho: un aviso
+    // suelto dentro del rowgroup era ARIA invalido (axe, critico).
+    const rows = screen.queryAllByRole("row");
+    expect(rows).toHaveLength(2);
+    const cell = rows[1].querySelector('[role="gridcell"]');
+    expect(cell?.textContent).toContain("No data");
+    expect(cell?.getAttribute("aria-colspan")).toBe(String(rows[0].querySelectorAll('[role="columnheader"]').length));
   });
 
   it("shows a custom empty text", () => {
@@ -846,5 +852,543 @@ describe("DataTable (Vue) — activatable", () => {
     await fireEvent.click(container.querySelector(".ui-dt__tr .ui-dt__td") as HTMLElement);
     expect(emitted().rowActivated).toBeUndefined();
     expect(container.querySelector(".ui-dt__tr--activatable")).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Virtual scroll: the window follows the viewport
+// ---------------------------------------------------------------------------
+interface Line {
+  id: number;
+  label: string;
+}
+
+const LINES: Line[] = Array.from({ length: 1000 }, (_, i) => ({
+  id: i + 1,
+  label: `Item ${i + 1}`,
+}));
+
+function renderWindow(props: Record<string, unknown> = {}) {
+  return render(DataTable, {
+    props: {
+      caption: "Items",
+      rowKey: "id",
+      columns: [{ id: "label", header: "Label", field: "label" }],
+      rows: LINES,
+      mode: "virtual",
+      rowHeight: 40,
+      viewportHeight: "200px",
+      ...props,
+    },
+  });
+}
+
+function viewportOf(container: Element): HTMLElement {
+  return container.querySelector(".ui-dt__viewport") as HTMLElement;
+}
+
+function windowLabels(container: Element): string[] {
+  return [...container.querySelectorAll(".ui-dt__viewport .ui-dt__tr")].map(
+    (r) => r.textContent?.trim() ?? "",
+  );
+}
+
+describe("DataTable (Vue) — virtual window", () => {
+  // jsdom no mide: `clientHeight` es 0 salvo que se fije a mano.
+  const ownHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientHeight");
+  let measured = 0;
+
+  beforeEach(() => {
+    measured = 0;
+    Object.defineProperty(HTMLElement.prototype, "clientHeight", {
+      configurable: true,
+      get(this: HTMLElement) {
+        return this.classList.contains("ui-dt__viewport") ? measured : 0;
+      },
+    });
+  });
+
+  afterEach(() => {
+    if (ownHeight) Object.defineProperty(HTMLElement.prototype, "clientHeight", ownHeight);
+    else Reflect.deleteProperty(HTMLElement.prototype, "clientHeight");
+  });
+
+  it("estimates the window from viewportHeight while the viewport is not measured", () => {
+    const { container } = renderWindow();
+    // 200px / 40px = 5 filas visibles, mas 4 de margen por cada lado.
+    expect(windowLabels(container)).toHaveLength(13);
+    expect(windowLabels(container)[0]).toBe("Item 1");
+  });
+
+  it("sizes the window from the measured viewport height", async () => {
+    measured = 400;
+    const { container } = renderWindow();
+    await nextTick();
+    expect(windowLabels(container)).toHaveLength(400 / 40 + 8);
+  });
+
+  it("renders only the overscan rows when the height can be neither measured nor parsed", () => {
+    const { container } = renderWindow({ viewportHeight: "calc(100vh - 120px)" });
+    expect(windowLabels(container)).toHaveLength(8);
+  });
+
+  it("moves the window when the viewport scrolls", async () => {
+    const { container } = renderWindow();
+    const vp = viewportOf(container);
+    vp.scrollTop = 4000; // la fila 101 queda arriba del todo
+    await fireEvent.scroll(vp);
+    const labels = windowLabels(container);
+    // Cuatro filas de margen por encima: la ventana empieza en la 97.
+    expect(labels[0]).toBe("Item 97");
+    expect(labels).toHaveLength(13);
+    expect(labels).not.toContain("Item 1");
+    const first = container.querySelector(".ui-dt__viewport .ui-dt__tr");
+    expect(first?.getAttribute("aria-rowindex")).toBe("98");
+    // El separador conserva el alto total y el trozo pintado baja a su sitio.
+    const spacer = vp.firstElementChild as HTMLElement;
+    expect(spacer.style.height).toBe(`${1000 * 40}px`);
+    expect((spacer.firstElementChild as HTMLElement).style.transform).toBe(`translateY(${96 * 40}px)`);
+  });
+
+  it("brings the window back after a reload", async () => {
+    const { container, rerender } = renderWindow();
+    await rerender({ loading: true });
+    expect(viewportOf(container)).toBeNull();
+    expect(screen.getByRole("status").textContent).toContain("Loading");
+    await rerender({ loading: false });
+    expect(viewportOf(container)).toBeTruthy();
+    expect(windowLabels(container)[0]).toBe("Item 1");
+  });
+
+  it("names the rows region after the caption, or 'Rows' without one", async () => {
+    const { container, rerender } = renderWindow();
+    expect(viewportOf(container).getAttribute("aria-label")).toBe("Items, rows");
+    await rerender({ caption: "" });
+    expect(viewportOf(container).getAttribute("aria-label")).toBe("Rows");
+  });
+
+  it("activates a virtual row on click", async () => {
+    const { container, emitted } = renderWindow({ activatable: true });
+    const row = container.querySelectorAll(".ui-dt__viewport .ui-dt__tr")[2];
+    expect(row.classList.contains("ui-dt__tr--activatable")).toBe(true);
+    await fireEvent.click(row.querySelector(".ui-dt__td") as HTMLElement);
+    expect((emitted().rowActivated as unknown[][])[0][0]).toEqual(LINES[2]);
+  });
+
+  it("selects a virtual row with its checkbox", async () => {
+    const { container, emitted } = renderWindow({ selectable: "multiple" });
+    const rows = container.querySelectorAll(".ui-dt__viewport .ui-dt__tr");
+    await fireEvent.click(within(rows[1] as HTMLElement).getByRole("checkbox"));
+    const calls = emitted()["update:selected"] as unknown[][];
+    expect([...(calls[calls.length - 1][0] as Set<number>)]).toEqual([2]);
+    expect(rows[1].getAttribute("aria-selected")).toBe("true");
+    expect(rows[0].getAttribute("aria-selected")).toBe("false");
+  });
+
+  it("activates the keyboard row with Enter in virtual mode", async () => {
+    const { container, emitted } = renderWindow({ activatable: true });
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+    await fireEvent.keyDown(grid, { key: "ArrowDown" });
+    await fireEvent.keyDown(grid, { key: "ArrowDown" });
+    expect(at()).toEqual({ row: "2", col: "0" });
+    expect(cellAt(container, 2, 0).getAttribute("tabindex")).toBe("0");
+    await fireEvent.keyDown(grid, { key: "Enter" });
+    expect((emitted().rowActivated as unknown[][])[0][0]).toEqual(LINES[1]);
+  });
+
+  it("selects a virtual row from the keyboard", async () => {
+    const { container } = renderWindow({ selectable: "multiple" });
+    cellAt(container, 0, 0).focus(); // casilla de "seleccionar todo"
+    const grid = screen.getByRole("grid");
+    await fireEvent.keyDown(grid, { key: "ArrowDown" });
+    expect(cellAt(container, 1, 0).getAttribute("tabindex")).toBe("0");
+    expect(cellAt(container, 0, 0).getAttribute("tabindex")).toBe("-1");
+    await fireEvent.keyDown(grid, { key: " " });
+    const firstRow = container.querySelector(".ui-dt__viewport .ui-dt__tr");
+    expect(firstRow?.getAttribute("aria-selected")).toBe("true");
+    expect(at()).toEqual({ row: "1", col: "0" });
+  });
+
+  it("keeps the focus on the header while a virtual table is loading", async () => {
+    const { container } = renderWindow({ loading: true });
+    cellAt(container, 0, 0).focus();
+    await fireEvent.keyDown(screen.getByRole("grid"), { key: "ArrowDown" });
+    expect(at()).toEqual({ row: "0", col: "0" });
+  });
+
+  it("scrolls a far row into view and makes it the tab stop (Ctrl+End, PageUp)", async () => {
+    measured = 200;
+    const { container } = renderWindow();
+    const vp = viewportOf(container);
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+
+    await fireEvent.keyDown(grid, { key: "End", ctrlKey: true });
+    // La fila 1000 no estaba pintada: el viewport baja hasta dejarla abajo del todo.
+    expect(vp.scrollTop).toBe(1000 * 40 - 200);
+    await fireEvent.scroll(vp); // el aviso de scroll que daria el navegador
+    expect(cellAt(container, 1000, 0).textContent?.trim()).toBe("Item 1000");
+    expect(cellAt(container, 1000, 0).getAttribute("tabindex")).toBe("0");
+
+    // Fuera de `paginated` el salto es de 10 filas; la 990 queda arriba del todo.
+    await fireEvent.keyDown(grid, { key: "PageUp" });
+    expect(vp.scrollTop).toBe(989 * 40);
+    await fireEvent.scroll(vp);
+    expect(cellAt(container, 990, 0).getAttribute("tabindex")).toBe("0");
+  });
+
+  // BUG (ver informe agent-charts-datatable.md, DataTable #1): en modo virtual,
+  // saltar a una fila que no esta pintada pierde el foco. `focusCell` mueve el
+  // scroll y reintenta en `nextTick`, pero el navegador avisa del scroll en una
+  // tarea posterior: en `nextTick` la fila aun no existe, y cuando la ventana se
+  // mueve la celda que tenia el foco se desmonta y el foco cae a <body>.
+  it.skip("keeps keyboard focus when jumping to a row outside the window", async () => {
+    measured = 200;
+    const { container } = renderWindow();
+    const vp = viewportOf(container);
+    let top = 0;
+    // Como un navegador: el evento `scroll` llega en una tarea, no en el acto.
+    Object.defineProperty(vp, "scrollTop", {
+      configurable: true,
+      get: () => top,
+      set: (value: number) => {
+        top = value;
+        setTimeout(() => vp.dispatchEvent(new Event("scroll")));
+      },
+    });
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+    await fireEvent.keyDown(grid, { key: "PageDown" });
+    expect(at()).toEqual({ row: "10", col: "0" });
+    await fireEvent.keyDown(grid, { key: "PageDown" });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await nextTick();
+    expect(at()).toEqual({ row: "20", col: "0" });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Keyboard: page jumps, Enter on rows, keys left alone
+// ---------------------------------------------------------------------------
+describe("DataTable (Vue) — keyboard page jumps and activation", () => {
+  const nineteen: Line[] = LINES.slice(0, 19);
+
+  it("jumps ten rows with PageDown/PageUp outside paginated mode", async () => {
+    const { container } = render(DataTable, {
+      props: {
+        caption: "Lines",
+        rowKey: "id",
+        columns: [{ id: "label", header: "Label", field: "label" }],
+        rows: nineteen,
+        mode: "plain",
+      },
+    });
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+    await fireEvent.keyDown(grid, { key: "PageDown" });
+    expect(at()).toEqual({ row: "10", col: "0" });
+    await fireEvent.keyDown(grid, { key: "PageDown" });
+    expect(at()).toEqual({ row: "19", col: "0" }); // tope: la ultima fila
+    await fireEvent.keyDown(grid, { key: "PageUp" });
+    expect(at()).toEqual({ row: "9", col: "0" });
+    await fireEvent.keyDown(grid, { key: "PageUp" });
+    expect(at()).toEqual({ row: "0", col: "0" }); // tope: la cabecera
+  });
+
+  it("jumps a whole page with PageDown in paginated mode", async () => {
+    const { container } = render(DataTable, {
+      props: {
+        caption: "Lines",
+        rowKey: "id",
+        columns: [{ id: "label", header: "Label", field: "label" }],
+        rows: LINES.slice(0, 30),
+        pageSize: 25,
+        pageSizeOptions: [10, 25],
+      },
+    });
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+    await fireEvent.keyDown(grid, { key: "PageDown" });
+    // 25 filas de un salto (no 10): la ultima de la pagina.
+    expect(at()).toEqual({ row: "25", col: "0" });
+    expect(document.activeElement?.textContent?.trim()).toBe("Item 25");
+    await fireEvent.keyDown(grid, { key: "PageUp" });
+    expect(at()).toEqual({ row: "0", col: "0" });
+  });
+
+  it("activates the keyboard row of the current page with Enter or Space", async () => {
+    const { container, emitted } = renderPaged({ activatable: true });
+    await fireEvent.click(screen.getByRole("button", { name: "Next page" }));
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+    await fireEvent.keyDown(grid, { key: "ArrowDown" });
+    await fireEvent.keyDown(grid, { key: "ArrowDown" });
+    await fireEvent.keyDown(grid, { key: "Enter" });
+    // Pagina 2 (Item 6–10), segunda fila: Item 7.
+    const calls = emitted().rowActivated as unknown[][];
+    expect(calls[0][0]).toEqual(ITEMS[6]);
+    await fireEvent.keyDown(grid, { key: "ArrowDown" });
+    await fireEvent.keyDown(grid, { key: " " });
+    expect(calls[1][0]).toEqual(ITEMS[7]);
+  });
+
+  it("lets Enter work the control in a cell instead of activating the row", async () => {
+    const { container, emitted } = render(DataTable, {
+      props: {
+        caption: "People",
+        columns: COLUMNS,
+        rows: ROWS,
+        rowKey: "id",
+        mode: "plain",
+        activatable: true,
+        selectable: "multiple",
+      },
+    });
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+    await fireEvent.keyDown(grid, { key: "ArrowDown" }); // celda del checkbox de Ada
+    await fireEvent.keyDown(grid, { key: "Enter" });
+    const calls = emitted()["update:selected"] as unknown[][];
+    expect([...(calls[calls.length - 1][0] as Set<number>)]).toEqual([1]);
+    expect(emitted().rowActivated).toBeUndefined();
+    expect(at()).toEqual({ row: "1", col: "0" }); // el foco sigue en la celda
+  });
+
+  it("does not activate a row from the header", async () => {
+    const { container, emitted } = render(DataTable, {
+      props: { caption: "People", columns: COLUMNS, rows: ROWS, rowKey: "id", mode: "plain", activatable: true },
+    });
+    cellAt(container, 0, 0).focus();
+    await fireEvent.keyDown(screen.getByRole("grid"), { key: "Enter" });
+    expect(emitted().rowActivated).toBeUndefined();
+  });
+
+  it("leaves the keys it does not handle to the browser", async () => {
+    const { container } = renderScores();
+    cellAt(container, 0, 0).focus();
+    const grid = screen.getByRole("grid");
+    const tab = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
+    grid.dispatchEvent(tab);
+    await nextTick();
+    expect(tab.defaultPrevented).toBe(false);
+    expect(cellAt(container, 0, 0).getAttribute("tabindex")).toBe("0");
+    const down = new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, cancelable: true });
+    grid.dispatchEvent(down);
+    await nextTick();
+    expect(down.defaultPrevented).toBe(true);
+    expect(cellAt(container, 1, 0).getAttribute("tabindex")).toBe("0");
+  });
+
+  it("keeps the focus on the header while the rows are loading", async () => {
+    const { container } = render(DataTable, {
+      props: { caption: "People", columns: COLUMNS, rows: ROWS, rowKey: "id", loading: true },
+    });
+    cellAt(container, 0, 0).focus();
+    await fireEvent.keyDown(screen.getByRole("grid"), { key: "ArrowDown" });
+    expect(at()).toEqual({ row: "0", col: "0" });
+  });
+
+  // BUG (ver informe agent-charts-datatable.md, DataTable #3): mientras carga,
+  // una flecha mueve la celda activa a una fila que no esta pintada; la
+  // cabecera pierde su tabindex=0 y la rejilla se queda sin parada de Tab.
+  it.skip("keeps a tab stop in the grid while the rows are loading", async () => {
+    const { container } = render(DataTable, {
+      props: { caption: "People", columns: COLUMNS, rows: ROWS, rowKey: "id", loading: true },
+    });
+    cellAt(container, 0, 0).focus();
+    await fireEvent.keyDown(screen.getByRole("grid"), { key: "ArrowDown" });
+    expect(container.querySelectorAll('[role="grid"] [tabindex="0"]')).toHaveLength(1);
+  });
+
+  // BUG (ver informe agent-charts-datatable.md, DataTable #2): una celda tiene
+  // tabindex=-1, asi que un clic le da el foco, pero la celda activa del roving
+  // tabindex no lo sigue: el teclado actua sobre la celda activa anterior. Con
+  // la primera columna ordenable, clic en una celda + Enter ordena la tabla.
+  it.skip("acts on the clicked cell, not on a stale active cell, after a pointer focus", async () => {
+    const { container } = renderScores();
+    const cell = cellAt(container, 2, 1); // Alice · 10
+    await fireEvent.click(cell);
+    cell.focus(); // lo que hace el navegador con un clic en un elemento enfocable
+    await fireEvent.keyDown(cell, { key: "Enter" });
+    expect(screen.getByRole("columnheader", { name: /Name/ }).getAttribute("aria-sort")).toBe("none");
+    await fireEvent.keyDown(cell, { key: "ArrowUp" });
+    expect(at()).toEqual({ row: "1", col: "1" });
+  });
+
+  it("moves the roving tab stop from the select-all header to a row's checkbox cell", async () => {
+    const { container } = renderSelect();
+    expect(cellAt(container, 0, 0).getAttribute("tabindex")).toBe("0");
+    cellAt(container, 0, 0).focus();
+    await fireEvent.keyDown(screen.getByRole("grid"), { key: "ArrowDown" });
+    expect(cellAt(container, 0, 0).getAttribute("tabindex")).toBe("-1");
+    expect(cellAt(container, 1, 0).getAttribute("tabindex")).toBe("0");
+    expect(at()).toEqual({ row: "1", col: "0" });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Values, keys and sorting edge cases
+// ---------------------------------------------------------------------------
+describe("DataTable (Vue) — values and row keys", () => {
+  function lastSelected(emitted: () => Record<string, unknown[]>): RowKey[] {
+    const calls = emitted()["update:selected"] as unknown[][];
+    return [...(calls[calls.length - 1][0] as Set<RowKey>)];
+  }
+
+  it("renders an empty cell for a column with neither field nor value", () => {
+    render(DataTable, {
+      props: {
+        caption: "People",
+        rowKey: "id",
+        columns: [
+          { id: "name", header: "Name", field: "name" },
+          { id: "notes", header: "Notes" },
+        ],
+        rows: ROWS,
+      },
+    });
+    const notes = screen.getAllByRole("row").slice(1).map((r) => r.querySelectorAll(".ui-dt__td")[1].textContent?.trim());
+    expect(notes).toEqual(["", ""]);
+  });
+
+  it("keys rows with a rowKey function", async () => {
+    const { emitted } = renderSelect({ rowKey: (r: Score) => `score-${r.id}` });
+    await fireEvent.click(screen.getAllByRole("checkbox")[1]); // Charlie
+    expect(lastSelected(emitted)).toEqual(["score-1"]);
+  });
+
+  it("keys a row without id by its JSON when no rowKey is given", async () => {
+    const { emitted } = render(DataTable, {
+      props: {
+        caption: "People",
+        columns: [{ id: "name", header: "Name", field: "name" }],
+        rows: [{ name: "Ada" }, { name: "Grace" }],
+        selectable: "multiple",
+      },
+    });
+    await fireEvent.click(screen.getAllByRole("checkbox")[2]); // Grace
+    expect(lastSelected(emitted)).toEqual(['{"name":"Grace"}']);
+  });
+
+  it("removes a row from the selection when it is unchecked", async () => {
+    const { state } = renderSelect();
+    const rowBox = screen.getAllByRole("checkbox")[2]; // Alice (id 2)
+    await fireEvent.click(rowBox);
+    expect(state.selected.has(2)).toBe(true);
+    await fireEvent.click(rowBox);
+    expect(state.selected.has(2)).toBe(false);
+    expect(screen.getAllByRole("row")[2].getAttribute("aria-selected")).toBe("false");
+  });
+
+  it("clears the single selection when the selected row is unchecked", async () => {
+    const { state } = renderSelect({ selectable: "single" });
+    const rowBox = screen.getAllByRole("checkbox")[0];
+    await fireEvent.click(rowBox);
+    expect(state.selected.size).toBe(1);
+    await fireEvent.click(rowBox);
+    expect(state.selected.size).toBe(0);
+  });
+});
+
+interface Entry {
+  id: number;
+  name: string;
+  points: number | null;
+}
+
+interface Member {
+  id: number;
+  name: string;
+  role: string;
+}
+
+describe("DataTable (Vue) — sorting edge cases", () => {
+  function sortBy(header: RegExp, init: { shiftKey?: boolean } = {}) {
+    return fireEvent.click(within(screen.getByRole("columnheader", { name: header })).getByRole("button"), init);
+  }
+
+  it("sorts by a column's sortAccessor instead of its displayed value", async () => {
+    renderScores({
+      columns: [{ id: "name", header: "Name", field: "name", sortable: true, sortAccessor: (r: Score) => -r.points }],
+    });
+    await sortBy(/Name/);
+    // -30, -20, -10: ni orden alfabetico (Alice…) ni el de origen (Charlie, Alice…).
+    expect(names()).toEqual(["Charlie", "Bob", "Alice"]);
+  });
+
+  it("puts empty values last ascending and first descending", async () => {
+    const entries: Entry[] = [
+      { id: 1, name: "A", points: 2 },
+      { id: 2, name: "B", points: null },
+      { id: 3, name: "C", points: 1 },
+      { id: 4, name: "D", points: null },
+    ];
+    render(DataTable, {
+      props: {
+        caption: "Entries",
+        rowKey: "id",
+        columns: [
+          { id: "name", header: "Name", field: "name" },
+          { id: "points", header: "Points", field: "points", sortable: true },
+        ],
+        rows: entries,
+      },
+    });
+    await sortBy(/Points/);
+    expect(names()).toEqual(["C", "A", "B", "D"]); // dos vacios: empatan, orden de origen
+    await sortBy(/Points/);
+    expect(names()).toEqual(["B", "D", "A", "C"]);
+  });
+
+  it("ignores a sort level whose column no longer exists", () => {
+    const { unmount } = renderScores({ sort: [{ columnId: "gone", direction: "asc" }] });
+    expect(names()).toEqual(["Charlie", "Alice", "Bob"]); // orden de origen
+    unmount();
+    renderScores({
+      sort: [
+        { columnId: "gone", direction: "asc" },
+        { columnId: "name", direction: "asc" },
+      ],
+    });
+    expect(names()).toEqual(["Alice", "Bob", "Charlie"]);
+  });
+
+  it("breaks ties with the next sort level and keeps source order on a full tie", async () => {
+    const members: Member[] = [
+      { id: 1, name: "Ada", role: "Lead" },
+      { id: 2, name: "Grace", role: "Eng" },
+      { id: 3, name: "Linus", role: "Eng" },
+      { id: 4, name: "Alan", role: "Eng" },
+    ];
+    render(DataTable, {
+      props: {
+        caption: "Members",
+        rowKey: "id",
+        multiSort: true,
+        columns: [
+          { id: "name", header: "Name", field: "name", sortable: true },
+          { id: "role", header: "Role", field: "role", sortable: true },
+        ],
+        rows: members,
+      },
+    });
+    await sortBy(/Role/);
+    expect(names()).toEqual(["Grace", "Linus", "Alan", "Ada"]);
+    await sortBy(/Name/, { shiftKey: true });
+    expect(names()).toEqual(["Alan", "Grace", "Linus", "Ada"]);
+    await sortBy(/Name/, { shiftKey: true });
+    expect(names()).toEqual(["Linus", "Grace", "Alan", "Ada"]);
+  });
+
+  it("drops only the cycled level when Shift+click takes it back to none", async () => {
+    renderScores({ multiSort: true });
+    await sortBy(/Name/);
+    await sortBy(/Points/, { shiftKey: true }); // asc
+    await sortBy(/Points/, { shiftKey: true }); // desc
+    await sortBy(/Points/, { shiftKey: true }); // none
+    expect(screen.getByRole("columnheader", { name: /Points/ }).getAttribute("aria-sort")).toBe("none");
+    expect(screen.getByRole("columnheader", { name: /Name/ }).getAttribute("aria-sort")).toBe("ascending");
+    expect(names()).toEqual(["Alice", "Bob", "Charlie"]);
   });
 });
