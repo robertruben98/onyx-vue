@@ -43,7 +43,8 @@ import {
  *
  * Reading order is the on-call's: is anything on fire (the alert), how is the
  * whole thing doing (the KPIs), which service (the table), and what changed
- * (the activity log). The right column is context, not action.
+ * (the activity log). The table gets the full width because it is the thing
+ * acted on; the charts under it are context.
  */
 
 const DOT: Record<Health, StatusDotState> = {
@@ -74,25 +75,29 @@ const rows = computed(() => {
   );
 });
 
+// Service takes twice Team's share of what the fixed columns leave. The fixed
+// ones are kept narrow on purpose: `hideBelow` reads the viewport, not the
+// table, so the table must hold every column at the narrowest width at which
+// they are all shown (900 px), or the 1fr tracks collapse to 0.
 const columns: DataTableColumn<Service>[] = [
-  { id: "name", header: "Service", field: "name", sortable: true },
-  { id: "version", header: "Version", field: "version", width: "9rem" },
+  { id: "name", header: "Service", field: "name", sortable: true, width: "minmax(0, 2fr)" },
+  { id: "version", header: "Version", field: "version", width: "8rem" },
   { id: "team", header: "Team", field: "team", hideBelow: 900 },
-  { id: "p95", header: "p95", field: "p95", align: "end", sortable: true, width: "6rem" },
+  { id: "p95", header: "p95", field: "p95", align: "end", sortable: true, width: "5.5rem" },
   {
     id: "errors",
     header: "5xx",
     value: (s) => s.errorRate,
     align: "end",
     sortable: true,
-    width: "6rem",
+    width: "5rem",
   },
   {
     id: "deployed",
     header: "Deployed",
     field: "deployedAt",
     sortable: true,
-    width: "8rem",
+    width: "7.5rem",
     hideBelow: 700,
   },
 ];
@@ -175,87 +180,85 @@ function refresh() {
 
       <UiKpiStrip :items="kpis" label="Environment health" />
 
-      <div class="ops__grid">
-        <UiPanel title="Services" :count="rows.length">
-          <template #controls>
-            <UiFilterBar
-              v-model:search="search"
-              search-placeholder="Filter by service or team"
-              search-label="Filter services"
-              label="Service filters"
-            >
-              <UiFilterChip
-                v-for="c in CHIPS"
-                :key="c.health"
-                :label="c.label"
-                :count="countOf(c.health)"
-                :tone="c.tone"
-                :pressed="health === c.health"
-                @toggled="toggleHealth(c.health, $event)"
-              />
-            </UiFilterBar>
-          </template>
-
-          <UiDataTable
-            :columns="columns"
-            :rows="rows"
-            row-key="name"
-            caption="Services"
-            :loading="refreshing"
-            empty-text="No service matches the filters."
+      <UiPanel title="Services" :count="rows.length">
+        <template #controls>
+          <UiFilterBar
+            v-model:search="search"
+            search-placeholder="Filter by service or team"
+            search-label="Filter services"
+            label="Service filters"
           >
-            <template #cell-name="{ row }">
-              <span class="ops__service">
-                <UiStatusDot :state="DOT[row.health]" :label="row.health" />
-                {{ row.name }}
-              </span>
-            </template>
-            <template #cell-version="{ row }">
-              <UiTag
-                appearance="outline"
-                :variant="row.version.includes('-') ? 'warning' : 'neutral'"
-              >
-                {{ row.version }}
-              </UiTag>
-            </template>
-            <template #cell-p95="{ row }">{{ row.p95 }} ms</template>
-            <template #cell-errors="{ row }">
-              {{ (row.errorRate * 100).toFixed(2) }}%
-            </template>
-            <template #cell-deployed="{ row }">
-              <UiRelativeTime :date="row.deployedAt" :now="NOW" :stale-after-days="30" />
-            </template>
-          </UiDataTable>
+            <UiFilterChip
+              v-for="c in CHIPS"
+              :key="c.health"
+              :label="c.label"
+              :count="countOf(c.health)"
+              :tone="c.tone"
+              :pressed="health === c.health"
+              @toggled="toggleHealth(c.health, $event)"
+            />
+          </UiFilterBar>
+        </template>
+
+        <UiDataTable
+          :columns="columns"
+          :rows="rows"
+          row-key="name"
+          caption="Services"
+          :loading="refreshing"
+          empty-text="No service matches the filters."
+        >
+          <template #cell-name="{ row }">
+            <span class="ops__service">
+              <UiStatusDot :state="DOT[row.health]" :label="row.health" />
+              {{ row.name }}
+            </span>
+          </template>
+          <template #cell-version="{ row }">
+            <UiTag
+              appearance="outline"
+              :variant="row.version.includes('-') ? 'warning' : 'neutral'"
+            >
+              {{ row.version }}
+            </UiTag>
+          </template>
+          <template #cell-p95="{ row }">{{ row.p95 }} ms</template>
+          <template #cell-errors="{ row }">
+            {{ (row.errorRate * 100).toFixed(2) }}%
+          </template>
+          <template #cell-deployed="{ row }">
+            <UiRelativeTime :date="row.deployedAt" :now="NOW" :stale-after-days="30" />
+          </template>
+        </UiDataTable>
+      </UiPanel>
+
+      <div class="ops__context">
+        <UiPanel title="Traffic" count="last 24 h">
+          <UiBarChart
+            :series="TRAFFIC_SERIES"
+            :points="TRAFFIC_24H"
+            label="Requests per hour"
+            :height="140"
+            :show-legend="false"
+            :value-format="(n: number) => `${Math.round(n / 1000)}k`"
+            category-header="hour"
+            table-summary="see the hours"
+          />
         </UiPanel>
 
-        <div class="ops__side">
-          <UiPanel title="Traffic" count="last 24 h">
-            <UiBarChart
-              :series="TRAFFIC_SERIES"
-              :points="TRAFFIC_24H"
-              label="Requests per hour"
-              :height="140"
-              :show-legend="false"
-              :value-format="(n: number) => `${Math.round(n / 1000)}k`"
-              category-header="hour"
-              table-summary="see the hours"
-            />
-          </UiPanel>
+        <UiPanel title="Error budget spent" count="30 days">
+          <UiBarList :items="ERROR_BUDGET" label="Error budget spent" :max="100" />
+        </UiPanel>
 
-          <UiPanel title="Error budget spent" count="30 days">
-            <UiBarList :items="ERROR_BUDGET" label="Error budget spent" :max="100" />
-          </UiPanel>
-
-          <UiPanel title="Incidents" count="90 days">
-            <UiHeatStrip
-              :values="INCIDENTS_90D"
-              :levels="3"
-              label="Incidents per day"
-              legend="90 days ago · today"
-              :bucket-label="(i: number, n: number) => `${incidentDay(i)}: ${n} incidents`"
-            />
-          </UiPanel>
-        </div>
+        <UiPanel title="Incidents" count="90 days">
+          <UiHeatStrip
+            :values="INCIDENTS_90D"
+            :levels="3"
+            label="Incidents per day"
+            legend="90 days ago · today"
+            :bucket-label="(i: number, n: number) => `${incidentDay(i)}: ${n} incidents`"
+          />
+        </UiPanel>
       </div>
 
       <UiPanel title="Activity" count="today">
@@ -272,16 +275,11 @@ function refresh() {
   gap: 16px;
   padding: 16px;
 }
-.ops__grid {
+.ops__context {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   gap: 16px;
   align-items: start;
-}
-.ops__side {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 .ops__service {
   display: inline-flex;
@@ -291,10 +289,5 @@ function refresh() {
 .ops__muted {
   color: var(--ui-color-text-muted);
   font-size: 0.875rem;
-}
-@media (max-width: 960px) {
-  .ops__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 </style>
