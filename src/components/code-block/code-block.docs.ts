@@ -14,7 +14,7 @@ export const codeBlockDoc: ComponentDoc = {
     { name: "emptyText", type: "string", default: "''", description: "Shown while there is no text." },
     { name: "loading", type: "boolean", default: "false", description: "Spinner instead of the text; aria-busy." },
     { name: "label", type: "string", default: "''", description: "Makes it a named region." },
-    { name: "tone", type: "'default' | 'muted' | 'danger'", default: "'default'", description: "Tone of the text." },
+    { name: "tone", type: "'neutral' | 'muted' | 'danger'", default: "'neutral'", description: "Tone of the text. Legacy spellings `ok`, `warn` and `default` still work and are deprecated." },
     { name: "scrollToEnd()", type: "exposed method", default: "—", description: "Jumps to the end and re-pins." },
   ],
   demos: [

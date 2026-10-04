@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { canonicalTone, type LegacyTone } from "../../internal/tone";
 import { computed } from "vue";
 import "./readout.scss";
 
@@ -22,14 +23,19 @@ const props = withDefaults(
     /** Rendered smaller next to the value: `s`, `%`, `ms`. */
     unit?: string;
     /** Semantic tone of the figure. */
-    tone?: "default" | "success" | "warning" | "danger" | "muted";
+    tone?: "neutral" | "success" | "warning" | "danger" | "muted" | LegacyTone;
   }>(),
-  { tone: "default" },
+  { tone: "neutral" },
 );
+
+/** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
+const tone = computed(() => canonicalTone(props.tone));
 
 const rootClasses = computed(() => [
   "ui-readout",
-  `ui-readout--${props.tone}`,
+  // `--default` y no `--neutral`: es la clase que existia y la que una hoja
+  // del consumidor puede estar sobrescribiendo.
+  `ui-readout--${tone.value === "neutral" ? "default" : tone.value}`,
 ]);
 </script>
 

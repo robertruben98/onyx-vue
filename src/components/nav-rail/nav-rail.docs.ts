@@ -71,7 +71,7 @@ export const navRailDoc: ComponentDoc = {
       title: "Views and repositories",
       code: `<UiNavRail label="PR dashboard">
   <UiNavRailItem label="Todos" :count="57" active />
-  <UiNavRailItem label="Listos para merge" :count="4" count-tone="ok" />
+  <UiNavRailItem label="Listos para merge" :count="4" count-tone="success" />
   <UiNavRailItem label="Seguridad" count-state="unrequested" />
   <UiNavRailGroup label="Repos">
     <UiNavRailItem label="payment" :count="12" />

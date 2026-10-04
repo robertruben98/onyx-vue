@@ -1,4 +1,5 @@
 <script lang="ts">
+import { canonicalTone, type LegacyTone } from "../../internal/tone";
 /**
  * Semantic tone of a filter chip.
  *
@@ -8,11 +9,12 @@
  */
 export type FilterChipTone =
   | "neutral"
-  | "ok"
-  | "warn"
-  | "danger"
   | "info"
-  | "muted";
+  | "success"
+  | "warning"
+  | "danger"
+  | "muted"
+  | LegacyTone;
 </script>
 
 <script setup lang="ts">
@@ -51,6 +53,9 @@ const props = withDefaults(
   },
 );
 
+/** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
+const tone = computed(() => canonicalTone(props.tone));
+
 /** Emitted on activation, carrying the state the chip is moving TO. */
 const emit = defineEmits<{ toggled: [pressed: boolean] }>();
 
@@ -70,19 +75,19 @@ const empty = computed(
  */
 const countTone = computed(() => {
   if (!props.pressed) return "neutral" as const;
-  if (props.tone === "ok") return "ok" as const;
-  if (props.tone === "warn") return "warn" as const;
-  if (props.tone === "danger") return "danger" as const;
+  if (tone.value === "success") return "success" as const;
+  if (tone.value === "warning") return "warning" as const;
+  if (tone.value === "danger") return "danger" as const;
   return "neutral" as const;
 });
 
 const rootClasses = computed(() => ({
   "ui-filter-chip": true,
-  "ui-filter-chip--ok": props.tone === "ok",
-  "ui-filter-chip--warn": props.tone === "warn",
-  "ui-filter-chip--danger": props.tone === "danger",
-  "ui-filter-chip--info": props.tone === "info",
-  "ui-filter-chip--muted": props.tone === "muted",
+  "ui-filter-chip--ok": tone.value === "success",
+  "ui-filter-chip--warn": tone.value === "warning",
+  "ui-filter-chip--danger": tone.value === "danger",
+  "ui-filter-chip--info": tone.value === "info",
+  "ui-filter-chip--muted": tone.value === "muted",
   "ui-filter-chip--pressed": props.pressed,
   "ui-filter-chip--dashed": props.dashed,
   "ui-filter-chip--empty": empty.value && !props.pressed,
