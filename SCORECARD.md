@@ -5,10 +5,10 @@ Measured 2026-10-04 by `npm run score`. Every aspect must score above 90. How ea
 | Aspect | Score | Measured |
 |---|---|---|
 | Accessibility | ✅ 99.9 | 375/380 component×theme runs with no axe violation |
-| Test coverage | ✅ 97.9 | statements 99.43%, branches 95.27%, functions 99.02% |
+| Test coverage | ✅ 98 | statements 99.44%, branches 95.41%, functions 99.08% |
 | Documentation | ✅ 100 | 504/504 props, events and slots documented; 81/81 exports on a docs page |
 | Theming & tokens | ✅ 100 | 156/156 token checks pass |
-| Responsive | ✅ 100 | 234/234 page×width runs with nothing spilling |
+| Responsive | ✅ 100 | 240/240 page×width runs with nothing spilling |
 | API consistency | ✅ 100 | 98/98 API convention checks pass |
 | Component catalogue | ✅ 94 | 47/50 catalogue entries present, tested and documented |
 | Packaging & DX | ✅ 100 | 12/12 packaging checks pass |
@@ -23,8 +23,8 @@ Measured 2026-10-04 by `npm run score`. Every aspect must score above 90. How ea
 
 ## Test coverage — what costs points
 
-- components/textarea/Textarea.vue: statements 93.47%, branches 100%, functions 50%
 - components/toast/ToastHost.vue: statements 100%, branches 100%, functions 50%
+- components/textarea/Textarea.vue: statements 93.61%, branches 100%, functions 66.66%
 - components/tabs/Tab.vue: statements 100%, branches 80%, functions 100%
 - components/dialog/Dialog.vue: statements 94.65%, branches 80.55%, functions 100%
 - components/ansi-terminal/AnsiTerminal.vue: statements 97.22%, branches 82.35%, functions 100%

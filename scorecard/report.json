@@ -8,8 +8,8 @@
       "findings": 5
     },
     "Test coverage": {
-      "score": 97.9,
-      "summary": "statements 99.43%, branches 95.27%, functions 99.02%",
+      "score": 98,
+      "summary": "statements 99.44%, branches 95.41%, functions 99.08%",
       "findings": 13
     },
     "Documentation": {
@@ -24,7 +24,7 @@
     },
     "Responsive": {
       "score": 100,
-      "summary": "234/234 page×width runs with nothing spilling",
+      "summary": "240/240 page×width runs with nothing spilling",
       "findings": 0
     },
     "API consistency": {
