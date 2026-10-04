@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
+import { useRoute } from "vue-router";
 import { UiCrtOverlay, UiDigitalRain } from "@onyx/vue";
 import { NAV } from "./nav";
 
@@ -46,17 +47,42 @@ const preset = ref(
  */
 const atmosfera = computed(() => preset.value === "matrix");
 
-function applyPreset(id: string) {
+function setPresetClass(id: string) {
   const root = document.documentElement;
   for (const p of PRESETS) root.classList.remove(`ui-theme-${p.id}`);
   if (id !== "default") root.classList.add(`ui-theme-${id}`);
   preset.value = id;
+}
+
+function applyPreset(id: string) {
+  setPresetClass(id);
   try {
     localStorage.setItem("onyx-preset", id);
   } catch {
     /* ignore */
   }
 }
+
+/**
+ * La vista previa de un pattern es esta misma app dentro de un iframe. El
+ * script de pre-pintado de index.html le pone el tema al cargar, pero un cambio
+ * posterior en la pagina de fuera no le llegaria. `storage` salta en los OTROS
+ * documentos del mismo origen cuando uno escribe en localStorage, asi que el
+ * marco sigue al selector sin recargar.
+ */
+function onStorage(event: StorageEvent) {
+  if (event.key === "onyx-preset") setPresetClass(event.newValue || "default");
+  if (event.key === "onyx-dark") {
+    dark.value = event.newValue === "true";
+    document.documentElement.classList.toggle("app-dark", dark.value);
+  }
+}
+window.addEventListener("storage", onStorage);
+onBeforeUnmount(() => window.removeEventListener("storage", onStorage));
+
+// El marco de un pattern (`meta.bare`) se pinta sin la barra lateral.
+const route = useRoute();
+const bare = computed(() => route.meta.bare === true);
 </script>
 
 <template>
@@ -71,7 +97,9 @@ function applyPreset(id: string) {
   <UiDigitalRain v-if="atmosfera" :opacity="0.13" />
   <UiCrtOverlay v-if="atmosfera" :scanlines="0.09" :vignette="0.5" />
 
-  <div class="docs">
+  <RouterView v-if="bare" />
+
+  <div v-else class="docs">
     <aside class="docs__sidebar">
       <RouterLink class="docs__brand" to="/introduction">Onyx UI</RouterLink>
       <button type="button" class="docs__theme" @click="toggleDark">
