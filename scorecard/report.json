@@ -3,44 +3,44 @@
   "threshold": 90,
   "aspects": {
     "Accessibility": {
-      "score": 94.5,
-      "summary": "248/340 component×theme runs with no axe violation",
-      "findings": 104
+      "score": 99.9,
+      "summary": "375/380 component×theme runs with no axe violation",
+      "findings": 5
     },
     "Test coverage": {
-      "score": 90.4,
-      "summary": "statements 95.78%, branches 87.95%, functions 87.43%",
-      "findings": 23
+      "score": 97.9,
+      "summary": "statements 99.43%, branches 95.27%, functions 99.02%",
+      "findings": 13
     },
     "Documentation": {
-      "score": 97.7,
-      "summary": "423/435 props, events and slots documented; 73/73 exports on a docs page",
-      "findings": 12
+      "score": 100,
+      "summary": "504/504 props, events and slots documented; 81/81 exports on a docs page",
+      "findings": 0
     },
     "Theming & tokens": {
-      "score": 98.6,
-      "summary": "138/140 token checks pass",
-      "findings": 2
+      "score": 100,
+      "summary": "156/156 token checks pass",
+      "findings": 0
     },
     "Responsive": {
-      "score": 62.4,
-      "summary": "131/210 page×width runs with nothing spilling",
-      "findings": 79
+      "score": 100,
+      "summary": "234/234 page×width runs with nothing spilling",
+      "findings": 0
     },
     "API consistency": {
-      "score": 66.2,
-      "summary": "49/74 API convention checks pass",
-      "findings": 25
+      "score": 100,
+      "summary": "98/98 API convention checks pass",
+      "findings": 0
     },
     "Component catalogue": {
-      "score": 78,
-      "summary": "39/50 catalogue entries present, tested and documented",
-      "findings": 11
+      "score": 94,
+      "summary": "47/50 catalogue entries present, tested and documented",
+      "findings": 3
     },
     "Packaging & DX": {
-      "score": 58.3,
-      "summary": "7/12 packaging checks pass",
-      "findings": 5
+      "score": 100,
+      "summary": "12/12 packaging checks pass",
+      "findings": 0
     }
   }
 }
