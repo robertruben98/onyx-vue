@@ -1,4 +1,5 @@
 import { COMPONENT_DOCS } from "./registry";
+import { PATTERN_DOCS } from "./patterns/registry";
 
 /** A single navigable entry in the sidebar. */
 export interface NavItem {
@@ -18,9 +19,10 @@ export interface NavSection {
  * La unica fuente de la navegacion. La barra lateral pinta esto y el router
  * saca sus rutas de componente de {@link COMPONENT_DOCS}.
  *
- * "Getting Started" son las tres guias escritas a mano; "Components" sale del
- * registro de metadatos, asi que refleja exactamente los `*.docs.ts` que hay
- * en la libreria — no las paginas que alguien se haya acordado de escribir.
+ * "Getting Started" son las tres guias escritas a mano; "Patterns" y
+ * "Components" salen de sus registros de metadatos (`*.pattern.ts` y
+ * `*.docs.ts`), asi que reflejan exactamente lo que hay — no las paginas que
+ * alguien se haya acordado de escribir.
  */
 export const NAV: NavSection[] = [
   {
@@ -32,11 +34,14 @@ export const NAV: NavSection[] = [
     ],
   },
   {
-    // Una vista entera montada con la libreria. No es la documentacion de un
-    // componente: es la prueba de que los componentes componen, que es lo que
+    // Paginas enteras montadas con la libreria. No son la documentacion de un
+    // componente: son la prueba de que los componentes componen, que es lo que
     // una pagina por componente nunca llega a ensenar.
     title: "Patterns",
-    items: [{ path: "/patterns/run-view", label: "Run view" }],
+    items: PATTERN_DOCS.map((p) => ({
+      path: `/patterns/${p.id}`,
+      label: p.title,
+    })),
   },
   {
     title: "Components",

@@ -3,3 +3,6 @@ dist
 coverage
 *.log
 .DS_Store
+
+# scorecard: salidas intermedias de cada medicion
+scorecard/.out

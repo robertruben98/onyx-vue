@@ -24,6 +24,7 @@
   --ui-spinner-width-lg: 0.1875rem;
   --ui-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.12);
   --ui-blue-50: #eff6ff;
+  --ui-blue-300: #60a5fa;
   --ui-blue-400: #3b82f6;
   --ui-blue-500: #2563eb;
   --ui-blue-600: #1d4ed8;
@@ -246,16 +247,20 @@
   --ui-card-padding-x: var(--ui-space-5);
   --ui-card-padding-y: var(--ui-space-4);
   --ui-card-header-font-weight: var(--ui-font-weight-medium);
-  --ui-color-primary: var(--ui-emerald-500);
-  --ui-color-primary-hover: var(--ui-emerald-600);
-  --ui-color-primary-active: var(--ui-emerald-700);
+  /* emerald-700 y no el 500: con el 500 el texto blanco de un boton primario y
+     el texto primario sobre blanco quedaban a 2.5:1 (WCAG AA pide 4.5:1). El
+     700 da 5.5:1 en los dos sentidos. Medido con axe en el scorecard. */
+  --ui-color-primary: var(--ui-emerald-700);
+  --ui-color-primary-hover: var(--ui-emerald-800);
+  --ui-color-primary-active: var(--ui-emerald-900);
   --ui-color-on-primary: var(--ui-white);
   --ui-color-surface: var(--ui-white);
   --ui-color-surface-hover: var(--ui-slate-100);
   --ui-color-text: var(--ui-slate-700);
   --ui-color-text-muted: var(--ui-slate-500);
   --ui-color-border: var(--ui-slate-200);
-  --ui-color-danger: var(--ui-red-600);
+  /* red-700: el 600 sobre su propia superficie (red-50) quedaba a 4.4:1. */
+  --ui-color-danger: var(--ui-red-700);
   --ui-color-danger-surface: var(--ui-red-50);
   --ui-color-success: var(--ui-green-700);
   --ui-color-success-surface: var(--ui-green-50);
@@ -398,7 +403,10 @@
   --ui-tag-danger-bg: var(--ui-color-danger-surface);
   --ui-tag-danger-text: var(--ui-color-danger);
   --ui-tag-muted-bg: var(--ui-color-disabled-bg);
-  --ui-tag-muted-text: var(--ui-color-disabled-text);
+  /* Un tag apagado no esta deshabilitado: con el gris de deshabilitado quedaba
+     a 2.3:1 sobre su fondo, y con el de texto secundario a 4.3:1. Mezclado con
+     el color de texto pasa de 4.5:1 en claro y en oscuro sin dejar de ser gris. */
+  --ui-tag-muted-text: color-mix(in srgb, var(--ui-color-text-muted) 70%, var(--ui-color-text));
   --ui-status-dot-size: 0.5rem;
   --ui-status-dot-live: var(--ui-color-success);
   --ui-status-dot-dead: var(--ui-color-danger);
@@ -437,7 +445,9 @@
   --ui-severity-badge-unknown-text: var(--ui-color-neutral);
   --ui-tri-state-count-font-size: var(--ui-font-size-sm);
   --ui-tri-state-count-font-weight: var(--ui-font-weight-medium);
-  --ui-tri-state-count-neutral: var(--ui-color-text-muted);
+  /* Mezclado con el color de texto, como el tag apagado: el gris secundario solo
+     quedaba a 4.3:1 sobre el fondo de un chip. */
+  --ui-tri-state-count-neutral: color-mix(in srgb, var(--ui-color-text-muted) 70%, var(--ui-color-text));
   --ui-tri-state-count-ok: var(--ui-color-success);
   --ui-tri-state-count-warn: var(--ui-color-warning);
   --ui-tri-state-count-danger: var(--ui-color-danger);
@@ -483,7 +493,7 @@
   --ui-load-more-row-padding-y: var(--ui-space-3);
   --ui-load-more-row-border: var(--ui-color-border);
   --ui-action-cluster-gap: var(--ui-space-1);
-  --ui-action-cluster-quiet-opacity: 0.32;
+  --ui-action-cluster-quiet-opacity: 1;
   --ui-action-cluster-transition: 0.12s;
   /* --- Capas de las superficies teletransportadas -----------------------
      Dialog, Menu, Select, Popover y Tooltip se pintan en `body`, fuera del
@@ -514,7 +524,7 @@
   --ui-filter-chip-text-hover: var(--ui-color-text);
   --ui-filter-chip-pressed-bg: var(--ui-color-surface-hover);
   --ui-filter-chip-pressed-text: var(--ui-color-text);
-  --ui-filter-chip-empty-opacity: 0.42;
+  --ui-filter-chip-empty-opacity: 1;
   --ui-block-meter-gap: var(--ui-space-2);
   --ui-block-meter-font-size: var(--ui-font-size-sm);
   /* The block glyphs carry side bearings meant for prose; at eight in a row
@@ -535,7 +545,7 @@
   --ui-metric-chip-label-tracking: 0.16em;
   --ui-metric-chip-label-color: var(--ui-color-text-muted);
   --ui-metric-chip-value-font-size: var(--ui-font-size-lg);
-  --ui-metric-chip-stale-opacity: 0.55;
+  --ui-metric-chip-stale-opacity: 1;
   --ui-heat-strip-gap: 2px;
   --ui-heat-strip-cell-size: 0.6875rem;
   --ui-heat-strip-cell-radius: var(--ui-radii-sm);
@@ -632,6 +642,12 @@
   --ui-drawer-bg: var(--ui-color-surface);
   --ui-drawer-edge: var(--ui-color-border-strong);
   --ui-drawer-backdrop: rgba(15, 23, 42, 0.45);
+  /* El dialogo usaba este token sin que estuviera definido: su telon salia
+     transparente. Sigue al del drawer, asi que un preset que cambie uno cambia
+     los dos. */
+  --ui-dialog-backdrop: var(--ui-drawer-backdrop);
+  /* Tinta de las scanlines y la vineta del CRT, como canales rgb. */
+  --ui-crt-overlay-ink: 0 0 0;
   --ui-drawer-duration: 200ms;
   --ui-drawer-title-size: var(--ui-font-size-md);
   --ui-toast-offset: 1.625rem;
@@ -663,8 +679,10 @@
   --ui-terminal-green: var(--ui-color-success);
   --ui-terminal-yellow: var(--ui-color-warning);
   --ui-terminal-blue: var(--ui-color-primary);
-  --ui-terminal-magenta: #c58af9;
-  --ui-terminal-cyan: #5fd7d7;
+  /* Oscurecidos para un fondo claro: los vivos (#c58af9, #5fd7d7) quedaban a
+     2.5:1 y 1.7:1 sobre blanco. Los presets oscuros devuelven los vivos. */
+  --ui-terminal-magenta: #a21caf;
+  --ui-terminal-cyan: #0e7490;
   --ui-terminal-white: var(--ui-color-text);
   /* --- Charts --------------------------------------------------------
      Mixed from the semantic tones one step darker, not the tones themselves:
@@ -678,4 +696,41 @@
   --ui-chart-grid: var(--ui-color-border);
   --ui-chart-inseg: var(--ui-color-surface);
   --ui-chart-inseg-light: var(--ui-color-on-primary);
+
+  /* --- Forms and layout (0.2): segmented, slider, date input, form field,
+     pagination, skeleton, stack, grid ------------------------------------ */
+  --ui-segmented-bg: var(--ui-color-surface);
+  --ui-segmented-border: var(--ui-color-border-strong);
+  --ui-segmented-text: var(--ui-color-text);
+  --ui-segmented-selected-bg: var(--ui-color-primary);
+  --ui-segmented-selected-text: var(--ui-color-on-primary);
+  --ui-segmented-hover-bg: var(--ui-color-surface-hover);
+  --ui-segmented-radius: var(--ui-radius);
+  --ui-segmented-padding-x: var(--ui-space-3);
+
+  --ui-slider-track: var(--ui-color-border-strong);
+  --ui-slider-fill: var(--ui-color-primary);
+  --ui-slider-thumb: var(--ui-color-primary);
+  --ui-slider-thumb-border: var(--ui-color-surface);
+  --ui-slider-track-height: 4px;
+  --ui-slider-thumb-size: 16px;
+
+  --ui-form-field-gap: var(--ui-space-1);
+  --ui-form-field-label: var(--ui-color-text);
+  --ui-form-field-help: var(--ui-color-text-muted);
+  --ui-form-field-error: var(--ui-color-danger);
+  --ui-form-field-required: var(--ui-color-danger);
+
+  --ui-pagination-gap: var(--ui-space-1);
+  --ui-pagination-current-bg: var(--ui-color-primary);
+  --ui-pagination-current-text: var(--ui-color-on-primary);
+  --ui-pagination-ellipsis: var(--ui-color-text-muted);
+
+  --ui-skeleton-bg: var(--ui-color-neutral-surface);
+  --ui-skeleton-shine: var(--ui-color-surface);
+  --ui-skeleton-radius: var(--ui-radius);
+  --ui-skeleton-line-height: 0.8em;
+
+  --ui-stack-gap: var(--ui-space-3);
+  --ui-grid-gap: var(--ui-space-4);
 }

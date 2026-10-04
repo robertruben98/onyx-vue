@@ -28,9 +28,9 @@ export const filterChipDoc: ComponentDoc = {
     },
     {
       name: "tone",
-      type: "'neutral' | 'ok' | 'warn' | 'danger' | 'info' | 'muted'",
+      type: "'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted'",
       default: "'neutral'",
-      description: "Semantic tone of the thing being filtered.",
+      description: "Semantic tone of the thing being filtered. Legacy spellings `ok`, `warn` and `default` still work and are deprecated.",
     },
     {
       name: "pressed",
@@ -63,16 +63,16 @@ export const filterChipDoc: ComponentDoc = {
       description:
         "Chips combine: the consumer decides whether they OR within a group and AND across groups.",
       code: `<UiFilterChip label="ci rojo" :count="3" tone="danger" :pressed="true" />
-<UiFilterChip label="aprobado" :count="12" tone="ok" />
+<UiFilterChip label="aprobado" :count="12" tone="success" />
 <UiFilterChip label="draft" :count="0" tone="muted" />
-<UiFilterChip label="hilos" state="pending" tone="warn" />`,
+<UiFilterChip label="hilos" state="pending" tone="warning" />`,
     },
     {
       title: "Counts that are not numbers",
       description:
         "A filter whose data has not arrived shows a dot; one nobody asked for shows a dash. Neither is a zero.",
       code: `<UiFilterChip label="secrets" state="unrequested" tone="danger" />
-<UiFilterChip label="vulns" state="pending" tone="warn" />
+<UiFilterChip label="vulns" state="pending" tone="warning" />
 <UiFilterChip label="conflicto" :count="0" tone="danger" />`,
     },
   ],

@@ -1,0 +1,82 @@
+// Slider — a native range input, painted. References ONLY semantic /
+// component tokens. The fill is a gradient stop at --ui-slider-fill-at, set
+// per instance from the value.
+
+.ui-slider {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--ui-space-1);
+  width: 100%;
+  min-width: 0;
+}
+
+.ui-slider__head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text);
+}
+
+.ui-slider__value {
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-slider__el {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: var(--ui-slider-thumb-size);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ui-slider__el::-webkit-slider-runnable-track {
+  height: var(--ui-slider-track-height);
+  border-radius: var(--ui-radius);
+  background: linear-gradient(
+    to right,
+    var(--ui-slider-fill) var(--ui-slider-fill-at),
+    var(--ui-slider-track) var(--ui-slider-fill-at)
+  );
+}
+.ui-slider__el::-moz-range-track {
+  height: var(--ui-slider-track-height);
+  border-radius: var(--ui-radius);
+  background: var(--ui-slider-track);
+}
+.ui-slider__el::-moz-range-progress {
+  height: var(--ui-slider-track-height);
+  border-radius: var(--ui-radius);
+  background: var(--ui-slider-fill);
+}
+
+.ui-slider__el::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: var(--ui-slider-thumb-size);
+  height: var(--ui-slider-thumb-size);
+  margin-top: calc((var(--ui-slider-track-height) - var(--ui-slider-thumb-size)) / 2);
+  border-radius: 50%;
+  background: var(--ui-slider-thumb);
+  border: var(--ui-border-width-thick) solid var(--ui-slider-thumb-border);
+}
+.ui-slider__el::-moz-range-thumb {
+  width: var(--ui-slider-thumb-size);
+  height: var(--ui-slider-thumb-size);
+  border-radius: 50%;
+  background: var(--ui-slider-thumb);
+  border: var(--ui-border-width-thick) solid var(--ui-slider-thumb-border);
+}
+
+.ui-slider__el:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+  border-radius: var(--ui-radius);
+}
+
+.ui-slider--disabled .ui-slider__el {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

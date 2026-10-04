@@ -19,7 +19,9 @@ describe("Switch (Vue)", () => {
     const { emitted } = render(Switch, { props: { label: "A" } });
     await fireEvent.click(screen.getByRole("switch"));
     expect(emitted().checkedChange).toBeTruthy();
+    expect(emitted().checkedChanged).toBeTruthy();
     expect(emitted().checkedChange[0]).toEqual([true]);
+    expect(emitted().checkedChanged[0]).toEqual([true]);
   });
 
   it("is toggleable by keyboard (Space)", async () => {
@@ -29,7 +31,9 @@ describe("Switch (Vue)", () => {
     expect(document.activeElement).toBe(screen.getByRole("switch"));
     await user.keyboard(" ");
     expect(emitted().checkedChange).toBeTruthy();
+    expect(emitted().checkedChanged).toBeTruthy();
     expect(emitted().checkedChange[0]).toEqual([true]);
+    expect(emitted().checkedChanged[0]).toEqual([true]);
   });
 
   it("does not emit checkedChange when disabled", async () => {
@@ -40,6 +44,7 @@ describe("Switch (Vue)", () => {
     expect(sw.disabled).toBe(true);
     await fireEvent.click(sw);
     expect(emitted().checkedChange).toBeFalsy();
+    expect(emitted().checkedChanged).toBeFalsy();
   });
 
   it("reflects invalid via aria-invalid", () => {

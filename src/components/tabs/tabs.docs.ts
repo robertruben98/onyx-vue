@@ -32,6 +32,7 @@ export const tabsDoc: ComponentDoc = {
       description: "Skipped by the keyboard and unselectable, on `UiTab`.",
     },
     { name: "#default", type: "slot", default: "—", description: "Panel content, on `UiTab`." },
+    { name: "index", type: "number", default: "—", description: "Internal: Tabs sets each Tab's position itself. Do not pass it." },
   ],
   demos: [
     {

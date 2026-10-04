@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./select.scss";
 
 export interface SelectOption {
@@ -38,10 +39,17 @@ const model = defineModel<string | null>({ default: null });
 
 /** Emitted whenever the user picks an option. */
 const emit = defineEmits<{
+  changed: [value: string | null];
+  /** @deprecated Use `changed`; still emitted until 1.0. */
   change: [value: string | null];
 }>();
 
 const uid = useId();
+
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs } = useForwardedAttrs();
 const listboxId = `ui-select-listbox-${uid}`;
 
 const open = ref(false);
@@ -158,7 +166,8 @@ function selectOption(index: number): void {
   const opt = props.options[index];
   if (!opt || opt.disabled) return;
   model.value = opt.value;
-  emit("change", opt.value);
+  emit("changed", opt.value);
+  emit("change", opt.value); // obsoleto, ver src/deprecations.ts
   close();
 }
 
@@ -196,8 +205,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="ui-select">
+  <div :class="['ui-select', rootAttrs().class]" :style="rootAttrs().style">
     <button
+      v-bind="controlAttrs()"
       ref="triggerEl"
       type="button"
       role="combobox"

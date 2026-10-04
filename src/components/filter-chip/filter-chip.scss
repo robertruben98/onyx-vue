@@ -70,9 +70,11 @@
 }
 
 // --- Empty ----------------------------------------------------------------
-// Dimmed, still clickable, and it lights back up on hover so the label stays
-// readable while you scan the bar.
-.ui-filter-chip--empty {
+// Apagado, todavia pulsable, y recupera su tono al pasar por encima. Apagado
+// con el gris de texto secundario y no con opacidad: transparente quedaba a
+// menos de 2:1 y la etiqueta no se leia.
+.ui-filter-chip.ui-filter-chip--empty {
+  color: var(--ui-color-text-muted);
   opacity: var(--ui-filter-chip-empty-opacity);
 }
 .ui-filter-chip--empty:hover {

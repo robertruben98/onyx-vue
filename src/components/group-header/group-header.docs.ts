@@ -24,7 +24,7 @@ export const groupHeaderDoc: ComponentDoc = {
       code: `<UiGroupHeader name="supervision-api-payment" full="treew-inc/supervision-api-payment">
   <template #marks>
     <UiTriStateCount :value="4" label="pull requests" />
-    <UiTriStateCount :value="2" tone="ok" label="ready to merge" />
+    <UiTriStateCount :value="2" tone="success" label="ready to merge" />
     <UiTriStateCount :value="1" tone="danger" label="secrets" />
   </template>
 </UiGroupHeader>`,
