@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./button.scss";
 
 export type ButtonVariant = "primary" | "secondary" | "danger" | "text";
@@ -31,6 +32,11 @@ const props = withDefaults(
 /** Emitted on activation when interactive. */
 const emit = defineEmits<{ clicked: [event: MouseEvent] }>();
 
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs } = useForwardedAttrs();
+
 const isInteractive = computed(() => !props.disabled && !props.loading);
 
 const rootClasses = computed(() => ({
@@ -56,8 +62,9 @@ function handleClick(event: MouseEvent): void {
 </script>
 
 <template>
-  <span :class="rootClasses">
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
     <button
+      v-bind="controlAttrs()"
       class="ui-button__el"
       :type="type"
       :disabled="disabled || loading"

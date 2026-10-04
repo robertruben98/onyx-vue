@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, type ComponentPublicInstance } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./checkbox.scss";
 
 export type CheckboxSize = "sm" | "md" | "lg";
@@ -59,6 +60,11 @@ watch(
 
 const inputId = `ui-checkbox-${nextCheckboxId++}`;
 
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+
 const rootClasses = computed(() => ({
   "ui-checkbox": true,
   "ui-checkbox--sm": props.size === "sm",
@@ -81,13 +87,14 @@ let nextCheckboxId = 0;
 </script>
 
 <template>
-  <span :class="rootClasses">
-    <label class="ui-checkbox__wrap" :for="inputId">
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
+    <label class="ui-checkbox__wrap" :for="controlId()">
       <input
+        v-bind="controlAttrs()"
         :ref="setBox"
         class="ui-checkbox__el"
         type="checkbox"
-        :id="inputId"
+        :id="controlId()"
         :tabindex="tabindex"
         :checked="checked"
         :disabled="disabled"

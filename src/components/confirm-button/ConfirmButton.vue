@@ -13,6 +13,7 @@ const armedOwner = ref<symbol | null>(null);
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, watch } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import { UiButton, type ButtonSize, type ButtonVariant } from "../button";
 import "./confirm-button.scss";
 
@@ -70,6 +71,11 @@ const emit = defineEmits<{
   /** Second activation within the timeout. */
   confirmed: [];
 }>();
+
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs } = useForwardedAttrs();
 
 const me = Symbol("ui-confirm-button");
 let timer: ReturnType<typeof setTimeout> | undefined;
@@ -138,11 +144,13 @@ defineExpose({ disarm });
 
 <template>
   <span
-    :class="['ui-confirm-button', { 'ui-confirm-button--armed': isArmed }]"
+    :class="['ui-confirm-button', { 'ui-confirm-button--armed': isArmed }, rootAttrs().class]"
+    :style="rootAttrs().style"
     @keydown="onKeydown"
     @focusout="onFocusOut"
   >
     <UiButton
+      v-bind="controlAttrs()"
       :variant="isArmed ? armedVariant : variant"
       :size="size"
       :disabled="disabled"

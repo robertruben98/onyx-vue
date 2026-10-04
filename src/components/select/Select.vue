@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./select.scss";
 
 export interface SelectOption {
@@ -42,6 +43,11 @@ const emit = defineEmits<{
 }>();
 
 const uid = useId();
+
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs } = useForwardedAttrs();
 const listboxId = `ui-select-listbox-${uid}`;
 
 const open = ref(false);
@@ -196,8 +202,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="ui-select">
+  <div :class="['ui-select', rootAttrs().class]" :style="rootAttrs().style">
     <button
+      v-bind="controlAttrs()"
       ref="triggerEl"
       type="button"
       role="combobox"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./textarea.scss";
 
 const props = withDefaults(
@@ -36,6 +37,11 @@ const emit = defineEmits<{ valueChange: [value: string] }>();
 const uid = useId();
 const inputId = `ui-textarea-${uid}`;
 
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+
 const rootClasses = computed(() => ({
   "ui-textarea": true,
   "ui-textarea--invalid": props.invalid,
@@ -59,13 +65,14 @@ function handleBlur(): void {
 </script>
 
 <template>
-  <span :class="rootClasses">
-    <label v-if="label" class="ui-textarea__label" :for="inputId">{{
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
+    <label v-if="label" class="ui-textarea__label" :for="controlId()">{{
       label
     }}</label>
     <textarea
+      v-bind="controlAttrs()"
       class="ui-textarea__el"
-      :id="inputId"
+      :id="controlId()"
       :rows="rows"
       :value="model"
       :disabled="disabled"

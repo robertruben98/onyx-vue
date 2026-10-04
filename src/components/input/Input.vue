@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./input.scss";
 
 export type InputType =
@@ -49,6 +50,11 @@ const value = defineModel<string>({ default: "" });
 const uid = useId();
 const inputId = `ui-input-${uid}`;
 
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+
 const rootClasses = computed(() => ({
   "ui-input": true,
   "ui-input--sm": props.size === "sm",
@@ -87,14 +93,15 @@ defineExpose({ focus, select, elemento });
 </script>
 
 <template>
-  <span :class="rootClasses">
-    <label v-if="label" class="ui-input__label" :for="inputId">{{
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
+    <label v-if="label" class="ui-input__label" :for="controlId()">{{
       label
     }}</label>
     <input
+      v-bind="controlAttrs()"
       ref="elemento"
       class="ui-input__el"
-      :id="inputId"
+      :id="controlId()"
       :type="type"
       :value="value"
       :disabled="disabled"

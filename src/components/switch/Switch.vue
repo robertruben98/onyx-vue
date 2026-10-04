@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useId } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./switch.scss";
 
 const props = withDefaults(
@@ -30,6 +31,11 @@ const emit = defineEmits<{ checkedChange: [value: boolean] }>();
 const uid = useId();
 const inputId = `ui-switch-${uid}`;
 
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+
 const rootClasses = computed(() => ({
   "ui-switch": true,
   "ui-switch--invalid": props.invalid,
@@ -48,14 +54,15 @@ function handleChange(event: Event): void {
 </script>
 
 <template>
-  <span :class="rootClasses">
-    <label class="ui-switch__wrap" :for="inputId">
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
+    <label class="ui-switch__wrap" :for="controlId()">
       <span class="ui-switch__control">
         <input
+          v-bind="controlAttrs()"
           class="ui-switch__el"
           type="checkbox"
           role="switch"
-          :id="inputId"
+          :id="controlId()"
           :checked="checked"
           :disabled="disabled"
           :aria-label="!label && ariaLabel ? ariaLabel : undefined"
