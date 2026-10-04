@@ -42,7 +42,9 @@ const emit = defineEmits<{ valueChanged: [value: string] }>();
  */
 defineOptions({ inheritAttrs: false });
 const inputId = `ui-date-input-${useId()}`;
-const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+const { rootAttrs, controlAttrs, controlId, fieldInvalid } = useForwardedAttrs(inputId, { field: true });
+/** Invalido por su prop o por el UiFormField que lo envuelve. */
+const isInvalid = (): boolean => props.invalid || fieldInvalid();
 
 const rootClasses = computed(() => [
   "ui-input",
@@ -50,7 +52,7 @@ const rootClasses = computed(() => [
   {
     "ui-input--sm": props.size === "sm",
     "ui-input--lg": props.size === "lg",
-    "ui-input--invalid": props.invalid,
+    "ui-input--invalid": isInvalid(),
     "ui-input--disabled": props.disabled,
   },
   rootAttrs().class,
@@ -76,7 +78,7 @@ function onInput(event: Event): void {
       :max="max || undefined"
       :disabled="disabled"
       :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-      :aria-invalid="invalid ? 'true' : undefined"
+      :aria-invalid="isInvalid() ? 'true' : undefined"
       @input="onInput"
     />
   </span>

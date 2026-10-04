@@ -49,7 +49,7 @@ const uid = useId();
 // Los atributos del consumidor van al elemento nativo, no a la envoltura
 // (ver internal/forward-attrs.ts).
 defineOptions({ inheritAttrs: false });
-const { rootAttrs, controlAttrs } = useForwardedAttrs();
+const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(undefined, { field: true });
 const listboxId = `ui-select-listbox-${uid}`;
 
 const open = ref(false);
@@ -208,6 +208,7 @@ onBeforeUnmount(() => {
   <div :class="['ui-select', rootAttrs().class]" :style="rootAttrs().style">
     <button
       v-bind="controlAttrs()"
+      :id="controlId()"
       ref="triggerEl"
       type="button"
       role="combobox"

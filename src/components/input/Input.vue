@@ -60,13 +60,15 @@ const inputId = `ui-input-${uid}`;
 // Los atributos del consumidor van al elemento nativo, no a la envoltura
 // (ver internal/forward-attrs.ts).
 defineOptions({ inheritAttrs: false });
-const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+const { rootAttrs, controlAttrs, controlId, fieldInvalid } = useForwardedAttrs(inputId, { field: true });
+/** Invalido por su prop o por el UiFormField que lo envuelve. */
+const isInvalid = (): boolean => props.invalid || fieldInvalid();
 
 const rootClasses = computed(() => ({
   "ui-input": true,
   "ui-input--sm": props.size === "sm",
   "ui-input--lg": props.size === "lg",
-  "ui-input--invalid": props.invalid,
+  "ui-input--invalid": isInvalid(),
   "ui-input--disabled": props.disabled,
 }));
 
@@ -115,7 +117,7 @@ defineExpose({ focus, select, elemento });
       :disabled="disabled"
       :placeholder="placeholder || undefined"
       :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-      :aria-invalid="invalid ? 'true' : undefined"
+      :aria-invalid="isInvalid() ? 'true' : undefined"
       @input="handleInput"
     />
   </span>

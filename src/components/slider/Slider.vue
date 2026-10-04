@@ -45,7 +45,7 @@ const emit = defineEmits<{ valueChanged: [value: number] }>();
 // Los atributos del consumidor van al <input type="range">, no a la envoltura.
 defineOptions({ inheritAttrs: false });
 const inputId = `ui-slider-${useId()}`;
-const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId, { field: true });
 
 const hasValueText = computed(() => typeof props.valueText === "function");
 const text = computed(() => {

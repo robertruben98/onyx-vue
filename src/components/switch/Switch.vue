@@ -38,11 +38,13 @@ const inputId = `ui-switch-${uid}`;
 // Los atributos del consumidor van al elemento nativo, no a la envoltura
 // (ver internal/forward-attrs.ts).
 defineOptions({ inheritAttrs: false });
-const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+const { rootAttrs, controlAttrs, controlId, fieldInvalid } = useForwardedAttrs(inputId, { field: true });
+/** Invalido por su prop o por el UiFormField que lo envuelve. */
+const isInvalid = (): boolean => props.invalid || fieldInvalid();
 
 const rootClasses = computed(() => ({
   "ui-switch": true,
-  "ui-switch--invalid": props.invalid,
+  "ui-switch--invalid": isInvalid(),
   "ui-switch--disabled": props.disabled,
 }));
 
@@ -71,7 +73,7 @@ function handleChange(event: Event): void {
           :checked="checked"
           :disabled="disabled"
           :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-          :aria-invalid="invalid ? 'true' : undefined"
+          :aria-invalid="isInvalid() ? 'true' : undefined"
           @change="handleChange"
         />
         <span class="ui-switch__track" aria-hidden="true"></span>

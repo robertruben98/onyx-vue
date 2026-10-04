@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, useId } from "vue";
+import { provideField } from "../../internal/field-context";
 import "./form-field.scss";
 
 const props = withDefaults(
@@ -17,11 +18,12 @@ const props = withDefaults(
 );
 
 /**
- * The label, the hint and the error, wired to the control: the slot hands the
- * control its `id` (the label points at it), the ids of the hint and the error
- * for `aria-describedby`, and whether it is invalid. Controls forward those to
- * their native element, so a screen reader reads the hint and the error with
- * the field instead of never finding them.
+ * The label, the hint and the error, wired to the control: the library's form
+ * controls pick up the field's `id` (the label points at it), the ids of the
+ * hint and the error for `aria-describedby`, and whether it is invalid or
+ * required, without a single binding. The slot hands over the same values for
+ * any other control. A screen reader reads the hint and the error with the
+ * field instead of never finding them.
  */
 const base = `ui-form-field-${useId()}`;
 const id = `${base}-control`;
@@ -32,6 +34,11 @@ const invalid = computed(() => props.error !== "");
 const describedBy = computed(
   () => [props.help ? helpId : "", invalid.value ? errorId : ""].filter(Boolean).join(" ") || undefined,
 );
+
+// El control de dentro (UiInput, UiSelect, UiTextarea, UiDateInput, UiCheckbox,
+// UiSwitch, UiSlider) recoge esto solo; el slot lo sigue dando para cualquier
+// otro control o para quien prefiera escribirlo.
+provideField({ id, describedBy, invalid, required: computed(() => props.required) });
 </script>
 
 <template>

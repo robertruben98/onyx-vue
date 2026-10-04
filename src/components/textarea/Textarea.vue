@@ -44,11 +44,13 @@ const inputId = `ui-textarea-${uid}`;
 // Los atributos del consumidor van al elemento nativo, no a la envoltura
 // (ver internal/forward-attrs.ts).
 defineOptions({ inheritAttrs: false });
-const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
+const { rootAttrs, controlAttrs, controlId, fieldInvalid } = useForwardedAttrs(inputId, { field: true });
+/** Invalido por su prop o por el UiFormField que lo envuelve. */
+const isInvalid = (): boolean => props.invalid || fieldInvalid();
 
 const rootClasses = computed(() => ({
   "ui-textarea": true,
-  "ui-textarea--invalid": props.invalid,
+  "ui-textarea--invalid": isInvalid(),
   "ui-textarea--disabled": props.disabled,
 }));
 
@@ -83,7 +85,7 @@ function handleBlur(): void {
       :disabled="disabled"
       :placeholder="placeholder || undefined"
       :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-      :aria-invalid="invalid ? 'true' : undefined"
+      :aria-invalid="isInvalid() ? 'true' : undefined"
       @input="handleInput"
       @blur="handleBlur"
     ></textarea>
