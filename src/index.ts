@@ -9,6 +9,7 @@
 // O `styles/index.css` si los quieres todos.
 
 export * from "./docs-model";
+export * from "./deprecations";
 export * from "./components/accordion";
 export * from "./components/action-cluster";
 export * from "./components/alert";

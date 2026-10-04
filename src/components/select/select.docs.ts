@@ -34,10 +34,10 @@ export const selectDoc: ComponentDoc = {
     },
     { name: "disabled", type: "boolean", default: "false", description: "Disabled state." },
     {
-      name: "@change",
+      name: "@changed / @change",
       type: "(value: string | null) => void",
       default: "—",
-      description: "Emitted when the user picks an option.",
+      description: "Emitted when the user picks an option. `@change` is the deprecated name of the same event, still emitted until 1.0.",
     },
   ],
   demos: [

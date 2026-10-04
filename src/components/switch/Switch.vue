@@ -26,7 +26,11 @@ const props = withDefaults(
 const checked = defineModel<boolean>({ default: false });
 
 /** Emitted on every change (in addition to the v-model update). */
-const emit = defineEmits<{ checkedChange: [value: boolean] }>();
+const emit = defineEmits<{
+  checkedChanged: [value: boolean];
+  /** @deprecated Use `checkedChanged`; still emitted until 1.0. */
+  checkedChange: [value: boolean];
+}>();
 
 const uid = useId();
 const inputId = `ui-switch-${uid}`;
@@ -49,7 +53,8 @@ function handleChange(event: Event): void {
   }
   const value = (event.target as HTMLInputElement).checked;
   checked.value = value;
-  emit("checkedChange", value);
+  emit("checkedChanged", value);
+  emit("checkedChange", value); // obsoleto, ver src/deprecations.ts
 }
 </script>
 

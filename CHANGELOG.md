@@ -19,6 +19,31 @@ Consumers that build from source (the control-panel dashboard aliases
 - `ToastApi`: the typed return of `useToast()`.
 - `npm run score` and `SCORECARD.md`: the library measured on eight aspects.
 
+### Fixed
+
+- `UiButton`, `UiConfirmButton`, `UiInput`, `UiTextarea`, `UiCheckbox`,
+  `UiSwitch` and `UiSelect` forward attributes (`aria-*`, `autocomplete`,
+  `name`, `id`…) to their native element instead of the wrapper; `class` and
+  `style` stay on the wrapper.
+
+### Changed
+
+- One tone vocabulary: `UiBlockMeter`, `UiFilterChip`, `UiMetricChip`,
+  `UiTriStateCount`, `UiCodeBlock` and `UiReadout` take
+  `neutral | info | success | warning | danger | muted`. `UiCodeBlock` and
+  `UiReadout` default to `neutral`.
+- Past-tense event names: `checkedChanged`, `valueChanged`, `changed`
+  (`UiSelect`), `toggled` (`UiPopover`, `UiTooltip`), `itemSelected`,
+  `loadMoreRequested`, `primaryClicked`, `secondaryClicked`.
+
+### Deprecated
+
+- Tone spellings `ok`, `warn` and `default` (still accepted).
+- The old event names (`checkedChange`, `valueChange`, `change`, `toggle`,
+  `itemSelect`, `loadMore`, `primaryAction`, `secondaryAction`): each is still
+  emitted right after its new name. All of them go in 1.0; the list is
+  exported as `DEPRECATED_EVENTS`.
+
 ## 0.1.0 — 2026-09-25
 
 First versioned release: everything on `feat/console-lists` (68 components,

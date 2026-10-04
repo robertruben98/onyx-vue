@@ -32,7 +32,11 @@ const props = withDefaults(
 const model = defineModel<string>({ default: "" });
 
 /** Emitted on every value change (in addition to v-model). */
-const emit = defineEmits<{ valueChange: [value: string] }>();
+const emit = defineEmits<{
+  valueChanged: [value: string];
+  /** @deprecated Use `valueChanged`; still emitted until 1.0. */
+  valueChange: [value: string];
+}>();
 
 const uid = useId();
 const inputId = `ui-textarea-${uid}`;
@@ -56,7 +60,8 @@ function handleInput(event: Event): void {
   }
   const value = (event.target as HTMLTextAreaElement).value;
   model.value = value;
-  emit("valueChange", value);
+  emit("valueChanged", value);
+  emit("valueChange", value); // obsoleto, ver src/deprecations.ts
 }
 
 function handleBlur(): void {

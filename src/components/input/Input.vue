@@ -42,7 +42,11 @@ const props = withDefaults(
 );
 
 /** Emitted on every value change (in addition to v-model). */
-const emit = defineEmits<{ valueChange: [value: string] }>();
+const emit = defineEmits<{
+  valueChanged: [value: string];
+  /** @deprecated Use `valueChanged`; still emitted until 1.0. */
+  valueChange: [value: string];
+}>();
 
 /** Two-way bound value (v-model). */
 const value = defineModel<string>({ default: "" });
@@ -69,7 +73,8 @@ function handleInput(event: Event): void {
   }
   const next = (event.target as HTMLInputElement).value;
   value.value = next;
-  emit("valueChange", next);
+  emit("valueChanged", next);
+  emit("valueChange", next); // obsoleto, ver src/deprecations.ts
 }
 /**
  * Foco programatico. Sin esto, quien quiera enfocar la caja tiene que sacar el

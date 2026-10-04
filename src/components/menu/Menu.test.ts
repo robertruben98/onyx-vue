@@ -41,7 +41,11 @@ describe("Menu (Vue)", () => {
       await screen.findByRole("menuitem", { name: "Duplicate" }),
     );
     expect(emitted().itemSelect).toBeTruthy();
+    expect(emitted().itemSelected).toBeTruthy();
     expect((emitted().itemSelect as unknown[][])[0][0]).toMatchObject({
+      id: "dup",
+    });
+    expect((emitted().itemSelected as unknown[][])[0][0]).toMatchObject({
       id: "dup",
     });
     await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
@@ -67,6 +71,7 @@ describe("Menu (Vue)", () => {
     await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
     await fireEvent.click(await screen.findByRole("menuitem", { name: "Delete" }));
     expect(emitted().itemSelect).toBeFalsy();
+    expect(emitted().itemSelected).toBeFalsy();
   });
 
   it("closes on Escape", async () => {

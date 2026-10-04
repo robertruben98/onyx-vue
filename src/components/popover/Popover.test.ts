@@ -86,6 +86,7 @@ describe("Popover (Vue)", () => {
     await fireEvent.click(screen.getByRole("button", { name: "Open" }));
     await screen.findByRole("dialog");
     expect(emitted().toggle?.[0]).toEqual([true]);
+    expect(emitted().toggled?.[0]).toEqual([true]);
   });
 
   it("has no axe violations while open", async () => {

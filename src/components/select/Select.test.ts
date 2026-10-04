@@ -50,6 +50,7 @@ describe("Select (Vue)", () => {
     expect(emitted()["update:modelValue"]).toBeTruthy();
     expect(emitted()["update:modelValue"].at(-1)).toEqual(["rx"]);
     expect(emitted().change.at(-1)).toEqual(["rx"]);
+    expect(emitted().changed.at(-1)).toEqual(["rx"]);
     expect(screen.getByRole("combobox").textContent).toContain("RxJS");
     await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
   });
@@ -62,6 +63,7 @@ describe("Select (Vue)", () => {
     await fireEvent.keyDown(listbox, { key: "ArrowDown" });
     await fireEvent.keyDown(listbox, { key: "Enter" });
     expect(emitted().change.at(-1)).toEqual(["rx"]);
+    expect(emitted().changed.at(-1)).toEqual(["rx"]);
   });
 
   it("skips disabled options with the keyboard", async () => {
@@ -73,6 +75,7 @@ describe("Select (Vue)", () => {
     await fireEvent.keyDown(listbox, { key: "ArrowDown" }); // wrap -> Angular
     await fireEvent.keyDown(listbox, { key: "Enter" });
     expect(emitted().change.at(-1)).toEqual(["ng"]);
+    expect(emitted().changed.at(-1)).toEqual(["ng"]);
   });
 
   it("does not select a disabled option on click", async () => {
@@ -82,6 +85,7 @@ describe("Select (Vue)", () => {
       await screen.findByRole("option", { name: "Style Dictionary" }),
     );
     expect(emitted().change).toBeFalsy();
+    expect(emitted().changed).toBeFalsy();
     expect(screen.queryByRole("listbox")).toBeTruthy();
   });
 

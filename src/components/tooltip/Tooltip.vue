@@ -17,7 +17,11 @@ const props = withDefaults(
 );
 
 /** Emitted whenever the shown state changes (true = shown, false = hidden). */
-const emit = defineEmits<{ toggle: [shown: boolean] }>();
+const emit = defineEmits<{
+  toggled: [shown: boolean];
+  /** @deprecated Use `toggled`; still emitted until 1.0. */
+  toggle: [shown: boolean];
+}>();
 
 const triggerRef = ref<HTMLElement | null>(null);
 const paneRef = ref<HTMLElement | null>(null);
@@ -80,7 +84,8 @@ function onTriggerKeydown(event: KeyboardEvent): void {
 
 watch(shown, (isShown, was) => {
   if (isShown === was) return;
-  emit("toggle", isShown);
+  emit("toggled", isShown);
+  emit("toggle", isShown); // obsoleto, ver src/deprecations.ts
   if (isShown) {
     triggerRef.value?.setAttribute("aria-describedby", id);
     nextTick(() => {

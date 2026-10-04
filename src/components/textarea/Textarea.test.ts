@@ -21,6 +21,7 @@ describe("Textarea (Vue)", () => {
     const el = screen.getByLabelText("Bio");
     await fireEvent.update(el, "hi");
     const events = emitted().valueChange as unknown[][];
+    expect(emitted().valueChanged).toEqual(emitted().valueChange); // el nombre nuevo, mismo evento
     expect(events).toBeTruthy();
     expect(events[events.length - 1]).toEqual(["hi"]);
   });
@@ -67,6 +68,7 @@ describe("Textarea (Vue)", () => {
     expect(el.disabled).toBe(true);
     await fireEvent.update(el, "x");
     expect(emitted().valueChange).toBeFalsy();
+    expect(emitted().valueChanged).toBeFalsy();
   });
 
   it("has no axe violations (default)", async () => {

@@ -39,6 +39,8 @@ const model = defineModel<string | null>({ default: null });
 
 /** Emitted whenever the user picks an option. */
 const emit = defineEmits<{
+  changed: [value: string | null];
+  /** @deprecated Use `changed`; still emitted until 1.0. */
   change: [value: string | null];
 }>();
 
@@ -164,7 +166,8 @@ function selectOption(index: number): void {
   const opt = props.options[index];
   if (!opt || opt.disabled) return;
   model.value = opt.value;
-  emit("change", opt.value);
+  emit("changed", opt.value);
+  emit("change", opt.value); // obsoleto, ver src/deprecations.ts
   close();
 }
 

@@ -23,7 +23,9 @@ describe("Checkbox (Vue)", () => {
     const { emitted } = render(Checkbox, { props: { label: "A" } });
     await fireEvent.click(screen.getByRole("checkbox"));
     expect(emitted().checkedChange).toBeTruthy();
+    expect(emitted().checkedChanged).toBeTruthy();
     expect(emitted().checkedChange[0]).toEqual([true]);
+    expect(emitted().checkedChanged[0]).toEqual([true]);
   });
 
   it("updates v-model when toggled", async () => {
@@ -48,6 +50,7 @@ describe("Checkbox (Vue)", () => {
     expect(box.disabled).toBe(true);
     await fireEvent.click(box);
     expect(emitted().checkedChange).toBeFalsy();
+    expect(emitted().checkedChanged).toBeFalsy();
   });
 
   it("reflects the indeterminate state on the native control", () => {

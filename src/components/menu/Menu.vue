@@ -25,7 +25,11 @@ withDefaults(
 );
 
 /** Emitted with the chosen item on activation. */
-const emit = defineEmits<{ itemSelect: [item: MenuItem] }>();
+const emit = defineEmits<{
+  itemSelected: [item: MenuItem];
+  /** @deprecated Use `itemSelected`; still emitted until 1.0. */
+  itemSelect: [item: MenuItem];
+}>();
 
 const uid = useId();
 const menuId = `ui-menu-${uid}`;
@@ -114,7 +118,8 @@ function onMenuKeydown(event: KeyboardEvent): void {
 
 function activate(item: MenuItem): void {
   if (item.disabled) return;
-  emit("itemSelect", item);
+  emit("itemSelected", item);
+  emit("itemSelect", item); // obsoleto, ver src/deprecations.ts
   close();
 }
 

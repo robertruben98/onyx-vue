@@ -37,7 +37,11 @@ const props = withDefaults(
 const checked = defineModel<boolean>({ default: false });
 
 /** Emitted on every change (in addition to v-model). */
-const emit = defineEmits<{ checkedChange: [value: boolean] }>();
+const emit = defineEmits<{
+  checkedChanged: [value: boolean];
+  /** @deprecated Use `checkedChanged`; still emitted until 1.0. */
+  checkedChange: [value: boolean];
+}>();
 
 const box = ref<HTMLInputElement | null>(null);
 
@@ -77,7 +81,8 @@ function handleChange(event: Event): void {
   if (props.disabled) return;
   const value = (event.target as HTMLInputElement).checked;
   checked.value = value;
-  emit("checkedChange", value);
+  emit("checkedChanged", value);
+  emit("checkedChange", value); // obsoleto, ver src/deprecations.ts
 }
 </script>
 

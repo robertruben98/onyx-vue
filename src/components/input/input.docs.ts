@@ -41,10 +41,10 @@ export const inputDoc: ComponentDoc = {
     },
     { name: "disabled", type: "boolean", default: "false", description: "Disabled state." },
     {
-      name: "@valueChange",
+      name: "@valueChanged / @valueChange",
       type: "(value: string) => void",
       default: "—",
-      description: "Emitted on every change, in addition to `v-model`.",
+      description: "Emitted on every change, in addition to `v-model`. `@valueChange` is the deprecated name of the same event, still emitted until 1.0.",
     },
     {
       name: "focus() / select()",

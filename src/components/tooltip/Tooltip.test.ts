@@ -67,6 +67,7 @@ describe("Tooltip (Vue)", () => {
     await waitFor(() => expect(screen.queryByRole("tooltip")).toBeNull());
 
     const events = emitted().toggle as unknown[][];
+    expect(emitted().toggled).toEqual(emitted().toggle); // el nombre nuevo, mismo evento
     expect(events[0]).toEqual([true]);
     expect(events[1]).toEqual([false]);
   });
