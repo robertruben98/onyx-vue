@@ -67,3 +67,19 @@
     minmax(0, 1fr)
     auto;
 }
+
+// En pantalla estrecha el nombre deja de tener ancho fijo y el detalle y las
+// acciones bajan a una segunda linea bajo el nombre: a 360 px las acciones se
+// salian por la derecha.
+@media (max-width: 480px) {
+  .ui-check-row {
+    grid-template-columns: var(--ui-check-row-state-width) minmax(0, 1fr);
+  }
+  .ui-check-row__detail,
+  .ui-check-row__actions {
+    grid-column: 2 / -1;
+  }
+  .ui-check-row__actions {
+    justify-content: flex-start;
+  }
+}
