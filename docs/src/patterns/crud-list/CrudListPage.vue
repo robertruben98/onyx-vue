@@ -138,7 +138,7 @@ const facts = computed<DescriptionItem[]>(() => {
     { term: "Company", value: c.company },
     { term: "Country", value: c.country },
     { term: "MRR", value: `€${c.mrr}` },
-    { term: "Status", value: STATUS_LABEL[c.status], tone: c.status === "suspended" ? "warning" : "default" },
+    { term: "Status", value: STATUS_LABEL[c.status], tone: c.status === "suspended" ? "warning" : "neutral" },
     { term: "Signed up", value: c.signedUp.slice(0, 10) },
   ];
 });
@@ -308,21 +308,21 @@ function deleteOne(): void {
         <UiDescriptionList v-if="editing" :items="facts" dense />
 
         <UiStack as="form" :gap="3" novalidate @submit.prevent="save">
-          <UiFormField v-slot="f" label="Name" required :error="errors.name">
-            <UiInput :id="f.id" v-model="draft.name" :aria-describedby="f.describedBy" :invalid="f.invalid" required />
+          <UiFormField label="Name" required :error="errors.name">
+            <UiInput v-model="draft.name" />
           </UiFormField>
-          <UiFormField v-slot="f" label="Email" help="Invoices go here." required :error="errors.email">
-            <UiInput :id="f.id" v-model="draft.email" type="email" :aria-describedby="f.describedBy" :invalid="f.invalid" required />
+          <UiFormField label="Email" help="Invoices go here." required :error="errors.email">
+            <UiInput v-model="draft.email" type="email" />
           </UiFormField>
-          <UiFormField v-slot="f" label="Plan">
-            <UiSelect :id="f.id" v-model="draft.plan" :options="PLAN_SELECT" />
+          <UiFormField label="Plan">
+            <UiSelect v-model="draft.plan" :options="PLAN_SELECT" />
           </UiFormField>
-          <UiFormField v-slot="f" label="Renewal" help="The next invoice is issued on this day.">
-            <UiDateInput :id="f.id" v-model="draft.renewal" :aria-describedby="f.describedBy" />
+          <UiFormField label="Renewal" help="The next invoice is issued on this day.">
+            <UiDateInput v-model="draft.renewal" />
           </UiFormField>
           <UiSwitch v-model="draft.newsletter" label="Sends them the product newsletter" />
-          <UiFormField v-slot="f" label="Notes">
-            <UiTextarea :id="f.id" v-model="draft.notes" :rows="3" />
+          <UiFormField label="Notes">
+            <UiTextarea v-model="draft.notes" :rows="3" />
           </UiFormField>
         </UiStack>
       </UiStack>

@@ -12,19 +12,8 @@ export const crudListPattern: PatternDoc = {
     builtBy: "Claude Code (an AI agent: the time is its wall clock, not a person's)",
     minutes: 7,
     builtOn: "2026-10-04",
-    gaps: [
-      {
-        summary:
-          "UiFormField hands its control an id, the ids for aria-describedby and the invalid flag through the slot, so every field repeats three bindings. It could provide them to the control it wraps instead.",
-        natives: 0,
-      },
-      {
-        summary:
-          "DescriptionItem.tone still says default where the rest of the library now says neutral: the tone vocabulary was unified for props, not for data fields.",
-        natives: 0,
-      },
-    ],
+    gaps: [],
     takeaway:
-      "The page needed no native control and almost no CSS: UiStack laid out the toolbar, the drawer footer and the form, so the only hand-written styles are the name cell's two lines and its ellipsis.",
+      "The page needed no native control and almost no CSS: UiStack laid out the toolbar, the drawer footer and the form. Building it surfaced two gaps, both fixed right after: every UiFormField control repeated :id, :aria-describedby and :invalid (the field now wires its control itself, so the form here has no bindings), and DescriptionItem.tone still said default (it now says neutral).",
   },
 };
