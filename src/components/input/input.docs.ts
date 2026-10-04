@@ -15,7 +15,7 @@ export const inputDoc: ComponentDoc = {
     },
     {
       name: "type",
-      type: "'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'",
+      type: "'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local'",
       default: "'text'",
       description: "Native input type.",
     },

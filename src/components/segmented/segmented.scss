@@ -1,0 +1,73 @@
+// Segmented — one of a few options, shown side by side. References ONLY
+// semantic / component tokens. The radio itself is invisible but stays the
+// focusable, keyboard-operable control; the label paints the segment.
+
+.ui-segmented {
+  display: inline-flex;
+  max-width: 100%;
+  border: var(--ui-border-width) solid var(--ui-segmented-border);
+  border-radius: var(--ui-segmented-radius);
+  background: var(--ui-segmented-bg);
+  overflow: hidden;
+}
+
+.ui-segmented__item {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.ui-segmented__item + .ui-segmented__item {
+  border-left: var(--ui-border-width) solid var(--ui-segmented-border);
+}
+
+.ui-segmented__el {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.ui-segmented__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ui-size-control-md);
+  padding: 0 var(--ui-segmented-padding-x);
+  font-size: var(--ui-font-size-md);
+  color: var(--ui-segmented-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-segmented--sm .ui-segmented__label {
+  min-height: var(--ui-size-control-sm);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-segmented__item:hover .ui-segmented__label {
+  background: var(--ui-segmented-hover-bg);
+}
+
+.ui-segmented__item--selected .ui-segmented__label,
+.ui-segmented__item--selected:hover .ui-segmented__label {
+  background: var(--ui-segmented-selected-bg);
+  color: var(--ui-segmented-selected-text);
+}
+
+.ui-segmented__el:focus-visible + .ui-segmented__label {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: calc(var(--ui-focus-ring-width) * -1);
+}
+
+.ui-segmented__item--disabled {
+  cursor: not-allowed;
+}
+.ui-segmented__item--disabled .ui-segmented__label {
+  color: var(--ui-color-disabled-text);
+}
+.ui-segmented__item--disabled:hover .ui-segmented__label {
+  background: transparent;
+}

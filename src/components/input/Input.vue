@@ -10,7 +10,10 @@ export type InputType =
   | "number"
   | "tel"
   | "url"
-  | "search";
+  | "search"
+  | "date"
+  | "time"
+  | "datetime-local";
 export type InputSize = "sm" | "md" | "lg";
 
 const props = withDefaults(
