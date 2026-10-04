@@ -9,6 +9,16 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- Type declarations ship in `dist/types` and are exported (`types`).
+- Token and preset stylesheets ship in `dist/styles` and are exported as
+  `onyx-vue/styles/*`, so a page can load the base layer and one preset.
+- `ToastApi`: the typed return of `useToast()`.
+- `npm run score` and `SCORECARD.md`: the library measured on eight aspects.
+
 ## 0.1.0 — 2026-09-25
 
 First versioned release: everything on `feat/console-lists` (68 components,
