@@ -16,6 +16,7 @@ export const codeBlockDoc: ComponentDoc = {
     { name: "label", type: "string", default: "''", description: "Makes it a named region." },
     { name: "tone", type: "'neutral' | 'muted' | 'danger'", default: "'neutral'", description: "Tone of the text. `default` still works as the deprecated name of `neutral`." },
     { name: "scrollToEnd()", type: "exposed method", default: "—", description: "Jumps to the end and re-pins." },
+    { name: "#default", type: "slot", default: "—", description: "Text to show instead of the `text` prop, for content you render yourself." },
   ],
   demos: [
     {

@@ -20,6 +20,7 @@ export const drawerDoc: ComponentDoc = {
     { name: "#toolbar", type: "slot", default: "—", description: "Fixed row under the header, usually tabs." },
     { name: "#footer", type: "slot", default: "—", description: "Fixed row at the bottom." },
     { name: "@opened / @closed", type: "() => void", default: "—", description: "After opening / closing." },
+    { name: "#default", type: "slot", default: "—", description: "The drawer's content." },
   ],
   demos: [
     {

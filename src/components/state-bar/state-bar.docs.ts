@@ -45,6 +45,7 @@ export const stateBarDoc: ComponentDoc = {
       description:
         "A legend entry was activated. Emits null when the active one is clicked again, so the same handler clears the filter.",
     },
+    { name: "label", type: "string", default: "''", description: "Accessible name of the bar." },
   ],
   demos: [
     {

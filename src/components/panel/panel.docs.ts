@@ -17,6 +17,7 @@ export const panelDoc: ComponentDoc = {
     { name: "#actions", type: "slot", default: "—", description: "Buttons beside the count." },
     { name: "#controls", type: "slot", default: "—", description: "Controls pushed to the far end." },
     { name: "#footer", type: "slot", default: "—", description: "A band under the body." },
+    { name: "#default", type: "slot", default: "—", description: "The panel's body." },
   ],
   demos: [
     {

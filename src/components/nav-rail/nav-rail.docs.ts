@@ -65,6 +65,9 @@ export const navRailDoc: ComponentDoc = {
       default: "—",
       description: "A button entry was activated. Links navigate on their own.",
     },
+    { name: "NavRail #default", type: "slot", default: "—", description: "The entries: NavRailItem and NavRailGroup." },
+    { name: "NavRailGroup #default", type: "slot", default: "—", description: "The group's entries." },
+    { name: "NavRailItem title", type: "string", default: "''", description: "Tooltip: the full name, or the shortcut that also gets here." },
   ],
   demos: [
     {
