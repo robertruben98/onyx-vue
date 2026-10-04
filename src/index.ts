@@ -58,6 +58,7 @@ export * from "./components/log-lines";
 export * from "./components/menu";
 export * from "./components/metric-chip";
 export * from "./components/nav-rail";
+export * from "./components/pagination";
 export * from "./components/panel";
 export * from "./components/popover";
 export * from "./components/progress-bar";
