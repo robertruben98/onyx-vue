@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-04",
+  "threshold": 90,
+  "aspects": {
+    "Accessibility": {
+      "score": 94.5,
+      "summary": "248/340 component×theme runs with no axe violation",
+      "findings": 104
+    },
+    "Test coverage": {
+      "score": 90.4,
+      "summary": "statements 95.78%, branches 87.95%, functions 87.43%",
+      "findings": 23
+    },
+    "Documentation": {
+      "score": 97.7,
+      "summary": "423/435 props, events and slots documented; 73/73 exports on a docs page",
+      "findings": 12
+    },
+    "Theming & tokens": {
+      "score": 98.6,
+      "summary": "138/140 token checks pass",
+      "findings": 2
+    },
+    "Responsive": {
+      "score": 62.4,
+      "summary": "131/210 page×width runs with nothing spilling",
+      "findings": 79
+    },
+    "API consistency": {
+      "score": 66.2,
+      "summary": "49/74 API convention checks pass",
+      "findings": 25
+    },
+    "Component catalogue": {
+      "score": 78,
+      "summary": "39/50 catalogue entries present, tested and documented",
+      "findings": 11
+    },
+    "Packaging & DX": {
+      "score": 58.3,
+      "summary": "7/12 packaging checks pass",
+      "findings": 5
+    }
+  }
+}
