@@ -45,7 +45,9 @@ if (!quick || !existsSync(join(OUT, "coverage", "coverage-summary.json"))) {
 const meta = {
   typecheckOk: step("vue-tsc --noEmit", "npx vue-tsc --noEmit"),
   buildOk: step("library build (bundle + type declarations)", "npm run build"),
-  docsBuildOk: step("docs build", "npx vite build", { cwd: join(ROOT, "docs") }),
+  // El script de la doc (vue-tsc + vite build), no solo vite: el typecheck de la doc
+  // incluye los tests de src y es el que se rompe si uno usa un global de vitest.
+  docsBuildOk: step("docs build (typecheck + bundle)", "npm run build", { cwd: join(ROOT, "docs") }),
 };
 meta.dtsBuilt =
   existsSync(join(ROOT, "dist")) &&

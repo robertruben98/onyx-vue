@@ -1,4 +1,4 @@
-import { afterEach, beforeEach } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
 import { render, screen, within, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import { nextTick, reactive } from "vue";
