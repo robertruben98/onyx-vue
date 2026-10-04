@@ -17,10 +17,23 @@ Consumers that build from source (the control-panel dashboard aliases
 - Token and preset stylesheets ship in `dist/styles` and are exported as
   `onyx-vue/styles/*`, so a page can load the base layer and one preset.
 - `ToastApi`: the typed return of `useToast()`.
+- Components: `UiStack`, `UiGrid` and `UiSkeleton` (layout); `UiSegmented`,
+  `UiSlider`, `UiDateInput` and `UiFormField` (forms); `UiPagination`.
+- `UiInput` accepts `date`, `time` and `datetime-local`.
 - `npm run score` and `SCORECARD.md`: the library measured on eight aspects.
 
 ### Fixed
 
+- Colour contrast passes WCAG AA (axe) in all five themes. The default
+  primary is emerald-700 and danger red-700; dimmed states (quiet action
+  cluster, empty filter chip, stale metric) no longer fade text with opacity.
+- `UiDialog` had no backdrop colour: `--ui-dialog-backdrop` was used but
+  never defined.
+- `UiDataTable`: the empty and loading messages sit in a row and a cell
+  (valid ARIA), and the virtual viewport is focusable.
+- At 360 px nothing spills: `UiBulkBar`, `UiSectionHeader` and `UiCheckRow`
+  wrap, `UiSparkBars` scrolls inside its box, and the docs site no longer
+  scrolls sideways.
 - `UiButton`, `UiConfirmButton`, `UiInput`, `UiTextarea`, `UiCheckbox`,
   `UiSwitch` and `UiSelect` forward attributes (`aria-*`, `autocomplete`,
   `name`, `id`…) to their native element instead of the wrapper; `class` and

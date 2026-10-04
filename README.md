@@ -70,7 +70,7 @@ import "onyx-vue/styles/matrix.css"; // and the preset you use
 
 - Every component is tested with axe in its own suite, and the scorecard runs
   axe in Chromium over every docs demo in all five themes, colour contrast
-  included.
+  included: text meets WCAG AA contrast in every preset.
 - Controls forward the attributes you put on them (`aria-*`, `autocomplete`,
   `name`…) to the native element they render, not to a wrapper.
 - Dialog and Drawer trap focus and close on Escape.
