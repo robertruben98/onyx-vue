@@ -143,7 +143,10 @@ const bare = computed(() => route.meta.bare === true);
 <style scoped>
 .docs {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  /* `minmax(0, 1fr)` y no `1fr`: una pista `1fr` crece hasta el ancho minimo
+     de su contenido, y un bloque de codigo o la tabla de API ensanchaban la
+     pagina entera en el movil (a 360 px median 416-585 px). */
+  grid-template-columns: 240px minmax(0, 1fr);
   min-height: 100vh;
   color: var(--ui-color-text);
   background: var(--ui-color-background, var(--ui-color-surface));
@@ -233,7 +236,7 @@ const bare = computed(() => route.meta.bare === true);
 }
 @media (max-width: 720px) {
   .docs {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .docs__sidebar {
     position: static;
