@@ -1038,12 +1038,40 @@ describe("DataTable (Vue) — virtual window", () => {
     expect(cellAt(container, 990, 0).getAttribute("tabindex")).toBe("0");
   });
 
-  // BUG (ver informe agent-charts-datatable.md, DataTable #1): en modo virtual,
-  // saltar a una fila que no esta pintada pierde el foco. `focusCell` mueve el
+  it("re-measures the viewport when it is resized", async () => {
+    // DataTable #4: medida una sola vez, una tabla montada oculta se quedaba
+    // con la ventana de 8 filas aunque luego tuviera sitio para mas.
+    const observer: { notify: (() => void) | null } = { notify: null };
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(cb: () => void) {
+          observer.notify = cb;
+        }
+        observe() {}
+        disconnect() {}
+      },
+    );
+    try {
+      measured = 0;
+      const { container } = renderWindow({ viewportHeight: "calc(50vh - 2rem)" });
+      const before = windowLabels(container).length;
+      measured = 800;
+      observer.notify?.();
+      await nextTick();
+      expect(windowLabels(container).length).toBeGreaterThan(before);
+      expect(windowLabels(container).length).toBe(Math.ceil(800 / 40) + 8);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  // DataTable #1 (arreglado): en modo virtual, saltar a una fila que no estaba
+  // pintada perdia el foco. `focusCell` mueve el
   // scroll y reintenta en `nextTick`, pero el navegador avisa del scroll en una
   // tarea posterior: en `nextTick` la fila aun no existe, y cuando la ventana se
   // mueve la celda que tenia el foco se desmonta y el foco cae a <body>.
-  it.skip("keeps keyboard focus when jumping to a row outside the window", async () => {
+  it("keeps keyboard focus when jumping to a row outside the window", async () => {
     measured = 200;
     const { container } = renderWindow();
     const vp = viewportOf(container);
@@ -1189,10 +1217,10 @@ describe("DataTable (Vue) — keyboard page jumps and activation", () => {
     expect(at()).toEqual({ row: "0", col: "0" });
   });
 
-  // BUG (ver informe agent-charts-datatable.md, DataTable #3): mientras carga,
+  // DataTable #3 (arreglado): mientras carga,
   // una flecha mueve la celda activa a una fila que no esta pintada; la
   // cabecera pierde su tabindex=0 y la rejilla se queda sin parada de Tab.
-  it.skip("keeps a tab stop in the grid while the rows are loading", async () => {
+  it("keeps a tab stop in the grid while the rows are loading", async () => {
     const { container } = render(DataTable, {
       props: { caption: "People", columns: COLUMNS, rows: ROWS, rowKey: "id", loading: true },
     });
@@ -1201,11 +1229,11 @@ describe("DataTable (Vue) — keyboard page jumps and activation", () => {
     expect(container.querySelectorAll('[role="grid"] [tabindex="0"]')).toHaveLength(1);
   });
 
-  // BUG (ver informe agent-charts-datatable.md, DataTable #2): una celda tiene
+  // DataTable #2 (arreglado): una celda tiene
   // tabindex=-1, asi que un clic le da el foco, pero la celda activa del roving
   // tabindex no lo sigue: el teclado actua sobre la celda activa anterior. Con
   // la primera columna ordenable, clic en una celda + Enter ordena la tabla.
-  it.skip("acts on the clicked cell, not on a stale active cell, after a pointer focus", async () => {
+  it("acts on the clicked cell, not on a stale active cell, after a pointer focus", async () => {
     const { container } = renderScores();
     const cell = cellAt(container, 2, 1); // Alice · 10
     await fireEvent.click(cell);

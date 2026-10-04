@@ -407,9 +407,23 @@ function onViewportScroll(event: Event): void {
   scrollTop.value = (event.target as HTMLElement).scrollTop;
 }
 
+// La altura se vuelve a medir cuando el viewport cambia de tamano: medida una
+// sola vez al montar, una tabla montada oculta (una pestana cerrada, un
+// <details>) o un viewport redimensionado dejaban la ventana con el tamano
+// viejo y una franja en blanco bajo las filas (DataTable #4).
+let viewportObserver: ResizeObserver | null = null;
 watch(viewport, (el) => {
+  viewportObserver?.disconnect();
+  viewportObserver = null;
   viewportClientHeight.value = el ? el.clientHeight : 0;
+  if (el && typeof ResizeObserver !== "undefined") {
+    viewportObserver = new ResizeObserver(() => {
+      viewportClientHeight.value = el.clientHeight;
+    });
+    viewportObserver.observe(el);
+  }
 });
+onBeforeUnmount(() => viewportObserver?.disconnect());
 
 const virtualStart = computed(() =>
   Math.max(0, Math.floor(scrollTop.value / props.rowHeight) - OVERSCAN),
@@ -465,6 +479,11 @@ function scrollIndexIntoView(index: number): void {
   if (top < vp.scrollTop) vp.scrollTop = top;
   else if (bottom > vp.scrollTop + vp.clientHeight)
     vp.scrollTop = bottom - vp.clientHeight;
+  // La ventana se mueve ya, sin esperar al evento `scroll`: el navegador lo
+  // entrega en una tarea posterior, y en el `nextTick` de focusCell la fila
+  // destino aun no existia. La celda con el foco se desmontaba y el foco caia
+  // a <body> (DataTable #1).
+  scrollTop.value = vp.scrollTop;
 }
 
 function focusCell(row: number, col: number): void {
@@ -502,9 +521,26 @@ function rowAt(index: number): T | undefined {
   return visibleRows.value[index];
 }
 
+/**
+ * Las celdas tienen tabindex=-1, asi que un clic les da el foco; la celda
+ * activa del roving tabindex tiene que seguirlo. Si no, Enter y las flechas
+ * actuaban sobre la ultima celda que dejo el teclado (al principio la cabecera:
+ * clic en una celda + Enter ordenaba la tabla) (DataTable #2).
+ */
+function onGridFocusin(event: FocusEvent): void {
+  const cell = (event.target as HTMLElement | null)?.closest<HTMLElement>("[data-row][data-col]");
+  if (!cell || !root.value?.contains(cell)) return;
+  const row = Number(cell.dataset.row);
+  const col = Number(cell.dataset.col);
+  if (!Number.isInteger(row) || !Number.isInteger(col)) return;
+  if (row !== activeCell.value.row || col !== activeCell.value.col) activeCell.value = { row, col };
+}
+
 function onGridKeydown(event: KeyboardEvent): void {
   const a = activeCell.value;
-  const rowMax = visibleRows.value.length; // header = 0, data rows = 1..N
+  // header = 0, data rows = 1..N. Mientras carga solo se pinta el aviso: bajar
+  // a una fila que no existe dejaba la rejilla sin parada de Tab (DataTable #3).
+  const rowMax = props.loading ? 0 : visibleRows.value.length;
   const colMax = colCount.value - 1;
   let { row, col } = a;
   switch (event.key) {
@@ -572,6 +608,7 @@ function onGridKeydown(event: KeyboardEvent): void {
         overflowY: maxHeight ? 'auto' : undefined,
       }"
       @keydown="onGridKeydown"
+      @focusin="onGridFocusin"
     >
       <!-- Header row -->
       <div
