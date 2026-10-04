@@ -192,8 +192,11 @@ const twin = computed<ChartTable | null>(() => {
         </template>
         <template v-else-if="row.bar">
           <path :d="row.bar.d" :class="`ui-chart--${row.bar.tone}`" />
+          <!-- `?? 0`: `value` es opcional, y una fila sin el se dibuja como 0 y
+               la tabla gemela dice 0; el texto y el tooltip tienen que decir lo
+               mismo y no "undefined". -->
           <text class="ui-chart__val" :x="padL + row.bar.w + 10" :y="row.textY">{{
-            row.item.valueText ?? row.item.value
+            row.item.valueText ?? row.item.value ?? 0
           }}</text>
           <rect
             class="ui-chart__hit"
@@ -201,7 +204,7 @@ const twin = computed<ChartTable | null>(() => {
             :y="row.yTop"
             :width="Math.max(row.bar.w, 24)"
             :height="rowHeight"
-            @pointerenter="show($event, row.item.tip ?? `${row.item.label} · ${row.item.valueText ?? row.item.value}`)"
+            @pointerenter="show($event, row.item.tip ?? `${row.item.label} · ${row.item.valueText ?? row.item.value ?? 0}`)"
             @pointerleave="hide"
           />
         </template>

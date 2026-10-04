@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { canonicalTone } from "../../internal/tone";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { UiSpinner } from "../spinner";
 import "./code-block.scss";
@@ -31,7 +32,8 @@ const props = withDefaults(
     /** Accessible name of the box. */
     label?: string;
     /** Semantic tone of the text, e.g. `danger` for an error body. */
-    tone?: "default" | "muted" | "danger";
+    /** `default` is the deprecated name of `neutral`. */
+    tone?: "neutral" | "muted" | "danger" | "default";
   }>(),
   {
     text: "",
@@ -41,9 +43,12 @@ const props = withDefaults(
     emptyText: "",
     loading: false,
     label: "",
-    tone: "default",
+    tone: "neutral",
   },
 );
+
+/** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
+const tone = computed(() => canonicalTone(props.tone));
 
 const box = ref<HTMLElement | null>(null);
 let pinned = true;
@@ -67,7 +72,7 @@ onMounted(toEnd);
 const rootClasses = computed(() => ({
   "ui-code-block": true,
   "ui-code-block--nowrap": !props.wrap,
-  [`ui-code-block--${props.tone}`]: props.tone !== "default",
+  [`ui-code-block--${tone.value}`]: tone.value !== "neutral",
 }));
 
 const rootStyle = computed(() => (props.maxHeight ? { maxHeight: props.maxHeight } : undefined));

@@ -72,6 +72,7 @@ describe("EmptyState (Vue)", () => {
     });
     (screen.getByRole("button", { name: "Cargar ahora" }) as HTMLButtonElement).click();
     expect(emitted().primaryAction).toBeTruthy();
+    expect(emitted().primaryClicked).toBeTruthy();
   });
 
   it("emits secondaryAction when the secondary button is activated", async () => {
@@ -80,6 +81,7 @@ describe("EmptyState (Vue)", () => {
     });
     (screen.getByRole("button", { name: "Ver opciones" }) as HTMLButtonElement).click();
     expect(emitted().secondaryAction).toBeTruthy();
+    expect(emitted().secondaryClicked).toBeTruthy();
   });
 
   it("disables both actions and marks itself aria-disabled", () => {
@@ -100,6 +102,7 @@ describe("EmptyState (Vue)", () => {
     });
     (container.querySelector("button") as HTMLButtonElement).click();
     expect(emitted().primaryAction).toBeFalsy();
+    expect(emitted().primaryClicked).toBeFalsy();
   });
 
   it("omits the title element entirely when no title slot was given", () => {

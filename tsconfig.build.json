@@ -1,0 +1,16 @@
+{
+  // Solo para emitir los tipos del paquete (`npm run build`): la libreria sin
+  // tests, a dist/types. El tsconfig.json de siempre sigue siendo el de
+  // `vue-tsc --noEmit` y el editor.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/types",
+    "rootDir": "src",
+    "types": []
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/test-setup.ts"]
+}

@@ -92,11 +92,17 @@
   --ui-console-txt-faint: #65635f;   /* --txt-faint */
   --ui-console-ok: #62c37a;          /* --ok     2xx */
   --ui-console-warn: #ecbd3a;        /* --warn   responde algo que no es 2xx */
-  --ui-console-down: #dc5e59;        /* --down   no responde */
+  /* Un punto mas claro que el #dc5e59 original: aquel quedaba a 3.5:1 sobre la
+     barra de seleccion y a 4.4:1 sobre su propia superficie. */
+  --ui-console-down: #f0827d;        /* --down   no responde */
   --ui-console-accent: #79a1fc;      /* --accent */
 
   /* --- semanticos ------------------------------------------------------- */
   /* Los 21 que remapea dark.css: ese es el contrato de un preset completo. */
+  /* Colores ANSI vivos: el terminal sobre fondo oscuro. Los de tokens.css son
+     los de un tema claro, oscurecidos para leerse sobre blanco. */
+  --ui-terminal-magenta: #c58af9;
+  --ui-terminal-cyan: #5fd7d7;
   --ui-color-primary: var(--ui-console-accent);
   --ui-color-primary-hover: #93b3fd;
   --ui-color-primary-active: #a3bffd;
@@ -146,5 +152,7 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ui-console-txt-faint);
+  /* txt-dim y no txt-faint: a 9.5px el faint quedaba a 3.0:1. El faint se
+     queda para lo deshabilitado, que WCAG exime. */
+  color: var(--ui-console-txt-dim);
 }

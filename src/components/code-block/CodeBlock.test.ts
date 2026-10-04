@@ -66,3 +66,31 @@ describe("CodeBlock (Vue)", () => {
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
+
+describe("CodeBlock (Vue) — scrolling and content details", () => {
+  it("scrollToEnd jumps to the bottom and keeps following", async () => {
+    const wrapper = render({
+      components: { CodeBlock },
+      template: `<CodeBlock ref="cb" :text="text" follow-tail /><button type="button" @click="$refs.cb.scrollToEnd()">end</button>`,
+      data: () => ({ text: "a" }),
+    });
+    const pre = wrapper.container.querySelector("pre") as HTMLElement;
+    geometry(pre, 800, 100);
+    pre.scrollTop = 10;
+    pre.dispatchEvent(new Event("scroll"));
+    wrapper.getByRole("button", { name: "end" }).click();
+    await nextTick();
+    await nextTick();
+    expect(pre.scrollTop).toBe(800);
+  });
+
+  it("does not move without followTail, renders slot content, and drops wrapping on request", async () => {
+    const { container } = render(CodeBlock, { props: { wrap: false }, slots: { default: "custom body" } });
+    const pre = container.querySelector("pre") as HTMLElement;
+    expect(pre.textContent).toContain("custom body");
+    expect(pre.classList.contains("ui-code-block--nowrap")).toBe(true);
+    expect(pre.style.maxHeight).toBe("");
+    const capped = render(CodeBlock, { props: { text: "x", maxHeight: "12rem" } });
+    expect((capped.container.querySelector("pre") as HTMLElement).style.maxHeight).toBe("12rem");
+  });
+});

@@ -24,6 +24,7 @@ describe("RadioGroup (Vue)", () => {
     });
     await fireEvent.click(screen.getByRole("radio", { name: /medium/i }));
     const events = emitted().valueChange as unknown[][];
+    expect(emitted().valueChanged).toEqual(emitted().valueChange); // el nombre nuevo, mismo evento
     expect(events).toBeTruthy();
     expect(events[events.length - 1]).toEqual(["md"]);
   });
@@ -71,6 +72,7 @@ describe("RadioGroup (Vue)", () => {
     });
     await fireEvent.click(screen.getByRole("radio", { name: /medium/i }));
     expect(emitted().valueChange).toBeFalsy();
+    expect(emitted().valueChanged).toBeFalsy();
   });
 
   it("sets aria-invalid when invalid", () => {

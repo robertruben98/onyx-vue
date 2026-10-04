@@ -23,7 +23,9 @@ describe("Input (Vue)", () => {
     const el = screen.getByLabelText("Name") as HTMLInputElement;
     await fireEvent.update(el, "abc");
     expect(emitted().valueChange).toBeTruthy();
+    expect(emitted().valueChanged).toBeTruthy();
     expect(emitted().valueChange.at(-1)).toEqual(["abc"]);
+    expect(emitted().valueChanged.at(-1)).toEqual(["abc"]);
   });
 
   it("supports v-model via update:modelValue", async () => {
@@ -62,6 +64,7 @@ describe("Input (Vue)", () => {
     expect(el.disabled).toBe(true);
     await fireEvent.input(el, { target: { value: "abc" } });
     expect(emitted().valueChange).toBeFalsy();
+    expect(emitted().valueChanged).toBeFalsy();
   });
 
   it("has no axe violations (default)", async () => {

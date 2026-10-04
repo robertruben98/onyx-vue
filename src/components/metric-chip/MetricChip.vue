@@ -1,6 +1,7 @@
 <script lang="ts">
+import { canonicalTone, type LegacyTone } from "../../internal/tone";
 /** Semantic tone of a known value. */
-export type MetricChipTone = "neutral" | "ok" | "warn" | "danger" | "info";
+export type MetricChipTone = "neutral" | "info" | "success" | "warning" | "danger" | LegacyTone;
 
 /**
  * What the chip has to report.
@@ -47,6 +48,9 @@ const props = withDefaults(
   },
 );
 
+/** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
+const tone = computed(() => canonicalTone(props.tone));
+
 /** Emitted when an interactive chip is activated. */
 const emit = defineEmits<{ activated: [] }>();
 
@@ -59,10 +63,10 @@ const countState = computed<TriState>(() =>
 
 const rootClasses = computed(() => ({
   "ui-metric-chip": true,
-  "ui-metric-chip--ok": !failed.value && props.tone === "ok",
-  "ui-metric-chip--warn": !failed.value && props.tone === "warn",
-  "ui-metric-chip--danger": failed.value || props.tone === "danger",
-  "ui-metric-chip--info": !failed.value && props.tone === "info",
+  "ui-metric-chip--ok": !failed.value && tone.value === "success",
+  "ui-metric-chip--warn": !failed.value && tone.value === "warning",
+  "ui-metric-chip--danger": failed.value || tone.value === "danger",
+  "ui-metric-chip--info": !failed.value && tone.value === "info",
   "ui-metric-chip--stale": props.stale,
   "ui-metric-chip--interactive": props.interactive,
 }));

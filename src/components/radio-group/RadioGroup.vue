@@ -33,7 +33,11 @@ const props = withDefaults(
 const value = defineModel<string>({ default: "" });
 
 /** Emitted on every selection change. */
-const emit = defineEmits<{ valueChange: [value: string] }>();
+const emit = defineEmits<{
+  valueChanged: [value: string];
+  /** @deprecated Use `valueChanged`; still emitted until 1.0. */
+  valueChange: [value: string];
+}>();
 
 const uid = useId();
 const name = `ui-radio-${uid}`;
@@ -47,7 +51,8 @@ const rootClasses = computed(() => ({
 function select(optValue: string): void {
   if (props.disabled) return;
   value.value = optValue;
-  emit("valueChange", optValue);
+  emit("valueChanged", optValue);
+  emit("valueChange", optValue); // obsoleto, ver src/deprecations.ts
 }
 </script>
 

@@ -1,0 +1,14 @@
+// Date input — UiInput's look (input.scss) plus what a native date/time field
+// needs. References ONLY semantic / component tokens.
+
+.ui-date-input__el {
+  // El icono del calendario es del navegador: sin esto se queda gris claro
+  // sobre los presets oscuros. `inherit` toma el esquema del tema.
+  color-scheme: inherit;
+  min-width: 0;
+}
+
+.ui-date-input__el::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.8;
+}

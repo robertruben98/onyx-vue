@@ -52,7 +52,17 @@ function clear(): void {
   for (const t of [...queue]) dismiss(t.id);
 }
 
+/** What `useToast()` hands back. */
+export interface ToastApi {
+  /** Queue a message; returns its id. */
+  show: (message: string, options?: ToastOptions) => number;
+  dismiss: (id: number) => void;
+  clear: () => void;
+  /** The messages on screen, oldest first. Read-only. */
+  toasts: readonly Readonly<ToastMessage>[];
+}
+
 /** Show and dismiss transient messages; render them with one `UiToastHost`. */
-export function useToast() {
-  return { show, dismiss, clear, toasts: readonly(queue) };
+export function useToast(): ToastApi {
+  return { show, dismiss, clear, toasts: readonly(queue) as readonly Readonly<ToastMessage>[] };
 }

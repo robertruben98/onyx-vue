@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./input.scss";
 
 export type InputType =
@@ -9,7 +10,10 @@ export type InputType =
   | "number"
   | "tel"
   | "url"
-  | "search";
+  | "search"
+  | "date"
+  | "time"
+  | "datetime-local";
 export type InputSize = "sm" | "md" | "lg";
 
 const props = withDefaults(
@@ -41,13 +45,22 @@ const props = withDefaults(
 );
 
 /** Emitted on every value change (in addition to v-model). */
-const emit = defineEmits<{ valueChange: [value: string] }>();
+const emit = defineEmits<{
+  valueChanged: [value: string];
+  /** @deprecated Use `valueChanged`; still emitted until 1.0. */
+  valueChange: [value: string];
+}>();
 
 /** Two-way bound value (v-model). */
 const value = defineModel<string>({ default: "" });
 
 const uid = useId();
 const inputId = `ui-input-${uid}`;
+
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(inputId);
 
 const rootClasses = computed(() => ({
   "ui-input": true,
@@ -63,7 +76,8 @@ function handleInput(event: Event): void {
   }
   const next = (event.target as HTMLInputElement).value;
   value.value = next;
-  emit("valueChange", next);
+  emit("valueChanged", next);
+  emit("valueChange", next); // obsoleto, ver src/deprecations.ts
 }
 /**
  * Foco programatico. Sin esto, quien quiera enfocar la caja tiene que sacar el
@@ -87,14 +101,15 @@ defineExpose({ focus, select, elemento });
 </script>
 
 <template>
-  <span :class="rootClasses">
-    <label v-if="label" class="ui-input__label" :for="inputId">{{
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
+    <label v-if="label" class="ui-input__label" :for="controlId()">{{
       label
     }}</label>
     <input
+      v-bind="controlAttrs()"
       ref="elemento"
       class="ui-input__el"
-      :id="inputId"
+      :id="controlId()"
       :type="type"
       :value="value"
       :disabled="disabled"
