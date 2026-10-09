@@ -15,6 +15,13 @@ export const digitalRainDoc: ComponentDoc = {
         "How visible the rain is. Keep it low — above ~0.3 it starts competing with the text it sits behind.",
     },
     {
+      name: "pauseWhenUnfocused",
+      type: "boolean",
+      default: "true",
+      description:
+        "Stop painting while the window has no focus, not only while the tab is hidden. The last frame stays on the canvas and the rain moves again on focus. A backdrop left open on a second monitor otherwise paints all day.",
+    },
+    {
       name: "columnGap",
       type: "number",
       default: "16",
