@@ -129,6 +129,18 @@
   text-align: right;
 }
 
+// La fila del aviso ocupa la rejilla entera, sea cual sea su plantilla.
+.ui-dt__status-row {
+  display: block;
+  grid-column: 1 / -1;
+}
+
+// El viewport virtual se enfoca para poder desplazarlo con el teclado.
+.ui-dt__viewport:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: calc(var(--ui-focus-ring-width) * -1);
+}
+
 .ui-dt__status {
   padding: var(--ui-data-table-empty-padding);
   text-align: center;

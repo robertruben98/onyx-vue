@@ -103,7 +103,7 @@
   --ui-matrix-head: #d6ffe4; /* destello: cabeza de la lluvia, cifras grandes */
   --ui-matrix-bright: #22ff6a; /* fosforo vivo */
   --ui-matrix-green: #00c246; /* tinta de cuerpo */
-  --ui-matrix-mid: #0b8f39; /* texto secundario */
+  --ui-matrix-mid: #0fa243; /* texto secundario: 5.2:1 o mas sobre todos los fondos del tema */
   --ui-matrix-dim: #0a5c28; /* texto apagado */
   --ui-matrix-deep: #07331a; /* fondo de canal, filete interior */
 
@@ -112,6 +112,10 @@
      en ningun sitio decorativo. */
   --ui-matrix-amber: #ffb000;
   --ui-matrix-alert: #ff4a4a;
+  /* Los dos colores ANSI que no son verdes: un terminal ensena la salida de
+     otro programa, y esa salida trae su propio color. */
+  --ui-matrix-ansi-magenta: #c58af9;
+  --ui-matrix-ansi-cyan: #5fd7d7;
 
   /* Rellenos de grafica: un paso mas oscuros que los fosforos de estado, que
      caen fuera de la banda de luminosidad de un relleno sobre negro. Elegidos
@@ -130,6 +134,10 @@
 
   /* --- semanticos ------------------------------------------------------- */
   /* Los 21 que remapea dark.css: ese es el contrato de un preset completo. */
+  /* Colores ANSI vivos: el terminal sobre fondo oscuro. Los de tokens.css son
+     los de un tema claro, oscurecidos para leerse sobre blanco. */
+  --ui-terminal-magenta: var(--ui-matrix-ansi-magenta);
+  --ui-terminal-cyan: var(--ui-matrix-ansi-cyan);
   --ui-color-primary: var(--ui-matrix-bright);
   --ui-color-primary-hover: var(--ui-matrix-flare);
   --ui-color-primary-active: var(--ui-matrix-head);
@@ -167,7 +175,9 @@
   --ui-color-danger-surface: rgba(255, 74, 74, 0.13);
   --ui-color-info: var(--ui-matrix-mid);
   --ui-color-info-surface: rgba(11, 143, 57, 0.14);
-  --ui-color-neutral: var(--ui-matrix-dim);
+  /* mid y no dim: el dim se usaba como color de texto y quedaba a
+     2.3:1. Dos tintas para leer, no tres; el dim queda para filetes. */
+  --ui-color-neutral: var(--ui-matrix-mid);
   --ui-color-neutral-surface: rgba(10, 92, 40, 0.12);
 
   --ui-color-disabled-bg: var(--ui-matrix-raise);

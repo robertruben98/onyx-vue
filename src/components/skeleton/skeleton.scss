@@ -1,0 +1,65 @@
+// Skeleton — a placeholder in the shape of the content that is loading.
+// References ONLY semantic / component tokens.
+
+.ui-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ui-skeleton-line-height) * 0.6);
+  width: 100%;
+}
+
+.ui-skeleton--circle {
+  display: inline-flex;
+  width: auto;
+}
+
+// Lo que se lee y no se ve: el lector de pantalla oye "Cargando…".
+.ui-skeleton__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ui-skeleton__bone {
+  display: block;
+  width: 100%;
+  height: var(--ui-skeleton-line-height);
+  border-radius: var(--ui-skeleton-radius);
+  background-color: var(--ui-skeleton-bg);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--ui-skeleton-shine) 55%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: ui-skeleton-shine 1.4s ease-in-out infinite;
+}
+
+.ui-skeleton--block .ui-skeleton__bone {
+  height: 8rem;
+}
+
+.ui-skeleton--circle .ui-skeleton__bone {
+  border-radius: 50%;
+}
+
+@keyframes ui-skeleton-shine {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+
+// Quien pide menos movimiento ve el hueco quieto: la forma ya dice "cargando".
+@media (prefers-reduced-motion: reduce) {
+  .ui-skeleton__bone {
+    animation: none;
+    background-image: none;
+  }
+}

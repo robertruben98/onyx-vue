@@ -87,6 +87,9 @@ function toggle(key: string) {
     </section>
 
     <h2 id="api">API</h2>
+    <!-- Con scroll propio: una tabla con tipos en <code> no encoge por debajo
+         de su contenido, y sin esto ensanchaba la pagina entera en el movil. -->
+    <div class="api-wrap" tabindex="0" role="region" aria-label="API">
     <table class="api">
       <thead>
         <tr>
@@ -105,6 +108,7 @@ function toggle(key: string) {
         </tr>
       </tbody>
     </table>
+    </div>
   </article>
 
   <article v-else class="docs-page">
@@ -227,6 +231,9 @@ h2 {
 h2 + .code {
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius);
+}
+.api-wrap {
+  overflow-x: auto;
 }
 .api {
   width: 100%;

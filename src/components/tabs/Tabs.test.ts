@@ -271,3 +271,46 @@ describe("tabs stylesheet", () => {
     expect(tab).toMatch(/white-space:\s*nowrap/);
   });
 });
+
+describe("Tabs (Vue) — keyboard and markup details", () => {
+  it("moves with ArrowDown and ArrowUp like ArrowRight and ArrowLeft", async () => {
+    await renderTabs(0);
+    const [one, two] = screen.getAllByRole("tab");
+    await fireEvent.keyDown(one, { key: "ArrowDown" });
+    expect(two.getAttribute("aria-selected")).toBe("true");
+    await fireEvent.keyDown(two, { key: "ArrowUp" });
+    expect(one.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("ignores keys that do not move", async () => {
+    await renderTabs(0);
+    const [one] = screen.getAllByRole("tab");
+    await fireEvent.keyDown(one, { key: "a" });
+    expect(one.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("finds tabs rendered by v-for, takes a bare disabled attribute and an empty label", async () => {
+    render({
+      components: { Tabs, Tab },
+      template: `<Tabs aria-label="Results">
+        <Tab v-for="n in 2" :key="n" :label="'Tab ' + n">Panel {{ n }}</Tab>
+        <Tab disabled>Off</Tab>
+      </Tabs>`,
+    });
+    await nextTick();
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs.map((t) => t.textContent?.trim())).toEqual(["Tab 1", "Tab 2", ""]);
+    expect((tabs[2] as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("does nothing on arrow keys when every tab is disabled", async () => {
+    render({
+      components: { Tabs, Tab },
+      template: `<Tabs aria-label="Locked"><Tab label="A" disabled>a</Tab><Tab label="B" disabled>b</Tab></Tabs>`,
+    });
+    await nextTick();
+    const [a] = screen.getAllByRole("tab");
+    await fireEvent.keyDown(a, { key: "ArrowRight" });
+    expect(screen.getAllByRole("tab")[1].getAttribute("aria-selected")).toBe("false");
+  });
+});

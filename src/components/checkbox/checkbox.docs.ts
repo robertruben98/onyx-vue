@@ -36,10 +36,10 @@ export const checkboxDoc: ComponentDoc = {
       description: "Set to -1 inside roving-tabindex grids, such as a data table's select column.",
     },
     {
-      name: "@checkedChange",
+      name: "@checkedChanged / @checkedChange",
       type: "(value: boolean) => void",
       default: "—",
-      description: "Emitted on every change, in addition to `v-model`.",
+      description: "Emitted on every change, in addition to `v-model`. `@checkedChange` is the deprecated name of the same event, still emitted until 1.0.",
     },
   ],
   demos: [

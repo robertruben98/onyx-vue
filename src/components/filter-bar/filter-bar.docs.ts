@@ -22,10 +22,10 @@ export const filterBarDoc: ComponentDoc = {
       setup: () => ({ q: "", on: "todos" }),
       code: `<UiFilterBar v-model:search="q" search-placeholder="filtrar run, repo, PR" search-label="filtrar runs">
   <UiFilterChip label="todos" :count="42" :pressed="on === 'todos'" @toggled="on = 'todos'" />
-  <UiFilterChip label="ok" :count="36" tone="ok" :pressed="on === 'ok'" @toggled="on = 'ok'" />
+  <UiFilterChip label="ok" :count="36" tone="success" :pressed="on === 'ok'" @toggled="on = 'ok'" />
   <UiFilterChip label="fallo" :count="4" tone="danger" :pressed="on === 'fallo'" @toggled="on = 'fallo'" />
   <template #trailing>
-    <UiFilterChip label="oculto" :count="2" tone="warn" dashed />
+    <UiFilterChip label="oculto" :count="2" tone="warning" dashed />
   </template>
 </UiFilterBar>`,
     },

@@ -65,13 +65,16 @@ export const navRailDoc: ComponentDoc = {
       default: "—",
       description: "A button entry was activated. Links navigate on their own.",
     },
+    { name: "NavRail #default", type: "slot", default: "—", description: "The entries: NavRailItem and NavRailGroup." },
+    { name: "NavRailGroup #default", type: "slot", default: "—", description: "The group's entries." },
+    { name: "NavRailItem title", type: "string", default: "''", description: "Tooltip: the full name, or the shortcut that also gets here." },
   ],
   demos: [
     {
       title: "Views and repositories",
       code: `<UiNavRail label="PR dashboard">
   <UiNavRailItem label="Todos" :count="57" active />
-  <UiNavRailItem label="Listos para merge" :count="4" count-tone="ok" />
+  <UiNavRailItem label="Listos para merge" :count="4" count-tone="success" />
   <UiNavRailItem label="Seguridad" count-state="unrequested" />
   <UiNavRailGroup label="Repos">
     <UiNavRailItem label="payment" :count="12" />

@@ -34,10 +34,10 @@ export const blockMeterDoc: ComponentDoc = {
     },
     {
       name: "tone",
-      type: "'neutral' | 'ok' | 'warn' | 'danger' | 'info'",
+      type: "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
       default: "'neutral'",
       description:
-        "Tone of the filled part. The empty part is a track and stays quiet.",
+        "Tone of the filled part. The empty part is a track and stays quiet. Legacy spellings `ok`, `warn` and `default` still work and are deprecated.",
     },
     {
       name: "showRatio",
@@ -62,14 +62,14 @@ export const blockMeterDoc: ComponentDoc = {
     {
       title: "A checklist inside a row",
       code: `<UiBlockMeter :value="3" :max="7" :blocks="7" label="workflow" show-ratio />
-<UiBlockMeter :value="7" :max="7" :blocks="7" label="workflow" tone="ok" show-ratio />`,
+<UiBlockMeter :value="7" :max="7" :blocks="7" label="workflow" tone="success" show-ratio />`,
     },
     {
       title: "A budget running out",
       description:
         "The tone is the consumer's call: it knows where the thresholds are.",
-      code: `<UiBlockMeter :value="4200" :max="5000" label="api budget" tone="ok" />
-<UiBlockMeter :value="820" :max="5000" label="api budget" tone="warn" />
+      code: `<UiBlockMeter :value="4200" :max="5000" label="api budget" tone="success" />
+<UiBlockMeter :value="820" :max="5000" label="api budget" tone="warning" />
 <UiBlockMeter :value="120" :max="5000" label="api budget" tone="danger" />`,
     },
   ],

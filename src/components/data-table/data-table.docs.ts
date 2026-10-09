@@ -133,6 +133,8 @@ export const dataTableDoc: ComponentDoc = {
       description:
         "The drawer under an expanded row. The row itself carries no aria-expanded — that is only valid on a treegrid row — so put the disclosure on the control the user actually activates.",
     },
+    { name: "@rowActivated", type: "(row: T, event: Event) => void", default: "—", description: "A row was opened: clicked, or Enter on a cell without its own control. Needs `activatable`." },
+    { name: "v-model:expanded", type: "Set<RowKey>", default: "new Set()", description: "Keys of the expanded rows (emits `update:expanded`); see `expanded`." },
   ],
   demos: [
     {

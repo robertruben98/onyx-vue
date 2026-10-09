@@ -28,13 +28,16 @@ export const digitalRainDoc: ComponentDoc = {
       description:
         "Distance between columns in px, and also the glyph size. Larger is sparser and cheaper to paint.",
     },
+    { name: "label", type: "string", default: "''", description: "Accessible name. Empty by default: the rain is decoration and stays out of the accessibility tree." },
   ],
   demos: [
     {
       title: "Behind a view",
+      description:
+        "The rain and the glass sit behind and in front of the page; the view itself is whatever you render (here a stand-in, since this page already has its own main landmark).",
       code: `<UiDigitalRain />
 <UiCrtOverlay />
-<main>…</main>`,
+<div>…</div>`,
     },
     {
       title: "Barely there",

@@ -24,7 +24,11 @@ const props = withDefaults(
 const open = defineModel<boolean>("open", { default: false });
 
 /** Emitted whenever the open state changes (true = opened, false = closed). */
-const emit = defineEmits<{ "toggle": [open: boolean] }>();
+const emit = defineEmits<{
+  toggled: [open: boolean];
+  /** @deprecated Use `toggled`; still emitted until 1.0. */
+  toggle: [open: boolean];
+}>();
 
 const triggerRef = ref<HTMLElement | null>(null);
 const panelRef = ref<HTMLElement | null>(null);
@@ -114,7 +118,8 @@ function onPanelKeydown(event: KeyboardEvent): void {
 
 watch(open, (isOpen, was) => {
   if (isOpen === was) return;
-  emit("toggle", isOpen);
+  emit("toggled", isOpen);
+  emit("toggle", isOpen); // obsoleto, ver src/deprecations.ts
   if (isOpen) {
     restoreFocusEl = document.activeElement as HTMLElement | null;
     nextTick(() => {

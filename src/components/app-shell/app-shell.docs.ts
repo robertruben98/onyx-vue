@@ -15,6 +15,7 @@ export const appShellDoc: ComponentDoc = {
     },
     { name: "#rail", type: "slot", default: "—", description: "The rail: usually a brand mark and a UiNavRail." },
     { name: "default", type: "slot", default: "—", description: "The page content." },
+    { name: "#default", type: "slot", default: "—", description: "The page: app bar, content, everything beside the rail." },
   ],
   demos: [
     {

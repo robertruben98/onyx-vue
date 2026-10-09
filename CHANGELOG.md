@@ -13,6 +13,54 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ### Added
 
+- Type declarations ship in `dist/types` and are exported (`types`).
+- Token and preset stylesheets ship in `dist/styles` and are exported as
+  `onyx-vue/styles/*`, so a page can load the base layer and one preset.
+- `ToastApi`: the typed return of `useToast()`.
+- Components: `UiStack`, `UiGrid` and `UiSkeleton` (layout); `UiSegmented`,
+  `UiSlider`, `UiDateInput` and `UiFormField` (forms); `UiPagination`.
+- `UiInput` accepts `date`, `time` and `datetime-local`.
+- `npm run score` and `SCORECARD.md`: the library measured on eight aspects.
+
+### Fixed
+
+- Colour contrast passes WCAG AA (axe) in all five themes. The default
+  primary is emerald-700 and danger red-700; dimmed states (quiet action
+  cluster, empty filter chip, stale metric) no longer fade text with opacity.
+- `UiDialog` had no backdrop colour: `--ui-dialog-backdrop` was used but
+  never defined.
+- `UiDataTable`: the empty and loading messages sit in a row and a cell
+  (valid ARIA), and the virtual viewport is focusable.
+- `UiDataTable` keyboard and layout: a keyboard jump in virtual mode no
+  longer loses focus, a clicked cell becomes the active one (Enter used to
+  act on the header), the grid keeps its tab stop while loading, and the
+  virtual viewport re-measures its height when resized.
+- `UiBarList`: a row with no value reads 0, not "undefined".
+- At 360 px nothing spills: `UiBulkBar`, `UiSectionHeader` and `UiCheckRow`
+  wrap, `UiSparkBars` scrolls inside its box, and the docs site no longer
+  scrolls sideways.
+- `UiButton`, `UiConfirmButton`, `UiInput`, `UiTextarea`, `UiCheckbox`,
+  `UiSwitch` and `UiSelect` forward attributes (`aria-*`, `autocomplete`,
+  `name`, `id`…) to their native element instead of the wrapper; `class` and
+  `style` stay on the wrapper.
+
+### Changed
+
+- One tone vocabulary: `UiBlockMeter`, `UiFilterChip`, `UiMetricChip`,
+  `UiTriStateCount`, `UiCodeBlock` and `UiReadout` take
+  `neutral | info | success | warning | danger | muted`. `UiCodeBlock` and
+  `UiReadout` default to `neutral`.
+- Past-tense event names: `checkedChanged`, `valueChanged`, `changed`
+  (`UiSelect`), `toggled` (`UiPopover`, `UiTooltip`), `itemSelected`,
+  `loadMoreRequested`, `primaryClicked`, `secondaryClicked`.
+
+### Deprecated
+
+- Tone spellings `ok`, `warn` and `default` (still accepted).
+- The old event names (`checkedChange`, `valueChange`, `change`, `toggle`,
+  `itemSelect`, `loadMore`, `primaryAction`, `secondaryAction`): each is still
+  emitted right after its new name. All of them go in 1.0; the list is
+  exported as `DEPRECATED_EVENTS`.
 - `UiDigitalRain`: `pauseWhenUnfocused` (default `true`). The rain stops painting while its
   window has no focus, not only while the tab is hidden, and moves again on focus; the last
   frame stays on the canvas. A dashboard left open on a second monitor painted it all day

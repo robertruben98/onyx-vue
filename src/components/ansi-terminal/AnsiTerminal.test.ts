@@ -117,3 +117,37 @@ describe("AnsiTerminal (Vue)", () => {
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
+
+describe("createAnsiParser — attributes and reset", () => {
+  it("tracks bold and dim, bright colours, and skips parameters it cannot read", () => {
+    const segs = createAnsiParser().feed(`${ESC}[1;2;91mloud${ESC}[?;39mplain`);
+    expect(segs[0]).toMatchObject({ text: "loud", fg: 91, bold: true, dim: true });
+    expect(segs[1]).toMatchObject({ text: "plain", fg: null, bold: true, dim: true });
+  });
+
+  it("treats an empty parameter as a full reset", () => {
+    const segs = createAnsiParser().feed(`${ESC}[1;32mok${ESC}[mnext`);
+    expect(segs[1]).toMatchObject({ text: "next", fg: null, bold: false });
+  });
+
+  it("forgets every open attribute on reset()", () => {
+    const parser = createAnsiParser();
+    parser.feed(`${ESC}[1;2;33mwarn`);
+    parser.reset();
+    expect(parser.feed("after")[0]).toMatchObject({ fg: null, bold: false, dim: false });
+  });
+});
+
+describe("AnsiTerminal (Vue) — exposed text", () => {
+  it("hands back the plain text shown, escapes removed", async () => {
+    const wrapper = render({
+      components: { AnsiTerminal },
+      template: `<AnsiTerminal ref="t" :lines="lines" label="Run" /><output>{{ txt }}</output><button type="button" @click="txt = $refs.t.text()">read</button>`,
+      data: () => ({ lines: [`${ESC}[32mpassed${ESC}[0m in 2s`], txt: "" }),
+    });
+    await nextTick();
+    wrapper.getByRole("button", { name: "read" }).click();
+    await nextTick();
+    expect(wrapper.container.querySelector("output")?.textContent).toContain("passed in 2s");
+  });
+});

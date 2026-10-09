@@ -4,7 +4,7 @@ export const sparkBarsDoc: ComponentDoc = {
   id: "spark-bars",
   title: "Spark Bars",
   description:
-    "A short labelled series — the context a single number does not carry. A 20 on its own says nothing about whether it was a good day; with the six days behind it, it does. One bar can be marked as the one the reader is standing on, and it is the only one that takes colour.",
+    "A short labelled series — the context a single number does not carry. A 20 on its own says nothing about whether it was a good day; with the six days behind it, it does. One bar can be marked as the one the reader is standing on, and it is the only one that takes colour. Meant for short series (about a dozen points): for more, or for an axis, use Bar Chart.",
   imports: ["UiSparkBars"],
   api: [
     {

@@ -23,9 +23,9 @@ export const readoutDoc: ComponentDoc = {
     },
     {
       name: "tone",
-      type: "'default' | 'success' | 'warning' | 'danger' | 'muted'",
-      default: "'default'",
-      description: "Semantic tone of the figure. `muted` also drops the glow.",
+      type: "'neutral' | 'success' | 'warning' | 'danger' | 'muted'",
+      default: "'neutral'",
+      description: "Semantic tone of the figure. `muted` also drops the glow. Legacy spellings `ok`, `warn` and `default` still work and are deprecated.",
     },
   ],
   demos: [
