@@ -61,6 +61,10 @@ Consumers that build from source (the control-panel dashboard aliases
   `itemSelect`, `loadMore`, `primaryAction`, `secondaryAction`): each is still
   emitted right after its new name. All of them go in 1.0; the list is
   exported as `DEPRECATED_EVENTS`.
+- `UiDigitalRain`: `pauseWhenUnfocused` (default `true`). The rain stops painting while its
+  window has no focus, not only while the tab is hidden, and moves again on focus; the last
+  frame stays on the canvas. A dashboard left open on a second monitor painted it all day
+  (~5 % of a core on the control-panel agents graph, 2026-10-09).
 
 ## 0.1.0 — 2026-09-25
 
