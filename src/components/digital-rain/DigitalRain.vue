@@ -36,6 +36,13 @@ import "./digital-rain.scss";
  *
  * Colour comes from the live computed value of the theme tokens, so the rain
  * follows whatever preset is on the root instead of hard-coding a green.
+ *
+ * It also stops when its window loses focus (`pauseWhenUnfocused`, on by
+ * default), not only when the tab is hidden: a backdrop is decoration, and a
+ * dashboard left open on a second monitor kept painting it all day. On the
+ * SM23 agents graph (2026-10-09) the rain was ~5 % of a core with nobody
+ * looking. The last frame stays on the canvas, so the page does not flash
+ * empty; it moves again on focus.
  */
 const props = withDefaults(
   defineProps<{
@@ -45,10 +52,13 @@ const props = withDefaults(
     columnGap?: number;
     /** Accessible name — omitted from the tree entirely, it is decoration. */
     label?: string;
+    /** Stop painting while the window has no focus (the last frame stays). */
+    pauseWhenUnfocused?: boolean;
   }>(),
   {
     opacity: 0.22,
     columnGap: 16,
+    pauseWhenUnfocused: true,
   },
 );
 
@@ -56,6 +66,8 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 let frame = 0;
 let timer = 0;
 let stop = false;
+/** Whether a paint is scheduled: a resume must not start a second loop. */
+let running = false;
 
 /** Half-width katakana, digits and a few latin glyphs: the real alphabet. */
 const GLYPHS =
@@ -117,12 +129,29 @@ onMounted(() => {
   const PERIOD = 52; // ~19fps, the cadence of the original effect
   let last = 0;
 
+  /** Hidden tab, or (unless turned off) a window without focus. */
+  function paused(): boolean {
+    if (document.hidden) return true;
+    return props.pauseWhenUnfocused && typeof document.hasFocus === "function" && !document.hasFocus();
+  }
+
   function schedule() {
-    if (stop) return;
+    if (stop || paused()) {
+      running = false;
+      return;
+    }
+    running = true;
     const wait = Math.max(0, PERIOD - (performance.now() - last));
     timer = window.setTimeout(() => {
       frame = requestAnimationFrame(paint);
     }, wait);
+  }
+
+  /** Back from a pause: one loop again, never two. */
+  function resume() {
+    if (stop || running || paused()) return;
+    running = true;
+    frame = requestAnimationFrame(paint);
   }
 
   function paint() {
@@ -160,6 +189,9 @@ onMounted(() => {
 
   measure();
   window.addEventListener("resize", measure);
+  window.addEventListener("focus", resume);
+  document.addEventListener("visibilitychange", resume);
+  running = true;
   frame = requestAnimationFrame(paint);
 
   onBeforeUnmount(() => {
@@ -167,6 +199,8 @@ onMounted(() => {
     window.clearTimeout(timer);
     cancelAnimationFrame(frame);
     window.removeEventListener("resize", measure);
+    window.removeEventListener("focus", resume);
+    document.removeEventListener("visibilitychange", resume);
   });
 });
 
