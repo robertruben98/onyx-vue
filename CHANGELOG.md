@@ -9,7 +9,10 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
-## Unreleased
+## 0.1.1 — 2026-10-09
+
+Everything merged on `feat/console-lists` since 0.1.0. The control-panel dashboard pins it
+for `UiDigitalRain`'s `pauseWhenUnfocused`.
 
 ### Added
 
@@ -99,7 +102,7 @@ extracted from the control-panel dashboard during its migration to onyx-vue.
 
 ```bash
 cd ~/Workspaces/robertdev/onyx/onyx-vue
-git fetch --tags && git checkout v0.1.0
+git fetch --tags && git checkout v0.1.1
 ```
 
 A source consumer should refuse to build against any other version; the
