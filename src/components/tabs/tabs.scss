@@ -18,6 +18,18 @@
   border-bottom: var(--ui-tabs-border-width) solid var(--ui-tabs-border);
 }
 
+// overflow="scroll": una sola fila que se desliza con el dedo, sin barra visible.
+.ui-tabs__list--scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.ui-tabs__list--scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .ui-tabs__tab {
   // Ni encoge ni parte la etiqueta: un boton es una etiqueta entera o no se
   // lee. Con el encogido por defecto, "Sin concluir" caia en dos lineas para
