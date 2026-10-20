@@ -40,6 +40,12 @@
   --docs-page-bg: var(--ui-classroom-paper);
 }
 
+/* `pocket` tambien trae su noche: el suelo sigue a su primitivo. */
+.ui-theme-pocket {
+  --docs-font: var(--ui-font-family);
+  --docs-page-bg: var(--ui-pocket-floor);
+}
+
 /* Igual para `matrix`. El fondo sale de su propio primitivo y no de un gris
    generico: el suelo del tema es negro con sesgo verde, y un #0c0d10 al lado
    se nota. */

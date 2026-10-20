@@ -1,0 +1,215 @@
+/*
+ * Preset "pocket".
+ *
+ * Para webs que se usan como app de movil (instaladas, a pantalla completa): el
+ * aspecto de una app bien hecha de 2026. Superficies limpias sobre un suelo gris
+ * frio, un indigo vivo para actuar, esquinas grandes, sombras suaves en capas,
+ * botones en pildora que responden al toque y barras translucidas que dejan ver
+ * lo que pasa por debajo. La letra es la del sistema (SF en iPhone, Roboto
+ * Flex / Google Sans en Android, Segoe UI Variable en Windows): se siente nativa
+ * y no hay ficheros que servir. Titulos sin serifa, gruesos y apretados.
+ *
+ * Como los demas presets, sobre todo re-mapea tokens. Lo poco que no es token
+ * (barra translucida, pulsacion, titulos) va al final, acotado a esta clase.
+ *
+ * Uso: la clase va en la RAIZ (<html>), por los componentes que hacen
+ * `<Teleport to="body">`:
+ *
+ *   <html class="ui-theme-pocket">            claro
+ *   <html class="ui-theme-pocket app-dark">   oscuro
+ */
+.ui-theme-pocket {
+  /* --- tipografia ------------------------------------------------------- */
+  --ui-font-family: system-ui, -apple-system, "SF Pro Text", "Segoe UI Variable Text",
+    "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --ui-font-family-display: system-ui, -apple-system, "SF Pro Display", "Segoe UI Variable Display",
+    "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+
+  font-family: var(--ui-font-family);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Letra de movil (17px como iOS) y controles de 48px: el dedo, no el raton. */
+  --ui-font-size-sm: 0.9375rem;
+  --ui-font-size-md: 1.0625rem;
+  --ui-font-size-lg: 1.25rem;
+  --ui-size-control-sm: 2.5rem;
+  --ui-size-control-md: 3rem;
+  --ui-size-control-lg: 3.5rem;
+
+  /* --- geometria -------------------------------------------------------- */
+  --ui-radii-sm: 10px;
+  --ui-radii-md: 14px;
+  --ui-radii-lg: 20px;
+  --ui-radii-xl: 28px;
+  --ui-radius: var(--ui-radii-md);
+  /* Botones y selectores en pildora: el gesto de "esto se pulsa". */
+  --ui-button-radius: var(--ui-radii-full);
+  --ui-segmented-radius: var(--ui-radii-full);
+  --ui-button-font-weight: 650;
+
+  --ui-border-width: 1px;
+  --ui-border-width-thick: 2px;
+
+  --ui-app-bar-title-size: 1.125rem;
+  --ui-section-header-title-size: 1.1875rem;
+  --ui-section-header-title-tracking: -0.015em;
+  --ui-progress-height: 0.5rem;
+
+  /* --- sombras ---------------------------------------------------------- */
+  /* En capas y tintadas del propio indigo: profundidad sin bordes duros. */
+  --ui-card-shadow: 0 1px 2px rgba(23, 26, 52, 0.04), 0 6px 24px -8px rgba(23, 26, 52, 0.1);
+  --ui-dialog-shadow: 0 32px 64px -24px rgba(23, 26, 52, 0.35);
+  --ui-menu-shadow: 0 16px 40px -12px rgba(23, 26, 52, 0.25);
+  --ui-popover-shadow: 0 16px 40px -12px rgba(23, 26, 52, 0.25);
+  --ui-select-listbox-shadow: 0 16px 40px -12px rgba(23, 26, 52, 0.25);
+  --ui-tooltip-shadow: 0 6px 16px -4px rgba(23, 26, 52, 0.25);
+
+  /* --- primitivos del tema ---------------------------------------------- */
+  --ui-pocket-floor: #f2f3f8;         /* suelo: gris frio, no blanco */
+  --ui-pocket-card: #ffffff;          /* tarjetas: blanco limpio sobre el suelo */
+  --ui-pocket-card-hover: #f5f6fb;
+  --ui-pocket-glass: rgba(255, 255, 255, 0.72); /* barras translucidas */
+  --ui-pocket-line: #e3e5ef;          /* filete casi invisible */
+  --ui-pocket-ink: #12142b;           /* texto */
+  --ui-pocket-ink-soft: #5d6079;      /* texto suave: 6.1:1 sobre blanco */
+  --ui-pocket-ink-faint: #9a9db3;
+  --ui-pocket-accent: #4f46e5;        /* indigo: actuar */
+  --ui-pocket-accent-hover: #4338ca;
+  --ui-pocket-accent-active: #3730a3;
+  --ui-pocket-accent-2: #8b5cf6;      /* violeta: el otro extremo del degradado */
+  --ui-pocket-right: #0f8a4f;
+  --ui-pocket-wrong: #d92d4f;
+  --ui-pocket-careful: #b45309;
+
+  /* --- semanticos ------------------------------------------------------- */
+  --ui-terminal-magenta: #a33fbf;
+  --ui-terminal-cyan: #0e7f8c;
+  --ui-color-primary: var(--ui-pocket-accent);
+  --ui-color-primary-hover: var(--ui-pocket-accent-hover);
+  --ui-color-primary-active: var(--ui-pocket-accent-active);
+  --ui-color-on-primary: #ffffff;
+
+  --ui-color-surface: var(--ui-pocket-card);
+  --ui-color-surface-hover: var(--ui-pocket-card-hover);
+  --ui-color-text: var(--ui-pocket-ink);
+  --ui-color-text-muted: var(--ui-pocket-ink-soft);
+  --ui-color-border: var(--ui-pocket-line);
+
+  --ui-color-success: var(--ui-pocket-right);
+  --ui-color-success-surface: #e4f6ec;
+  --ui-color-warning: var(--ui-pocket-careful);
+  --ui-color-warning-surface: #fdf0dc;
+  --ui-color-danger: var(--ui-pocket-wrong);
+  --ui-color-danger-surface: #fde7ec;
+  --ui-color-info: var(--ui-pocket-accent);
+  --ui-color-info-surface: #eceafd;
+  --ui-color-neutral: var(--ui-pocket-ink-soft);
+  --ui-color-neutral-surface: #eceef5;
+
+  --ui-color-disabled-bg: var(--ui-pocket-card-hover);
+  --ui-color-disabled-text: var(--ui-pocket-ink-faint);
+
+  --ui-focus-ring: var(--ui-pocket-accent);
+
+  --ui-app-bar-bg: var(--ui-pocket-glass);
+
+  /* --- suelo ------------------------------------------------------------ */
+  background-color: var(--ui-pocket-floor);
+  color: var(--ui-color-text);
+}
+
+/* De noche: casi negro azulado, tarjetas un punto mas claras, indigo encendido. */
+.ui-theme-pocket.app-dark {
+  --ui-pocket-floor: #0b0c14;
+  --ui-pocket-card: #161826;
+  --ui-pocket-card-hover: #1e2133;
+  --ui-pocket-glass: rgba(22, 24, 38, 0.72);
+  --ui-pocket-line: #262a3f;
+  --ui-pocket-ink: #eceef8;
+  --ui-pocket-ink-soft: #a2a6c0;
+  --ui-pocket-ink-faint: #666b88;
+  --ui-pocket-accent: #8b8dff;
+  --ui-pocket-accent-hover: #a2a4ff;
+  --ui-pocket-accent-active: #b8b9ff;
+  --ui-pocket-accent-2: #c084fc;
+  --ui-pocket-right: #4ade80;
+  --ui-pocket-wrong: #fb7185;
+  --ui-pocket-careful: #fbbf24;
+
+  --ui-terminal-magenta: #e0a3f5;
+  --ui-terminal-cyan: #67e0ea;
+  --ui-color-primary: var(--ui-pocket-accent);
+  --ui-color-primary-hover: var(--ui-pocket-accent-hover);
+  --ui-color-primary-active: var(--ui-pocket-accent-active);
+  --ui-color-on-primary: #0b0c14;
+  --ui-color-surface: var(--ui-pocket-card);
+  --ui-color-surface-hover: var(--ui-pocket-card-hover);
+  --ui-color-text: var(--ui-pocket-ink);
+  --ui-color-text-muted: var(--ui-pocket-ink-soft);
+  --ui-color-border: var(--ui-pocket-line);
+  --ui-color-success: var(--ui-pocket-right);
+  --ui-color-success-surface: rgba(74, 222, 128, 0.12);
+  --ui-color-warning: var(--ui-pocket-careful);
+  --ui-color-warning-surface: rgba(251, 191, 36, 0.12);
+  --ui-color-danger: var(--ui-pocket-wrong);
+  --ui-color-danger-surface: rgba(251, 113, 133, 0.12);
+  --ui-color-info: var(--ui-pocket-accent);
+  --ui-color-info-surface: rgba(139, 141, 255, 0.14);
+  --ui-color-neutral: var(--ui-pocket-ink-soft);
+  --ui-color-neutral-surface: rgba(162, 166, 192, 0.12);
+  --ui-color-disabled-bg: var(--ui-pocket-card-hover);
+  --ui-color-disabled-text: var(--ui-pocket-ink-faint);
+  --ui-focus-ring: var(--ui-pocket-accent);
+  --ui-app-bar-bg: var(--ui-pocket-glass);
+
+  /* La sombra no se ve sobre negro: un borde de luz arriba hace de relieve. */
+  --ui-card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* --- lo que no es token --------------------------------------------------- */
+
+/* Titulos de app: sin versalitas, gruesos y con el tracking apretado. */
+.ui-theme-pocket .ui-app-bar__title,
+.ui-theme-pocket .ui-section-header__title,
+.ui-theme-pocket .ui-dialog__title,
+.ui-theme-pocket .ui-empty-state__title {
+  font-family: var(--ui-font-family-display);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+.ui-theme-pocket .ui-app-bar__eyebrow {
+  letter-spacing: 0.06em;
+}
+
+/* Barra translucida: el contenido pasa por debajo, desenfocado (como iOS). */
+.ui-theme-pocket .ui-app-bar {
+  -webkit-backdrop-filter: saturate(1.8) blur(18px);
+  backdrop-filter: saturate(1.8) blur(18px);
+}
+
+/* Al pulsar, el boton cede un poco: la respuesta que se espera de una app. */
+.ui-theme-pocket .ui-button__el {
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease,
+    box-shadow 150ms ease, transform 120ms ease;
+}
+.ui-theme-pocket .ui-button__el:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.ui-theme-pocket .ui-button--primary .ui-button__el {
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--ui-pocket-accent) 70%, transparent);
+}
+
+/* El progreso con el degradado de la marca. */
+.ui-theme-pocket .ui-progress__fill {
+  background-image: linear-gradient(90deg, var(--ui-pocket-accent), var(--ui-pocket-accent-2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-theme-pocket .ui-button__el:active:not(:disabled) {
+    transform: none;
+  }
+}
