@@ -33,6 +33,13 @@
   --docs-page-bg: var(--ui-console-bg);
 }
 
+/* `classroom` lleva su propia variante de noche bajo `.app-dark`; el suelo de
+   la doc sigue a su primitivo en los dos modos. */
+.ui-theme-classroom {
+  --docs-font: var(--ui-font-family);
+  --docs-page-bg: var(--ui-classroom-paper);
+}
+
 /* Igual para `matrix`. El fondo sale de su propio primitivo y no de un gris
    generico: el suelo del tema es negro con sesgo verde, y un #0c0d10 al lado
    se nota. */

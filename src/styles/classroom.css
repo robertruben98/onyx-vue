@@ -1,0 +1,193 @@
+/*
+ * Preset "classroom".
+ *
+ * Para paginas de aprender: un cuaderno claro y suave (sin blanco puro), letra grande y legible, titulos
+ * con serifa de libro de texto, esquinas redondeadas y controles de 44px que se
+ * pulsan bien con el dedo. El color tiene tres trabajos y solo tres: el azul de
+ * tinta para actuar, el verde/rojo para corregir (bien/mal) y el amarillo de
+ * subrayador para lo que hay que recordar. Densidad baja a proposito: una
+ * pantalla de ejercicios se lee despacio, no se escanea.
+ *
+ * Como los demas presets, es un re-mapeo de tokens y NO toca ningun componente.
+ *
+ * Uso: la clase va en la RAIZ (<html>), por los componentes que hacen
+ * `<Teleport to="body">` (dialog, select, tooltip, popover, menu):
+ *
+ *   <html class="ui-theme-classroom">            claro
+ *   <html class="ui-theme-classroom app-dark">   oscuro (la misma paleta, de noche)
+ *
+ * A diferencia de `console` y `matrix`, que son oscuros y se bastan solos, este
+ * es claro por defecto y trae su propia variante oscura bajo `.app-dark`: quien
+ * estudia de noche no quiere un folio blanco.
+ *
+ * Las familias son del sistema: no hay ficheros de letra que servir.
+ */
+.ui-theme-classroom {
+  /* --- tipografia ------------------------------------------------------- */
+  --ui-font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system,
+    "Noto Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ui-font-family-display: "Iowan Old Style", "Palatino Linotype", Palatino,
+    "Book Antiqua", Georgia, "Noto Serif", serif;
+
+  font-family: var(--ui-font-family);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+
+  /* Letra un punto mas grande y controles de 44px: el objetivo tactil minimo. */
+  --ui-font-size-sm: 0.9375rem;
+  --ui-font-size-md: 1.0625rem;
+  --ui-font-size-lg: 1.25rem;
+  --ui-size-control-sm: 2.25rem;
+  --ui-size-control-md: 2.75rem;
+  --ui-size-control-lg: 3.25rem;
+
+  /* --- geometria -------------------------------------------------------- */
+  /* Se remapea la escala entera, como en `console`: casi todo tira de
+     --ui-radii-* directamente. */
+  --ui-radii-sm: 6px;
+  --ui-radii-md: 10px;
+  --ui-radii-lg: 14px;
+  --ui-radii-xl: 18px;
+  --ui-radius: var(--ui-radii-md);
+
+  --ui-border-width: 1px;
+  --ui-border-width-thick: 2px;
+
+  /* Titulos de leccion, no rotulos de consola: mas grandes y sin el tracking
+     ancho de las versalitas. El text-transform se quita abajo, en la regla de
+     titulos, porque los componentes lo fijan en su propio CSS. */
+  --ui-app-bar-title-size: 1.25rem;
+  --ui-section-header-title-size: 1.125rem;
+  --ui-section-header-title-tracking: -0.005em;
+
+  /* --- sombras ---------------------------------------------------------- */
+  /* Suaves y tintadas de la propia tinta: una hoja apoyada en la mesa. */
+  --ui-card-shadow: 0 1px 2px rgba(27, 42, 65, 0.06), 0 4px 14px -6px rgba(27, 42, 65, 0.14);
+  --ui-dialog-shadow: 0 24px 48px -16px rgba(27, 42, 65, 0.3);
+  --ui-menu-shadow: 0 12px 28px -10px rgba(27, 42, 65, 0.24);
+  --ui-popover-shadow: 0 12px 28px -10px rgba(27, 42, 65, 0.24);
+  --ui-select-listbox-shadow: 0 12px 28px -10px rgba(27, 42, 65, 0.24);
+  --ui-tooltip-shadow: 0 4px 12px -2px rgba(27, 42, 65, 0.25);
+
+  /* --- primitivos del tema ---------------------------------------------- */
+  /* El claro es SUAVE a proposito: ni el suelo ni la hoja son blanco puro. Una
+     sesion de estudio dura horas y el #fff a pantalla completa cansa; la tinta
+     sigue por encima de 4.5:1 en todos los textos. */
+  --ui-classroom-paper: #e9edf2;      /* suelo de la pagina */
+  --ui-classroom-sheet: #f6f8fa;      /* la hoja: tarjetas y paneles */
+  --ui-classroom-sheet-hover: #e6ebf2;
+  --ui-classroom-rule: #d0d8e3;       /* filete */
+  --ui-classroom-ink: #1b2a41;        /* tinta */
+  --ui-classroom-ink-soft: #55657c;   /* tinta suave: 5.9:1 sobre la hoja */
+  --ui-classroom-ink-faint: #8a97aa;
+  --ui-classroom-pen: #2453c7;        /* azul de boligrafo: actuar */
+  --ui-classroom-pen-hover: #1d45a8;
+  --ui-classroom-pen-active: #183a8c;
+  --ui-classroom-right: #18714a;      /* bien */
+  --ui-classroom-wrong: #c03a3a;      /* mal */
+  --ui-classroom-careful: #9a5b00;    /* cuidado */
+  --ui-classroom-marker: #ffe169;     /* subrayador */
+  --ui-classroom-marker-ink: #3d3200;
+
+  /* --- semanticos ------------------------------------------------------- */
+  /* Los que remapea dark.css: el contrato de un preset completo. */
+  --ui-terminal-magenta: #9b3fb5;
+  --ui-terminal-cyan: #0f7c8a;
+  --ui-color-primary: var(--ui-classroom-pen);
+  --ui-color-primary-hover: var(--ui-classroom-pen-hover);
+  --ui-color-primary-active: var(--ui-classroom-pen-active);
+  --ui-color-on-primary: var(--ui-classroom-sheet);
+
+  --ui-color-surface: var(--ui-classroom-sheet);
+  --ui-color-surface-hover: var(--ui-classroom-sheet-hover);
+  --ui-color-text: var(--ui-classroom-ink);
+  --ui-color-text-muted: var(--ui-classroom-ink-soft);
+  --ui-color-border: var(--ui-classroom-rule);
+
+  --ui-color-success: var(--ui-classroom-right);
+  --ui-color-success-surface: #e3f4ea;
+  --ui-color-warning: var(--ui-classroom-careful);
+  --ui-color-warning-surface: #fdf1d8;
+  --ui-color-danger: var(--ui-classroom-wrong);
+  --ui-color-danger-surface: #fbe6e6;
+  --ui-color-info: var(--ui-classroom-pen);
+  --ui-color-info-surface: #e6eefc;
+  --ui-color-neutral: var(--ui-classroom-ink-soft);
+  --ui-color-neutral-surface: #edf1f6;
+
+  --ui-color-disabled-bg: var(--ui-classroom-sheet-hover);
+  --ui-color-disabled-text: var(--ui-classroom-ink-faint);
+
+  --ui-focus-ring: var(--ui-classroom-pen);
+
+  /* --- suelo ------------------------------------------------------------ */
+  background-color: var(--ui-classroom-paper);
+  color: var(--ui-color-text);
+}
+
+/* De noche: la misma paleta con la luz apagada. Solo cambian los primitivos y
+   los velos de estado; los semanticos siguen colgando de ellos. */
+.ui-theme-classroom.app-dark {
+  --ui-classroom-paper: #0f1521;
+  --ui-classroom-sheet: #172033;
+  --ui-classroom-sheet-hover: #1f2a40;
+  --ui-classroom-rule: #2c3a54;
+  --ui-classroom-ink: #e8eef8;
+  --ui-classroom-ink-soft: #a3b3ca;
+  --ui-classroom-ink-faint: #6b7a92;
+  --ui-classroom-pen: #82abff;
+  --ui-classroom-pen-hover: #9dbcff;
+  --ui-classroom-pen-active: #b4ccff;
+  --ui-classroom-right: #62d29c;
+  --ui-classroom-wrong: #ff8f8f;
+  --ui-classroom-careful: #f2bb55;
+  --ui-classroom-marker: #6b5a12;
+  --ui-classroom-marker-ink: #fff2b8;
+
+  --ui-terminal-magenta: #d39af0;
+  --ui-terminal-cyan: #6fd8e2;
+  --ui-color-primary: var(--ui-classroom-pen);
+  --ui-color-primary-hover: var(--ui-classroom-pen-hover);
+  --ui-color-primary-active: var(--ui-classroom-pen-active);
+  --ui-color-on-primary: var(--ui-classroom-paper);
+  --ui-color-surface: var(--ui-classroom-sheet);
+  --ui-color-surface-hover: var(--ui-classroom-sheet-hover);
+  --ui-color-text: var(--ui-classroom-ink);
+  --ui-color-text-muted: var(--ui-classroom-ink-soft);
+  --ui-color-border: var(--ui-classroom-rule);
+  --ui-color-success: var(--ui-classroom-right);
+  --ui-color-success-surface: rgba(98, 210, 156, 0.13);
+  --ui-color-warning: var(--ui-classroom-careful);
+  --ui-color-warning-surface: rgba(242, 187, 85, 0.13);
+  --ui-color-danger: var(--ui-classroom-wrong);
+  --ui-color-danger-surface: rgba(255, 143, 143, 0.13);
+  --ui-color-info: var(--ui-classroom-pen);
+  --ui-color-info-surface: rgba(130, 171, 255, 0.14);
+  --ui-color-neutral: var(--ui-classroom-ink-soft);
+  --ui-color-neutral-surface: rgba(163, 179, 202, 0.12);
+  --ui-color-disabled-bg: var(--ui-classroom-sheet-hover);
+  --ui-color-disabled-text: var(--ui-classroom-ink-faint);
+  --ui-focus-ring: var(--ui-classroom-pen);
+
+  /* Sombras: sobre fondo oscuro no se ven; el filete hace el trabajo. */
+  --ui-card-shadow: none;
+}
+
+/* Los titulos en serifa de libro de texto: es lo que hace que la pagina se lea
+   como una leccion y no como un formulario. */
+.ui-theme-classroom .ui-app-bar__title,
+.ui-theme-classroom .ui-section-header__title,
+.ui-theme-classroom .ui-dialog__title,
+.ui-theme-classroom .ui-empty-state__title {
+  font-family: var(--ui-font-family-display);
+  letter-spacing: -0.005em;
+  text-transform: none;
+}
+
+/* `mark` es el subrayador: lo que el alumno tiene que recordar. */
+.ui-theme-classroom mark {
+  background: var(--ui-classroom-marker);
+  color: var(--ui-classroom-marker-ink);
+  padding: 0 0.15em;
+  border-radius: 3px;
+}

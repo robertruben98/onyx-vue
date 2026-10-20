@@ -9,6 +9,17 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.1.2 — 2026-10-20
+
+### Added
+
+- Preset `classroom` (`.ui-theme-classroom`) for learning pages: light by default with its own
+  night variant under `.app-dark`, system sans body and textbook serif titles, 17px body text,
+  44px controls, rounded corners, soft shadows, and `mark` styled as a highlighter. Like every
+  preset it only remaps tokens; `classroom.test.ts` checks both modes cover every semantic token.
+  The docs preset selector offers it. The control-panel dashboard pins this version for its
+  English trainer pages.
+
 ## 0.1.1 — 2026-10-09
 
 Everything merged on `feat/console-lists` since 0.1.0. The control-panel dashboard pins it
