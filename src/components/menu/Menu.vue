@@ -74,6 +74,10 @@ function positionPanel(): void {
 async function openMenu(): Promise<void> {
   open.value = true;
   await nextTick();
+  // Dos pasadas: hasta estar "fixed" el panel mide lo que el body (todo el ancho);
+  // ya colocado mide lo suyo, y con eso se decide si cabe a la derecha.
+  positionPanel();
+  await nextTick();
   positionPanel();
   // El foco, cuando el panel YA esta en su sitio: antes estaba aun al final del
   // body y el navegador desplazaba la pagina hasta alli al enfocarlo.
