@@ -9,6 +9,21 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.3.0 — 2026-10-20
+
+### Added
+
+- Preset `pocket` (`.ui-theme-pocket`, with its own night variant under `.app-dark`) for web apps
+  used as phone apps:
+  - clean white cards on a cool grey floor, with a vivid indigo accent;
+  - system fonts (SF, Roboto, Segoe UI Variable) with bold, tight titles;
+  - 48px controls, pill buttons and switches, 14–28px corners, and soft layered shadows;
+  - a translucent app bar with backdrop blur, a press effect on buttons (off under
+    `prefers-reduced-motion`), and progress bars in the brand gradient.
+
+  Like `classroom`, it covers every semantic token in both modes (`pocket.test.ts`). The docs
+  preset selector offers it.
+
 ## 0.2.0 — 2026-10-20
 
 Phones. Found on the English trainer, used mostly from a phone: a sticky bar that took half the
