@@ -5,6 +5,10 @@
 
 .ui-tabs {
   display: block;
+  // Dentro de un grid o un flex, una tira con overflow="scroll" no puede imponer
+  // su ancho de una fila al contenedor: se desliza dentro de el (si no, la pagina
+  // entera medía 616px en un movil de 360).
+  min-width: 0;
 }
 
 .ui-tabs__list {
