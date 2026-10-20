@@ -313,4 +313,29 @@ describe("Tabs (Vue) — keyboard and markup details", () => {
     await fireEvent.keyDown(a, { key: "ArrowRight" });
     expect(screen.getAllByRole("tab")[1].getAttribute("aria-selected")).toBe("false");
   });
+
+  it("overflow=scroll keeps one row that scrolls, and brings the selected tab into view", async () => {
+    const seen: string[] = [];
+    const original = HTMLElement.prototype.scrollIntoView;
+    HTMLElement.prototype.scrollIntoView = function () { seen.push(this.textContent?.trim() || ""); };
+    const Harness = defineComponent({
+      setup() { const i = ref(0); return { i }; },
+      render() {
+        return h(Tabs, { overflow: "scroll", selectedIndex: this.i, "onUpdate:selectedIndex": (v: number) => { this.i = v; } },
+          () => [h(Tab, { label: "One" }, () => "1"), h(Tab, { label: "Two" }, () => "2")]);
+      },
+    });
+    const { container } = render(Harness);
+    await nextTick();
+    expect(container.querySelector(".ui-tabs__list--scroll")).toBeTruthy();
+    await fireEvent.click(screen.getByRole("tab", { name: "Two" }));
+    await nextTick();
+    expect(seen).toContain("Two");
+    HTMLElement.prototype.scrollIntoView = original;
+  });
+
+  it("wraps by default", async () => {
+    const { container } = await renderTabs();
+    expect(container.querySelector(".ui-tabs__list--scroll")).toBeNull();
+  });
 });

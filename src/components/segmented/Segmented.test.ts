@@ -71,4 +71,11 @@ describe("Segmented (Vue)", () => {
     const { container } = render(Segmented, { props: { options: OPTIONS, ariaLabel: "View", modelValue: "list" } });
     expect(await axe(container)).toHaveNoViolations();
   });
+
+  it("fluid takes the full width and still works as a radio group", async () => {
+    const { container, emitted } = render(Segmented, { props: { options: OPTIONS, ariaLabel: "View", fluid: true, modelValue: "calendar" } });
+    expect(container.querySelector(".ui-segmented--fluid")).toBeTruthy();
+    await fireEvent.click(screen.getByRole("radio", { name: "List" }));
+    expect(emitted().changed[0]).toEqual(["list"]);
+  });
 });
