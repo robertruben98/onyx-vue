@@ -19,8 +19,13 @@ const props = withDefaults(
     size?: SegmentedSize;
     /** Disables the whole control. */
     disabled?: boolean;
+    /**
+     * Takes the full width and shares it equally; a label that does not fit
+     * wraps onto a second line instead of pushing the page wider (phones).
+     */
+    fluid?: boolean;
   }>(),
-  { ariaLabel: "", size: "md", disabled: false },
+  { ariaLabel: "", size: "md", disabled: false, fluid: false },
 );
 
 /** The selected value (v-model). */
@@ -39,7 +44,7 @@ const name = `ui-segmented-${useId()}`;
 const rootClasses = computed(() => [
   "ui-segmented",
   `ui-segmented--${props.size}`,
-  { "ui-segmented--disabled": props.disabled },
+  { "ui-segmented--disabled": props.disabled, "ui-segmented--fluid": props.fluid },
 ]);
 
 function select(value: string): void {
