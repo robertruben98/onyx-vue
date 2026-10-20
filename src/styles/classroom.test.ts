@@ -54,6 +54,12 @@ describe("classroom preset", () => {
     expect([...classroom.matchAll(patron)].map((m) => m[0])).toEqual([]);
   });
 
+  it("titles read as lesson headings, not console labels", () => {
+    // app-bar.scss y section-header.scss ponen uppercase; el preset lo quita.
+    expect(classroom).toMatch(/\.ui-theme-classroom \.ui-section-header__title[^{]*\{[^}]*text-transform: none/);
+    expect(light).toContain("--ui-app-bar-title-size: 1.25rem");
+  });
+
   it("paints the page floor so the preset is a whole look", () => {
     expect(light).toContain("background-color: var(--ui-classroom-paper)");
   });
