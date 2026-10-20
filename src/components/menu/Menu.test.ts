@@ -175,4 +175,35 @@ describe("Menu (Vue) — keyboard and positioning details", () => {
     await fireEvent.keyDown(menu, { key: "ArrowDown" });
     expect(screen.getByRole("menu")).toBeTruthy();
   });
+
+  it("stays inside the window: a trigger in the right corner opens the panel to its left", async () => {
+    // jsdom no maqueta: se fijan los rectangulos del boton (esquina derecha) y del panel.
+    const rects = new Map<string, DOMRect>([
+      ["ui-menu__trigger", new DOMRect(900, 10, 100, 40)],
+      ["ui-menu__pane", new DOMRect(0, 0, 220, 90)],
+    ]);
+    const original = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = function () {
+      for (const [cls, r] of rects) if (this.classList.contains(cls)) return r;
+      return original.call(this);
+    };
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 1000 });
+    renderMenu();
+    await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    const menu = await screen.findByRole("menu");
+    await waitFor(() => expect(menu.style.left).toBe(`${992 - 220}px`));
+    expect(menu.style.top).toBe("50px");
+    Element.prototype.getBoundingClientRect = original;
+  });
+
+  it("focuses the first item without scrolling the page", async () => {
+    const calls: (FocusOptions | undefined)[] = [];
+    const original = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function (o?: FocusOptions) { calls.push(o); original.call(this, o); };
+    renderMenu();
+    await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    await waitFor(() => expect(document.activeElement?.textContent?.trim()).toBe("Edit"));
+    expect(calls.at(-1)).toEqual({ preventScroll: true });
+    HTMLElement.prototype.focus = original;
+  });
 });
