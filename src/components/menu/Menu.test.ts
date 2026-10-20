@@ -128,7 +128,9 @@ describe("Menu (Vue) — keyboard and positioning details", () => {
     renderMenu();
     await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
     const menu = await screen.findByRole("menu");
-    await waitFor(() => expect(document.activeElement?.textContent).toContain("Edit"));
+    // El elemento con foco, no el body: el body tambien "contiene" Edit (todo el texto
+    // de la pagina) y la espera pasaba sin que el menu tuviera el foco todavia.
+    await waitFor(() => expect(document.activeElement?.getAttribute("role") === "menuitem" && document.activeElement.textContent).toContain("Edit"));
     await fireEvent.keyDown(menu, { key: "ArrowUp" });
     expect(document.activeElement?.textContent).toContain("Duplicate");
     await fireEvent.keyDown(menu, { key: "Home" });
