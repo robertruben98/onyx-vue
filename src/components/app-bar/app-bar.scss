@@ -84,3 +84,72 @@
 .ui-app-bar__actions {
   gap: var(--ui-space-2);
 }
+
+// --- Collapsed (collapseBelow) ---------------------------------------------
+// La marca ocupa la fila y se recorta; estado y acciones viven en el menu.
+.ui-app-bar--collapsed {
+  flex-wrap: wrap;
+  row-gap: 0;
+}
+
+.ui-app-bar--collapsed .ui-app-bar__brand {
+  flex: 1 1 0;
+}
+
+.ui-app-bar--collapsed .ui-app-bar__gap {
+  display: none;
+}
+
+.ui-app-bar--collapsed .ui-app-bar__eyebrow,
+.ui-app-bar--collapsed .ui-app-bar__title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ui-app-bar__toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-md);
+  height: var(--ui-size-control-md);
+  padding: 0;
+  border: var(--ui-border-width) solid var(--ui-color-border);
+  border-radius: var(--ui-radii-md);
+  background: transparent;
+  color: var(--ui-color-text);
+  cursor: pointer;
+}
+
+.ui-app-bar__toggle svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.ui-app-bar__toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+// El menu es una fila mas de la barra, a todo lo ancho: sigue siendo sticky con ella.
+.ui-app-bar__menu {
+  display: flex;
+  flex: 1 0 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-3) 0 var(--ui-space-2);
+}
+
+.ui-app-bar__menu .ui-app-bar__status,
+.ui-app-bar__menu .ui-app-bar__actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.ui-app-bar__menu .ui-app-bar__actions > * {
+  max-width: 100%;
+}
