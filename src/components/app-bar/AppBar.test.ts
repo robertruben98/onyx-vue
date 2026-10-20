@@ -78,7 +78,7 @@ describe("AppBar (Vue)", () => {
 
     const narrowBar = () => render(AppBar, {
       props: { title: "English B1 Sprint", eyebrow: "LanguageCert", collapseBelow: 640 },
-      slots: { status: "saved", actions: "<button type='button'>Grammar</button><input aria-label='Theme' type='radio' />" },
+      slots: { status: "saved", actions: "<button type='button'>Grammar</button><input aria-label='Theme' type='radio' /><button type='button' aria-haspopup='menu'>Account</button>" },
     });
 
     it("folds status and actions behind a menu button on a narrow screen", async () => {
@@ -103,6 +103,8 @@ describe("AppBar (Vue)", () => {
       expect(isOpen()).toBe(false);
       await fireEvent.click(toggle);
       await fireEvent.click(screen.getByRole("radio", { name: "Theme" }));
+      expect(isOpen()).toBe(true);
+      await fireEvent.click(screen.getByRole("button", { name: "Account" })); // abre su propio menu
       expect(isOpen()).toBe(true);
       await fireEvent.click(screen.getByRole("button", { name: "Grammar" }));
       expect(isOpen()).toBe(false);
