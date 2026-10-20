@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { cloneVNode, computed, provide, ref, useSlots, type VNode } from "vue";
+import { cloneVNode, computed, nextTick, provide, ref, useSlots, watch, type VNode } from "vue";
 import "./tabs.scss";
 import { TABS_CONTEXT, type TabRegistration, type TabsContext } from "./context";
 import Tab from "./Tab.vue";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     /** Accessible label for the tab list. */
     ariaLabel?: string;
+    /**
+     * What the tab list does when it does not fit: `wrap` onto more rows, or
+     * `scroll` sideways in one row (phones: five tabs in two rows of 360px
+     * read as two separate menus).
+     */
+    overflow?: "wrap" | "scroll";
   }>(),
   {
     ariaLabel: "",
+    overflow: "wrap",
   },
 );
 
@@ -57,6 +64,13 @@ const context: TabsContext = {
 provide(TABS_CONTEXT, context);
 
 const trigger = ref<HTMLButtonElement[]>([]);
+
+// En una tira que se desplaza, la pestana elegida siempre a la vista.
+watch(selectedIndex, async (i) => {
+  if (props.overflow !== "scroll") return;
+  await nextTick();
+  trigger.value[i]?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
+});
 
 function select(index: number): void {
   if (tabs.value[index]?.disabled.value) return;
@@ -144,7 +158,12 @@ function flattenTabs(nodes: VNode[]): VNode[] {
 
 <template>
   <div class="ui-tabs">
-    <div class="ui-tabs__list" role="tablist" :aria-label="ariaLabel || undefined">
+    <div
+      class="ui-tabs__list"
+      :class="{ 'ui-tabs__list--scroll': overflow === 'scroll' }"
+      role="tablist"
+      :aria-label="ariaLabel || undefined"
+    >
       <button
         v-for="(tab, i) in tabs"
         :key="tab.tabId"

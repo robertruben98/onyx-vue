@@ -17,11 +17,30 @@ export const appBarDoc: ComponentDoc = {
       description: "Heading level of the title; 0 renders plain text for pages that already have an h1.",
     },
     { name: "sticky", type: "boolean", default: "true", description: "Sticks the bar to the top of the page." },
+    {
+      name: "collapseBelow",
+      type: "number",
+      default: "0",
+      description:
+        "Viewport width in px under which status and actions fold behind a menu button, and eyebrow and title truncate to one line. The menu closes with Escape, a tap outside or choosing a button or link in it. 0 never folds.",
+    },
+    { name: "menuLabel", type: "string", default: "'Menu'", description: "Accessible name of the menu button." },
     { name: "#brand", type: "slot", default: "—", description: "Replaces eyebrow, title and subtitle." },
     { name: "#status", type: "slot", default: "—", description: "Middle region: a state line, a meter, a stamp." },
     { name: "#actions", type: "slot", default: "—", description: "Right region: buttons." },
   ],
   demos: [
+    {
+      title: "Folds into a menu on phones",
+      description: "Make the window narrower than 640px: the actions move behind the menu button.",
+      code: `<UiAppBar eyebrow="LanguageCert · B1" title="English B1 Sprint" :collapse-below="640" :sticky="false" :heading-level="0">
+  <template #status>progress synced</template>
+  <template #actions>
+    <UiButton variant="secondary">Grammar drills</UiButton>
+    <UiButton variant="text">Log out</UiButton>
+  </template>
+</UiAppBar>`,
+    },
     {
       title: "Title, status and actions",
       code: `<UiAppBar title="Todos los agentes" subtitle="12 agentes" :sticky="false" :heading-level="0">

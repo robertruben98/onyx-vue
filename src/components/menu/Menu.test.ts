@@ -128,7 +128,9 @@ describe("Menu (Vue) — keyboard and positioning details", () => {
     renderMenu();
     await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
     const menu = await screen.findByRole("menu");
-    await waitFor(() => expect(document.activeElement?.textContent).toContain("Edit"));
+    // El elemento con foco, no el body: el body tambien "contiene" Edit (todo el texto
+    // de la pagina) y la espera pasaba sin que el menu tuviera el foco todavia.
+    await waitFor(() => expect(document.activeElement?.getAttribute("role") === "menuitem" && document.activeElement.textContent).toContain("Edit"));
     await fireEvent.keyDown(menu, { key: "ArrowUp" });
     expect(document.activeElement?.textContent).toContain("Duplicate");
     await fireEvent.keyDown(menu, { key: "Home" });
@@ -174,5 +176,37 @@ describe("Menu (Vue) — keyboard and positioning details", () => {
     const menu = await screen.findByRole("menu");
     await fireEvent.keyDown(menu, { key: "ArrowDown" });
     expect(screen.getByRole("menu")).toBeTruthy();
+  });
+
+  it("stays inside the window: a trigger in the right corner opens the panel to its left", async () => {
+    // jsdom no maqueta: se fijan los rectangulos del boton (esquina derecha) y del panel.
+    // Hasta estar colocado (style.position=fixed) el panel mide lo que el body: 1000px.
+    const trigger = new DOMRect(900, 10, 100, 40);
+    const original = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = function () {
+      if (this.classList.contains("ui-menu__trigger")) return trigger;
+      if (this.classList.contains("ui-menu__pane")) {
+        return (this as HTMLElement).style.position === "fixed" ? new DOMRect(0, 0, 220, 90) : new DOMRect(0, 0, 1000, 90);
+      }
+      return original.call(this);
+    };
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 1000 });
+    renderMenu();
+    await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    const menu = await screen.findByRole("menu");
+    await waitFor(() => expect(menu.style.left).toBe(`${992 - 220}px`));
+    expect(menu.style.top).toBe("50px");
+    Element.prototype.getBoundingClientRect = original;
+  });
+
+  it("focuses the first item without scrolling the page", async () => {
+    const calls: (FocusOptions | undefined)[] = [];
+    const original = HTMLElement.prototype.focus;
+    HTMLElement.prototype.focus = function (o?: FocusOptions) { calls.push(o); original.call(this, o); };
+    renderMenu();
+    await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    await waitFor(() => expect(document.activeElement?.textContent?.trim()).toBe("Edit"));
+    expect(calls.at(-1)).toEqual({ preventScroll: true });
+    HTMLElement.prototype.focus = original;
   });
 });

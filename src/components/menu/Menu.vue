@@ -49,22 +49,40 @@ function itemElements(): HTMLButtonElement[] {
   );
 }
 
+const EDGE = 8; // px libres hasta el borde de la ventana
+
+/**
+ * Debajo del boton y alineado a su izquierda, salvo que no quepa: entonces se
+ * alinea a su derecha (un menu de cuenta en la esquina se salia de la pantalla y
+ * cortaba el email) y, si tampoco cabe debajo, se abre hacia arriba.
+ */
 function positionPanel(): void {
   const trigger = triggerEl.value;
   if (!trigger) return;
   const rect = trigger.getBoundingClientRect();
-  panelStyle.value = {
-    position: "fixed",
-    top: `${rect.bottom}px`,
-    left: `${rect.left}px`,
-  };
+  const panel = panelEl.value?.getBoundingClientRect();
+  const width = panel?.width ?? 0;
+  const height = panel?.height ?? 0;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  let left = rect.left;
+  if (left + width > vw - EDGE) left = Math.max(EDGE, Math.min(rect.right, vw - EDGE) - width);
+  const top = rect.bottom + height > vh - EDGE && rect.top - height >= EDGE ? rect.top - height : rect.bottom;
+  panelStyle.value = { position: "fixed", top: `${top}px`, left: `${left}px` };
 }
 
 async function openMenu(): Promise<void> {
   open.value = true;
   await nextTick();
+  // Dos pasadas: hasta estar "fixed" el panel mide lo que el body (todo el ancho);
+  // ya colocado mide lo suyo, y con eso se decide si cabe a la derecha.
   positionPanel();
-  itemElements()[0]?.focus();
+  await nextTick();
+  positionPanel();
+  // El foco, cuando el panel YA esta en su sitio: antes estaba aun al final del
+  // body y el navegador desplazaba la pagina hasta alli al enfocarlo.
+  await nextTick();
+  itemElements()[0]?.focus({ preventScroll: true });
 }
 
 function close(): void {

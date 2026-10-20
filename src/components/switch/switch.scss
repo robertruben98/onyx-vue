@@ -92,3 +92,23 @@
 .ui-switch--disabled .ui-switch__label {
   color: var(--ui-switch-disabled-text);
 }
+
+// --- Touch target --------------------------------------------------------------
+// Con el dedo, la caja de 20px es un blanco dificil. Una zona invisible de 44px
+// alrededor del control (WCAG 2.5.8 pide 24; las guias de iOS y Android, 44-48)
+// sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-switch__wrap {
+    position: relative;
+  }
+
+  .ui-switch__wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

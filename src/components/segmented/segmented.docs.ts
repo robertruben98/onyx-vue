@@ -12,6 +12,12 @@ export const segmentedDoc: ComponentDoc = {
     { name: "ariaLabel", type: "string", default: "''", description: "Accessible name of the group." },
     { name: "size", type: "'sm' | 'md'", default: "'md'", description: "Control size." },
     { name: "disabled", type: "boolean", default: "false", description: "Disables the whole control." },
+    {
+      name: "fluid",
+      type: "boolean",
+      default: "false",
+      description: "Full width, equal segments; a label that does not fit wraps onto a second line instead of widening the page.",
+    },
     { name: "@changed", type: "(value: string) => void", default: "—", description: "Emitted when the user picks another option, in addition to `v-model`." },
   ],
   demos: [

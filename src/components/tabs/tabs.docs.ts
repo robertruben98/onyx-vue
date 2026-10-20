@@ -20,6 +20,12 @@ export const tabsDoc: ComponentDoc = {
       description: "Accessible name for the tab list, on `UiTabs`.",
     },
     {
+      name: "overflow",
+      type: "'wrap' | 'scroll'",
+      default: "'wrap'",
+      description: "When the tabs do not fit: wrap onto more rows, or keep one row that scrolls sideways (phones), with the selected tab kept in view.",
+    },
+    {
       name: "label",
       type: "string",
       default: "— (required)",

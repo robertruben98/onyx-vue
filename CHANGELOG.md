@@ -9,6 +9,34 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.2.0 — 2026-10-20
+
+Phones. Found on the English trainer, used mostly from a phone: a sticky bar that took half the
+screen, five tabs in two rows, a four-option switch that made the page 515px wide on a 360px
+screen, and 20px checkboxes.
+
+### Added
+
+- `UiAppBar` `collapseBelow` (and `menuLabel`): under that viewport width, status and actions fold
+  behind a menu button and eyebrow and title truncate to one line. The menu closes with Escape, a
+  tap outside, or choosing a button or link in it.
+- `UiTabs` `overflow="scroll"`: one row that scrolls sideways, keeping the selected tab in view.
+  The default stays `wrap`.
+- `UiSegmented` `fluid`: full width, equal segments, labels wrap instead of widening the page.
+
+### Changed
+
+- `UiCheckbox` and `UiSwitch` get an invisible 44px touch target on touch screens
+  (`pointer: coarse`); the layout does not move.
+
+### Fixed
+
+- `UiMenu` stays inside the window: near the right edge it opens to the left of its trigger, and
+  upwards when there is no room below. Opening it no longer scrolls the page: the first item used
+  to take focus before the panel was positioned, still at the end of the body.
+- `UiTabs` never widens its grid or flex container (`min-width: 0`), which a one-row scrolling tab
+  list did.
+
 ## 0.1.2 — 2026-10-20
 
 ### Added

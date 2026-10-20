@@ -5,6 +5,10 @@
 
 .ui-tabs {
   display: block;
+  // Dentro de un grid o un flex, una tira con overflow="scroll" no puede imponer
+  // su ancho de una fila al contenedor: se desliza dentro de el (si no, la pagina
+  // entera medía 616px en un movil de 360).
+  min-width: 0;
 }
 
 .ui-tabs__list {
@@ -16,6 +20,18 @@
   flex-wrap: wrap;
   gap: var(--ui-tabs-gap);
   border-bottom: var(--ui-tabs-border-width) solid var(--ui-tabs-border);
+}
+
+// overflow="scroll": una sola fila que se desliza con el dedo, sin barra visible.
+.ui-tabs__list--scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.ui-tabs__list--scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .ui-tabs__tab {
