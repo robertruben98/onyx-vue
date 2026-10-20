@@ -62,4 +62,26 @@ describe("pocket preset", () => {
   it("paints the page floor so the preset is a whole look", () => {
     expect(light).toContain("background-color: var(--ui-pocket-floor)");
   });
+
+  it("every text colour reaches 4.5:1 (WCAG AA) on every background it is painted on", () => {
+    const hex = (block: string, name: string) => new RegExp(`${name}:\\s*(#[0-9a-f]{6})`).exec(block)?.[1];
+    const lum = (h: string) => {
+      const [r, g, b] = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const ratio = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+    const texts = ["--ui-pocket-ink", "--ui-pocket-ink-soft", "--ui-pocket-accent", "--ui-pocket-right", "--ui-pocket-wrong", "--ui-pocket-careful"];
+    const fails: string[] = [];
+    for (const [mode, css, bgs] of [
+      ["light", light, ["--ui-pocket-floor", "--ui-pocket-card", "--ui-pocket-card-hover", "--ui-color-success-surface", "--ui-color-danger-surface", "--ui-color-warning-surface", "--ui-color-info-surface", "--ui-color-neutral-surface"]],
+      ["dark", night, ["--ui-pocket-floor", "--ui-pocket-card", "--ui-pocket-card-hover"]],
+    ] as const) {
+      for (const t of texts) for (const b of bgs) {
+        const [fg, bg] = [hex(css, t), hex(css, b)];
+        if (!fg || !bg) { fails.push(`${mode} ${t}/${b}: not a literal colour`); continue; }
+        if (ratio(fg, bg) < 4.5) fails.push(`${mode} ${t} on ${b}: ${ratio(fg, bg).toFixed(2)}`);
+      }
+    }
+    expect(fails).toEqual([]);
+  });
 });
