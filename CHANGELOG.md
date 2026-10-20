@@ -9,6 +9,14 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.3.1 — 2026-10-20
+
+### Fixed
+
+- `pocket`: the right, wrong and careful colours reach 4.5:1 on every light background. They were
+  3.7–4.4:1, which Lighthouse flagged on the English trainer. `pocket.test.ts` now computes the
+  WCAG ratio of every text colour against every background, in both modes.
+
 ## 0.3.0 — 2026-10-20
 
 ### Added
