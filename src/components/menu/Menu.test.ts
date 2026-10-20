@@ -178,13 +178,14 @@ describe("Menu (Vue) — keyboard and positioning details", () => {
 
   it("stays inside the window: a trigger in the right corner opens the panel to its left", async () => {
     // jsdom no maqueta: se fijan los rectangulos del boton (esquina derecha) y del panel.
-    const rects = new Map<string, DOMRect>([
-      ["ui-menu__trigger", new DOMRect(900, 10, 100, 40)],
-      ["ui-menu__pane", new DOMRect(0, 0, 220, 90)],
-    ]);
+    // Hasta estar colocado (style.position=fixed) el panel mide lo que el body: 1000px.
+    const trigger = new DOMRect(900, 10, 100, 40);
     const original = Element.prototype.getBoundingClientRect;
     Element.prototype.getBoundingClientRect = function () {
-      for (const [cls, r] of rects) if (this.classList.contains(cls)) return r;
+      if (this.classList.contains("ui-menu__trigger")) return trigger;
+      if (this.classList.contains("ui-menu__pane")) {
+        return (this as HTMLElement).style.position === "fixed" ? new DOMRect(0, 0, 220, 90) : new DOMRect(0, 0, 1000, 90);
+      }
       return original.call(this);
     };
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 1000 });
