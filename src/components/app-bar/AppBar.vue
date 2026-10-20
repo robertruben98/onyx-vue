@@ -73,7 +73,8 @@ function watchWidth(): void {
 }
 
 // Cerrar: Escape, un toque fuera de la barra, o elegir un boton/enlace del menu
-// (un selector dentro del menu, como el de tema, no lo cierra: se ve el cambio).
+// (un selector dentro del menu, como el de tema, no lo cierra: se ve el cambio; y
+// un boton que abre otra cosa -aria-haspopup, un UiMenu de cuenta- tampoco).
 function onKey(e: KeyboardEvent): void {
   if (e.key === "Escape" && open.value) open.value = false;
 }
@@ -81,7 +82,8 @@ function onPointer(e: Event): void {
   if (open.value && root.value && !root.value.contains(e.target as Node)) open.value = false;
 }
 function onMenuClick(e: MouseEvent): void {
-  if ((e.target as HTMLElement).closest("button, a")) open.value = false;
+  const hit = (e.target as HTMLElement).closest("button, a");
+  if (hit && !hit.hasAttribute("aria-haspopup")) open.value = false;
 }
 
 watch(narrow, (v) => { if (!v) open.value = false; });
