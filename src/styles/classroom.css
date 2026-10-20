@@ -1,7 +1,7 @@
 /*
  * Preset "classroom".
  *
- * Para paginas de aprender: un cuaderno claro, letra grande y legible, titulos
+ * Para paginas de aprender: un cuaderno claro y suave (sin blanco puro), letra grande y legible, titulos
  * con serifa de libro de texto, esquinas redondeadas y controles de 44px que se
  * pulsan bien con el dedo. El color tiene tres trabajos y solo tres: el azul de
  * tinta para actuar, el verde/rojo para corregir (bien/mal) y el amarillo de
@@ -70,17 +70,20 @@
   --ui-tooltip-shadow: 0 4px 12px -2px rgba(27, 42, 65, 0.25);
 
   /* --- primitivos del tema ---------------------------------------------- */
-  --ui-classroom-paper: #f6f8fb;      /* suelo de la pagina */
-  --ui-classroom-sheet: #ffffff;      /* la hoja: tarjetas y paneles */
-  --ui-classroom-sheet-hover: #eef3fa;
-  --ui-classroom-rule: #d9e1ec;       /* filete */
+  /* El claro es SUAVE a proposito: ni el suelo ni la hoja son blanco puro. Una
+     sesion de estudio dura horas y el #fff a pantalla completa cansa; la tinta
+     sigue por encima de 4.5:1 en todos los textos. */
+  --ui-classroom-paper: #e9edf2;      /* suelo de la pagina */
+  --ui-classroom-sheet: #f6f8fa;      /* la hoja: tarjetas y paneles */
+  --ui-classroom-sheet-hover: #e6ebf2;
+  --ui-classroom-rule: #d0d8e3;       /* filete */
   --ui-classroom-ink: #1b2a41;        /* tinta */
   --ui-classroom-ink-soft: #55657c;   /* tinta suave: 5.9:1 sobre la hoja */
   --ui-classroom-ink-faint: #8a97aa;
   --ui-classroom-pen: #2453c7;        /* azul de boligrafo: actuar */
   --ui-classroom-pen-hover: #1d45a8;
   --ui-classroom-pen-active: #183a8c;
-  --ui-classroom-right: #1d7f52;      /* bien */
+  --ui-classroom-right: #18714a;      /* bien */
   --ui-classroom-wrong: #c03a3a;      /* mal */
   --ui-classroom-careful: #9a5b00;    /* cuidado */
   --ui-classroom-marker: #ffe169;     /* subrayador */
