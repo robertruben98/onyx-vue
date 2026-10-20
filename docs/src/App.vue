@@ -28,6 +28,7 @@ const PRESETS = [
   { id: "acme", label: "Acme" },
   { id: "console", label: "Console" },
   { id: "matrix", label: "Matrix" },
+  { id: "classroom", label: "Classroom" },
 ] as const;
 
 const preset = ref(
