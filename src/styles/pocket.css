@@ -79,9 +79,11 @@
   --ui-pocket-accent-hover: #4338ca;
   --ui-pocket-accent-active: #3730a3;
   --ui-pocket-accent-2: #8b5cf6;      /* violeta: el otro extremo del degradado */
-  --ui-pocket-right: #0f8a4f;
-  --ui-pocket-wrong: #d92d4f;
-  --ui-pocket-careful: #b45309;
+  /* Bien/mal/cuidado, oscurecidos lo justo para 4.5:1 sobre el suelo, las tarjetas y
+     los fondos de estado (0.3.0 se quedaba en 3.7-4.4: lo marco Lighthouse). */
+  --ui-pocket-right: #0a7340;
+  --ui-pocket-wrong: #c01f3f;
+  --ui-pocket-careful: #9a4708;
 
   /* --- semanticos ------------------------------------------------------- */
   --ui-terminal-magenta: #a33fbf;
