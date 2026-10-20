@@ -29,6 +29,14 @@ screen, and 20px checkboxes.
 - `UiCheckbox` and `UiSwitch` get an invisible 44px touch target on touch screens
   (`pointer: coarse`); the layout does not move.
 
+### Fixed
+
+- `UiMenu` stays inside the window: near the right edge it opens to the left of its trigger, and
+  upwards when there is no room below. Opening it no longer scrolls the page: the first item used
+  to take focus before the panel was positioned, still at the end of the body.
+- `UiTabs` never widens its grid or flex container (`min-width: 0`), which a one-row scrolling tab
+  list did.
+
 ## 0.1.2 — 2026-10-20
 
 ### Added
