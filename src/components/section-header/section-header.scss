@@ -1,0 +1,42 @@
+// Section header — the band above a list. References ONLY semantic /
+// component tokens.
+//
+// `font-family` is deliberately absent: the console preset defines a display
+// family and the default theme does not, so inheriting is what lets one
+// component read correctly under both. What makes the band recognisable is the
+// tracking and the caps, not the face.
+
+.ui-section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-section-header-gap);
+  min-height: var(--ui-section-header-height);
+}
+
+.ui-section-header__title {
+  margin: 0;
+  font-size: var(--ui-section-header-title-size);
+  font-weight: var(--ui-section-header-title-weight);
+  letter-spacing: var(--ui-section-header-title-tracking);
+  text-transform: uppercase;
+  color: var(--ui-section-header-title-color);
+}
+
+.ui-section-header--quiet .ui-section-header__title {
+  color: var(--ui-section-header-title-color-quiet);
+}
+
+.ui-section-header__count {
+  font-size: var(--ui-section-header-count-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-section-header-count-color);
+}
+
+// Los controles se van al fondo; las acciones se quedan junto al contador,
+// que es donde el ojo ya esta.
+.ui-section-header__controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}

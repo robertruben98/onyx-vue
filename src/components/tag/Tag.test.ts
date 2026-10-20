@@ -39,7 +39,7 @@ describe("Tag (Vue)", () => {
     expect(emitted().removed).toBeTruthy();
   });
 
-  it.each(["neutral", "info", "success", "warning", "danger"] as const)(
+  it.each(["neutral", "muted", "info", "success", "warning", "danger"] as const)(
     "has no axe violations (%s)",
     async (variant) => {
       const { container } = render(Tag, {
@@ -49,4 +49,21 @@ describe("Tag (Vue)", () => {
       expect(await axe(container, axeOptions)).toHaveNoViolations();
     },
   );
+
+  it("applies the muted variant class on the root", () => {
+    const { container } = render(Tag, {
+      props: { variant: "muted" },
+      slots: { default: "draft" },
+    });
+    expect(
+      container.querySelector(".ui-tag")?.classList.contains("ui-tag--muted"),
+    ).toBe(true);
+  });
+
+  it("still defaults to neutral, which muted does not replace", () => {
+    const { container } = render(Tag, { slots: { default: "label" } });
+    expect(
+      container.querySelector(".ui-tag")?.classList.contains("ui-tag--neutral"),
+    ).toBe(true);
+  });
 });

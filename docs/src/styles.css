@@ -1,0 +1,77 @@
+/*
+ * Cromo del sitio de documentacion (capa de aplicacion).
+ *
+ * Aqui SI se pueden usar valores crudos y variables primitivas: esto no es un
+ * componente de la libreria, donde los estilos son solo tokens. Portado del
+ * equivalente de la lib de Angular (`apps/docs/src/styles.css`), con la clase
+ * de modo oscuro que usa esta app (`.app-dark`, no `.onyx-dark`).
+ *
+ * Hasta 2026-09-06 este fichero no existia y `body` no tenia ni fuente ni
+ * fondo: el sitio entero salia en Times New Roman sobre blanco del navegador.
+ * No fallaba nada — simplemente no se parecia en nada al de Angular.
+ */
+:root {
+  --docs-page-bg: var(--ui-slate-50);
+  --docs-code-bg: var(--ui-slate-100);
+  --docs-font:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --docs-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.app-dark {
+  --docs-page-bg: var(--ui-slate-950);
+  --docs-code-bg: var(--ui-slate-900);
+}
+
+/* El preset `console` reencamina la tipografia de los componentes; el cromo la
+   sigue para que la pagina no quede a dos fuentes. */
+.ui-theme-console {
+  --docs-font: var(--ui-font-family);
+  --docs-mono: var(--ui-font-family);
+  --docs-page-bg: var(--ui-console-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--docs-font);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  background: var(--docs-page-bg);
+  color: var(--ui-color-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--ui-color-text);
+  letter-spacing: -0.011em;
+  line-height: 1.25;
+}
+
+a {
+  color: var(--ui-color-primary);
+}
+
+code,
+pre {
+  font-family: var(--docs-mono);
+}
+
+@media (max-width: 720px) {
+  body {
+    /* que no se desplace la pagina entera de lado */
+    overflow-x: hidden;
+  }
+}

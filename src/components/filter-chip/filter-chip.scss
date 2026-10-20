@@ -1,0 +1,80 @@
+// Filter chip — a toggleable filter with its own match count. References ONLY
+// semantic / component tokens.
+//
+// The tone re-maps the count's OWN token inside the chip's scope instead of
+// reaching into `.ui-tri-state-count`: a component that styles another
+// component's internals breaks the moment that other component renames a
+// class, and the token layer is the seam that already exists for this.
+
+.ui-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-filter-chip-gap);
+  padding: var(--ui-filter-chip-padding-y) var(--ui-filter-chip-padding-x);
+  border: var(--ui-border-width) solid transparent;
+  border-radius: var(--ui-filter-chip-radius);
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--ui-filter-chip-font-size);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ui-filter-chip-text);
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.ui-filter-chip:hover:not(:disabled) {
+  color: var(--ui-filter-chip-text-hover);
+}
+
+.ui-filter-chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+.ui-filter-chip:disabled {
+  cursor: not-allowed;
+  color: var(--ui-color-disabled-text);
+}
+
+// --- Tones ----------------------------------------------------------------
+.ui-filter-chip--ok {
+  color: var(--ui-color-success);
+  --ui-tri-state-count-neutral: var(--ui-color-success);
+}
+.ui-filter-chip--warn {
+  color: var(--ui-color-warning);
+  --ui-tri-state-count-neutral: var(--ui-color-warning);
+}
+.ui-filter-chip--danger {
+  color: var(--ui-color-danger);
+  --ui-tri-state-count-neutral: var(--ui-color-danger);
+}
+.ui-filter-chip--info {
+  color: var(--ui-color-info);
+  --ui-tri-state-count-neutral: var(--ui-color-info);
+}
+.ui-filter-chip--muted {
+  color: var(--ui-color-text-muted);
+  --ui-tri-state-count-neutral: var(--ui-color-text-muted);
+}
+
+// --- Pressed --------------------------------------------------------------
+// The applied filter takes a surface, not a stronger colour: the colour slot
+// is already spoken for by the tone.
+.ui-filter-chip--pressed {
+  background: var(--ui-filter-chip-pressed-bg);
+  color: var(--ui-filter-chip-pressed-text);
+}
+
+// --- Empty ----------------------------------------------------------------
+// Dimmed, still clickable, and it lights back up on hover so the label stays
+// readable while you scan the bar.
+.ui-filter-chip--empty {
+  opacity: var(--ui-filter-chip-empty-opacity);
+}
+.ui-filter-chip--empty:hover {
+  opacity: 1;
+}

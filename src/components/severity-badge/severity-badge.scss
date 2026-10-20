@@ -1,0 +1,39 @@
+// Severity badge — the severity scale of the security views. References ONLY
+// semantic / component tokens. `critical` is the only solid fill: five
+// surfaces at equal weight make a wall of colour in which nothing is worse
+// than anything else.
+
+.ui-severity-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--ui-severity-badge-padding-y) var(--ui-severity-badge-padding-x);
+  font-size: var(--ui-severity-badge-font-size);
+  font-weight: var(--ui-severity-badge-font-weight);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-radius: var(--ui-severity-badge-radius);
+  background-color: var(--ui-severity-badge-unknown-bg);
+  color: var(--ui-severity-badge-unknown-text);
+}
+
+.ui-severity-badge--critical {
+  background-color: var(--ui-severity-badge-critical-bg);
+  color: var(--ui-severity-badge-critical-text);
+}
+.ui-severity-badge--high {
+  background-color: var(--ui-severity-badge-high-bg);
+  color: var(--ui-severity-badge-high-text);
+}
+.ui-severity-badge--moderate {
+  background-color: var(--ui-severity-badge-moderate-bg);
+  color: var(--ui-severity-badge-moderate-text);
+}
+.ui-severity-badge--low {
+  background-color: var(--ui-severity-badge-low-bg);
+  color: var(--ui-severity-badge-low-text);
+}
+.ui-severity-badge--unknown {
+  background-color: var(--ui-severity-badge-unknown-bg);
+  color: var(--ui-severity-badge-unknown-text);
+}

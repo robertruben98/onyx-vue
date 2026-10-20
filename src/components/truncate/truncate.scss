@@ -1,0 +1,24 @@
+// Truncate — one line with an ellipsis, or several with a clamp, and always
+// the full text in `title`. References ONLY semantic / component tokens.
+//
+// `min-width: 0` is not cosmetic: inside a flex or grid row a text cell
+// refuses to shrink below its content without it, and the ellipsis never
+// appears — the row overflows instead.
+
+.ui-truncate {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ui-truncate--single {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ui-truncate--clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--ui-truncate-lines);
+  line-clamp: var(--ui-truncate-lines);
+}

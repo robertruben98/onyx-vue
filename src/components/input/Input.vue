@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, useId } from "vue";
 import "./input.scss";
 
 export type InputType =
@@ -11,8 +11,6 @@ export type InputType =
   | "url"
   | "search";
 export type InputSize = "sm" | "md" | "lg";
-
-let nextId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -48,7 +46,8 @@ const emit = defineEmits<{ valueChange: [value: string] }>();
 /** Two-way bound value (v-model). */
 const value = defineModel<string>({ default: "" });
 
-const inputId = `ui-input-${nextId++}`;
+const uid = useId();
+const inputId = `ui-input-${uid}`;
 
 const rootClasses = computed(() => ({
   "ui-input": true,
@@ -66,6 +65,25 @@ function handleInput(event: Event): void {
   value.value = next;
   emit("valueChange", next);
 }
+/**
+ * Foco programatico. Sin esto, quien quiera enfocar la caja tiene que sacar el
+ * `<input>` del DOM por su cuenta — y un `ref` sobre `<UiInput>` devuelve la
+ * instancia del componente, no un elemento, asi que el intento natural
+ * (`ref.querySelector("input")`) revienta con "querySelector is not a
+ * function". Se expone tambien `select` porque enfocar para reescribir el
+ * contenido es el caso que sigue.
+ */
+const elemento = ref<HTMLInputElement | null>(null);
+
+function focus(opciones?: FocusOptions): void {
+  elemento.value?.focus(opciones);
+}
+
+function select(): void {
+  elemento.value?.select();
+}
+
+defineExpose({ focus, select, elemento });
 </script>
 
 <template>
@@ -74,6 +92,7 @@ function handleInput(event: Event): void {
       label
     }}</label>
     <input
+      ref="elemento"
       class="ui-input__el"
       :id="inputId"
       :type="type"

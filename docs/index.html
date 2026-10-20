@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onyx UI — Vue</title>
+    <meta
+      name="description"
+      content="Onyx UI for Vue — accessible, token-themed components in styled mode."
+    />
+    <!-- Las dos familias del preset "console". Sin ellas cae en la mono del
+         sistema y el tema se sostiene igual, pero la galeria no ensena lo que
+         el preset es de verdad. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Martian+Mono:wght@600;700&display=swap"
+    />
+    <script>
+      // Apply persisted theme before first paint to avoid a flash.
+      (function () {
+        try {
+          if (localStorage.getItem("onyx-dark") === "true") {
+            document.documentElement.classList.add("app-dark");
+          }
+          var preset = localStorage.getItem("onyx-preset");
+          if (preset && preset !== "default") {
+            document.documentElement.classList.add("ui-theme-" + preset);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

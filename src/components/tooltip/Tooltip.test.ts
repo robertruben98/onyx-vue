@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { h } from "vue";
 import Tooltip from "./Tooltip.vue";
 
 function renderTooltip(text = "Helpful hint") {
@@ -77,5 +78,28 @@ describe("Tooltip (Vue)", () => {
     expect(
       await axe(document.body, { rules: { region: { enabled: false } } }),
     ).toHaveNoViolations();
+  });
+
+  it("gives independent ids to two tooltips shown together", async () => {
+    render({
+      render() {
+        return h("div", [
+          h(Tooltip, { text: "First tip" }, { default: () => h("button", { type: "button" }, "One") }),
+          h(Tooltip, { text: "Second tip" }, { default: () => h("button", { type: "button" }, "Two") }),
+        ]);
+      },
+    });
+    await fireEvent.mouseEnter(screen.getByRole("button", { name: "One" }).parentElement!);
+    await fireEvent.mouseEnter(screen.getByRole("button", { name: "Two" }).parentElement!);
+
+    const hostOne = screen.getByRole("button", { name: "One" }).parentElement!;
+    const hostTwo = screen.getByRole("button", { name: "Two" }).parentElement!;
+    const describedByOne = hostOne.getAttribute("aria-describedby");
+    const describedByTwo = hostTwo.getAttribute("aria-describedby");
+    expect(describedByOne).toBeTruthy();
+    expect(describedByTwo).toBeTruthy();
+    expect(describedByOne).not.toBe(describedByTwo);
+    expect(document.getElementById(describedByOne!)?.textContent).toBe("First tip");
+    expect(document.getElementById(describedByTwo!)?.textContent).toBe("Second tip");
   });
 });

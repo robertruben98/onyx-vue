@@ -1,0 +1,13 @@
+// Relative time — a compact age with the absolute date in the title.
+// References ONLY semantic / component tokens.
+
+.ui-relative-time {
+  font-size: var(--ui-relative-time-font-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-relative-time-color);
+  white-space: nowrap;
+}
+
+.ui-relative-time--stale {
+  color: var(--ui-relative-time-stale-color);
+}

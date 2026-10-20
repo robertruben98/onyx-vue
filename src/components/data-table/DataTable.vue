@@ -1,12 +1,24 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, watch, nextTick } from "vue";
+import { computed, ref, watch, nextTick , useSlots } from "vue";
 import UiCheckbox from "../checkbox/Checkbox.vue";
 import "./data-table.scss";
 
 export type RowKey = string | number;
 export type CellAlign = "start" | "center" | "end";
 export type SortDirection = "asc" | "desc";
-export type DataTableMode = "paginated" | "virtual";
+/**
+ * Como se reparten las filas por la pantalla.
+ *
+ * - `paginated`: una pagina cada vez, con pie de paginacion.
+ * - `virtual`: ventana deslizante sobre miles de filas; exige un `rowHeight`
+ *   que case EXACTAMENTE con el alto renderizado.
+ * - `plain`: todas las filas, sin pie y sin ventana. Para tablas cortas que se
+ *   leen de un vistazo — un panel de servicios, un resumen — donde paginar
+ *   veinte filas estorba y virtualizarlas obliga a cuadrar un alto que sale de
+ *   la tipografia y cambia con el tema. Con `maxHeight` sigue teniendo scroll
+ *   interno y cabecera pegada.
+ */
+export type DataTableMode = "paginated" | "virtual" | "plain";
 export type SelectionMode = "none" | "single" | "multiple";
 
 /** One level of the (multi-)column sort. */
@@ -82,6 +94,18 @@ const props = withDefaults(
     viewportHeight?: string;
     /** Max height for paginated mode; enables internal scroll with sticky header. */
     maxHeight?: string;
+    /**
+     * Extra classes for one row — a cursor, a row that is ready, one the user
+     * has marked. Selection is already modelled; this is for everything else a
+     * consumer knows about a row and the table does not.
+     *
+     * Method syntax (bivariant) on purpose, for the same reason as `value` on
+     * a column: an arrow type makes the prop invariant in `T`, and then a
+     * `(row: Service) => ...` stops being assignable the moment the table is
+     * rendered without an explicit generic — which is how every consumer here
+     * renders it.
+     */
+    rowClass?(row: T): string | string[] | undefined;
   }>(),
   {
     rows: () => [],
@@ -96,8 +120,11 @@ const props = withDefaults(
     rowHeight: 44,
     viewportHeight: "400px",
     maxHeight: "",
+    rowClass: undefined,
   },
 );
+
+const slots = useSlots();
 
 /** Active sort levels. Two-way bindable via v-model:sort. */
 const sort = defineModel<SortState[]>("sort", { default: () => [] });
@@ -107,6 +134,26 @@ const pageIndex = defineModel<number>("pageIndex", { default: 0 });
 const pageSize = defineModel<number>("pageSize", { default: 10 });
 /** Selected row keys. Two-way bindable via v-model:selected. */
 const selected = defineModel<Set<RowKey>>("selected", {
+  default: () => new Set(),
+});
+
+/**
+ * Expanded row keys. Two-way bindable via v-model:expanded.
+ *
+ * A row opens a full-width detail row underneath it, filled by the
+ * `#row-detail` slot. The adjacency is the whole point: a drawer that opens
+ * somewhere else on the page makes the reader find their row again.
+ *
+ * Not available in `virtual` mode, and that is a constraint rather than a gap:
+ * windowing needs every row to be exactly `rowHeight` tall, and a detail row
+ * whose height depends on its content is the one thing that cannot be.
+ *
+ * The row carries no `aria-expanded`: that attribute is only valid on a
+ * `treegrid` row, and axe rejects it on a `grid` one. The disclosure lives on
+ * whatever control the consumer puts in a cell, which is the thing the user
+ * actually activates — the row is not a widget.
+ */
+const expanded = defineModel<Set<RowKey>>("expanded", {
   default: () => new Set(),
 });
 
@@ -170,7 +217,8 @@ const currentPage = computed(() =>
 
 /** Rows currently rendered (sorted, then paged in paginated mode). */
 const visibleRows = computed<T[]>(() => {
-  if (props.mode === "virtual") return sorted.value;
+  // `virtual` recorta luego, por scroll; `plain` no recorta nunca.
+  if (props.mode === "virtual" || props.mode === "plain") return sorted.value;
   const start = currentPage.value * pageSize.value;
   return sorted.value.slice(start, start + pageSize.value);
 });
@@ -218,6 +266,15 @@ const someSelected = computed(() => {
 
 function isSelected(row: T): boolean {
   return selected.value.has(rowKeyOf(row));
+}
+
+/** Whether the detail row can be rendered at all: a slot, and not virtual. */
+const canExpand = computed(
+  () => Boolean(slots["row-detail"]) && props.mode !== "virtual",
+);
+
+function isExpanded(row: T): boolean {
+  return canExpand.value && expanded.value.has(rowKeyOf(row));
 }
 
 function toggleRow(row: T, checked: boolean): void {
@@ -532,10 +589,13 @@ function onGridKeydown(event: KeyboardEvent): void {
                 :aria-selected="
                   selectable !== 'none' ? isSelected(item.row) : undefined
                 "
-                :class="{
-                  'ui-dt__tr--selected':
-                    selectable !== 'none' && isSelected(item.row),
-                }"
+                :class="[
+                  {
+                    'ui-dt__tr--selected':
+                      selectable !== 'none' && isSelected(item.row),
+                  },
+                  rowClass ? rowClass(item.row) : undefined,
+                ]"
                 :style="{
                   height: rowHeight + 'px',
                   gridTemplateColumns: templateColumns,
@@ -584,16 +644,19 @@ function onGridKeydown(event: KeyboardEvent): void {
 
         <!-- Paginated rows -->
         <template v-else>
+          <template v-for="(row, i) in visibleRows" :key="rowKeyOf(row)">
           <div
-            v-for="(row, i) in visibleRows"
-            :key="rowKeyOf(row)"
             role="row"
             class="ui-dt__tr"
             :aria-rowindex="i + 2"
             :aria-selected="selectable !== 'none' ? isSelected(row) : undefined"
-            :class="{
-              'ui-dt__tr--selected': selectable !== 'none' && isSelected(row),
-            }"
+            :class="[
+              {
+                'ui-dt__tr--selected': selectable !== 'none' && isSelected(row),
+                'ui-dt__tr--expanded': isExpanded(row),
+              },
+              rowClass ? rowClass(row) : undefined,
+            ]"
             :style="{ gridTemplateColumns: templateColumns }"
           >
             <div
@@ -633,6 +696,19 @@ function onGridKeydown(event: KeyboardEvent): void {
               </slot>
             </div>
           </div>
+
+          <!--
+            La fila de detalle: una sola celda que ocupa todas las columnas.
+            Sin `grid-column: 1 / -1` heredaria la rejilla de la tabla y el
+            contenido saldria troceado en celdas, que es como se ve un cajon
+            metido dentro de una tabla sin pensarlo.
+          -->
+          <div v-if="isExpanded(row)" role="row" class="ui-dt__detail">
+            <div role="gridcell" class="ui-dt__detail-cell">
+              <slot name="row-detail" :row="row" />
+            </div>
+          </div>
+          </template>
         </template>
       </div>
     </div>

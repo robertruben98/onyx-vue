@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import "./switch.scss";
-
-let nextId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -29,7 +27,8 @@ const checked = defineModel<boolean>({ default: false });
 /** Emitted on every change (in addition to the v-model update). */
 const emit = defineEmits<{ checkedChange: [value: boolean] }>();
 
-const inputId = `ui-switch-${nextId++}`;
+const uid = useId();
+const inputId = `ui-switch-${uid}`;
 
 const rootClasses = computed(() => ({
   "ui-switch": true,

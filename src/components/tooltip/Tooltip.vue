@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
 import "./tooltip.scss";
 
 export type TooltipPlacement = "top" | "bottom" | "left" | "right";
-
-let nextTooltipId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -26,7 +24,8 @@ const paneRef = ref<HTMLElement | null>(null);
 const shown = ref(false);
 const paneStyle = ref<Record<string, string>>({});
 
-const id = `ui-tooltip-${nextTooltipId++}`;
+const uid = useId();
+const id = `ui-tooltip-${uid}`;
 
 /** Only shown when there is text to display (mirrors the Angular guard). */
 const canShow = computed(() => !!props.text);

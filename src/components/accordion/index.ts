@@ -5,4 +5,4 @@ export {
   type AccordionHost,
   type AccordionItemRef,
 } from "./accordion-host";
-export { accordionDemos } from "./accordion.demos";
+export { accordionDoc } from "./accordion.docs";

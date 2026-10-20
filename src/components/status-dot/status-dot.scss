@@ -1,0 +1,28 @@
+// Status dot — a state carrier, not decoration. References ONLY semantic /
+// component tokens. The dot is round by meaning, so it keeps --ui-radii-full
+// even under the console preset, which squares off every other corner.
+
+.ui-status-dot {
+  display: inline-block;
+  flex: none;
+  width: var(--ui-status-dot-size);
+  height: var(--ui-status-dot-size);
+  border-radius: var(--ui-radii-full);
+  background-color: var(--ui-status-dot-unknown);
+}
+
+.ui-status-dot--live {
+  background-color: var(--ui-status-dot-live);
+}
+.ui-status-dot--dead {
+  background-color: var(--ui-status-dot-dead);
+}
+.ui-status-dot--warn {
+  background-color: var(--ui-status-dot-warn);
+}
+.ui-status-dot--off {
+  background-color: var(--ui-status-dot-off);
+}
+.ui-status-dot--unknown {
+  background-color: var(--ui-status-dot-unknown);
+}

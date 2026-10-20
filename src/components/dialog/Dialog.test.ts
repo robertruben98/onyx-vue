@@ -149,4 +149,23 @@ describe("Dialog (Vue)", () => {
     const dialog = await screen.findByRole("dialog");
     expect(await axe(dialog, axeOptions)).toHaveNoViolations();
   });
+
+  it("gives independent heading ids to two dialogs open together", async () => {
+    render({
+      render() {
+        return h("div", [
+          h(Dialog, { open: true, heading: "First" }, { default: () => h("p", "Body 1") }),
+          h(Dialog, { open: true, heading: "Second" }, { default: () => h("p", "Body 2") }),
+        ]);
+      },
+    });
+    const dialogs = await screen.findAllByRole("dialog");
+    expect(dialogs.length).toBe(2);
+    const [firstId, secondId] = dialogs.map((d) => d.getAttribute("aria-labelledby"));
+    expect(firstId).toBeTruthy();
+    expect(secondId).toBeTruthy();
+    expect(firstId).not.toBe(secondId);
+    expect(document.getElementById(firstId!)?.textContent).toBe("First");
+    expect(document.getElementById(secondId!)?.textContent).toBe("Second");
+  });
 });

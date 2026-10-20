@@ -1,2 +1,2 @@
 export { default as UiTextarea } from "./Textarea.vue";
-export { textareaDemos } from "./textarea.demos";
+export { textareaDoc } from "./textarea.docs";

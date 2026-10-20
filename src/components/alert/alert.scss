@@ -83,3 +83,25 @@
 .ui-alert--danger .ui-alert__title {
   color: var(--ui-alert-danger-accent);
 }
+
+.ui-alert__icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ui-alert__action {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+// The band: full-bleed, square, no side accent, ruled off from what follows.
+// That is what makes several in a row read as a list of notices rather than a
+// stack of cards.
+.ui-alert--band .ui-alert__el {
+  padding: var(--ui-alert-band-padding-y) var(--ui-alert-band-padding-x);
+  border-left: 0;
+  border-radius: 0;
+  border-bottom: var(--ui-border-width) solid var(--ui-alert-band-border);
+}

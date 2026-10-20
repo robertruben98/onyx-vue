@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, useId } from "vue";
 import "./textarea.scss";
-
-let nextId = 0;
 
 const props = withDefaults(
   defineProps<{
@@ -35,7 +33,8 @@ const model = defineModel<string>({ default: "" });
 /** Emitted on every value change (in addition to v-model). */
 const emit = defineEmits<{ valueChange: [value: string] }>();
 
-const inputId = `ui-textarea-${nextId++}`;
+const uid = useId();
+const inputId = `ui-textarea-${uid}`;
 
 const rootClasses = computed(() => ({
   "ui-textarea": true,

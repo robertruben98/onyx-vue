@@ -37,6 +37,12 @@
   background-color: var(--ui-tag-neutral-bg);
   color: var(--ui-tag-neutral-text);
 }
+// `muted` says what a row IS — a draft — rather than warning about it, so it
+// recedes instead of competing with the tags that do carry a warning.
+.ui-tag--muted {
+  background-color: var(--ui-tag-muted-bg);
+  color: var(--ui-tag-muted-text);
+}
 .ui-tag--info {
   background-color: var(--ui-tag-info-bg);
   color: var(--ui-tag-info-text);

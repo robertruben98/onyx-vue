@@ -61,6 +61,25 @@
   background-color: var(--ui-color-surface-hover);
 }
 
+// Destructiva. Sale de los tokens semanticos de danger, sin capa propia de
+// component tokens: `tokens.css` se reusa TAL CUAL de la lib de Angular
+// ("Do not edit directly, this file was auto-generated"), asi que un
+// --ui-button-danger-* declarado aqui se perderia en la siguiente sincronia.
+// Cada preset reencamina --ui-color-danger, de modo que la variante lo sigue.
+//
+// Empieza en tinta plana con borde y solo se llena de color al pasar por
+// encima: un boton ya rojo del todo en reposo compite con el estado de la
+// pagina, que es donde el rojo significa algo.
+.ui-button--danger .ui-button__el {
+  background-color: var(--ui-color-danger-surface);
+  color: var(--ui-color-danger);
+  border-color: var(--ui-color-danger);
+}
+.ui-button--danger .ui-button__el:hover:not(:disabled) {
+  background-color: var(--ui-color-danger);
+  color: var(--ui-color-on-primary);
+}
+
 .ui-button--text .ui-button__el {
   background-color: transparent;
   color: var(--ui-color-primary);

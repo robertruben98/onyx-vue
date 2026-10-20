@@ -1,0 +1,84 @@
+// Nav rail — the standing navigation of a console page, where every entry
+// carries how many things are behind it. References ONLY semantic / component
+// tokens.
+//
+// The count is part of the entry and not decoration: it is what tells you
+// whether a section is worth opening, so it keeps its own tri-state and never
+// collapses "nothing there" into "not loaded yet".
+
+.ui-nav-rail {
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-nav-rail__group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  padding: var(--ui-nav-rail-group-padding-y) var(--ui-nav-rail-padding-x);
+}
+
+.ui-nav-rail__group-label {
+  font-size: var(--ui-nav-rail-group-font-size);
+  font-weight: var(--ui-font-weight-medium);
+  letter-spacing: var(--ui-nav-rail-group-tracking);
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-nav-rail__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  width: 100%;
+  min-height: var(--ui-nav-rail-item-height);
+  padding: 0 var(--ui-nav-rail-padding-x);
+  border: 0;
+  border-left: var(--ui-border-width-thick) solid transparent;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--ui-nav-rail-item-font-size);
+  text-align: left;
+  text-decoration: none;
+  color: var(--ui-color-text-muted);
+  cursor: pointer;
+}
+
+.ui-nav-rail__item:hover {
+  background: var(--ui-color-surface-hover);
+  color: var(--ui-color-text);
+}
+
+.ui-nav-rail__item:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+}
+
+// The active entry is marked on its edge as well as in its colour: on a rail
+// of a dozen entries a colour change alone is easy to lose.
+.ui-nav-rail__item--active {
+  border-left-color: var(--ui-color-primary);
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
+}
+
+.ui-nav-rail__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-nav-rail__marks {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-nav-rail-marks-gap);
+  flex: none;
+  font-size: var(--ui-nav-rail-marks-font-size);
+}
+
+.ui-nav-rail__item--active .ui-nav-rail__count {
+  --ui-tri-state-count-neutral: var(--ui-color-primary);
+}

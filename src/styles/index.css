@@ -1,7 +1,10 @@
 /* Framework-agnostic Onyx token layer — reused verbatim from the Angular lib.
    Theming (light/dark, client presets) happens entirely here, never in a
    component. Toggle `.app-dark` on the root for dark mode; add `.ui-theme-acme`
-   for the acme preset. */
+   for the acme preset, or `.ui-theme-console` for the mono console look.
+   Presets that teleport (dialog, select, tooltip, popover, menu render into
+   `body`) need the class on the ROOT element, not on an inner container. */
 @import "./tokens.css";
 @import "./dark.css";
 @import "./acme.css";
+@import "./console.css";
