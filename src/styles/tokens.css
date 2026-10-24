@@ -707,6 +707,29 @@
   --ui-segmented-hover-bg: var(--ui-color-surface-hover);
   --ui-segmented-radius: var(--ui-radius);
   --ui-segmented-padding-x: var(--ui-space-3);
+  /* Raya entre segmentos y hueco alrededor del elegido (pocket: sin raya, la
+     pildora elegida flota dentro de la pista). */
+  --ui-segmented-divider: var(--ui-segmented-border);
+  --ui-segmented-inset: 0px;
+  --ui-segmented-item-radius: 0px;
+  /* --- Floating action button (0.4) ----------------------------------- */
+  --ui-fab-size: 3.25rem;
+  --ui-fab-size-compact: 3rem;
+  --ui-fab-glyph: 1.375rem;
+  --ui-fab-inset: var(--ui-space-4);
+  --ui-fab-bottom: var(--ui-space-6);
+  --ui-fab-z: 40;
+  --ui-fab-bg: var(--ui-color-primary);
+  --ui-fab-bg-hover: var(--ui-color-primary-hover);
+  --ui-fab-text: var(--ui-color-on-primary);
+  --ui-fab-font-weight: var(--ui-font-weight-bold);
+  --ui-fab-shadow: 0 10px 30px -10px rgba(10, 12, 24, 0.45);
+  /* --- Tabs that scroll (0.4): fade and arrow at the hidden edge -------- */
+  --ui-tabs-fade: 2.5rem;
+  --ui-tabs-arrow-size: 2rem;
+  --ui-tabs-arrow-bg: var(--ui-color-surface);
+  --ui-tabs-arrow-text: var(--ui-color-text);
+  --ui-tabs-arrow-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.25);
 
   --ui-slider-track: var(--ui-color-border-strong);
   --ui-slider-fill: var(--ui-color-primary);

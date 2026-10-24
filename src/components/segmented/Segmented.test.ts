@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import Segmented from "./Segmented.vue";
+import { nextTick } from "vue";
 
 // jsdom no trae CSS.escape, y user-event lo usa para buscar los radios del
 // mismo grupo al mover con las flechas. En un navegador existe.
@@ -77,5 +78,40 @@ describe("Segmented (Vue)", () => {
     expect(container.querySelector(".ui-segmented--fluid")).toBeTruthy();
     await fireEvent.click(screen.getByRole("radio", { name: "List" }));
     expect(emitted().changed[0]).toEqual(["list"]);
+  });
+
+  it("fluid keeps labels on one line: short labels when the full ones do not fit, wrapping only as a last resort", async () => {
+    // jsdom no mide: cada etiqueta "ocupa" 10px por letra en una caja de 95px.
+    const sw = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollWidth");
+    const cw = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientWidth");
+    let box = 95;
+    Object.defineProperty(HTMLElement.prototype, "scrollWidth", { configurable: true, get() { return (this.textContent?.length ?? 0) * 10; } });
+    Object.defineProperty(HTMLElement.prototype, "clientWidth", { configurable: true, get() { return box; } });
+    try {
+      const parts = [
+        { value: "1", label: "1 · Interview", short: "Interview" },
+        { value: "2", label: "2 · Role-play", short: "Role-play" },
+      ];
+      const { container, unmount } = render(Segmented, { props: { options: parts, ariaLabel: "Part", fluid: true, modelValue: "1" } });
+      await nextTick(); await nextTick(); await nextTick();
+      expect(screen.getByText("Interview")).toBeTruthy(); // 13 letras no caben en 95px; 9 si
+      expect(screen.getByRole("radio", { name: "1 · Interview" })).toBeTruthy(); // el nombre sigue entero
+      expect(container.querySelector(".ui-segmented--wrap")).toBeNull();
+      unmount();
+
+      box = 200; // ancho de sobra: las enteras
+      render(Segmented, { props: { options: parts, ariaLabel: "Part", fluid: true, modelValue: "1" } });
+      await nextTick(); await nextTick();
+      expect(screen.getByText("1 · Interview")).toBeTruthy();
+      document.body.innerHTML = "";
+
+      box = 40; // ni las cortas: se parte
+      const r = render(Segmented, { props: { options: parts, ariaLabel: "Part", fluid: true, modelValue: "1" } });
+      await nextTick(); await nextTick(); await nextTick(); await nextTick();
+      expect(r.container.querySelector(".ui-segmented--wrap")).toBeTruthy();
+    } finally {
+      if (sw) Object.defineProperty(HTMLElement.prototype, "scrollWidth", sw);
+      if (cw) Object.defineProperty(HTMLElement.prototype, "clientWidth", cw);
+    }
   });
 });

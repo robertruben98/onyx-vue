@@ -79,3 +79,64 @@
 .ui-tabs__panels {
   padding: var(--ui-tabs-panel-padding-y) var(--ui-tabs-panel-padding-x);
 }
+
+// --- Scroll hints (0.4) --------------------------------------------------------
+// La tira que se desplaza lleva un degradado y una flecha en el borde que
+// esconde pestanas; el degradado es una mascara, asi que sirve sobre cualquier
+// fondo.
+.ui-tabs__bar {
+  position: relative;
+  min-width: 0;
+}
+
+.ui-tabs__bar--hidden-start .ui-tabs__list--scroll {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade));
+  mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade));
+}
+
+.ui-tabs__bar--hidden-end .ui-tabs__list--scroll {
+  -webkit-mask-image: linear-gradient(to left, transparent, #000 var(--ui-tabs-fade));
+  mask-image: linear-gradient(to left, transparent, #000 var(--ui-tabs-fade));
+}
+
+.ui-tabs__bar--hidden-start.ui-tabs__bar--hidden-end .ui-tabs__list--scroll {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade), #000 calc(100% - var(--ui-tabs-fade)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade), #000 calc(100% - var(--ui-tabs-fade)), transparent);
+}
+
+.ui-tabs__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-tabs-arrow-size);
+  height: var(--ui-tabs-arrow-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-tabs-arrow-bg);
+  color: var(--ui-tabs-arrow-text);
+  box-shadow: var(--ui-tabs-arrow-shadow);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.ui-tabs__arrow--start {
+  left: 0;
+}
+
+.ui-tabs__arrow--end {
+  right: 0;
+}
+
+.ui-tabs__arrow svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

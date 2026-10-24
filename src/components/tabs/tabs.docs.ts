@@ -23,7 +23,7 @@ export const tabsDoc: ComponentDoc = {
       name: "overflow",
       type: "'wrap' | 'scroll'",
       default: "'wrap'",
-      description: "When the tabs do not fit: wrap onto more rows, or keep one row that scrolls sideways (phones), with the selected tab kept in view.",
+      description: "When the tabs do not fit: wrap onto more rows, or keep one row that scrolls sideways (phones). The selected tab is centred, and each edge that hides tabs shows a fade and an arrow button (for mouse and touch; the keyboard moves with the arrow keys).",
     },
     {
       name: "label",

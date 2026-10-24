@@ -47,6 +47,14 @@
   /* Botones y selectores en pildora: el gesto de "esto se pulsa". */
   --ui-button-radius: var(--ui-radii-full);
   --ui-segmented-radius: var(--ui-radii-full);
+  /* Pista suave con la pildora elegida dentro, sin rayas entre opciones. */
+  --ui-segmented-border: var(--ui-color-border);
+  --ui-segmented-divider: transparent;
+  --ui-segmented-inset: 3px;
+  --ui-segmented-item-radius: var(--ui-radii-full);
+  --ui-fab-bg: linear-gradient(135deg, var(--ui-pocket-accent), var(--ui-pocket-accent-2));
+  --ui-fab-bg-hover: linear-gradient(135deg, var(--ui-pocket-accent-hover), var(--ui-pocket-accent-2));
+  --ui-tabs-arrow-bg: var(--ui-pocket-card);
   --ui-button-font-weight: 650;
 
   --ui-border-width: 1px;

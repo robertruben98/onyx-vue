@@ -50,6 +50,7 @@ export * from "./components/group-header";
 export * from "./components/heat-strip";
 export * from "./components/hud-frame";
 export * from "./components/icon-button";
+export * from "./components/fab";
 export * from "./components/input";
 export * from "./components/key-hints";
 export * from "./components/kpi-strip";

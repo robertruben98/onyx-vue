@@ -314,10 +314,10 @@ describe("Tabs (Vue) — keyboard and markup details", () => {
     expect(screen.getAllByRole("tab")[1].getAttribute("aria-selected")).toBe("false");
   });
 
-  it("overflow=scroll keeps one row that scrolls, and brings the selected tab into view", async () => {
-    const seen: string[] = [];
-    const original = HTMLElement.prototype.scrollIntoView;
-    HTMLElement.prototype.scrollIntoView = function () { seen.push(this.textContent?.trim() || ""); };
+  it("overflow=scroll keeps one row that scrolls, and centres the selected tab", async () => {
+    const calls: { left?: number }[] = [];
+    const original = HTMLElement.prototype.scrollTo;
+    HTMLElement.prototype.scrollTo = function (o?: ScrollToOptions | number) { if (typeof o === "object") calls.push(o); } as typeof HTMLElement.prototype.scrollTo;
     const Harness = defineComponent({
       setup() { const i = ref(0); return { i }; },
       render() {
@@ -328,10 +328,45 @@ describe("Tabs (Vue) — keyboard and markup details", () => {
     const { container } = render(Harness);
     await nextTick();
     expect(container.querySelector(".ui-tabs__list--scroll")).toBeTruthy();
-    await fireEvent.click(screen.getByRole("tab", { name: "Two" }));
+    const two = screen.getByRole("tab", { name: "Two" });
+    Object.defineProperty(two, "offsetLeft", { configurable: true, value: 300 });
+    Object.defineProperty(two, "offsetWidth", { configurable: true, value: 80 });
+    const list = container.querySelector(".ui-tabs__list") as HTMLElement;
+    Object.defineProperty(list, "clientWidth", { configurable: true, value: 200 });
+    calls.length = 0;
+    await fireEvent.click(two);
     await nextTick();
-    expect(seen).toContain("Two");
-    HTMLElement.prototype.scrollIntoView = original;
+    expect(calls.at(-1)?.left).toBe(240); // 300 - (200 - 80) / 2: en el centro, no pegada al borde
+    HTMLElement.prototype.scrollTo = original;
+  });
+
+  it("overflow=scroll shows a fade and an arrow on each edge that hides tabs", async () => {
+    const { container } = render({
+      components: { Tabs, Tab },
+      template: `<Tabs overflow="scroll"><Tab label="A">a</Tab><Tab label="B">b</Tab><Tab label="C">c</Tab></Tabs>`,
+    });
+    await nextTick();
+    const bar = container.querySelector(".ui-tabs__bar") as HTMLElement;
+    const list = container.querySelector(".ui-tabs__list") as HTMLElement;
+    expect(container.querySelector(".ui-tabs__arrow")).toBeNull(); // todo cabe (jsdom mide 0)
+    Object.defineProperty(list, "clientWidth", { configurable: true, value: 200 });
+    Object.defineProperty(list, "scrollWidth", { configurable: true, value: 600 });
+    list.scrollLeft = 0;
+    await fireEvent.scroll(list);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-end")).toBe(true);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-start")).toBe(false);
+    const end = container.querySelector(".ui-tabs__arrow--end") as HTMLElement;
+    expect(end.getAttribute("aria-hidden")).toBe("true"); // el teclado ya tiene las flechas
+    list.scrollLeft = 200;
+    await fireEvent.scroll(list);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-start")).toBe(true);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-end")).toBe(true);
+    list.scrollLeft = 400;
+    await fireEvent.scroll(list);
+    expect(container.querySelector(".ui-tabs__arrow--end")).toBeNull();
+    // la flecha del principio vuelve atras
+    await fireEvent.click(container.querySelector(".ui-tabs__arrow--start") as HTMLElement);
+    expect(list.scrollLeft).toBeLessThan(400);
   });
 
   it("wraps by default", async () => {

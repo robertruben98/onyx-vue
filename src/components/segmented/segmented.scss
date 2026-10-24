@@ -9,6 +9,8 @@
   border-radius: var(--ui-segmented-radius);
   background: var(--ui-segmented-bg);
   overflow: hidden;
+  gap: var(--ui-segmented-inset);
+  padding: var(--ui-segmented-inset);
 }
 
 .ui-segmented__item {
@@ -19,7 +21,7 @@
 }
 
 .ui-segmented__item + .ui-segmented__item {
-  border-left: var(--ui-border-width) solid var(--ui-segmented-border);
+  border-left: var(--ui-border-width) solid var(--ui-segmented-divider);
 }
 
 .ui-segmented__el {
@@ -40,6 +42,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-radius: var(--ui-segmented-item-radius);
 }
 
 .ui-segmented--sm .ui-segmented__label {
@@ -73,8 +76,9 @@
 }
 
 // --- Fluid -------------------------------------------------------------------
-// Todo el ancho, a partes iguales; la etiqueta parte en dos lineas antes que
-// ensanchar la pagina ("4 · Long turn" en 360px).
+// Todo el ancho, a partes iguales y en una linea; si no cabe, el componente
+// pasa a las etiquetas cortas y, como ultimo recurso, a partir en dos lineas
+// (`--wrap`) antes que ensanchar la pagina ("4 · Long turn" en 360px).
 .ui-segmented--fluid {
   display: flex;
   width: 100%;
@@ -87,9 +91,14 @@
 .ui-segmented--fluid .ui-segmented__label {
   flex: 1 1 auto;
   justify-content: center;
-  padding: var(--ui-space-1) var(--ui-space-2);
+  // Poco margen a los lados: los segmentos son iguales y el texto va centrado,
+  // asi que cada pixel de margen se lo quita a la etiqueta ("Role-play" en 88px).
+  padding: var(--ui-space-1) var(--ui-space-1);
   line-height: 1.2;
   text-align: center;
+}
+
+.ui-segmented--wrap .ui-segmented__label {
   white-space: normal;
   // Parte entre palabras; una palabra solo se corta si sola no cabe ("Intervi-ew" no).
   overflow-wrap: break-word;

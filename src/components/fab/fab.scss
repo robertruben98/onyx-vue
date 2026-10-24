@@ -1,0 +1,94 @@
+// Floating action button. References ONLY semantic / component tokens.
+
+.ui-fab {
+  position: fixed;
+  bottom: var(--ui-fab-bottom);
+  z-index: var(--ui-fab-z);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  min-width: var(--ui-fab-size);
+  height: var(--ui-fab-size);
+  padding: 0 var(--ui-space-4);
+  border: 0;
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-fab-bg);
+  color: var(--ui-fab-text);
+  font: inherit;
+  font-weight: var(--ui-fab-font-weight);
+  box-shadow: var(--ui-fab-shadow);
+  cursor: pointer;
+  transition: padding 180ms ease, background-color 150ms ease, transform 200ms ease, opacity 200ms ease;
+}
+
+.ui-fab--end {
+  right: var(--ui-fab-inset);
+}
+
+.ui-fab--start {
+  left: var(--ui-fab-inset);
+}
+
+.ui-fab:hover {
+  background: var(--ui-fab-bg-hover);
+}
+
+.ui-fab:active {
+  transform: scale(0.96);
+}
+
+.ui-fab:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: 2px;
+}
+
+.ui-fab__glyph {
+  display: inline-flex;
+  flex: none;
+}
+
+.ui-fab__svg {
+  width: var(--ui-fab-glyph);
+  height: var(--ui-fab-glyph);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ui-fab__label {
+  max-width: 12em;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 180ms ease, opacity 120ms ease;
+}
+
+// Escondido al bajar: sale por abajo, sin dejar de existir.
+.ui-fab--hidden {
+  transform: translateY(calc(100% + var(--ui-fab-bottom)));
+  opacity: 0;
+  pointer-events: none;
+}
+
+// Compacto: un circulo con el glifo.
+.ui-fab--compact {
+  gap: 0;
+  padding: 0;
+  width: var(--ui-fab-size-compact);
+  min-width: var(--ui-fab-size-compact);
+  height: var(--ui-fab-size-compact);
+}
+
+.ui-fab--compact .ui-fab__label {
+  max-width: 0;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-fab,
+  .ui-fab__label {
+    transition: none;
+  }
+}
