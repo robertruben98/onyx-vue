@@ -91,7 +91,9 @@
 .ui-segmented--fluid .ui-segmented__label {
   flex: 1 1 auto;
   justify-content: center;
-  padding: var(--ui-space-1) var(--ui-space-2);
+  // Poco margen a los lados: los segmentos son iguales y el texto va centrado,
+  // asi que cada pixel de margen se lo quita a la etiqueta ("Role-play" en 88px).
+  padding: var(--ui-space-1) var(--ui-space-1);
   line-height: 1.2;
   text-align: center;
 }
