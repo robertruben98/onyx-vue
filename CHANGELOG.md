@@ -18,6 +18,9 @@ Consumers that build from source (the control-panel dashboard aliases
   - With `collapse-on-scroll` it shrinks to a 48px round glyph while the page scrolls down, and
     grows back at the top of the page or when scrolling up. On the English trainer the hand-made
     "Ask" pill covered the listen buttons on the right edge of every card it passed.
+  - With `hide-on-scroll` it slides out while scrolling down. It comes back when scrolling up, at
+    the top or the end of the page, and on focus. Even round, a fixed button covers whatever
+    passes under it.
   - The label is the accessible name in both shapes. Tokens `--ui-fab-*`, and `--ui-fab-bottom`
     lifts it above a bottom bar. `pocket` paints it in the brand gradient.
 - `UiTabs overflow="scroll"`: a fade and an arrow button on each edge that hides tabs, and the
@@ -29,7 +32,7 @@ Consumers that build from source (the control-panel dashboard aliases
 ### Changed
 
 - `UiSegmented fluid` keeps labels on one line. When they do not fit, it uses the options'
-  `short` labels. Only if those do not fit either does a label wrap, which used to happen at once
+  `short` labels, with less side padding. Only if those do not fit either does a label wrap, which used to happen at once
   ("1 ·" / "Interview").
 - `pocket`: segmented controls are a soft track with the chosen option as a pill inside, with no
   dark border and no lines between options. New tokens: `--ui-segmented-divider`,

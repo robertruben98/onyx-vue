@@ -11,6 +11,7 @@ export const fabDoc: ComponentDoc = {
     { name: "icon", type: "string", default: "''", description: "`d` of a 24×24 stroke icon." },
     { name: "extended", type: "boolean", default: "true", description: "Shows the label; false is always the round button." },
     { name: "collapseOnScroll", type: "boolean", default: "false", description: "Round while scrolling down, extended at the top or scrolling up." },
+    { name: "hideOnScroll", type: "boolean", default: "false", description: "Slides out while scrolling down; back scrolling up, at the top or at the end of the page, and on focus." },
     { name: "placement", type: "'end' | 'start'", default: "'end'", description: "Bottom corner it sits in." },
     { name: "#icon", type: "slot", default: "—", description: "Glyph used instead of the icon path." },
     { name: "@clicked", type: "(event: MouseEvent) => void", default: "—", description: "Activation." },
