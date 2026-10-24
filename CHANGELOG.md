@@ -9,6 +9,32 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.4.0 — 2026-10-24
+
+### Added
+
+- `UiFab`: a floating action button for the one action that must stay at hand on a long page.
+  - Extended (glyph and label) or round (`:extended="false"`).
+  - With `collapse-on-scroll` it shrinks to a 48px round glyph while the page scrolls down, and
+    grows back at the top of the page or when scrolling up. On the English trainer the hand-made
+    "Ask" pill covered the listen buttons on the right edge of every card it passed.
+  - The label is the accessible name in both shapes. Tokens `--ui-fab-*`, and `--ui-fab-bottom`
+    lifts it above a bottom bar. `pocket` paints it in the brand gradient.
+- `UiTabs overflow="scroll"`: a fade and an arrow button on each edge that hides tabs, and the
+  selected tab is centred instead of left at the edge. On a phone, nine tabs read "Today Writing
+  Speaking AI exa", and the other five were invisible. The arrows are for mouse and touch: they
+  stay out of the tab order, because the keyboard already moves with the arrow keys.
+- `UiSegmented`: options take a `short` label.
+
+### Changed
+
+- `UiSegmented fluid` keeps labels on one line. When they do not fit, it uses the options'
+  `short` labels. Only if those do not fit either does a label wrap, which used to happen at once
+  ("1 ·" / "Interview").
+- `pocket`: segmented controls are a soft track with the chosen option as a pill inside, with no
+  dark border and no lines between options. New tokens: `--ui-segmented-divider`,
+  `--ui-segmented-inset` and `--ui-segmented-item-radius`.
+
 ## 0.3.1 — 2026-10-20
 
 ### Fixed

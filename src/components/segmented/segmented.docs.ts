@@ -8,7 +8,7 @@ export const segmentedDoc: ComponentDoc = {
   imports: ["UiSegmented"],
   api: [
     { name: "v-model", type: "string", default: "''", description: "The selected value." },
-    { name: "options", type: "{ value: string; label: string; disabled?: boolean }[]", default: "—", description: "The choices, in order." },
+    { name: "options", type: "{ value: string; label: string; short?: string; disabled?: boolean }[]", default: "—", description: "The choices, in order. `short` is used when the full labels do not fit (fluid); the full label stays the accessible name." },
     { name: "ariaLabel", type: "string", default: "''", description: "Accessible name of the group." },
     { name: "size", type: "'sm' | 'md'", default: "'md'", description: "Control size." },
     { name: "disabled", type: "boolean", default: "false", description: "Disables the whole control." },
@@ -16,7 +16,7 @@ export const segmentedDoc: ComponentDoc = {
       name: "fluid",
       type: "boolean",
       default: "false",
-      description: "Full width, equal segments; a label that does not fit wraps onto a second line instead of widening the page.",
+      description: "Full width, equal segments, labels on one line. When they do not fit it switches to the `short` labels, and only if those do not fit either does a label wrap onto a second line. Never widens the page.",
     },
     { name: "@changed", type: "(value: string) => void", default: "—", description: "Emitted when the user picks another option, in addition to `v-model`." },
   ],
