@@ -53,3 +53,25 @@ describe("Fab (Vue)", () => {
     expect(screen.getByRole("button", { name: "Ask" }).classList.contains("ui-fab--start")).toBe(true);
   });
 });
+
+describe("Fab hide-on-scroll", () => {
+  afterEach(() => { Object.defineProperty(window, "scrollY", { configurable: true, value: 0 }); });
+  it("slides out scrolling down, comes back scrolling up, at the end of the page and on focus", async () => {
+    Object.defineProperty(document.documentElement, "scrollHeight", { configurable: true, value: 3000 });
+    Object.defineProperty(window, "innerHeight", { configurable: true, value: 800 });
+    render(Fab, { props: { label: "Ask", hideOnScroll: true } });
+    const btn = screen.getByRole("button", { name: "Ask" });
+    await scrollTo(500);
+    expect(btn.classList.contains("ui-fab--hidden")).toBe(true);
+    expect(btn.classList.contains("ui-fab--compact")).toBe(false); // esconder no es encoger
+    await scrollTo(400);
+    expect(btn.classList.contains("ui-fab--hidden")).toBe(false);
+    await scrollTo(900);
+    expect(btn.classList.contains("ui-fab--hidden")).toBe(true);
+    await fireEvent.focus(btn);
+    expect(btn.classList.contains("ui-fab--hidden")).toBe(false);
+    await scrollTo(1300);
+    await scrollTo(2190); // 2190 + 800 >= 3000 - 80: al final
+    expect(btn.classList.contains("ui-fab--hidden")).toBe(false);
+  });
+});
