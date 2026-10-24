@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { computed, useId } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
 import "./segmented.scss";
 
 export interface SegmentedOption {
   value: string;
   label: string;
+  /**
+   * Shorter label for when the full ones do not fit on one line (fluid only):
+   * "Interview" for "1 · Interview" on a phone. The full label stays the
+   * accessible name.
+   */
+  short?: string;
   disabled?: boolean;
 }
 export type SegmentedSize = "sm" | "md";
@@ -20,8 +26,9 @@ const props = withDefaults(
     /** Disables the whole control. */
     disabled?: boolean;
     /**
-     * Takes the full width and shares it equally; a label that does not fit
-     * wraps onto a second line instead of pushing the page wider (phones).
+     * Takes the full width and shares it equally. Labels stay on one line;
+     * when they do not fit, the options' `short` labels are used, and only if
+     * those do not fit either does a label wrap onto a second line (phones).
      */
     fluid?: boolean;
   }>(),
@@ -41,10 +48,57 @@ const emit = defineEmits<{ changed: [value: string] }>();
  */
 const name = `ui-segmented-${useId()}`;
 
+/**
+ * Fluid: una etiqueta partida en dos lineas ("1 ·" / "Interview") se lee mal.
+ * Se mide: primero las etiquetas enteras en una linea; si alguna no cabe, las
+ * cortas; si tampoco, se deja partir. Se vuelve a medir al cambiar el ancho.
+ */
+const fit = ref<"full" | "short" | "wrap">("full");
+const root = ref<HTMLElement | null>(null);
+const hasShort = computed(() => props.options.some((o) => o.short));
+function overflows(): boolean {
+  const labels = root.value?.querySelectorAll<HTMLElement>(".ui-segmented__label") ?? [];
+  return [...labels].some((l) => l.scrollWidth > l.clientWidth + 1);
+}
+async function measure(): Promise<void> {
+  if (!props.fluid || !root.value) return;
+  fit.value = "full";
+  await nextTick();
+  if (!overflows()) return;
+  if (hasShort.value) {
+    fit.value = "short";
+    await nextTick();
+    if (!overflows()) return;
+  }
+  fit.value = "wrap";
+}
+let observer: ResizeObserver | null = null;
+let lastWidth = -1;
+onMounted(() => {
+  if (!props.fluid) return;
+  void measure();
+  if (typeof ResizeObserver !== "undefined" && root.value) {
+    // Solo los cambios de ANCHO: el alto cambia al partir, y medir por eso daria vueltas.
+    observer = new ResizeObserver(([e]) => {
+      const w = Math.round(e.contentRect.width);
+      if (w !== lastWidth) { lastWidth = w; void measure(); }
+    });
+    observer.observe(root.value);
+  }
+});
+onBeforeUnmount(() => observer?.disconnect());
+watch(() => props.options.map((o) => o.label + (o.short ?? "")).join("|"), () => void measure());
+
+const shown = (opt: SegmentedOption) => (fit.value !== "full" && opt.short ? opt.short : opt.label);
+
 const rootClasses = computed(() => [
   "ui-segmented",
   `ui-segmented--${props.size}`,
-  { "ui-segmented--disabled": props.disabled, "ui-segmented--fluid": props.fluid },
+  {
+    "ui-segmented--disabled": props.disabled,
+    "ui-segmented--fluid": props.fluid,
+    "ui-segmented--wrap": props.fluid && fit.value === "wrap",
+  },
 ]);
 
 function select(value: string): void {
@@ -55,7 +109,7 @@ function select(value: string): void {
 </script>
 
 <template>
-  <div :class="rootClasses" role="radiogroup" :aria-label="ariaLabel || undefined">
+  <div ref="root" :class="rootClasses" role="radiogroup" :aria-label="ariaLabel || undefined">
     <label
       v-for="opt in options"
       :key="opt.value"
@@ -74,9 +128,10 @@ function select(value: string): void {
         :value="opt.value"
         :checked="model === opt.value"
         :disabled="disabled || !!opt.disabled"
+        :aria-label="shown(opt) !== opt.label ? opt.label : undefined"
         @change="select(opt.value)"
       />
-      <span class="ui-segmented__label">{{ opt.label }}</span>
+      <span class="ui-segmented__label" :title="shown(opt) !== opt.label ? opt.label : undefined">{{ shown(opt) }}</span>
     </label>
   </div>
 </template>
