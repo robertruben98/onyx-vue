@@ -4,6 +4,9 @@
 
 .ui-segmented {
   display: inline-flex;
+  // Border-box: con el borde y el `inset` de relleno, `width: 100%` (fluid)
+  // salia 8px mas ancho que su columna (344px en una de 336px a 360px).
+  box-sizing: border-box;
   max-width: 100%;
   border: var(--ui-border-width) solid var(--ui-segmented-border);
   border-radius: var(--ui-segmented-radius);
@@ -77,8 +80,9 @@
 
 // --- Fluid -------------------------------------------------------------------
 // Todo el ancho, a partes iguales y en una linea; si no cabe, el componente
-// pasa a las etiquetas cortas y, como ultimo recurso, a partir en dos lineas
-// (`--wrap`) antes que ensanchar la pagina ("4 · Long turn" en 360px).
+// pasa a las etiquetas cortas, luego a compacto (`--compact`) y, como ultimo
+// recurso, a partir en dos lineas (`--wrap`) antes que ensanchar la pagina
+// ("4 · Long turn" en 360px).
 .ui-segmented--fluid {
   display: flex;
   width: 100%;
@@ -98,9 +102,19 @@
   text-align: center;
 }
 
+// Compacto: el paso antes de partir. Letra pequena y casi sin margen, que en
+// 360px es lo que separa "Role-play" en una linea de "Role-" / "play".
+.ui-segmented--compact .ui-segmented__label {
+  padding: var(--ui-space-1) calc(var(--ui-space-1) / 2);
+  font-size: var(--ui-font-size-sm);
+  letter-spacing: -0.01em;
+}
+
 .ui-segmented--wrap .ui-segmented__label {
   white-space: normal;
-  // Parte entre palabras; una palabra solo se corta si sola no cabe ("Intervi-ew" no).
-  overflow-wrap: break-word;
-  hyphens: auto;
+  // Parte solo en los espacios: ni "Role-" / "play" ni "Intervi-ew". Una
+  // palabra que sola no cabe se recorta con elipsis en vez de trocearse.
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
 }

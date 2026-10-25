@@ -27,8 +27,9 @@ const props = withDefaults(
     disabled?: boolean;
     /**
      * Takes the full width and shares it equally. Labels stay on one line;
-     * when they do not fit, the options' `short` labels are used, and only if
-     * those do not fit either does a label wrap onto a second line (phones).
+     * when they do not fit, the options' `short` labels are used, then a
+     * compact step (smaller text, less padding), and only if that does not fit
+     * either does a label wrap onto a second line, at spaces only (phones).
      */
     fluid?: boolean;
   }>(),
@@ -51,9 +52,10 @@ const name = `ui-segmented-${useId()}`;
 /**
  * Fluid: una etiqueta partida en dos lineas ("1 ·" / "Interview") se lee mal.
  * Se mide: primero las etiquetas enteras en una linea; si alguna no cabe, las
- * cortas; si tampoco, se deja partir. Se vuelve a medir al cambiar el ancho.
+ * cortas; si tampoco, las mismas en compacto (letra pequena, sin apenas margen);
+ * y solo si tampoco, se deja partir. Se vuelve a medir al cambiar el ancho.
  */
-const fit = ref<"full" | "short" | "wrap">("full");
+const fit = ref<"full" | "short" | "compact" | "wrap">("full");
 const root = ref<HTMLElement | null>(null);
 const hasShort = computed(() => props.options.some((o) => o.short));
 function overflows(): boolean {
@@ -70,6 +72,9 @@ async function measure(): Promise<void> {
     await nextTick();
     if (!overflows()) return;
   }
+  fit.value = "compact";
+  await nextTick();
+  if (!overflows()) return;
   fit.value = "wrap";
 }
 let observer: ResizeObserver | null = null;
@@ -90,6 +95,11 @@ onBeforeUnmount(() => observer?.disconnect());
 watch(() => props.options.map((o) => o.label + (o.short ?? "")).join("|"), () => void measure());
 
 const shown = (opt: SegmentedOption) => (fit.value !== "full" && opt.short ? opt.short : opt.label);
+/**
+ * Al partir, solo en los espacios: el navegador tambien parte tras un guion
+ * ("Role-" / "play"), y eso solo lo evita el guion que no se parte (U+2011).
+ */
+const painted = (opt: SegmentedOption) => (fit.value === "wrap" ? shown(opt).replace(/-/g, "\u2011") : shown(opt));
 
 const rootClasses = computed(() => [
   "ui-segmented",
@@ -97,6 +107,7 @@ const rootClasses = computed(() => [
   {
     "ui-segmented--disabled": props.disabled,
     "ui-segmented--fluid": props.fluid,
+    "ui-segmented--compact": props.fluid && (fit.value === "compact" || fit.value === "wrap"),
     "ui-segmented--wrap": props.fluid && fit.value === "wrap",
   },
 ]);
@@ -128,10 +139,10 @@ function select(value: string): void {
         :value="opt.value"
         :checked="model === opt.value"
         :disabled="disabled || !!opt.disabled"
-        :aria-label="shown(opt) !== opt.label ? opt.label : undefined"
+        :aria-label="painted(opt) !== opt.label ? opt.label : undefined"
         @change="select(opt.value)"
       />
-      <span class="ui-segmented__label" :title="shown(opt) !== opt.label ? opt.label : undefined">{{ shown(opt) }}</span>
+      <span class="ui-segmented__label" :title="shown(opt) !== opt.label ? opt.label : undefined">{{ painted(opt) }}</span>
     </label>
   </div>
 </template>
