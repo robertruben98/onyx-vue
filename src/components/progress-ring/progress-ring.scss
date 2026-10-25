@@ -1,0 +1,41 @@
+// Progress ring — circular progress. References ONLY semantic / component
+// tokens. The drawing lives in src/internal/ring-svg.scss (shared with the
+// avatar ring).
+
+.ui-progress-ring {
+  --ui-progress-ring-size: var(--ui-progress-ring-size-md);
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: var(--ui-progress-ring-size);
+  height: var(--ui-progress-ring-size);
+  vertical-align: middle;
+}
+
+.ui-progress-ring--sm { --ui-progress-ring-size: var(--ui-progress-ring-size-sm); }
+.ui-progress-ring--lg { --ui-progress-ring-size: var(--ui-progress-ring-size-lg); }
+.ui-progress-ring--xl { --ui-progress-ring-size: var(--ui-progress-ring-size-xl); }
+
+.ui-progress-ring__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--ui-progress-ring-text);
+  // The centre text scales with the ring, so `sm` and `xl` read the same.
+  font-size: calc(var(--ui-progress-ring-size) * var(--ui-progress-ring-value-scale));
+  line-height: 1;
+}
+
+.ui-progress-ring__value {
+  font-weight: var(--ui-progress-ring-value-weight);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.ui-progress-ring__unit {
+  font-size: 0.6em;
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-progress-ring-unit-text);
+}

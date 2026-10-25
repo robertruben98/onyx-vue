@@ -82,6 +82,10 @@
   --ui-fab-shadow: none;
   --ui-tabs-arrow-shadow: none;
   --ui-course-switcher-panel-shadow: none;
+  --ui-stat-card-shadow: none;
+  --ui-kpi-strip-plain-shadow: none;
+  --ui-panel-card-shadow: none;
+  --ui-profile-header-shadow: none;
 
   /* --- primitivos del tema ---------------------------------------------- */
   /* Los mismos valores que `:root` en el style.css del dashboard, con el nombre

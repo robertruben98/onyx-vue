@@ -59,6 +59,14 @@
   --ui-record-button-shadow: 0 12px 26px -12px color-mix(in srgb, var(--ui-color-primary) 80%, transparent);
   --ui-tabs-arrow-bg: var(--ui-pocket-card);
   --ui-button-font-weight: 650;
+  /* 0.8: the progress ring with the brand gradient, and the profile surfaces
+     as cards that float on the floor (the night shadow follows --ui-card-shadow). */
+  --ui-progress-ring-gradient-from: var(--ui-pocket-accent);
+  --ui-progress-ring-gradient-to: var(--ui-pocket-accent-2);
+  --ui-stat-card-shadow: var(--ui-card-shadow);
+  --ui-kpi-strip-plain-shadow: var(--ui-card-shadow);
+  --ui-panel-card-shadow: var(--ui-card-shadow);
+  --ui-profile-header-shadow: var(--ui-card-shadow);
 
   --ui-border-width: 1px;
   --ui-border-width-thick: 2px;
