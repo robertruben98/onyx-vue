@@ -93,6 +93,64 @@
   height: var(--ui-button-height-lg);
 }
 
+// --- Icons (0.6) ------------------------------------------------------------
+// Decorative glyphs on either side of the label. They never shrink, so a long
+// label wraps (or is squeezed) before an icon is.
+.ui-button__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-button-icon-size);
+  height: var(--ui-button-icon-size);
+}
+
+.ui-button__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+// --- Block (0.6) ------------------------------------------------------------
+// Full width of the container: the root becomes a block and the button fills it.
+.ui-button--block {
+  display: block;
+  width: 100%;
+}
+
+.ui-button--block .ui-button__el {
+  width: 100%;
+}
+
+// --- Wrap (0.6) -------------------------------------------------------------
+// A label that does not fit goes onto a second line. The fixed height becomes a
+// minimum and the line height opens up, so two lines stay inside the button
+// instead of spilling over its border. Without `wrap` nothing changes.
+.ui-button--wrap {
+  max-width: 100%;
+}
+
+.ui-button--wrap .ui-button__el {
+  max-width: 100%;
+  height: auto;
+  min-height: var(--ui-button-height);
+  line-height: var(--ui-button-wrap-line-height);
+  white-space: normal;
+  text-align: center;
+}
+
+.ui-button--wrap .ui-button__label {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.ui-button--wrap.ui-button--sm .ui-button__el {
+  min-height: var(--ui-button-height-sm);
+}
+
+.ui-button--wrap.ui-button--lg .ui-button__el {
+  min-height: var(--ui-button-height-lg);
+}
+
 // --- Loading --------------------------------------------------------------
 .ui-button--loading .ui-button__label {
   opacity: 0.7;

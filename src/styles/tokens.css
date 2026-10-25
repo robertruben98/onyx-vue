@@ -730,6 +730,9 @@
   --ui-fab-text: var(--ui-color-on-primary);
   --ui-fab-font-weight: var(--ui-font-weight-bold);
   --ui-fab-shadow: 0 10px 30px -10px rgba(10, 12, 24, 0.45);
+  /* --- Button icons and wrapping labels (0.6) ------------------------- */
+  --ui-button-icon-size: 1.125em;
+  --ui-button-wrap-line-height: 1.25;
   /* --- Tabs that scroll (0.4): fade and arrow at the hidden edge -------- */
   --ui-tabs-fade: 2.5rem;
   --ui-tabs-arrow-size: 2rem;
