@@ -1,0 +1,53 @@
+// The ring drawing shared by UiProgressRing and UiAvatar. References ONLY
+// semantic / component tokens.
+
+.ui-ring {
+  display: block;
+  width: 100%;
+  height: 100%;
+  // The arc starts at twelve o'clock.
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.ui-ring__track {
+  fill: none;
+  stroke: var(--ui-progress-ring-track);
+}
+
+.ui-ring__arc {
+  fill: none;
+  stroke: var(--ui-progress-ring-fill);
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--ui-progress-ring-duration) var(--ui-progress-ring-easing);
+}
+
+.ui-ring--success .ui-ring__arc { stroke: var(--ui-progress-ring-fill-success); }
+.ui-ring--warning .ui-ring__arc { stroke: var(--ui-progress-ring-fill-warning); }
+.ui-ring--danger .ui-ring__arc { stroke: var(--ui-progress-ring-fill-danger); }
+.ui-ring--neutral .ui-ring__arc { stroke: var(--ui-progress-ring-fill-neutral); }
+
+.ui-ring__stop-from { stop-color: var(--ui-progress-ring-gradient-from); }
+.ui-ring__stop-to { stop-color: var(--ui-progress-ring-gradient-to); }
+
+.ui-ring--indeterminate {
+  animation: ui-ring-spin var(--ui-progress-ring-spin-duration) linear infinite;
+}
+
+@keyframes ui-ring-spin {
+  from { transform: rotate(-90deg); }
+  to { transform: rotate(270deg); }
+}
+
+// Forced colours: the track and the arc keep apart (system colours).
+@media (forced-colors: active) {
+  .ui-ring__track { stroke: GrayText; }
+  .ui-ring__arc { stroke: Highlight !important; }
+}
+
+// Reduced motion: the arc jumps to its value and the indeterminate ring stands
+// still (a quarter arc at twelve o'clock).
+@media (prefers-reduced-motion: reduce) {
+  .ui-ring__arc { transition: none; }
+  .ui-ring--indeterminate { animation: none; }
+}

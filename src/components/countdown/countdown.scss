@@ -1,0 +1,62 @@
+// Countdown — a live countdown to a moment. References ONLY semantic /
+// component tokens.
+
+.ui-countdown {
+  --ui-countdown-value-size: var(--ui-countdown-value-size-md);
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--ui-countdown-gap);
+  row-gap: 0;
+  max-width: 100%;
+  line-height: 1.15;
+}
+
+.ui-countdown--sm { --ui-countdown-value-size: var(--ui-countdown-value-size-sm); }
+.ui-countdown--lg { --ui-countdown-value-size: var(--ui-countdown-value-size-lg); }
+
+.ui-countdown__value {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.3em;
+  font-size: var(--ui-countdown-value-size);
+  font-weight: var(--ui-countdown-value-weight);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ui-countdown-value-text);
+  white-space: nowrap;
+}
+
+.ui-countdown__part {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.12em;
+}
+
+.ui-countdown__unit {
+  font-size: 0.55em;
+  font-weight: var(--ui-font-weight-medium);
+  letter-spacing: 0;
+  color: var(--ui-countdown-unit-text);
+}
+
+.ui-countdown__label {
+  font-size: var(--ui-countdown-label-size);
+  color: var(--ui-countdown-label-text);
+  overflow-wrap: anywhere;
+}
+
+// Read, not seen: the full sentence for a screen reader.
+.ui-countdown__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

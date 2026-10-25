@@ -9,6 +9,78 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.8.0 — 2026-10-25
+
+Components for a learner's profile page (phone first, 360px): a progress ring, a live
+countdown, a stat card and a profile header, plus opt-in variants of the avatar, KPI strip,
+description list, panel and progress bar. Every new prop defaults to the old behaviour.
+
+### Added
+
+- `UiProgressRing`: circular progress. `value`, `max` (100), `size` (`sm|md|lg|xl` = 40/64/96/128px,
+  or a number of px), `thickness` (percent of the diameter; 12 for `sm`, 10 otherwise), `tone`
+  (`primary|success|warning|danger|neutral`), `gradient` (from `--ui-progress-ring-gradient-from`
+  to `-to`; pocket paints indigo to violet), `label`, `valueText` (`aria-valuetext`),
+  `indeterminate` (`role="img"`, a spinning quarter arc), `showValue` (the percentage in the
+  centre) and a default slot for custom centre content. It is a `progressbar` with
+  `aria-valuenow/min/max`. The arc animates to its value (700ms) and does not move under
+  `prefers-reduced-motion`; under forced colours it uses system colours. It covers what the
+  English trainer's own `ProgressRing.vue` does (gradient, slot centre, 10/100 stroke, round cap).
+  Tokens `--ui-progress-ring-*`.
+- `UiCountdown`: a live countdown to `to` (Date, ISO string or epoch ms). `units` (`auto` = days,
+  hours and minutes without the leading zero units, or an explicit list), `format` (`long`
+  "13 h 18 min" / `short` "13:18"), `size` (`sm|md|lg`), `label` (after the figure and at the end of
+  the spoken sentence), `tick` (30s, 1s when seconds show), `now` (injectable clock),
+  `announce`, `unitLabels`. The smallest unit rounds up, so the display reaches 0 with the time.
+  It is a `role="timer"` with `aria-live="off"`: the visible figure is `aria-hidden` inside a
+  `<time datetime="PT13H18M">`, and a visually hidden sentence ("13 hours and 18 minutes to the
+  written exam") is what a screen reader reads. `announce` makes it `polite` and the sentence then
+  changes only per day, hour, ten minutes and, in the last ten, minute. Emits `ended` once at zero
+  (also on mount when the moment has passed; a later `to` re-arms it), stops its timer then and on
+  unmount; slot `#ended`. Exports `splitCountdown`, `formatCountdown`, `speakCountdown`.
+- `UiStatCard`: one prominent figure. `value`, `label`, `hint`, `tone`
+  (`neutral|primary|success|warning|danger`), `size` (`sm|md|lg`), `variant` (`card|plain`),
+  `trend` (`up|down|flat`) with `trendLabel` and `trendText`, `as` (`div|button|a`) with `href`
+  and `disabled`, `loading` (a skeleton and `aria-busy`), `emptyValue`, slots `#icon`
+  (decorative) and `#value`. The label is read first and the value is shown first and largest
+  (at least 1.5x the label). The trend direction is said in words ("Up", "Down", "No change"),
+  never only by the arrow or the colour. As a button or link: at least 44px, outline focus ring,
+  pressed state (none under reduced motion). Tokens `--ui-stat-card-*`.
+- `UiProfileHeader`: the identity hero. `name` (the heading, `headingLevel`, default 2),
+  `subtitle` or `#subtitle`, `#actions`, `#stats` (a `role="group"` named by `statsLabel`, made
+  for 2 to 4 `UiStatCard size="sm"`), `#avatar`, `avatarSrc`, `avatarSize` (`xl`),
+  `avatarGradient` (`true`), the ring pass-through (`ringValue`, `ringMax`, `ringTone`,
+  `ringGradient`, `ringLabel`) and `variant` (`plain|card`). It lays out by its own width (a
+  container query): under 26rem it stacks and centres and the stats go two by two. The avatar is
+  decorative there, because the name is the heading beside it. Tokens `--ui-profile-header-*`.
+
+### Changed (opt-in; defaults unchanged)
+
+- `UiAvatar`: size `xl` (72px), `alt` (defaults to `name`; an empty name or alt makes the
+  initials decorative instead of an unnamed `role="img"`), `gradient` (white initials on one of
+  eight gradients, always the same one for a name, every stop at 4.5:1 or more; exported
+  `avatarGradientIndex`), and a progress ring around it: `ringValue` (`null` = none), `ringMax`,
+  `ringTone`, `ringGradient`, `ringLabel` (set, the ring is a `progressbar` beside the avatar;
+  unset, it is decorative). The ring reuses the UiProgressRing drawing. A new `src` after a broken
+  one is tried again.
+- `UiKpiStrip`: `size="lg"` (big values), `variant="plain"` (spaced cards without the shared
+  table rules, the label in normal case at a readable size), an `#icon-<index>` slot per item
+  (decorative), and `hint` per item (the line under the label, the name UiStatCard uses; `sub`
+  still works, `hint` wins).
+- `UiDescriptionList`: `variant="emphasis"` (the value larger, medium weight, in the main text
+  colour; the term in normal case, muted) and `layout="inline"` ("term: value" on one line,
+  wrapping on a phone).
+- `UiPanel`: `variant="plain"` (no separator, more space after it) and `variant="card"` (a
+  surface with a border and radius). In both, the heading, body, empty line and footer share one
+  inset, and a `UiDescriptionList` inside drops its own side padding so it starts under the
+  heading too. The default panel is unchanged: its body is unpadded on purpose (a table runs edge
+  to edge, and a description list's own padding matches the header); use `padded` for prose.
+- `UiProgressBar`: `startLabel` / `endLabel` at the ends of the bar (e.g. "18" and "19"; visual
+  only, the aria values do not change) and `size` (`sm|md|lg` = 4px, `--ui-progress-height`,
+  12px).
+- Presets: pocket sets the ring gradient and gives the stat card, plain KPI cells, card panel and
+  card profile header the card shadow; console and matrix set all of these shadows to `none`.
+
 ## 0.7.0 — 2026-10-25
 
 A course switcher for learning apps: the flag of the current course with a score in the top

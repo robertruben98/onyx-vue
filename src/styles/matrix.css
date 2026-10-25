@@ -93,6 +93,10 @@
   --ui-fab-shadow: none;
   --ui-tabs-arrow-shadow: none;
   --ui-course-switcher-panel-shadow: none;
+  --ui-stat-card-shadow: none;
+  --ui-kpi-strip-plain-shadow: none;
+  --ui-panel-card-shadow: none;
+  --ui-profile-header-shadow: none;
 
   /* --- primitivos del tema ---------------------------------------------- */
   /* Seis verdes y no uno. Una pantalla de fosforo tiene rango: el destello de

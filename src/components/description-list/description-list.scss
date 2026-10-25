@@ -51,3 +51,38 @@
 .ui-description-list__value--success { color: var(--ui-color-success); }
 .ui-description-list__value--warning { color: var(--ui-color-warning); }
 .ui-description-list__value--danger { color: var(--ui-color-danger); }
+
+// --- 0.8: emphasis variant and inline layout --------------------------------
+
+// Emphasis: the value is what the page is about. The term reads as words.
+.ui-description-list--emphasis .ui-description-list__term {
+  font-size: var(--ui-description-list-emphasis-term-size);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.ui-description-list--emphasis .ui-description-list__value {
+  font-size: var(--ui-description-list-emphasis-value-size);
+  font-weight: var(--ui-description-list-emphasis-value-weight);
+}
+
+.ui-description-list--emphasis .ui-description-list__value--default {
+  color: var(--ui-color-text);
+}
+
+// Inline: "term: value" on one line; a long value wraps under its term.
+.ui-description-list--inline .ui-description-list__pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--ui-description-list-inline-gap);
+}
+
+.ui-description-list--inline .ui-description-list__term::after {
+  content: ":";
+}
+
+.ui-description-list--inline .ui-description-list__value {
+  margin: 0;
+  min-width: 0;
+}

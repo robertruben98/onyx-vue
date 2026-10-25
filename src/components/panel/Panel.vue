@@ -37,6 +37,13 @@ const props = withDefaults(
     /** Pads the body, for prose instead of a table. */
     padded?: boolean;
     /**
+     * `default`: a header band with a rule, the body unpadded (a table runs
+     * edge to edge; `padded` for prose). `plain`: no rule, more space, and the
+     * header and the body on the same inset. `card`: a surface with a radius,
+     * header and body on the same inset.
+     */
+    variant?: "default" | "plain" | "card";
+    /**
      * Renders a `<section>` region landmark named by the heading. `false`
      * renders a plain `<div>`: the heading still gives the page its outline.
      */
@@ -49,6 +56,7 @@ const props = withDefaults(
     empty: false,
     emptyText: "Nothing here.",
     padded: false,
+    variant: "default",
     landmark: true,
   },
 );
@@ -58,6 +66,8 @@ const headingId = `ui-panel-${useId()}-title`;
 const rootClasses = computed(() => ({
   "ui-panel": true,
   "ui-panel--padded": props.padded,
+  "ui-panel--plain": props.variant === "plain",
+  "ui-panel--card": props.variant === "card",
 }));
 </script>
 

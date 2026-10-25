@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import DescriptionList from "./DescriptionList.vue";
@@ -67,5 +69,41 @@ describe("DescriptionList (Vue) — tone vocabulary", () => {
     expect(classes[0]).toBe(classes[1]);
     expect(classes[1]).toBe(classes[2]);
     expect(classes[3]).toContain("ui-description-list__value--warning");
+  });
+});
+
+describe("DescriptionList (Vue) — 0.8: emphasis and inline", () => {
+  const css = readFileSync(join(process.cwd(), "src", "components", "description-list", "description-list.scss"), "utf8");
+
+  it("adds no class by default", () => {
+    const { container } = render(DescriptionList, { props: { items } });
+    const dl = container.querySelector("dl")!;
+    expect(dl.classList.contains("ui-description-list--emphasis")).toBe(false);
+    expect(dl.classList.contains("ui-description-list--inline")).toBe(false);
+  });
+
+  it("emphasis and inline are classes, and the dl keeps its pairs", () => {
+    const { container } = render(DescriptionList, { props: { items, variant: "emphasis", layout: "inline" } });
+    const dl = container.querySelector("dl")!;
+    expect(dl.classList.contains("ui-description-list--emphasis")).toBe(true);
+    expect(dl.classList.contains("ui-description-list--inline")).toBe(true);
+    expect(dl.querySelectorAll("dt")).toHaveLength(3);
+    expect(dl.querySelectorAll("dd")).toHaveLength(3);
+  });
+
+  it("emphasis: the term in normal case, the value larger in the text colour", () => {
+    expect(css).toMatch(/\.ui-description-list--emphasis \.ui-description-list__term \{[^}]*text-transform: none/);
+    expect(css).toMatch(/\.ui-description-list--emphasis \.ui-description-list__value \{[^}]*font-size: var\(--ui-description-list-emphasis-value-size\)/);
+    expect(css).toMatch(/\.ui-description-list--emphasis \.ui-description-list__value--default \{[^}]*color: var\(--ui-color-text\)/);
+  });
+
+  it("inline: one wrapping line with a colon after the term", () => {
+    expect(css).toMatch(/\.ui-description-list--inline \.ui-description-list__pair \{[^}]*display: flex;[^}]*flex-wrap: wrap/);
+    expect(css).toMatch(/\.ui-description-list--inline \.ui-description-list__term::after \{[^}]*content: ":"/);
+  });
+
+  it("has no axe violations (emphasis, inline)", async () => {
+    const { container } = render(DescriptionList, { props: { items, variant: "emphasis", layout: "inline" } });
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });

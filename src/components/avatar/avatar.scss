@@ -30,6 +30,12 @@
   font-size: var(--ui-avatar-font-size-lg);
 }
 
+.ui-avatar--xl {
+  width: var(--ui-avatar-size-xl);
+  height: var(--ui-avatar-size-xl);
+  font-size: var(--ui-avatar-font-size-xl);
+}
+
 .ui-avatar--square {
   border-radius: var(--ui-avatar-radius-square);
 }
@@ -42,4 +48,42 @@
 
 .ui-avatar__initials {
   line-height: 1;
+}
+
+// --- 0.8: gradient initials --------------------------------------------------
+// One of eight gradients, picked from the name in the component. The initials
+// are white and every stop is dark enough for 4.5:1 (styles/profile-contrast
+// test), in any theme: the gradient does not follow the page's colours.
+.ui-avatar--gradient {
+  background-color: transparent;
+  color: var(--ui-avatar-gradient-text);
+  font-weight: var(--ui-font-weight-bold);
+}
+
+@for $i from 1 through 8 {
+  .ui-avatar--gradient-#{$i} {
+    background-image: var(--ui-avatar-gradient-#{$i});
+  }
+}
+
+// --- 0.8: progress ring around the avatar -----------------------------------
+// The ring is the same drawing as UiProgressRing (src/internal/RingSvg.vue),
+// in a box that is the avatar plus (gap + width) on each side.
+.ui-avatar-ring {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: calc(var(--ui-avatar-ring-gap) + var(--ui-avatar-ring-width));
+  vertical-align: middle;
+}
+
+.ui-avatar-ring__meter {
+  position: absolute;
+  inset: 0;
+}
+
+@media (forced-colors: active) {
+  .ui-avatar--gradient {
+    forced-color-adjust: none;
+  }
 }

@@ -846,4 +846,124 @@
 
   --ui-stack-gap: var(--ui-space-3);
   --ui-grid-gap: var(--ui-space-4);
+
+  /* --- 0.8: profile components (progress ring, countdown, stat card, ----
+     profile header) and the variants of avatar, KPI strip, description list,
+     panel and progress bar ------------------------------------------------ */
+  --ui-progress-ring-size-sm: 2.5rem;
+  --ui-progress-ring-size-md: 4rem;
+  --ui-progress-ring-size-lg: 6rem;
+  --ui-progress-ring-size-xl: 8rem;
+  --ui-progress-ring-track: var(--ui-color-neutral-surface);
+  --ui-progress-ring-fill: var(--ui-color-primary);
+  --ui-progress-ring-fill-success: var(--ui-color-success);
+  --ui-progress-ring-fill-warning: var(--ui-color-warning);
+  --ui-progress-ring-fill-danger: var(--ui-color-danger);
+  --ui-progress-ring-fill-neutral: var(--ui-color-neutral);
+  --ui-progress-ring-gradient-from: var(--ui-color-primary);
+  --ui-progress-ring-gradient-to: var(--ui-color-primary);
+  --ui-progress-ring-text: var(--ui-color-text);
+  --ui-progress-ring-unit-text: var(--ui-color-text-muted);
+  --ui-progress-ring-value-scale: 0.26;
+  --ui-progress-ring-value-weight: 800;
+  --ui-progress-ring-duration: 700ms;
+  --ui-progress-ring-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ui-progress-ring-spin-duration: 1s;
+
+  --ui-countdown-gap: var(--ui-space-2);
+  --ui-countdown-value-size-sm: var(--ui-font-size-md);
+  --ui-countdown-value-size-md: 1.5rem;
+  --ui-countdown-value-size-lg: 2.25rem;
+  --ui-countdown-value-weight: 800;
+  --ui-countdown-value-text: var(--ui-color-text);
+  --ui-countdown-unit-text: var(--ui-color-text-muted);
+  --ui-countdown-label-size: var(--ui-font-size-sm);
+  --ui-countdown-label-text: var(--ui-color-text-muted);
+
+  --ui-stat-card-bg: var(--ui-color-surface);
+  --ui-stat-card-bg-hover: var(--ui-color-surface-hover);
+  --ui-stat-card-border: var(--ui-color-border);
+  --ui-stat-card-border-hover: var(--ui-color-border-strong);
+  --ui-stat-card-radius: var(--ui-radii-lg);
+  --ui-stat-card-shadow: none;
+  --ui-stat-card-padding-sm: var(--ui-space-3);
+  --ui-stat-card-padding-md: var(--ui-space-4);
+  --ui-stat-card-padding-lg: var(--ui-space-5);
+  --ui-stat-card-gap: var(--ui-space-1);
+  --ui-stat-card-value-size-sm: 1.375rem;
+  --ui-stat-card-value-size-md: 1.875rem;
+  --ui-stat-card-value-size-lg: 2.5rem;
+  --ui-stat-card-value-weight: 800;
+  --ui-stat-card-value-text: var(--ui-color-text);
+  --ui-stat-card-label-size: var(--ui-font-size-sm);
+  --ui-stat-card-label-weight: var(--ui-font-weight-medium);
+  --ui-stat-card-label-text: var(--ui-color-text-muted);
+  --ui-stat-card-hint-size: 0.8125rem;
+  --ui-stat-card-hint-text: var(--ui-color-text-muted);
+  --ui-stat-card-icon-size: 1.5rem;
+  --ui-stat-card-icon-color: var(--ui-color-primary);
+  --ui-stat-card-interactive-min-height: 44px;
+  --ui-stat-card-active-scale: 0.985;
+  --ui-stat-card-trend-up: var(--ui-color-success);
+  --ui-stat-card-trend-down: var(--ui-color-danger);
+  --ui-stat-card-trend-flat: var(--ui-color-text-muted);
+
+  --ui-profile-header-gap: var(--ui-space-4);
+  --ui-profile-header-name-size: 1.5rem;
+  --ui-profile-header-name-weight: 800;
+  --ui-profile-header-name-text: var(--ui-color-text);
+  --ui-profile-header-subtitle-size: var(--ui-font-size-md);
+  --ui-profile-header-subtitle-text: var(--ui-color-text-muted);
+  --ui-profile-header-stats-gap: var(--ui-space-2);
+  --ui-profile-header-bg: var(--ui-color-surface);
+  --ui-profile-header-border: var(--ui-color-border);
+  --ui-profile-header-radius: var(--ui-radii-xl);
+  --ui-profile-header-shadow: none;
+  --ui-profile-header-padding: var(--ui-space-4);
+
+  --ui-avatar-size-xl: 4.5rem;
+  --ui-avatar-font-size-xl: 1.75rem;
+  /* Initials on a gradient are white; every stop is dark enough for 4.5:1. */
+  --ui-avatar-gradient-text: var(--ui-white);
+  --ui-avatar-gradient-1: linear-gradient(135deg, #4338ca, #6d28d9);
+  --ui-avatar-gradient-2: linear-gradient(135deg, #1d4ed8, #0e7490);
+  --ui-avatar-gradient-3: linear-gradient(135deg, #047857, #0f766e);
+  --ui-avatar-gradient-4: linear-gradient(135deg, #b91c1c, #be123c);
+  --ui-avatar-gradient-5: linear-gradient(135deg, #c2410c, #b45309);
+  --ui-avatar-gradient-6: linear-gradient(135deg, #a21caf, #7e22ce);
+  --ui-avatar-gradient-7: linear-gradient(135deg, #334155, #475569);
+  --ui-avatar-gradient-8: linear-gradient(135deg, #15803d, #0369a1);
+  --ui-avatar-ring-gap: 2px;
+  --ui-avatar-ring-width: 4px;
+
+  --ui-kpi-strip-value-size-lg: 1.75rem;
+  --ui-kpi-strip-plain-gap: var(--ui-space-2);
+  --ui-kpi-strip-plain-bg: var(--ui-color-surface);
+  --ui-kpi-strip-plain-border: var(--ui-color-border);
+  --ui-kpi-strip-plain-radius: var(--ui-radii-lg);
+  --ui-kpi-strip-plain-shadow: none;
+  --ui-kpi-strip-plain-label-size: var(--ui-font-size-sm);
+  --ui-kpi-strip-icon-size: 1.25rem;
+  --ui-kpi-strip-icon-color: var(--ui-color-primary);
+
+  --ui-description-list-emphasis-term-size: var(--ui-font-size-sm);
+  --ui-description-list-emphasis-value-size: var(--ui-font-size-lg);
+  --ui-description-list-emphasis-value-weight: var(--ui-font-weight-medium);
+  --ui-description-list-inline-gap: var(--ui-space-2);
+
+  --ui-panel-plain-padding-x: 0;
+  --ui-panel-plain-gap: 2.25rem;
+  --ui-panel-plain-body-gap: var(--ui-space-3);
+  --ui-panel-card-bg: var(--ui-color-surface);
+  --ui-panel-card-border: var(--ui-color-border);
+  --ui-panel-card-radius: var(--ui-radii-xl);
+  --ui-panel-card-shadow: none;
+  --ui-panel-card-padding-x: var(--ui-space-4);
+  --ui-panel-card-padding-y: var(--ui-space-4);
+
+  --ui-progress-height-sm: 0.25rem;
+  --ui-progress-height-lg: 0.75rem;
+  --ui-progress-label-gap: var(--ui-space-2);
+  --ui-progress-label-size: var(--ui-font-size-sm);
+  --ui-progress-label-text: var(--ui-color-text-muted);
 }

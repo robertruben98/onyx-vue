@@ -1,0 +1,190 @@
+// Stat card — one prominent figure. References ONLY semantic / component
+// tokens.
+//
+// The value goes second in the DOM (the label is read first) and first on
+// screen: `order` puts it on top, where the eye looks for it.
+
+.ui-stat-card {
+  --ui-stat-card-value-size: var(--ui-stat-card-value-size-md);
+  --ui-stat-card-padding: var(--ui-stat-card-padding-md);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  color: var(--ui-color-text);
+}
+
+.ui-stat-card--sm {
+  --ui-stat-card-value-size: var(--ui-stat-card-value-size-sm);
+  --ui-stat-card-padding: var(--ui-stat-card-padding-sm);
+}
+
+.ui-stat-card--lg {
+  --ui-stat-card-value-size: var(--ui-stat-card-value-size-lg);
+  --ui-stat-card-padding: var(--ui-stat-card-padding-lg);
+}
+
+.ui-stat-card--card {
+  padding: var(--ui-stat-card-padding);
+  background-color: var(--ui-stat-card-bg);
+  border: var(--ui-border-width) solid var(--ui-stat-card-border);
+  border-radius: var(--ui-stat-card-radius);
+  box-shadow: var(--ui-stat-card-shadow);
+}
+
+.ui-stat-card__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: var(--ui-stat-card-icon-size);
+  height: var(--ui-stat-card-icon-size);
+  color: var(--ui-stat-card-icon-color);
+}
+
+.ui-stat-card__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ui-stat-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-stat-card-gap);
+  min-width: 0;
+}
+
+.ui-stat-card__value {
+  order: 1;
+  display: block;
+  font-size: var(--ui-stat-card-value-size);
+  font-weight: var(--ui-stat-card-value-weight);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ui-stat-card-value-text);
+  overflow-wrap: anywhere;
+}
+
+.ui-stat-card--primary .ui-stat-card__value { color: var(--ui-color-primary); }
+.ui-stat-card--success .ui-stat-card__value { color: var(--ui-color-success); }
+.ui-stat-card--warning .ui-stat-card__value { color: var(--ui-color-warning); }
+.ui-stat-card--danger .ui-stat-card__value { color: var(--ui-color-danger); }
+
+.ui-stat-card__label {
+  order: 2;
+  display: block;
+  font-size: var(--ui-stat-card-label-size);
+  font-weight: var(--ui-stat-card-label-weight);
+  line-height: 1.3;
+  color: var(--ui-stat-card-label-text);
+  overflow-wrap: anywhere;
+}
+
+.ui-stat-card__hint {
+  order: 3;
+  display: block;
+  font-size: var(--ui-stat-card-hint-size);
+  line-height: 1.3;
+  color: var(--ui-stat-card-hint-text);
+  overflow-wrap: anywhere;
+}
+
+.ui-stat-card__trend {
+  order: 4;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  font-size: var(--ui-stat-card-hint-size);
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-stat-card__trend--up { color: var(--ui-stat-card-trend-up); }
+.ui-stat-card__trend--down { color: var(--ui-stat-card-trend-down); }
+.ui-stat-card__trend--flat { color: var(--ui-stat-card-trend-flat); }
+
+.ui-stat-card__skeleton {
+  display: block;
+  width: 3.5ch;
+  height: 0.9em;
+  margin-block: 0.075em;
+  border-radius: var(--ui-skeleton-radius);
+  background-color: var(--ui-skeleton-bg);
+  animation: ui-stat-card-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes ui-stat-card-pulse {
+  50% { opacity: 0.5; }
+}
+
+.ui-stat-card__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// --- Interactive: as="button" | as="a" ---------------------------------------
+.ui-stat-card--interactive {
+  width: 100%;
+  min-height: var(--ui-stat-card-interactive-min-height);
+  margin: 0;
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+.ui-stat-card--plain.ui-stat-card--interactive {
+  padding: var(--ui-space-1);
+  background: none;
+  border: 0;
+  border-radius: var(--ui-stat-card-radius);
+}
+
+.ui-stat-card--interactive:hover:not(:disabled) {
+  background-color: var(--ui-stat-card-bg-hover);
+}
+
+.ui-stat-card--card.ui-stat-card--interactive:hover:not(:disabled) {
+  border-color: var(--ui-stat-card-border-hover);
+}
+
+.ui-stat-card--interactive:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-stat-card--interactive:active:not(:disabled) {
+  transform: scale(var(--ui-stat-card-active-scale));
+}
+
+.ui-stat-card--interactive:disabled {
+  cursor: not-allowed;
+  --ui-stat-card-value-text: var(--ui-color-disabled-text);
+  --ui-stat-card-label-text: var(--ui-color-disabled-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-stat-card--interactive {
+    transition: none;
+  }
+
+  .ui-stat-card--interactive:active:not(:disabled) {
+    transform: none;
+  }
+
+  .ui-stat-card__skeleton {
+    animation: none;
+  }
+}

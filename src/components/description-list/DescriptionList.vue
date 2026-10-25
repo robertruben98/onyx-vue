@@ -40,14 +40,23 @@ const props = withDefaults(
     ruled?: boolean;
     /** What an empty value shows. */
     emptyValue?: string;
+    /**
+     * `emphasis`: the value larger and in the main text colour, the term in
+     * normal case and muted. For a page about a person rather than a service.
+     */
+    variant?: "default" | "emphasis";
+    /** `inline`: "term: value" on one line, wrapping on a phone. */
+    layout?: "stacked" | "inline";
   }>(),
-  { columns: "auto", dense: false, ruled: true, emptyValue: "—" },
+  { columns: "auto", dense: false, ruled: true, emptyValue: "—", variant: "default", layout: "stacked" },
 );
 
 const rootClasses = computed(() => ({
   "ui-description-list": true,
   "ui-description-list--dense": props.dense,
   "ui-description-list--ruled": props.ruled,
+  "ui-description-list--emphasis": props.variant === "emphasis",
+  "ui-description-list--inline": props.layout === "inline",
 }));
 
 const rootStyle = computed(() =>

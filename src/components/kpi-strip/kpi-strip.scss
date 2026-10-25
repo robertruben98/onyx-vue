@@ -70,3 +70,54 @@
     border-bottom: var(--ui-border-width) solid var(--ui-color-border);
   }
 }
+
+// --- 0.8: icon, big values, plain variant ------------------------------------
+
+// The icon sits above the figure; it is decorative (the label names the cell).
+.ui-kpi-strip__icon {
+  order: 0;
+  display: inline-flex;
+  width: var(--ui-kpi-strip-icon-size);
+  height: var(--ui-kpi-strip-icon-size);
+  margin-bottom: var(--ui-space-1);
+  color: var(--ui-kpi-strip-icon-color);
+}
+
+.ui-kpi-strip__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ui-kpi-strip--lg .ui-kpi-strip__value {
+  font-size: var(--ui-kpi-strip-value-size-lg);
+  letter-spacing: -0.02em;
+}
+
+// Plain: spaced cards, no shared rules. The label reads as words (normal case,
+// a readable size), not as a tiny uppercase caption.
+.ui-kpi-strip--plain {
+  gap: var(--ui-kpi-strip-plain-gap);
+  border: 0;
+}
+
+.ui-kpi-strip--plain .ui-kpi-strip__cell {
+  border: var(--ui-border-width) solid var(--ui-kpi-strip-plain-border);
+  border-radius: var(--ui-kpi-strip-plain-radius);
+  background-color: var(--ui-kpi-strip-plain-bg);
+  box-shadow: var(--ui-kpi-strip-plain-shadow);
+}
+
+.ui-kpi-strip--plain .ui-kpi-strip__label {
+  font-family: inherit;
+  font-size: var(--ui-kpi-strip-plain-label-size);
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 67.5rem) {
+  .ui-kpi-strip--plain .ui-kpi-strip__cell {
+    border-bottom: var(--ui-border-width) solid var(--ui-kpi-strip-plain-border);
+  }
+}
