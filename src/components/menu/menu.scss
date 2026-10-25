@@ -23,8 +23,8 @@
 }
 
 .ui-menu__trigger:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 .ui-menu__backdrop {
@@ -63,6 +63,14 @@
 .ui-menu__item:focus-visible {
   outline: none;
   background-color: var(--ui-menu-item-hover-bg);
+}
+
+// The hover tint alone is not a focus indicator in forced-colors mode, and it
+// looks the same as the item under the mouse: the keyboard item gets a ring too,
+// inset so it sits inside the menu panel, next to its neighbours.
+.ui-menu__item:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: calc(var(--ui-focus-ring-width) * -1);
 }
 
 .ui-menu__item:disabled {

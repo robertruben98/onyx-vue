@@ -61,8 +61,10 @@
 }
 
 .ui-tabs__tab:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  // Inside the ring: a scrolling strip (overflow-x: auto) clips anything drawn
+  // outside the tab, so an outer ring lost its top and bottom.
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: calc(var(--ui-focus-ring-width) * -1);
   border-radius: var(--ui-tabs-radius);
 }
 
@@ -121,6 +123,11 @@
   box-shadow: var(--ui-tabs-arrow-shadow);
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+.ui-tabs__arrow:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 .ui-tabs__arrow--start {
