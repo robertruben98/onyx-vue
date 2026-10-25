@@ -28,9 +28,12 @@
     box-shadow 150ms ease;
 }
 
+// The ring is an outline, not a box-shadow: a preset that gives a variant its
+// own shadow (pocket's primary) used to replace the ring and leave the focused
+// button looking unfocused. An outline also survives forced-colors mode.
 .ui-button__el:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 

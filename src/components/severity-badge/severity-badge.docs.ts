@@ -9,10 +9,10 @@ export const severityBadgeDoc: ComponentDoc = {
   api: [
     {
       name: "severity",
-      type: "'critical' | 'high' | 'moderate' | 'medium' | 'low' | 'unknown'",
+      type: "'critical' | 'very-high' | 'high' | 'moderate' | 'medium' | 'low' | 'very-low' | 'unknown'",
       default: "'unknown'",
       description:
-        "Severity reported. `medium` looks like `moderate` — they share a rung — but the visible text still reads `medium`, since the default slot renders `{{ severity }}`.",
+        "Severity reported. `medium` looks like `moderate` — they share a rung — but the visible text still reads `medium`, since the default slot renders `{{ severity }}`. `very-low | low | medium | high | very-high` is a five-level scale: `very-high` looks and ranks like `critical`, `very-low` is green and ranks after `low`. Every level reaches 4.5:1 in light and dark.",
     },
     {
       name: "#default",

@@ -2,7 +2,7 @@
 import { computed, nextTick, ref, useId, watch } from "vue";
 import "./drawer.scss";
 
-export type DrawerSide = "right" | "left";
+export type DrawerSide = "right" | "left" | "bottom";
 
 /**
  * A modal side sheet: the detail of something picked from a list, opened over
@@ -17,6 +17,10 @@ export type DrawerSide = "right" | "left";
  * The body is the only part that scrolls. The heading, the toolbar (usually a
  * row of tabs) and the footer stay put, so the controls that act on what you
  * are reading never scroll away from it.
+ *
+ * `side="bottom"` is the phone shape: a sheet that rises from the bottom edge,
+ * full width, as tall as its content up to `--ui-drawer-bottom-max-height`,
+ * with the same dialog semantics and focus trap.
  */
 const props = withDefaults(
   defineProps<{
@@ -32,9 +36,9 @@ const props = withDefaults(
     closeOnEsc?: boolean;
     /** Whether a click on the backdrop closes the drawer. */
     closeOnBackdrop?: boolean;
-    /** Edge the sheet slides in from. */
+    /** Edge the sheet slides in from. `bottom` is a bottom sheet (phones). */
     side?: DrawerSide;
-    /** Sheet width; never wider than the viewport. */
+    /** Sheet width; never wider than the viewport. A bottom sheet is full width unless set. */
     width?: string;
   }>(),
   {
@@ -70,6 +74,12 @@ const hasHeading = computed(() => !!props.heading);
 const panelClasses = computed(() => ({
   "ui-drawer__panel": true,
   "ui-drawer__panel--left": props.side === "left",
+  "ui-drawer__panel--bottom": props.side === "bottom",
+}));
+
+const backdropClasses = computed(() => ({
+  "ui-drawer__backdrop": true,
+  "ui-drawer__backdrop--bottom": props.side === "bottom",
 }));
 
 const panelStyle = computed(() => (props.width ? { width: props.width } : undefined));
@@ -147,7 +157,7 @@ defineExpose({ close });
 <template>
   <div class="ui-drawer">
     <Teleport to="body">
-      <div v-if="open" class="ui-drawer__backdrop" @click="onBackdrop">
+      <div v-if="open" :class="backdropClasses" @click="onBackdrop">
         <div
           ref="panel"
           :class="panelClasses"

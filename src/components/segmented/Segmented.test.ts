@@ -110,8 +110,61 @@ describe("Segmented (Vue)", () => {
       await nextTick(); await nextTick(); await nextTick(); await nextTick();
       expect(r.container.querySelector(".ui-segmented--wrap")).toBeTruthy();
     } finally {
+      // jsdom defines both on Element.prototype: without an own descriptor to
+      // put back, the mock is deleted so it does not leak into the next test.
       if (sw) Object.defineProperty(HTMLElement.prototype, "scrollWidth", sw);
+      else delete (HTMLElement.prototype as { scrollWidth?: number }).scrollWidth;
       if (cw) Object.defineProperty(HTMLElement.prototype, "clientWidth", cw);
+      else delete (HTMLElement.prototype as { clientWidth?: number }).clientWidth;
     }
+  });
+
+  it("fluid tries a compact step before wrapping, and a wrapped label breaks only at spaces", async () => {
+    // jsdom no mide: 10px por letra, 7px en compacto, en una caja de 80px.
+    const sw = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollWidth");
+    const cw = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientWidth");
+    let box = 80;
+    Object.defineProperty(HTMLElement.prototype, "scrollWidth", {
+      configurable: true,
+      get() {
+        const perLetter = this.closest(".ui-segmented--compact") ? 7 : 10;
+        return (this.textContent?.length ?? 0) * perLetter;
+      },
+    });
+    Object.defineProperty(HTMLElement.prototype, "clientWidth", { configurable: true, get() { return box; } });
+    const parts = [
+      { value: "1", label: "1 · Interview", short: "Interview" },
+      { value: "2", label: "2 · Role-play", short: "Role-play" },
+    ];
+    const settle = async () => { for (let i = 0; i < 6; i++) await nextTick(); };
+    try {
+      const first = render(Segmented, { props: { options: parts, ariaLabel: "Part", fluid: true, modelValue: "1" } });
+      await settle();
+      // "Role-play" is 90px at full size and 63px compact: compact, not wrapped.
+      expect(first.container.querySelector(".ui-segmented--compact")).toBeTruthy();
+      expect(first.container.querySelector(".ui-segmented--wrap")).toBeNull();
+      expect(screen.getByText("Role-play")).toBeTruthy();
+      first.unmount();
+
+      box = 40; // not even compact: it wraps, and the hyphen no longer breaks
+      const second = render(Segmented, { props: { options: parts, ariaLabel: "Part", fluid: true, modelValue: "1" } });
+      await settle();
+      expect(second.container.querySelector(".ui-segmented--wrap")).toBeTruthy();
+      expect(screen.getByText("Role‑play")).toBeTruthy();
+      expect(screen.getByRole("radio", { name: "2 · Role-play" })).toBeTruthy();
+    } finally {
+      // jsdom defines both on Element.prototype: without an own descriptor to
+      // put back, the mock is deleted so it does not leak into the next test.
+      if (sw) Object.defineProperty(HTMLElement.prototype, "scrollWidth", sw);
+      else delete (HTMLElement.prototype as { scrollWidth?: number }).scrollWidth;
+      if (cw) Object.defineProperty(HTMLElement.prototype, "clientWidth", cw);
+      else delete (HTMLElement.prototype as { clientWidth?: number }).clientWidth;
+    }
+  });
+
+  it("is not compact when the labels fit", async () => {
+    const { container } = render(Segmented, { props: { options: OPTIONS, ariaLabel: "View", fluid: true, modelValue: "calendar" } });
+    await nextTick(); await nextTick();
+    expect(container.querySelector(".ui-segmented--compact")).toBeNull();
   });
 });

@@ -31,8 +31,8 @@
 }
 
 .ui-icon-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 .ui-icon-button:disabled {
@@ -52,4 +52,22 @@
 
 .ui-icon-button__glyph {
   font-size: var(--ui-font-size-sm);
+}
+
+// Con puntero grueso (dedo), un area invisible de 44px alrededor del control,
+// como UiCheckbox y UiSwitch, sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-icon-button {
+    position: relative;
+  }
+
+  .ui-icon-button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
 }

@@ -16,7 +16,7 @@ export const segmentedDoc: ComponentDoc = {
       name: "fluid",
       type: "boolean",
       default: "false",
-      description: "Full width, equal segments, labels on one line. When they do not fit it switches to the `short` labels, and only if those do not fit either does a label wrap onto a second line. Never widens the page.",
+      description: "Full width, equal segments, labels on one line. When they do not fit it switches to the `short` labels, then to a compact step (smaller text, minimal padding), and only if that does not fit either does a label wrap onto a second line, at spaces only. Border-box: never wider than its column, never widens the page.",
     },
     { name: "@changed", type: "(value: string) => void", default: "—", description: "Emitted when the user picks another option, in addition to `v-model`." },
   ],

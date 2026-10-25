@@ -14,7 +14,7 @@ export const drawerDoc: ComponentDoc = {
     { name: "closeLabel", type: "string", default: "'Close'", description: "Accessible name of the close button." },
     { name: "closeOnEsc", type: "boolean", default: "true", description: "Whether Esc closes it." },
     { name: "closeOnBackdrop", type: "boolean", default: "true", description: "Whether a backdrop click closes it." },
-    { name: "side", type: "'right' | 'left'", default: "'right'", description: "Edge it slides in from." },
+    { name: "side", type: "'right' | 'left' | 'bottom'", default: "'right'", description: "Edge it slides in from. `bottom` is a phone bottom sheet: full width, as tall as its content up to `--ui-drawer-bottom-max-height` (85dvh), rounded top corners (`--ui-drawer-bottom-radius`), same dialog semantics and focus trap." },
     { name: "width", type: "string", default: "token", description: "Sheet width (capped at the viewport)." },
     { name: "#heading", type: "slot", default: "—", description: "Rich content next to the title, e.g. a badge." },
     { name: "#toolbar", type: "slot", default: "—", description: "Fixed row under the header, usually tabs." },

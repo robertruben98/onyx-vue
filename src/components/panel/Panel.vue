@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { UiSectionHeader } from "../section-header";
 import "./panel.scss";
 
@@ -15,6 +15,10 @@ import "./panel.scss";
  * `empty` swaps the body for one line of text. A panel whose list is empty is
  * still worth keeping on screen — "nothing is waiting" is an answer — so the
  * panel does not disappear, it says so.
+ *
+ * A panel is a `region` landmark named by its heading (`aria-labelledby`, so
+ * the name is the heading itself, not a copy). A page with many panels gets a
+ * noisy landmark list; `:landmark="false"` renders a plain `<div>` instead.
  */
 const props = withDefaults(
   defineProps<{
@@ -32,6 +36,11 @@ const props = withDefaults(
     emptyText?: string;
     /** Pads the body, for prose instead of a table. */
     padded?: boolean;
+    /**
+     * Renders a `<section>` region landmark named by the heading. `false`
+     * renders a plain `<div>`: the heading still gives the page its outline.
+     */
+    landmark?: boolean;
   }>(),
   {
     count: null,
@@ -40,8 +49,11 @@ const props = withDefaults(
     empty: false,
     emptyText: "Nothing here.",
     padded: false,
+    landmark: true,
   },
 );
+
+const headingId = `ui-panel-${useId()}-title`;
 
 const rootClasses = computed(() => ({
   "ui-panel": true,
@@ -50,13 +62,18 @@ const rootClasses = computed(() => ({
 </script>
 
 <template>
-  <section :class="rootClasses" :aria-label="title">
+  <component
+    :is="landmark ? 'section' : 'div'"
+    :class="rootClasses"
+    :aria-labelledby="landmark ? headingId : undefined"
+  >
     <UiSectionHeader
       class="ui-panel__header"
       :title="title"
       :count="count"
       :quiet="quiet || empty"
       :heading-level="headingLevel"
+      :heading-id="headingId"
     >
       <template v-if="$slots.actions" #actions><slot name="actions" /></template>
       <template v-if="$slots.controls" #controls><slot name="controls" /></template>
@@ -64,5 +81,5 @@ const rootClasses = computed(() => ({
     <p v-if="empty" class="ui-panel__empty">{{ emptyText }}</p>
     <div v-else class="ui-panel__body"><slot /></div>
     <div v-if="$slots.footer" class="ui-panel__footer"><slot name="footer" /></div>
-  </section>
+  </component>
 </template>

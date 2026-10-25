@@ -32,6 +32,17 @@ const props = withDefaults(
     invalid?: boolean;
     /** Disabled state. */
     disabled?: boolean;
+    /**
+     * Read-only: the value can be read, selected and copied but not edited,
+     * and keeps the normal text colour. Use it for "your answer" after a check;
+     * `disabled` greys the text out.
+     */
+    readonly?: boolean;
+    /**
+     * Takes the full width of its container (block, `width: 100%`) instead of
+     * sitting inline at its intrinsic width.
+     */
+    fluid?: boolean;
   }>(),
   {
     type: "text",
@@ -41,6 +52,8 @@ const props = withDefaults(
     ariaLabel: "",
     invalid: false,
     disabled: false,
+    readonly: false,
+    fluid: false,
   },
 );
 
@@ -70,6 +83,7 @@ const rootClasses = computed(() => ({
   "ui-input--lg": props.size === "lg",
   "ui-input--invalid": isInvalid(),
   "ui-input--disabled": props.disabled,
+  "ui-input--fluid": props.fluid,
 }));
 
 function handleInput(event: Event): void {
@@ -115,6 +129,7 @@ defineExpose({ focus, select, elemento });
       :type="type"
       :value="value"
       :disabled="disabled"
+      :readonly="readonly || undefined"
       :placeholder="placeholder || undefined"
       :aria-label="!label && ariaLabel ? ariaLabel : undefined"
       :aria-invalid="isInvalid() ? 'true' : undefined"

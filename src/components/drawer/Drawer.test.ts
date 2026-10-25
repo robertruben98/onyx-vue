@@ -98,4 +98,47 @@ describe("Drawer (Vue)", () => {
     const dialog = await screen.findByRole("dialog");
     expect(await axe(dialog, axeOptions)).toHaveNoViolations();
   });
+
+  describe("side=bottom", () => {
+    it("is a bottom sheet: bottom classes on the panel and the backdrop", async () => {
+      renderDrawer({ side: "bottom" });
+      const dialog = await screen.findByRole("dialog");
+      expect(dialog.classList.contains("ui-drawer__panel--bottom")).toBe(true);
+      expect(dialog.parentElement?.classList.contains("ui-drawer__backdrop--bottom")).toBe(true);
+    });
+
+    it("is not a bottom sheet by default", async () => {
+      renderDrawer();
+      const dialog = await screen.findByRole("dialog");
+      expect(dialog.classList.contains("ui-drawer__panel--bottom")).toBe(false);
+    });
+
+    it("keeps the dialog semantics, focus on open and the Tab trap", async () => {
+      renderDrawer({ side: "bottom", closeLabel: "cerrar" });
+      const dialog = await screen.findByRole("dialog", { name: "run 2026-09-25-1004" });
+      expect(dialog.getAttribute("aria-modal")).toBe("true");
+      await waitFor(() => expect(document.activeElement).toBe(dialog));
+      const close = screen.getByRole("button", { name: "cerrar" });
+      const retry = screen.getByRole("button", { name: "retry" });
+      retry.focus();
+      await fireEvent.keyDown(retry, { key: "Tab" });
+      expect(document.activeElement).toBe(close);
+      close.focus();
+      await fireEvent.keyDown(close, { key: "Tab", shiftKey: true });
+      expect(document.activeElement).toBe(retry);
+    });
+
+    it("closes on Esc", async () => {
+      const { emitted } = renderDrawer({ side: "bottom" });
+      const dialog = await screen.findByRole("dialog");
+      await fireEvent.keyDown(dialog, { key: "Escape" });
+      expect(emitted()["update:open"]?.[0]).toEqual([false]);
+    });
+
+    it("has no axe violations", async () => {
+      renderDrawer({ side: "bottom" });
+      const dialog = await screen.findByRole("dialog");
+      expect(await axe(dialog, axeOptions)).toHaveNoViolations();
+    });
+  });
 });

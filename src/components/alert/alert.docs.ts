@@ -34,6 +34,12 @@ export const alertDoc: ComponentDoc = {
       description: "Accessible name for the dismiss button.",
     },
     {
+      name: "live",
+      type: "'polite' | 'assertive' | 'off'",
+      default: "undefined",
+      description: "How a screen reader announces it: `polite` (role=status), `assertive` (role=alert) or `off` (a static role=note, for hints that are there from the start). Unset, it follows the variant: `danger` is assertive, the rest polite.",
+    },
+    {
       name: "@dismissed",
       type: "() => void",
       default: "—",

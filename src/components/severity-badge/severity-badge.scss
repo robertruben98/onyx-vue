@@ -21,6 +21,10 @@
   background-color: var(--ui-severity-badge-critical-bg);
   color: var(--ui-severity-badge-critical-text);
 }
+.ui-severity-badge--very-high {
+  background-color: var(--ui-severity-badge-very-high-bg);
+  color: var(--ui-severity-badge-very-high-text);
+}
 .ui-severity-badge--high {
   background-color: var(--ui-severity-badge-high-bg);
   color: var(--ui-severity-badge-high-text);
@@ -32,6 +36,10 @@
 .ui-severity-badge--low {
   background-color: var(--ui-severity-badge-low-bg);
   color: var(--ui-severity-badge-low-text);
+}
+.ui-severity-badge--very-low {
+  background-color: var(--ui-severity-badge-very-low-bg);
+  color: var(--ui-severity-badge-very-low-text);
 }
 .ui-severity-badge--unknown {
   background-color: var(--ui-severity-badge-unknown-bg);

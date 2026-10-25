@@ -443,6 +443,10 @@
   --ui-severity-badge-low-text: var(--ui-color-info);
   --ui-severity-badge-unknown-bg: var(--ui-color-neutral-surface);
   --ui-severity-badge-unknown-text: var(--ui-color-neutral);
+  --ui-severity-badge-very-high-bg: var(--ui-severity-badge-critical-bg);
+  --ui-severity-badge-very-high-text: var(--ui-severity-badge-critical-text);
+  --ui-severity-badge-very-low-bg: var(--ui-color-success-surface);
+  --ui-severity-badge-very-low-text: var(--ui-color-success);
   --ui-tri-state-count-font-size: var(--ui-font-size-sm);
   --ui-tri-state-count-font-weight: var(--ui-font-weight-medium);
   /* Mezclado con el color de texto, como el tag apagado: el gris secundario solo
@@ -650,6 +654,8 @@
   --ui-crt-overlay-ink: 0 0 0;
   --ui-drawer-duration: 200ms;
   --ui-drawer-title-size: var(--ui-font-size-md);
+  --ui-drawer-bottom-max-height: 85dvh;
+  --ui-drawer-bottom-radius: var(--ui-radii-lg);
   --ui-toast-offset: 1.625rem;
   --ui-toast-bg: var(--ui-color-surface);
   --ui-toast-border: var(--ui-color-border-strong);
