@@ -28,3 +28,12 @@
 .ui-chip-row--scroll > * {
   flex: none;
 }
+
+// Con puntero grueso cada chip lleva un area de 44px (::after) que sobresale
+// por arriba y por abajo; la caja que se desliza la recortaria, asi que el
+// relleno vertical deja sitio para ella.
+@media (pointer: coarse) {
+  .ui-chip-row--scroll {
+    padding-block: max(var(--ui-chip-row-inset), calc((44px - var(--ui-chip-height)) / 2));
+  }
+}
