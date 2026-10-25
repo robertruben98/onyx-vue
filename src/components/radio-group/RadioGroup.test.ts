@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
-import { h } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 import RadioGroup from "./RadioGroup.vue";
 import type { RadioOption } from "./RadioGroup.vue";
 
@@ -122,5 +122,32 @@ describe("RadioGroup (Vue)", () => {
     expect(small.checked).toBe(true);
     await fireEvent.click(screen.getByRole("radio", { name: /red/i }));
     expect(small.checked).toBe(true);
+  });
+});
+
+describe("RadioGroup (Vue): a parent that refuses the change", () => {
+  it("keeps the native radio on the model value and emits again on a second tap", async () => {
+    const requests: string[] = [];
+    const Host = defineComponent({
+      setup() {
+        const size = ref("sm");
+        return () =>
+          h(RadioGroup, {
+            label: "Size",
+            options: OPTIONS,
+            modelValue: size.value,
+            "onUpdate:modelValue": (v: string) => requests.push(v),
+          });
+      },
+    });
+    render(Host);
+    const medium = screen.getByRole("radio", { name: /medium/i }) as HTMLInputElement;
+    medium.click();
+    await nextTick(); await nextTick();
+    expect(medium.checked).toBe(false);
+    expect((screen.getByRole("radio", { name: /small/i }) as HTMLInputElement).checked).toBe(true);
+    medium.click();
+    await nextTick(); await nextTick();
+    expect(requests).toEqual(["md", "md"]);
   });
 });

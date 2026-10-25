@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import Segmented from "./Segmented.vue";
-import { nextTick } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 
 // jsdom no trae CSS.escape, y user-event lo usa para buscar los radios del
 // mismo grupo al mover con las flechas. En un navegador existe.
@@ -166,5 +166,47 @@ describe("Segmented (Vue)", () => {
     const { container } = render(Segmented, { props: { options: OPTIONS, ariaLabel: "View", fluid: true, modelValue: "calendar" } });
     await nextTick(); await nextTick();
     expect(container.querySelector(".ui-segmented--compact")).toBeNull();
+  });
+});
+
+describe("Segmented (Vue): a parent that refuses the change", () => {
+  // Like a leave guard: the parent hears the request and keeps its value.
+  function refusing() {
+    const requests: string[] = [];
+    const Host = defineComponent({
+      setup() {
+        const mode = ref("calendar");
+        return () =>
+          h(Segmented, {
+            options: OPTIONS.slice(0, 2),
+            ariaLabel: "View",
+            modelValue: mode.value,
+            "onUpdate:modelValue": (v: string) => requests.push(v),
+          });
+      },
+    });
+    return { Host, requests };
+  }
+
+  it("keeps the native radio and the highlight on the model value", async () => {
+    const { Host } = refusing();
+    const { container } = render(Host);
+    const list = screen.getByRole("radio", { name: "List" }) as HTMLInputElement;
+    list.click();
+    await nextTick(); await nextTick();
+    expect(list.checked).toBe(false);
+    expect((screen.getByRole("radio", { name: "Calendar" }) as HTMLInputElement).checked).toBe(true);
+    expect(container.querySelector(".ui-segmented__item--selected")?.textContent).toContain("Calendar");
+  });
+
+  it("emits again when the refused option is tapped a second time", async () => {
+    const { Host, requests } = refusing();
+    render(Host);
+    const list = screen.getByRole("radio", { name: "List" }) as HTMLInputElement;
+    list.click();
+    await nextTick(); await nextTick();
+    list.click();
+    await nextTick(); await nextTick();
+    expect(requests).toEqual(["list", "list"]);
   });
 });

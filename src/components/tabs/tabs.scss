@@ -91,19 +91,44 @@
   min-width: 0;
 }
 
+// Bajo la flecha la tira es transparente del todo, y el degradado empieza
+// donde la flecha acaba: antes empezaba en el borde, asi que la flecha se
+// sentaba sobre media palabra ("‹ ning") que asomaba casi opaca a su lado.
+// `--ui-tabs-fade-clear` es lo que tapa la flecha y `--ui-tabs-fade-solid`
+// donde la tira vuelve a ser opaca (nunca menos de 1rem de degradado).
+.ui-tabs__list--scroll {
+  --ui-tabs-fade-clear: var(--ui-tabs-arrow-size);
+  --ui-tabs-fade-solid: max(var(--ui-tabs-fade), calc(var(--ui-tabs-arrow-size) + 1rem));
+  // Una pestana que recibe el foco (o que se lleva a la vista) queda fuera de
+  // la flecha y del degradado.
+  scroll-padding-inline: var(--ui-tabs-fade-solid);
+}
+
 .ui-tabs__bar--hidden-start .ui-tabs__list--scroll {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade));
-  mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade));
+  -webkit-mask-image: linear-gradient(to right, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
+  mask-image: linear-gradient(to right, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
 }
 
 .ui-tabs__bar--hidden-end .ui-tabs__list--scroll {
-  -webkit-mask-image: linear-gradient(to left, transparent, #000 var(--ui-tabs-fade));
-  mask-image: linear-gradient(to left, transparent, #000 var(--ui-tabs-fade));
+  -webkit-mask-image: linear-gradient(to left, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
+  mask-image: linear-gradient(to left, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
 }
 
 .ui-tabs__bar--hidden-start.ui-tabs__bar--hidden-end .ui-tabs__list--scroll {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade), #000 calc(100% - var(--ui-tabs-fade)), transparent);
-  mask-image: linear-gradient(to right, transparent, #000 var(--ui-tabs-fade), #000 calc(100% - var(--ui-tabs-fade)), transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent var(--ui-tabs-fade-clear),
+    #000 var(--ui-tabs-fade-solid),
+    #000 calc(100% - var(--ui-tabs-fade-solid)),
+    transparent calc(100% - var(--ui-tabs-fade-clear))
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent var(--ui-tabs-fade-clear),
+    #000 var(--ui-tabs-fade-solid),
+    #000 calc(100% - var(--ui-tabs-fade-solid)),
+    transparent calc(100% - var(--ui-tabs-fade-clear))
+  );
 }
 
 .ui-tabs__arrow {

@@ -369,6 +369,51 @@ describe("Tabs (Vue) — keyboard and markup details", () => {
     expect(list.scrollLeft).toBeLessThan(400);
   });
 
+  it("overflow=scroll: a tab too wide to centre clear of the arrow starts right after it", async () => {
+    const calls: { left?: number }[] = [];
+    const original = HTMLElement.prototype.scrollTo;
+    HTMLElement.prototype.scrollTo = function (o?: ScrollToOptions | number) { if (typeof o === "object") calls.push(o); } as typeof HTMLElement.prototype.scrollTo;
+    const Harness = defineComponent({
+      setup() { const i = ref(0); return { i }; },
+      render() {
+        return h(Tabs, { overflow: "scroll", selectedIndex: this.i, "onUpdate:selectedIndex": (v: number) => { this.i = v; } },
+          () => [h(Tab, { label: "One" }, () => "1"), h(Tab, { label: "Two" }, () => "2")]);
+      },
+    });
+    const { container } = render(Harness);
+    await nextTick();
+    const list = container.querySelector(".ui-tabs__list") as HTMLElement;
+    list.style.scrollPaddingLeft = "48px"; // la hoja: flecha (32) + degradado
+    Object.defineProperty(list, "clientWidth", { configurable: true, value: 200 });
+    const two = screen.getByRole("tab", { name: "Two" });
+    Object.defineProperty(two, "offsetLeft", { configurable: true, value: 300 });
+    Object.defineProperty(two, "offsetWidth", { configurable: true, value: 160 });
+    calls.length = 0;
+    await fireEvent.click(two);
+    await nextTick();
+    expect(calls.at(-1)?.left).toBe(252); // 300 - 48; centrada (280) quedaria 20px bajo la flecha
+    HTMLElement.prototype.scrollTo = original;
+  });
+
+  it("overflow=scroll: the strip is clear under the arrow and fades in after it", () => {
+    const css = readFileSync(join(process.cwd(), "src", "components", "tabs", "tabs.scss"), "utf8")
+      .replace(/^\s*\/\/.*$/gm, "");
+    // Every rule for the selector, joined: `.ui-tabs__list--scroll` has two.
+    const rule = (sel: string) =>
+      [...css.matchAll(new RegExp(`(?:^|\\n)${sel.replace(/[.]/g, "\\.")} \\{([^}]*)\\}`, "g"))].map((m) => m[1]).join("\n");
+    const scroll = rule(".ui-tabs__list--scroll");
+    expect(scroll).toContain("--ui-tabs-fade-clear: var(--ui-tabs-arrow-size)");
+    expect(scroll).toContain("--ui-tabs-fade-solid: max(var(--ui-tabs-fade), calc(var(--ui-tabs-arrow-size) + 1rem))");
+    expect(scroll).toContain("scroll-padding-inline: var(--ui-tabs-fade-solid)");
+    for (const sel of [".ui-tabs__bar--hidden-start .ui-tabs__list--scroll", ".ui-tabs__bar--hidden-end .ui-tabs__list--scroll"]) {
+      const body = rule(sel);
+      expect(body).toContain("mask-image: linear-gradient(");
+      expect(body).toContain("transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid)");
+    }
+    const both = rule(".ui-tabs__bar--hidden-start.ui-tabs__bar--hidden-end .ui-tabs__list--scroll");
+    expect(both).toContain("transparent calc(100% - var(--ui-tabs-fade-clear))");
+  });
+
   it("wraps by default", async () => {
     const { container } = await renderTabs();
     expect(container.querySelector(".ui-tabs__list--scroll")).toBeNull();

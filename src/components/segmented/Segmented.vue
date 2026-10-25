@@ -116,6 +116,18 @@ function select(value: string): void {
   if (props.disabled || value === model.value) return;
   model.value = value;
   emit("changed", value);
+  // El padre puede no aceptar el valor (una guarda que se queda donde estaba).
+  // Entonces Vue no vuelve a pintar `checked`, porque no ha cambiado, y el radio
+  // nativo se queda marcado en la opcion rechazada: el resaltado dice la vieja y
+  // volver a tocar la nueva no dispara `change`. Se resincroniza con el modelo.
+  void nextTick(syncChecked);
+}
+
+/** Native `checked` of every radio back in line with the model. */
+function syncChecked(): void {
+  root.value?.querySelectorAll<HTMLInputElement>(".ui-segmented__el").forEach((input) => {
+    input.checked = input.value === model.value;
+  });
 }
 </script>
 

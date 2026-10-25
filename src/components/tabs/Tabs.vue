@@ -83,12 +83,18 @@ function measure(): void {
   hiddenEnd.value = x + el.clientWidth < el.scrollWidth - 1;
 }
 
-/** La pestana elegida, centrada en la tira (con "nearest" quedaba pegada al borde, medio tapada por el degradado). */
+/**
+ * La pestana elegida, centrada en la tira (con "nearest" quedaba pegada al borde, medio tapada por el degradado).
+ * Si es tan ancha que centrada no libra la flecha y el degradado (el `scroll-padding-inline`
+ * de la hoja), se alinea su principio justo despues de ellos.
+ */
 function reveal(i: number, smooth = true): void {
   const el = list.value;
   const tab = trigger.value[i];
   if (!el || !tab || props.overflow !== "scroll") return;
-  const left = tab.offsetLeft - (el.clientWidth - tab.offsetWidth) / 2;
+  const inset = parseFloat(getComputedStyle(el).scrollPaddingLeft) || 0;
+  const margin = (el.clientWidth - tab.offsetWidth) / 2;
+  const left = margin >= inset ? tab.offsetLeft - margin : tab.offsetLeft - inset;
   if (typeof el.scrollTo === "function") el.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
   else el.scrollLeft = left;
   measure();
