@@ -30,6 +30,10 @@ with the keyboard. Every new prop defaults to the old behaviour.
 - `UiAlert live`: `polite` (role=status), `assertive` (role=alert) or `off` (a static role=note,
   for hints present at mount). Unset, it follows the variant as before.
 - `UiSectionHeader headingId`.
+- `UiDrawer side="bottom"`: a phone bottom sheet, full width and as tall as its content up to
+  `--ui-drawer-bottom-max-height` (85dvh), with rounded top corners
+  (`--ui-drawer-bottom-radius`). Same dialog semantics as the side sheets: focus moves in, Tab
+  is trapped, Esc and the backdrop close it, and focus goes back to the trigger.
 
 ### Changed
 
