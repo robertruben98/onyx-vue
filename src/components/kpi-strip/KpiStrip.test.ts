@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import KpiStrip from "./KpiStrip.vue";
@@ -67,5 +69,48 @@ describe("KpiStrip (Vue) — tone vocabulary", () => {
     expect(classes[1]).toBe(classes[2]);
     expect(classes[0]).toContain("ui-kpi-strip__value--default");
     expect(classes[3]).toContain("ui-kpi-strip__value--danger");
+  });
+});
+
+describe("KpiStrip (Vue) — 0.8: size, variant, icon, hint", () => {
+  it("keeps the bordered cells and normal size by default", () => {
+    const { container } = render(KpiStrip, { props: { items } });
+    const ul = container.querySelector("ul")!;
+    expect(ul.className).toBe("ui-kpi-strip");
+  });
+
+  it("lg and plain are classes", () => {
+    const { container } = render(KpiStrip, { props: { items, size: "lg", variant: "plain" } });
+    const ul = container.querySelector("ul")!;
+    expect(ul.classList.contains("ui-kpi-strip--lg")).toBe(true);
+    expect(ul.classList.contains("ui-kpi-strip--plain")).toBe(true);
+  });
+
+  it("shows a hint under the label (hint wins over sub)", () => {
+    const { container } = render(KpiStrip, {
+      props: { items: [{ label: "Level", value: 7, hint: "2,340 XP" }, { label: "b", value: 1, sub: "old", hint: "new" }] },
+    });
+    const subs = [...container.querySelectorAll(".ui-kpi-strip__sub")].map((e) => e.textContent);
+    expect(subs).toEqual(["2,340 XP", "new"]);
+  });
+
+  it("renders a decorative icon per item from its slot, only where given", () => {
+    const { container } = render(KpiStrip, { props: { items }, slots: { "icon-1": "<svg class='fire'></svg>" } });
+    const icons = container.querySelectorAll(".ui-kpi-strip__icon");
+    expect(icons).toHaveLength(1);
+    expect(icons[0].getAttribute("aria-hidden")).toBe("true");
+    expect(container.querySelectorAll("li")[1].querySelector(".fire")).toBeTruthy();
+  });
+
+  it("plain drops the shared rules and the tiny uppercase label", () => {
+    const css = readFileSync(join(process.cwd(), "src", "components", "kpi-strip", "kpi-strip.scss"), "utf8");
+    expect(css).toMatch(/\.ui-kpi-strip--plain \{[^}]*border: 0/);
+    expect(css).toMatch(/\.ui-kpi-strip--plain \.ui-kpi-strip__label \{[^}]*text-transform: none/);
+    expect(css).toMatch(/\.ui-kpi-strip--lg \.ui-kpi-strip__value \{[^}]*font-size: var\(--ui-kpi-strip-value-size-lg\)/);
+  });
+
+  it("has no axe violations (lg, plain, icon)", async () => {
+    const { container } = render(KpiStrip, { props: { items, size: "lg", variant: "plain" }, slots: { "icon-0": "<svg></svg>" } });
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });

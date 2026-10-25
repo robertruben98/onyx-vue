@@ -83,6 +83,14 @@ describe("touch targets under a coarse pointer", () => {
     expect(baseRule(sheet("course-switcher/course-switcher.scss"), selector)).toMatch(size);
   });
 
+  it("stat card: a tappable card is at least 44px tall with any pointer", () => {
+    expect(baseRule(sheet("stat-card/stat-card.scss"), ".ui-stat-card--interactive")).toContain(
+      "min-height: var(--ui-stat-card-interactive-min-height)",
+    );
+    const tokens = readFileSync(join(process.cwd(), "src", "styles", "tokens.css"), "utf8");
+    expect(tokens).toMatch(/--ui-stat-card-interactive-min-height:\s*44px/);
+  });
+
   it("course switcher: the trigger height token is 44px", () => {
     const tokens = readFileSync(join(process.cwd(), "src", "styles", "tokens.css"), "utf8");
     expect(tokens).toMatch(/--ui-course-switcher-trigger-height:\s*44px/);

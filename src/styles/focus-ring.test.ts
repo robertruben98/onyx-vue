@@ -54,6 +54,8 @@ const focusable: [file: string, selector: string][] = [
   // New in 0.7.0.
   ["course-switcher/course-switcher.scss", ".ui-course-switcher__trigger:focus-visible"],
   ["course-switcher/course-switcher.scss", ".ui-course-switcher__tile:focus-visible"],
+  // New in 0.8.0: a tappable stat card (as="button" | as="a").
+  ["stat-card/stat-card.scss", ".ui-stat-card--interactive:focus-visible"],
 ];
 
 /** Files whose every :focus-visible rule must draw with an outline, never a box-shadow. */
@@ -95,7 +97,7 @@ describe("focus ring", () => {
 
   it.each(presets)("%s never removes or replaces the outline of a focusable control", (preset) => {
     const targets =
-      /\.ui-(button|icon-button|disclosure__summary|alert__close|tag__remove|tabs__tab|tabs__arrow|select__trigger|input__el|textarea__el|checkbox__el|radio__el|switch__track|segmented__label|app-bar__toggle|menu__trigger|menu__item|fab|filter-chip|toast__dismiss|toast__action|dialog__close|drawer__close|card--interactive|chip|record-button|course-switcher__trigger|course-switcher__tile)\b/;
+      /\.ui-(button|icon-button|disclosure__summary|alert__close|tag__remove|tabs__tab|tabs__arrow|select__trigger|input__el|textarea__el|checkbox__el|radio__el|switch__track|segmented__label|app-bar__toggle|menu__trigger|menu__item|fab|filter-chip|toast__dismiss|toast__action|dialog__close|drawer__close|card--interactive|chip|record-button|course-switcher__trigger|course-switcher__tile|stat-card--interactive|stat-card)\b/;
     const offenders = rules(read("src", "styles", preset))
       .filter((r) => targets.test(r.selector) && /(^|;)\s*outline(-style|-width)?\s*:/.test(r.body))
       .map((r) => r.selector);

@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import { defineComponent } from "vue";
@@ -94,5 +96,42 @@ describe("Panel (Vue)", () => {
     expect(container.querySelector("section")).toBeNull();
     expect(container.querySelector("div.ui-panel")?.hasAttribute("aria-labelledby")).toBe(false);
     expect(screen.getByRole("heading", { name: "runs" })).toBeTruthy();
+  });
+});
+
+describe("Panel (Vue) — 0.8: plain and card", () => {
+  const css = readFileSync(join(process.cwd(), "src", "components", "panel", "panel.scss"), "utf8");
+
+  it("adds no variant class by default", () => {
+    const { container } = render(Panel, { props: { title: "x" } });
+    const root = container.firstElementChild!;
+    expect(root.className).toBe("ui-panel");
+  });
+
+  it.each(["plain", "card"] as const)("%s is a class", (variant) => {
+    const { container } = render(Panel, { props: { title: "x", variant } });
+    expect(container.firstElementChild?.classList.contains(`ui-panel--${variant}`)).toBe(true);
+  });
+
+  it.each(["plain", "card"] as const)("%s: header and body share one inset token", (variant) => {
+    const block = (sel: string) => new RegExp(`\\.ui-panel--${variant} ${sel.replace(/\./g, "\\.")} \\{([^}]*)\\}`).exec(css)?.[1] ?? "";
+    expect(css).toMatch(new RegExp(`\\.ui-panel--${variant} \\{[^}]*--ui-panel-padding-x: var\\(--ui-panel-${variant}-padding-x\\)`));
+    expect(block(".ui-panel__body")).toMatch(/padding: [^;]*var\(--ui-panel-padding-x\)/);
+    expect(block(".ui-panel__header")).toContain("border-bottom: 0");
+    // The header reads the same token (base rule).
+    expect(css).toMatch(/\.ui-panel__header \{[^}]*padding: 0 var\(--ui-panel-padding-x\)/);
+  });
+
+  it("a description list in a plain or card body is not inset a second time", () => {
+    expect(css).toMatch(/\.ui-panel--plain,\s*\.ui-panel--card \{[^}]*--ui-description-list-padding-x: 0/);
+  });
+
+  it("card has a surface, a radius and a border", () => {
+    expect(css).toMatch(/\.ui-panel--card \{[^}]*background-color: var\(--ui-panel-card-bg\)[^}]*border-radius: var\(--ui-panel-card-radius\)/);
+  });
+
+  it.each(["plain", "card"] as const)("has no axe violations (%s)", async (variant) => {
+    const { container } = render(Panel, { props: { title: "Exam", variant }, slots: { default: "<p>Monday</p>" } });
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
