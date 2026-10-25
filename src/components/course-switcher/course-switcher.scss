@@ -1,0 +1,237 @@
+// Course switcher (0.7). References ONLY semantic / component tokens.
+
+.ui-course-switcher {
+  display: inline-flex;
+  flex: none;
+}
+
+// --- Trigger: icon + badge, at least 44px with any pointer -----------------
+.ui-course-switcher__trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-course-switcher-gap);
+  box-sizing: border-box;
+  min-width: 44px;
+  min-height: var(--ui-course-switcher-trigger-height);
+  padding: 0 var(--ui-course-switcher-trigger-padding-x);
+  border: 0;
+  border-radius: var(--ui-course-switcher-trigger-radius);
+  background: var(--ui-course-switcher-trigger-bg);
+  color: var(--ui-course-switcher-trigger-text);
+  font-family: inherit;
+  font-size: var(--ui-course-switcher-badge-font-size);
+  font-weight: var(--ui-course-switcher-badge-font-weight);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease;
+}
+
+.ui-course-switcher__trigger:hover:not(:disabled),
+.ui-course-switcher--open .ui-course-switcher__trigger {
+  background: var(--ui-course-switcher-trigger-bg-hover);
+}
+
+.ui-course-switcher__trigger:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: calc(var(--ui-focus-ring-width) * -1);
+}
+
+.ui-course-switcher__trigger:disabled {
+  cursor: not-allowed;
+  color: var(--ui-color-disabled-text);
+}
+
+.ui-course-switcher__trigger-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-course-switcher-icon-size);
+  height: var(--ui-course-switcher-icon-size);
+}
+
+.ui-course-switcher__trigger-icon > svg,
+.ui-course-switcher__tile-icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ui-course-switcher__badge {
+  font-variant-numeric: tabular-nums;
+}
+
+// Sin icono propio: las dos primeras letras en una pastilla.
+.ui-course-switcher__fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-color-neutral-surface);
+  color: var(--ui-color-text);
+  font-size: 0.6em;
+  font-weight: var(--ui-font-weight-bold);
+  text-transform: uppercase;
+}
+
+// --- Layer: a transparent catcher over the whole viewport -------------------
+// The page (and the app bar) stop taking taps while the panel is open; a tap
+// anywhere outside the panel, the trigger included, lands here and closes it.
+.ui-course-switcher__layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-course-switcher-z);
+}
+
+.ui-course-switcher__backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+// Phone sheet: the page under the app bar is dimmed; the bar itself is not.
+.ui-course-switcher__layer--sheet .ui-course-switcher__backdrop::after {
+  content: "";
+  position: absolute;
+  inset: var(--ui-course-switcher-top) 0 0 0;
+  background: var(--ui-course-switcher-backdrop);
+}
+
+// --- Panel ----------------------------------------------------------------
+.ui-course-switcher__panel {
+  position: absolute;
+  top: calc(var(--ui-course-switcher-top) + var(--ui-course-switcher-panel-offset));
+  left: var(--ui-course-switcher-left);
+  box-sizing: border-box;
+  width: min(var(--ui-course-switcher-panel-width), calc(100vw - 16px));
+  max-height: calc(100dvh - var(--ui-course-switcher-top) - var(--ui-space-4));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--ui-course-switcher-panel-padding);
+  border: var(--ui-border-width) solid var(--ui-course-switcher-panel-border);
+  border-radius: var(--ui-course-switcher-panel-radius);
+  background: var(--ui-course-switcher-panel-bg);
+  color: var(--ui-color-text);
+  box-shadow: var(--ui-course-switcher-panel-shadow);
+  animation: ui-course-switcher-in var(--ui-course-switcher-duration) cubic-bezier(0.2, 0, 0, 1);
+}
+
+.ui-course-switcher__panel:focus {
+  outline: none;
+}
+
+.ui-course-switcher__layer--sheet .ui-course-switcher__panel {
+  top: var(--ui-course-switcher-top);
+  left: 0;
+  right: 0;
+  width: auto;
+  border-width: 0 0 var(--ui-border-width);
+  border-radius: 0 0 var(--ui-course-switcher-panel-radius) var(--ui-course-switcher-panel-radius);
+}
+
+@keyframes ui-course-switcher-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-course-switcher__panel {
+    animation: none;
+  }
+}
+
+// --- Tiles ------------------------------------------------------------------
+// The row is a scrolling UiChipRow: its inset keeps the first and last tile
+// and the focus ring of the focused one inside the scroll box.
+.ui-course-switcher__tiles {
+  gap: var(--ui-course-switcher-tile-gap);
+  margin: calc(var(--ui-chip-row-inset) * -1);
+}
+
+.ui-course-switcher__tile {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-1);
+  box-sizing: border-box;
+  width: var(--ui-course-switcher-tile-size);
+  min-width: 44px;
+  min-height: max(44px, var(--ui-course-switcher-tile-size));
+  padding: var(--ui-space-2) var(--ui-space-1);
+  border: var(--ui-course-switcher-tile-border-width) solid var(--ui-course-switcher-tile-border);
+  border-radius: var(--ui-course-switcher-tile-radius);
+  background: var(--ui-course-switcher-tile-bg);
+  color: var(--ui-course-switcher-tile-text);
+  font-family: inherit;
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.ui-course-switcher__tile:hover:not(:disabled) {
+  background: var(--ui-course-switcher-tile-bg-hover);
+}
+
+.ui-course-switcher__tile:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+// The selected ring is the border, in the primary colour, and a tint: the
+// focus ring is an outline outside it, so a focused selected tile shows both.
+.ui-course-switcher__tile--selected,
+.ui-course-switcher__tile--selected:hover:not(:disabled) {
+  border-color: var(--ui-course-switcher-tile-selected-border);
+  background: var(--ui-course-switcher-tile-selected-bg);
+}
+
+.ui-course-switcher__tile:disabled,
+.ui-course-switcher__tile[aria-disabled="true"] {
+  cursor: not-allowed;
+  color: var(--ui-color-disabled-text);
+}
+
+.ui-course-switcher__tile:disabled {
+  background: var(--ui-color-disabled-bg);
+}
+
+.ui-course-switcher__tile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-course-switcher-tile-icon-size);
+  height: var(--ui-course-switcher-tile-icon-size);
+}
+
+.ui-course-switcher__tile-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-course-switcher__detail {
+  margin-top: var(--ui-space-3);
+}
+
+@media (forced-colors: active) {
+  .ui-course-switcher__tile--selected {
+    border-color: Highlight;
+  }
+}
