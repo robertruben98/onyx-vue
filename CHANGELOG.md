@@ -9,6 +9,36 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.7.0 — 2026-10-25
+
+A course switcher for learning apps: the flag of the current course with a score in the top
+bar, and a panel under the bar to change course. Nothing existing changes.
+
+### Added
+
+- `UiCourseSwitcher`: a trigger button (icon of the current course plus a `badge`, at least
+  44px, outline focus ring, `aria-expanded`/`aria-controls`/`aria-haspopup="dialog"`) that opens
+  a `role="dialog"` panel anchored under the app bar that holds it. The panel has a scrolling row
+  of course tiles (built on `UiChipRow`, so the first and last tile and the focus ring are never
+  clipped) and a `#detail` slot under it for a score card.
+  - Under `sheetBelow` (600px) the panel is a full-width sheet with the page dimmed, `aria-modal`
+    and a focus trap; a tap on the dimmed page or on the flag closes it. Wider it is a popover:
+    a click outside closes it, and Tab past its end closes it and continues after the trigger.
+  - Opening focuses the selected tile. Escape closes and returns focus to the trigger.
+  - Tiles are one roving Tab stop: arrows, Home and End move between enabled tiles. The selected
+    tile is `aria-pressed="true"` and `aria-current="true"`, with a primary-colour border ring
+    and a tint (`Highlight` under forced colours).
+  - `v-model` emits only for an enabled course other than the current one, and the selected
+    tile always follows the model: a parent that refuses the change keeps the old course
+    selected. Tapping the current course closes the panel.
+  - Props `options`, `label`, `badge`, `panelLabel`, `tilesLabel`, `sheetBelow`,
+    `closeOnSelect` (default `true`), `busy` (tiles `aria-disabled`, panel `aria-busy`),
+    `disabled`; `v-model:open`; events `changed`, `opened`, `closed`; slots
+    `#icon="{ option, selected, place }"`, `#detail="{ option, close }"`, `#trigger-extra`.
+  - The panel slides in, except under `prefers-reduced-motion`.
+  - Tokens `--ui-course-switcher-*` (trigger, badge, panel, tiles, selected ring, backdrop, z).
+    Console and matrix set `--ui-course-switcher-panel-shadow: none`.
+
 ## 0.6.1 — 2026-10-25
 
 Three fixes found while testing the English trainer on a phone. No API changes.
