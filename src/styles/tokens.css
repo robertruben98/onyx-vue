@@ -733,6 +733,29 @@
   /* --- Button icons and wrapping labels (0.6) ------------------------- */
   --ui-button-icon-size: 1.125em;
   --ui-button-wrap-line-height: 1.25;
+  /* --- Interactive card (0.6) ---------------------------------------- */
+  --ui-card-interactive-min-height: 44px;
+  --ui-card-bg-hover: var(--ui-color-surface-hover);
+  --ui-card-bg-active: var(--ui-color-surface-hover);
+  --ui-card-border-hover: var(--ui-color-border-strong);
+  --ui-card-shadow-hover: 0 2px 4px rgba(15, 23, 42, 0.08), 0 6px 16px -6px rgba(15, 23, 42, 0.18);
+  --ui-card-active-scale: 0.985;
+  /* --- Suggestion chip and chip row (0.6) ---------------------------- */
+  --ui-chip-height: 2rem;
+  --ui-chip-padding-x: var(--ui-space-3);
+  --ui-chip-gap: var(--ui-space-1);
+  --ui-chip-radius: var(--ui-radii-full);
+  --ui-chip-font-size: var(--ui-font-size-sm);
+  --ui-chip-font-weight: var(--ui-font-weight-medium);
+  --ui-chip-icon-size: 1em;
+  --ui-chip-bg: var(--ui-color-surface);
+  --ui-chip-bg-hover: var(--ui-color-surface-hover);
+  --ui-chip-bg-active: var(--ui-color-surface-hover);
+  --ui-chip-text: var(--ui-color-text);
+  --ui-chip-border: var(--ui-color-border);
+  --ui-chip-border-hover: var(--ui-color-border-strong);
+  --ui-chip-row-gap: var(--ui-space-2);
+  --ui-chip-row-inset: calc(var(--ui-focus-ring-width) + var(--ui-focus-ring-offset));
   /* --- Tabs that scroll (0.4): fade and arrow at the hidden edge -------- */
   --ui-tabs-fade: 2.5rem;
   --ui-tabs-arrow-size: 2rem;

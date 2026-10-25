@@ -83,6 +83,7 @@
      y, donde hace falta jerarquia, el resplandor de fosforo (--ui-matrix-glow),
      que es luz que sale y no sombra que cae. */
   --ui-card-shadow: none;
+  --ui-card-shadow-hover: none;
   --ui-dialog-shadow: none;
   --ui-menu-shadow: none;
   --ui-popover-shadow: none;
