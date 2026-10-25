@@ -9,6 +9,50 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.5.0 — 2026-10-25
+
+Accessibility and touch, found by an end-to-end audit of the English trainer on phones and
+with the keyboard. Every new prop defaults to the old behaviour.
+
+### Added
+
+- `UiTextarea fluid` and `UiInput fluid`: block and full width. Inline, a transcript box sat at
+  230px in a 334px column. `UiSelect` was already full width.
+- `UiTextarea readonly` and `UiInput readonly`: the value can be read and copied but not edited,
+  in the normal text colour. A learner's answer shown after a check used `disabled`, at 3.05:1.
+- `UiSeverityBadge`: `very-high` and `very-low`, which with `high`, `medium` and `low` make a
+  five-level scale. `very-high` looks and ranks like `critical`; `very-low` is green and ranks
+  after `low`. Every level reaches 4.5:1 in light, dark and pocket day and night
+  (`severity-contrast.test.ts`). New tokens `--ui-severity-badge-very-high-*` and
+  `--ui-severity-badge-very-low-*`.
+- `UiPanel landmark` (default `true`): `false` renders a plain `<div>`, for a page with so many
+  panels that the landmark list turns into noise.
+- `UiAlert live`: `polite` (role=status), `assertive` (role=alert) or `off` (a static role=note,
+  for hints present at mount). Unset, it follows the variant as before.
+- `UiSectionHeader headingId`.
+
+### Changed
+
+- `UiPanel` names its region with `aria-labelledby` on its heading instead of copying the title
+  into `aria-label`.
+- `UiSegmented fluid`: between the `short` labels and wrapping there is a compact step (small
+  text, minimal padding). A label that still has to wrap breaks only at spaces, not after a
+  hyphen ("Role-" / "play") or inside a word.
+
+### Fixed
+
+- Focus rings on `UiButton`, `UiIconButton`, the `UiDisclosure` summary, the `UiAlert` close and
+  the `UiTag` remove buttons are outlines. They were box-shadows, and pocket's primary button
+  shadow replaced the ring: a focused primary button looked unfocused. An outline also survives
+  forced-colors mode. `focus-ring.test.ts` checks every preset.
+- `UiSegmented fluid` is border-box: its border and inset made it 8px wider than its column.
+- Touch targets under `(pointer: coarse)`: `UiIconButton` (40px), the `UiTabs` scroll arrows
+  (32px), the `UiAlert` close and the `UiTag` remove buttons get an invisible 44px hit area, like
+  `UiCheckbox` and `UiSwitch`. The close and remove buttons reach 24px with any pointer (WCAG
+  2.5.8; they were 12×20 and 10×17). The `UiDisclosure` summary is at least a control tall (it
+  was 42px).
+- `pocket`: disabled text goes from 2.48:1 to 3.4:1 (day) and from 3.05:1 to 3.7:1 (night).
+
 ## 0.4.0 — 2026-10-24
 
 ### Added

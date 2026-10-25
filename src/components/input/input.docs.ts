@@ -39,7 +39,9 @@ export const inputDoc: ComponentDoc = {
       default: "false",
       description: "Sets `aria-invalid` and the invalid border token.",
     },
-    { name: "disabled", type: "boolean", default: "false", description: "Disabled state." },
+    { name: "disabled", type: "boolean", default: "false", description: "Disabled state. Greys the text out; to show a value that cannot change, use `readonly`." },
+    { name: "readonly", type: "boolean", default: "false", description: "The value can be read, selected and copied but not edited, in the normal text colour (a learner's answer after a check)." },
+    { name: "fluid", type: "boolean", default: "false", description: "Block and full width: fills its column instead of sitting inline at its intrinsic width." },
     {
       name: "@valueChanged / @valueChange",
       type: "(value: string) => void",
