@@ -1,0 +1,28 @@
+// Level meter (0.6) — live input level as bars. References ONLY semantic /
+// component tokens. The colour is currentColor, so inside UiRecordButton it
+// takes the button's text colour.
+
+.ui-level-meter {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-level-meter-gap);
+  height: var(--ui-level-meter-height);
+  color: var(--ui-level-meter-color);
+}
+
+.ui-level-meter__bar {
+  display: block;
+  width: var(--ui-level-meter-bar-width);
+  height: 100%;
+  border-radius: var(--ui-radii-full);
+  background: currentColor;
+  transform-origin: center;
+  transition: transform var(--ui-level-meter-smoothing) linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-level-meter__bar {
+    transition: none;
+  }
+}

@@ -56,6 +56,7 @@ export * from "./components/fab";
 export * from "./components/input";
 export * from "./components/key-hints";
 export * from "./components/kpi-strip";
+export * from "./components/level-meter";
 export * from "./components/load-more-row";
 export * from "./components/log-lines";
 export * from "./components/menu";

@@ -776,6 +776,12 @@
   --ui-record-button-pulse-size: 14px;
   --ui-record-button-pulse-duration: 1.6s;
   --ui-record-button-ring-offset: 3px;
+  /* --- Level meter (0.6) --------------------------------------------- */
+  --ui-level-meter-height: 1.25rem;
+  --ui-level-meter-bar-width: 3px;
+  --ui-level-meter-gap: 2px;
+  --ui-level-meter-color: currentColor;
+  --ui-level-meter-smoothing: 90ms;
   /* --- Tabs that scroll (0.4): fade and arrow at the hidden edge -------- */
   --ui-tabs-fade: 2.5rem;
   --ui-tabs-arrow-size: 2rem;
