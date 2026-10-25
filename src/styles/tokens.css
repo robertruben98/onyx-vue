@@ -659,6 +659,7 @@
   --ui-toast-offset: 1.625rem;
   --ui-toast-bg: var(--ui-color-surface);
   --ui-toast-border: var(--ui-color-border-strong);
+  --ui-toast-action-text: var(--ui-color-primary);
   /* --- Actions: icon button ------------------------------------------ */
   --ui-icon-button-size: var(--ui-size-control-sm);
   --ui-icon-button-size-sm: 1.375rem;

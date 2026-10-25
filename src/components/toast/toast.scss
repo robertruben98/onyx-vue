@@ -52,8 +52,45 @@
   overflow-wrap: anywhere;
 }
 
-.ui-toast__dismiss {
+// --- Action (0.6) -------------------------------------------------------------
+// A text button ("Undo") in the accent colour; on a toned toast it takes the
+// tone, which is already the colour of the message.
+.ui-toast__action {
+  position: relative;
   flex: none;
+  min-height: 24px;
+  padding: 0 var(--ui-space-2);
+  border: 0;
+  border-radius: var(--ui-radius);
+  background: transparent;
+  color: var(--ui-toast-action-text);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: var(--ui-font-weight-bold);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ui-toast--success .ui-toast__action,
+.ui-toast--warning .ui-toast__action,
+.ui-toast--danger .ui-toast__action {
+  color: inherit;
+}
+
+.ui-toast__action:hover {
+  background: var(--ui-color-surface-hover);
+}
+
+.ui-toast__action:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-toast__dismiss {
+  position: relative;
+  flex: none;
+  min-width: 24px;
+  min-height: 24px;
   padding: 0 2px;
   font-size: var(--ui-font-size-md);
   line-height: 1;
@@ -71,6 +108,20 @@
 .ui-toast__dismiss:focus-visible {
   outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
   outline-offset: var(--ui-focus-ring-offset);
+}
+
+// Con puntero grueso, area invisible de 44px en los dos botones.
+@media (pointer: coarse) {
+  .ui-toast__action::after,
+  .ui-toast__dismiss::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
 }
 
 @keyframes ui-toast-in {
