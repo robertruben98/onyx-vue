@@ -1,0 +1,74 @@
+// Suggestion chip (0.6) — a one-shot action shaped like a chip. References ONLY
+// semantic / component tokens.
+
+.ui-chip {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-chip-gap);
+  box-sizing: border-box;
+  min-height: var(--ui-chip-height);
+  padding: 0 var(--ui-chip-padding-x);
+  border: var(--ui-border-width) solid var(--ui-chip-border);
+  border-radius: var(--ui-chip-radius);
+  background: var(--ui-chip-bg);
+  color: var(--ui-chip-text);
+  font-family: inherit;
+  font-size: var(--ui-chip-font-size);
+  font-weight: var(--ui-chip-font-weight);
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.ui-chip:hover:not(:disabled) {
+  background: var(--ui-chip-bg-hover);
+  border-color: var(--ui-chip-border-hover);
+}
+
+.ui-chip:active:not(:disabled) {
+  background: var(--ui-chip-bg-active);
+}
+
+.ui-chip:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-chip:disabled {
+  cursor: not-allowed;
+  color: var(--ui-color-disabled-text);
+  background: var(--ui-color-disabled-bg);
+  border-color: transparent;
+}
+
+.ui-chip__icon {
+  display: inline-flex;
+  flex: none;
+  width: var(--ui-chip-icon-size);
+  height: var(--ui-chip-icon-size);
+}
+
+.ui-chip__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+// Con puntero grueso, area invisible de 44px como UiCheckbox y UiSwitch.
+@media (pointer: coarse) {
+  .ui-chip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

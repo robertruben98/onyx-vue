@@ -39,3 +39,71 @@
 .ui-card__footer:empty {
   display: none;
 }
+
+// --- Interactive (0.6): as="button" | as="a" ---------------------------------
+// The whole card is one control. It keeps the card's look and adds the states a
+// control needs: hover lifts it, focus draws the shared outline ring (a preset
+// shadow cannot replace it), and pressing sinks it. A touch target never drops
+// under 44px.
+.ui-card--interactive {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--ui-card-interactive-min-height);
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  color: var(--ui-card-text);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.ui-card--interactive > .ui-card__header,
+.ui-card--interactive > .ui-card__body,
+.ui-card--interactive > .ui-card__footer {
+  display: block;
+}
+
+.ui-card--interactive:hover:not(:disabled) {
+  background-color: var(--ui-card-bg-hover);
+}
+
+.ui-card--interactive.ui-card--outlined:hover:not(:disabled) {
+  border-color: var(--ui-card-border-hover);
+}
+
+.ui-card--interactive.ui-card--elevated:hover:not(:disabled) {
+  box-shadow: var(--ui-card-shadow-hover);
+}
+
+.ui-card--interactive:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-card--interactive:active:not(:disabled) {
+  background-color: var(--ui-card-bg-active);
+  transform: scale(var(--ui-card-active-scale));
+}
+
+.ui-card--interactive:disabled {
+  cursor: not-allowed;
+  color: var(--ui-color-disabled-text);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-card--interactive {
+    transition: none;
+  }
+
+  .ui-card--interactive:active:not(:disabled) {
+    transform: none;
+  }
+}

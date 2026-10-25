@@ -19,6 +19,13 @@ const props = withDefaults(
     disabled?: boolean;
     /** Loading state — shows a spinner and suppresses interaction. */
     loading?: boolean;
+    /** Full width: the button fills its container (a block-level root). */
+    block?: boolean;
+    /**
+     * Lets a long label wrap onto more lines: the height becomes a minimum
+     * instead of a fixed value, so the text never spills out of the button.
+     */
+    wrap?: boolean;
   }>(),
   {
     variant: "primary",
@@ -26,6 +33,8 @@ const props = withDefaults(
     type: "button",
     disabled: false,
     loading: false,
+    block: false,
+    wrap: false,
   },
 );
 
@@ -49,6 +58,8 @@ const rootClasses = computed(() => ({
   "ui-button--lg": props.size === "lg",
   "ui-button--loading": props.loading,
   "ui-button--disabled": props.disabled,
+  "ui-button--block": props.block,
+  "ui-button--wrap": props.wrap,
 }));
 
 function handleClick(event: MouseEvent): void {
@@ -72,7 +83,13 @@ function handleClick(event: MouseEvent): void {
       @click="handleClick"
     >
       <span v-if="loading" class="ui-button__spinner" aria-hidden="true"></span>
+      <span v-else-if="$slots.leading" class="ui-button__icon ui-button__icon--leading" aria-hidden="true"
+        ><slot name="leading"
+      /></span>
       <span class="ui-button__label"><slot /></span>
+      <span v-if="$slots.trailing" class="ui-button__icon ui-button__icon--trailing" aria-hidden="true"
+        ><slot name="trailing"
+      /></span>
     </button>
   </span>
 </template>

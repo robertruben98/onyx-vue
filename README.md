@@ -74,6 +74,9 @@ import "onyx-vue/styles/matrix.css"; // and the preset you use
 - Controls forward the attributes you put on them (`aria-*`, `autocomplete`,
   `name`…) to the native element they render, not to a wrapper.
 - Dialog and Drawer trap focus and close on Escape.
+- Focus rings are outlines (`--ui-focus-ring` and `--ui-focus-ring-width`), never box-shadows:
+  no preset shadow can replace them, and they survive forced-colors mode.
+  `src/styles/focus-ring.test.ts` checks every control against every preset.
 
 ## Develop
 

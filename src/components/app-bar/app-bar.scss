@@ -130,8 +130,8 @@
 }
 
 .ui-app-bar__toggle:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 // El menu es una fila mas de la barra, a todo lo ancho: sigue siendo sticky con ella.

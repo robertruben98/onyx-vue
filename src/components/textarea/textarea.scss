@@ -44,9 +44,9 @@
 }
 
 .ui-textarea__el:focus-visible {
-  outline: none;
   border-color: var(--ui-textarea-border-focus);
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: 0;
 }
 
 .ui-textarea__el[readonly]:not(:disabled) {
@@ -64,5 +64,5 @@
   border-color: var(--ui-textarea-border-invalid);
 }
 .ui-textarea--invalid .ui-textarea__el:focus-visible {
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-textarea-border-invalid);
+  outline-color: var(--ui-textarea-border-invalid);
 }

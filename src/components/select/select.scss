@@ -27,9 +27,9 @@
 
 .ui-select__trigger:focus-visible,
 .ui-select__trigger--open {
-  outline: none;
   border-color: var(--ui-select-border-focus);
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: 0;
 }
 
 .ui-select__trigger:disabled {

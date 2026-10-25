@@ -72,6 +72,8 @@
   /* Ninguna. La profundidad la da el filete y el cambio de fondo; una sombra
      sobre #0c0d10 no se ve y solo ensucia el borde. */
   --ui-card-shadow: none;
+  --ui-card-shadow-hover: none;
+  --ui-record-button-shadow: none;
   --ui-dialog-shadow: none;
   --ui-menu-shadow: none;
   --ui-popover-shadow: none;

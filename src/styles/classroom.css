@@ -171,6 +171,7 @@
 
   /* Sombras: sobre fondo oscuro no se ven; el filete hace el trabajo. */
   --ui-card-shadow: none;
+  --ui-card-shadow-hover: none;
 }
 
 /* Los titulos en serifa de libro de texto: es lo que hace que la pagina se lea

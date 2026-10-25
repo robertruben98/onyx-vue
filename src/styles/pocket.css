@@ -54,6 +54,9 @@
   --ui-segmented-item-radius: var(--ui-radii-full);
   --ui-fab-bg: linear-gradient(135deg, var(--ui-pocket-accent), var(--ui-pocket-accent-2));
   --ui-fab-bg-hover: linear-gradient(135deg, var(--ui-pocket-accent-hover), var(--ui-pocket-accent-2));
+  --ui-record-button-bg: var(--ui-fab-bg);
+  --ui-record-button-bg-hover: var(--ui-fab-bg-hover);
+  --ui-record-button-shadow: 0 12px 26px -12px color-mix(in srgb, var(--ui-color-primary) 80%, transparent);
   --ui-tabs-arrow-bg: var(--ui-pocket-card);
   --ui-button-font-weight: 650;
 
@@ -68,6 +71,7 @@
   /* --- sombras ---------------------------------------------------------- */
   /* En capas y tintadas del propio indigo: profundidad sin bordes duros. */
   --ui-card-shadow: 0 1px 2px rgba(23, 26, 52, 0.04), 0 6px 24px -8px rgba(23, 26, 52, 0.1);
+  --ui-card-shadow-hover: 0 2px 4px rgba(23, 26, 52, 0.06), 0 12px 28px -8px rgba(23, 26, 52, 0.18);
   --ui-dialog-shadow: 0 32px 64px -24px rgba(23, 26, 52, 0.35);
   --ui-menu-shadow: 0 16px 40px -12px rgba(23, 26, 52, 0.25);
   --ui-popover-shadow: 0 16px 40px -12px rgba(23, 26, 52, 0.25);
@@ -176,6 +180,7 @@
 
   /* La sombra no se ve sobre negro: un borde de luz arriba hace de relieve. */
   --ui-card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --ui-card-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 12px 28px -12px rgba(0, 0, 0, 0.75);
 }
 
 /* --- lo que no es token --------------------------------------------------- */
