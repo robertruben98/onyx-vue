@@ -32,6 +32,11 @@ const props = withDefaults(
     invalid?: boolean;
     /** Disabled state. */
     disabled?: boolean;
+    /**
+     * Takes the full width of its container (block, `width: 100%`) instead of
+     * sitting inline at its intrinsic width.
+     */
+    fluid?: boolean;
   }>(),
   {
     type: "text",
@@ -41,6 +46,7 @@ const props = withDefaults(
     ariaLabel: "",
     invalid: false,
     disabled: false,
+    fluid: false,
   },
 );
 
@@ -70,6 +76,7 @@ const rootClasses = computed(() => ({
   "ui-input--lg": props.size === "lg",
   "ui-input--invalid": isInvalid(),
   "ui-input--disabled": props.disabled,
+  "ui-input--fluid": props.fluid,
 }));
 
 function handleInput(event: Event): void {

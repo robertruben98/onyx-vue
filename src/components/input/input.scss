@@ -10,6 +10,11 @@
   gap: var(--ui-input-label-gap);
 }
 
+.ui-input--fluid {
+  display: flex;
+  width: 100%;
+}
+
 .ui-input__label {
   font-size: var(--ui-input-label-font-size);
   font-weight: var(--ui-input-label-font-weight);

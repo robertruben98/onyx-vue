@@ -17,6 +17,11 @@ const props = withDefaults(
     invalid?: boolean;
     /** Disabled state. */
     disabled?: boolean;
+    /**
+     * Takes the full width of its container (block, `width: 100%`) instead of
+     * sitting inline at its intrinsic width.
+     */
+    fluid?: boolean;
   }>(),
   {
     rows: 3,
@@ -25,6 +30,7 @@ const props = withDefaults(
     ariaLabel: "",
     invalid: false,
     disabled: false,
+    fluid: false,
   },
 );
 
@@ -52,6 +58,7 @@ const rootClasses = computed(() => ({
   "ui-textarea": true,
   "ui-textarea--invalid": isInvalid(),
   "ui-textarea--disabled": props.disabled,
+  "ui-textarea--fluid": props.fluid,
 }));
 
 const touched = ref(false);
