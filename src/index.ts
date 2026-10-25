@@ -33,6 +33,7 @@ export * from "./components/check-tree";
 export * from "./components/checkbox";
 export * from "./components/code-block";
 export * from "./components/confirm-button";
+export * from "./components/course-switcher";
 export * from "./components/crt-overlay";
 export * from "./components/data-table";
 export * from "./components/date-input";

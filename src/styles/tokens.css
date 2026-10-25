@@ -782,6 +782,38 @@
   --ui-level-meter-gap: 2px;
   --ui-level-meter-color: currentColor;
   --ui-level-meter-smoothing: 90ms;
+  /* --- Course switcher (0.7): flag + score in the bar, panel of tiles -- */
+  --ui-course-switcher-gap: var(--ui-space-1);
+  --ui-course-switcher-trigger-height: 44px;
+  --ui-course-switcher-trigger-padding-x: var(--ui-space-2);
+  --ui-course-switcher-trigger-radius: var(--ui-radius);
+  --ui-course-switcher-trigger-bg: transparent;
+  --ui-course-switcher-trigger-bg-hover: var(--ui-color-surface-hover);
+  --ui-course-switcher-trigger-text: var(--ui-color-text);
+  --ui-course-switcher-icon-size: 1.5rem;
+  --ui-course-switcher-badge-font-size: var(--ui-font-size-md);
+  --ui-course-switcher-badge-font-weight: var(--ui-font-weight-bold);
+  --ui-course-switcher-z: var(--ui-popover-z);
+  --ui-course-switcher-backdrop: var(--ui-drawer-backdrop);
+  --ui-course-switcher-duration: 160ms;
+  --ui-course-switcher-panel-width: 24rem;
+  --ui-course-switcher-panel-offset: var(--ui-space-1);
+  --ui-course-switcher-panel-padding: var(--ui-space-4);
+  --ui-course-switcher-panel-bg: var(--ui-popover-bg);
+  --ui-course-switcher-panel-border: var(--ui-popover-border);
+  --ui-course-switcher-panel-radius: var(--ui-radii-lg);
+  --ui-course-switcher-panel-shadow: var(--ui-popover-shadow);
+  --ui-course-switcher-tile-gap: var(--ui-space-2);
+  --ui-course-switcher-tile-size: 5.5rem;
+  --ui-course-switcher-tile-icon-size: 2.5rem;
+  --ui-course-switcher-tile-radius: var(--ui-radii-lg);
+  --ui-course-switcher-tile-bg: var(--ui-color-surface);
+  --ui-course-switcher-tile-bg-hover: var(--ui-color-surface-hover);
+  --ui-course-switcher-tile-text: var(--ui-color-text);
+  --ui-course-switcher-tile-border: var(--ui-color-border);
+  --ui-course-switcher-tile-border-width: var(--ui-border-width-thick);
+  --ui-course-switcher-tile-selected-border: var(--ui-color-primary);
+  --ui-course-switcher-tile-selected-bg: color-mix(in srgb, var(--ui-color-primary) 10%, var(--ui-color-surface));
   /* --- Tabs that scroll (0.4): fade and arrow at the hidden edge -------- */
   --ui-tabs-fade: 2.5rem;
   --ui-tabs-arrow-size: 2rem;
