@@ -76,6 +76,18 @@ describe("touch targets under a coarse pointer", () => {
     expect(body).toContain("min-height: 24px");
   });
 
+  it.each([
+    [".ui-course-switcher__trigger", /min-width: 44px;[\s\S]*min-height: var\(--ui-course-switcher-trigger-height\)/],
+    [".ui-course-switcher__tile", /min-width: 44px;[\s\S]*min-height: max\(44px, var\(--ui-course-switcher-tile-size\)\)/],
+  ])("course switcher: %s is at least 44px with any pointer", (selector, size) => {
+    expect(baseRule(sheet("course-switcher/course-switcher.scss"), selector)).toMatch(size);
+  });
+
+  it("course switcher: the trigger height token is 44px", () => {
+    const tokens = readFileSync(join(process.cwd(), "src", "styles", "tokens.css"), "utf8");
+    expect(tokens).toMatch(/--ui-course-switcher-trigger-height:\s*44px/);
+  });
+
   it("a scrolling chip row leaves room for its chips' 44px hit area", () => {
     const body = ruleBody(coarse(sheet("chip-row/chip-row.scss")), ".ui-chip-row--scroll") ?? "";
     expect(body).toContain("padding-block: max(var(--ui-chip-row-inset), calc((44px - var(--ui-chip-height)) / 2))");
