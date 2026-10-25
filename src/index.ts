@@ -67,6 +67,7 @@ export * from "./components/popover";
 export * from "./components/progress-bar";
 export * from "./components/radio-group";
 export * from "./components/readout";
+export * from "./components/record-button";
 export * from "./components/relative-time";
 export * from "./components/run-state";
 export * from "./components/section-header";

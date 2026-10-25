@@ -1,0 +1,175 @@
+// Record button (0.6) — the big microphone toggle. References ONLY semantic /
+// component tokens.
+
+.ui-record-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-record-button-gap);
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: var(--ui-record-button-height);
+  padding: var(--ui-space-2) var(--ui-record-button-padding-x);
+  border: 0;
+  border-radius: var(--ui-record-button-radius);
+  background: var(--ui-record-button-bg);
+  color: var(--ui-record-button-text);
+  box-shadow: var(--ui-record-button-shadow);
+  font-family: inherit;
+  font-size: var(--ui-record-button-font-size);
+  font-weight: var(--ui-record-button-font-weight);
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 150ms ease,
+    transform 120ms ease;
+}
+
+.ui-record-button:hover:not(:disabled) {
+  background: var(--ui-record-button-bg-hover);
+}
+
+.ui-record-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+// Outline, like every other control: the pulse below is a box-shadow on a
+// pseudo-element and must never be mistaken for, or hide, the focus ring.
+.ui-record-button:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-record-button-ring-offset);
+}
+
+.ui-record-button--md {
+  min-height: var(--ui-size-control-lg);
+  padding-inline: var(--ui-space-5);
+  font-size: var(--ui-font-size-md);
+}
+
+.ui-record-button--block {
+  display: flex;
+  width: 100%;
+}
+
+.ui-record-button__icon {
+  display: inline-flex;
+  flex: none;
+  width: var(--ui-record-button-icon-size);
+  height: var(--ui-record-button-icon-size);
+}
+
+.ui-record-button__icon > svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.ui-record-button__icon > svg.ui-record-button__mic path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.ui-record-button__label {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.ui-record-button__detail {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+.ui-record-button__meter {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: var(--ui-record-button-icon-size);
+}
+
+// --- Recording ----------------------------------------------------------------
+.ui-record-button--recording {
+  background: var(--ui-record-button-recording-bg);
+  color: var(--ui-record-button-recording-text);
+}
+
+.ui-record-button--recording:hover:not(:disabled) {
+  background: var(--ui-record-button-recording-bg);
+}
+
+.ui-record-button--recording::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: ui-record-button-pulse var(--ui-record-button-pulse-duration) ease-out infinite;
+}
+
+@keyframes ui-record-button-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--ui-record-button-pulse);
+  }
+  100% {
+    box-shadow: 0 0 0 var(--ui-record-button-pulse-size) transparent;
+  }
+}
+
+// --- Busy ---------------------------------------------------------------------
+// Keeps its colour: a grey "transcribing" button reads as broken, not as busy.
+.ui-record-button--busy {
+  cursor: progress;
+}
+
+.ui-record-button__spinner {
+  flex: none;
+  box-sizing: border-box;
+  width: var(--ui-record-button-icon-size);
+  height: var(--ui-record-button-icon-size);
+  border: var(--ui-border-width-thick) solid currentColor;
+  border-top-color: transparent;
+  border-radius: var(--ui-radii-full);
+  animation: ui-record-button-spin 700ms linear infinite;
+}
+
+@keyframes ui-record-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// --- Disabled -----------------------------------------------------------------
+.ui-record-button:disabled:not(.ui-record-button--busy) {
+  cursor: not-allowed;
+  background: var(--ui-color-disabled-bg);
+  color: var(--ui-color-disabled-text);
+  box-shadow: none;
+}
+
+// --- Reduced motion -----------------------------------------------------------
+// No pulse and no spin: a static halo still says "recording", and the busy
+// label plus aria-busy say "working".
+@media (prefers-reduced-motion: reduce) {
+  .ui-record-button {
+    transition: none;
+  }
+
+  .ui-record-button:active:not(:disabled) {
+    transform: none;
+  }
+
+  .ui-record-button--recording::before {
+    animation: none;
+    box-shadow: 0 0 0 calc(var(--ui-record-button-pulse-size) / 3) var(--ui-record-button-pulse);
+  }
+
+  .ui-record-button__spinner {
+    animation: none;
+    border-top-color: currentColor;
+    border-right-color: transparent;
+  }
+}

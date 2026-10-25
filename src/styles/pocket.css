@@ -54,6 +54,9 @@
   --ui-segmented-item-radius: var(--ui-radii-full);
   --ui-fab-bg: linear-gradient(135deg, var(--ui-pocket-accent), var(--ui-pocket-accent-2));
   --ui-fab-bg-hover: linear-gradient(135deg, var(--ui-pocket-accent-hover), var(--ui-pocket-accent-2));
+  --ui-record-button-bg: var(--ui-fab-bg);
+  --ui-record-button-bg-hover: var(--ui-fab-bg-hover);
+  --ui-record-button-shadow: 0 12px 26px -12px color-mix(in srgb, var(--ui-color-primary) 80%, transparent);
   --ui-tabs-arrow-bg: var(--ui-pocket-card);
   --ui-button-font-weight: 650;
 
