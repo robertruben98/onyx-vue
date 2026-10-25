@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
 import { useToast, type ToastMessage } from "./toast-store";
 import "./toast.scss";
 
@@ -16,12 +16,19 @@ import "./toast.scss";
  * under it. When a button of the toast closes it, focus goes back to where it
  * came from instead of falling to the top of the page.
  */
-withDefaults(
+const props = withDefaults(
   defineProps<{
     /** Accessible name of the dismiss button on each toast. */
     dismissLabel?: string;
+    /**
+     * Key that moves focus to the newest toast's first button, from anywhere
+     * on the page (`KeyboardEvent.key`). The host sits at the end of the body,
+     * so without it a keyboard user tabs through the whole page to reach Undo.
+     * `null` turns it off.
+     */
+    hotkey?: string | null;
   }>(),
-  { dismissLabel: "Dismiss" },
+  { dismissLabel: "Dismiss", hotkey: "F8" },
 );
 
 const { toasts, dismiss, pause, resume, act } = useToast();
@@ -64,6 +71,20 @@ function onFocusOut(t: Readonly<ToastMessage>, event: FocusEvent): void {
   release(focused, t.id);
 }
 
+/** The hotkey: focus the first button of the newest toast. */
+function onKeydown(event: KeyboardEvent): void {
+  if (!props.hotkey || event.key !== props.hotkey || toasts.length === 0) return;
+  const boxes = document.querySelectorAll<HTMLElement>(".ui-toast-host .ui-toast");
+  const newest = [...boxes].sort((a, b) => Number(b.dataset.toastId) - Number(a.dataset.toastId))[0];
+  const target = newest?.querySelector<HTMLElement>("button");
+  if (!target) return;
+  event.preventDefault();
+  target.focus();
+}
+
+onMounted(() => document.addEventListener("keydown", onKeydown));
+onBeforeUnmount(() => document.removeEventListener("keydown", onKeydown));
+
 /** Closes a toast from one of its own buttons, then gives focus back. */
 function close(t: Readonly<ToastMessage>, run: (id: number) => void): void {
   const target = returnTo.get(t.id);
@@ -83,6 +104,7 @@ function close(t: Readonly<ToastMessage>, run: (id: number) => void): void {
           v-for="t in region.items"
           :key="t.id"
           :class="['ui-toast', `ui-toast--${t.tone}`]"
+          :data-toast-id="t.id"
           @focusin="onFocusIn(t, $event)"
           @focusout="onFocusOut(t, $event)"
           @mouseenter="hold(hovered, t.id)"
