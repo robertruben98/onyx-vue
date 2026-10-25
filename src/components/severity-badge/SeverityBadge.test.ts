@@ -66,4 +66,27 @@ describe("severityRank", () => {
   it("sends anything it does not recognise to the back", () => {
     expect(severityRank("banana")).toBe(9);
   });
+
+  it.each([
+    ["very-high", "ui-severity-badge--very-high"],
+    ["very-low", "ui-severity-badge--very-low"],
+    ["high", "ui-severity-badge--high"],
+    ["medium", "ui-severity-badge--moderate"],
+    ["low", "ui-severity-badge--low"],
+  ] as const)("the five-level scale: %s gets %s", (severity, cls) => {
+    const { container } = render(SeverityBadge, { props: { severity } });
+    expect(container.querySelector(".ui-severity-badge")?.classList.contains(cls)).toBe(true);
+  });
+
+  it("ranks the five-level scale from very-high to very-low", () => {
+    const scale = ["very-low", "low", "medium", "high", "very-high"];
+    const sorted = [...scale].sort((a, b) => severityRank(a) - severityRank(b));
+    expect(sorted).toEqual(["very-high", "high", "medium", "low", "very-low"]);
+    expect(severityRank("very-high")).toBe(severityRank("critical"));
+  });
+
+  it.each(["very-high", "very-low"] as const)("has no axe violations (%s)", async (severity) => {
+    const { container } = render(SeverityBadge, { props: { severity } });
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
 });

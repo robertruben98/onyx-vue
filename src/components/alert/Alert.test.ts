@@ -135,4 +135,22 @@ describe("Alert (Vue)", () => {
     expect(screen.getByRole("button", { name: "reintentar" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Cerrar" })).toBeTruthy();
   });
+
+  it.each([
+    [undefined, "info", "status"],
+    [undefined, "danger", "alert"],
+    ["polite", "danger", "status"],
+    ["assertive", "info", "alert"],
+    ["off", "info", "note"],
+    ["off", "danger", "note"],
+  ] as const)("live=%s on a %s alert gives role=%s", (live, variant, role) => {
+    const { container } = render(Alert, { props: { live, variant }, slots: { default: "Hint" } });
+    expect(container.querySelector(".ui-alert__el")?.getAttribute("role")).toBe(role);
+  });
+
+  it("with live=off is not a live region and has no axe violations", async () => {
+    const { container } = render(Alert, { props: { live: "off" }, slots: { default: "Hint" } });
+    expect(container.querySelector("[role=status], [role=alert]")).toBeNull();
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
 });

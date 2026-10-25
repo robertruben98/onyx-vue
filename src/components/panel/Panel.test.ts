@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { defineComponent } from "vue";
 import Panel from "./Panel.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -66,5 +67,32 @@ describe("Panel (Vue)", () => {
       slots: { default: "<p>rows</p>", actions: "<button type='button'>recargar</button>" },
     });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+
+  it("names its region with aria-labelledby on the heading, not a copy of the text", () => {
+    const { container } = render(Panel, { props: { title: "runs" } });
+    const region = screen.getByRole("region", { name: "runs" });
+    const heading = screen.getByRole("heading", { name: "runs" });
+    expect(heading.id).toBeTruthy();
+    expect(region.getAttribute("aria-labelledby")).toBe(heading.id);
+    expect(region.hasAttribute("aria-label")).toBe(false);
+    expect(container.querySelector("section")).toBe(region);
+  });
+
+  it("gives every panel on a page its own heading id", () => {
+    render(defineComponent({
+      components: { Panel },
+      template: `<div><Panel title="a" /><Panel title="b" /></div>`,
+    }));
+    const ids = screen.getAllByRole("heading").map((h) => h.id);
+    expect(new Set(ids).size).toBe(2);
+  });
+
+  it("with landmark=false is a plain div, still with its heading", () => {
+    const { container } = render(Panel, { props: { title: "runs", landmark: false } });
+    expect(screen.queryByRole("region")).toBeNull();
+    expect(container.querySelector("section")).toBeNull();
+    expect(container.querySelector("div.ui-panel")?.hasAttribute("aria-labelledby")).toBe(false);
+    expect(screen.getByRole("heading", { name: "runs" })).toBeTruthy();
   });
 });
