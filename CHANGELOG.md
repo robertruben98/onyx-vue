@@ -35,8 +35,9 @@ level meter. Every new prop defaults to the old behaviour.
   mode an inset as wide as the focus ring keeps the first and last chip and the focus ring from
   being clipped. `label` makes it a named group.
 - Toast action: `useToast().show(message, { action: { label, onAction } })` adds a button such as
-  Undo. It is in the Tab order; activating it runs `onAction`, closes the toast and returns
-  focus to where it came from. With an action the default duration is 6000ms. New `pause`,
+  Undo. It is in the Tab order, and `F8` jumps to the newest toast from anywhere on the page
+  (`UiToastHost hotkey`, `null` turns it off); activating it runs `onAction`, closes the toast
+  and returns focus to where it came from. With an action the default duration is 6000ms. New `pause`,
   `resume` and `act` on `useToast()`, type `ToastAction`, token `--ui-toast-action-text`.
 - `UiRecordButton`: the microphone toggle. Idle, recording (`aria-pressed`, danger colour, a
   pulse that becomes a static halo under reduced motion) and busy (spinner, `aria-busy`) states;
