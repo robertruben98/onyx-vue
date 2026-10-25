@@ -31,8 +31,8 @@
 }
 
 .ui-icon-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 .ui-icon-button:disabled {
