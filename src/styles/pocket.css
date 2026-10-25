@@ -82,7 +82,7 @@
   --ui-pocket-line: #e3e5ef;          /* filete casi invisible */
   --ui-pocket-ink: #12142b;           /* texto */
   --ui-pocket-ink-soft: #5d6079;      /* texto suave: 6.1:1 sobre blanco */
-  --ui-pocket-ink-faint: #9a9db3;
+  --ui-pocket-ink-faint: #80849e;   /* deshabilitado: 3.4:1 sobre card-hover */
   --ui-pocket-accent: #4f46e5;        /* indigo: actuar */
   --ui-pocket-accent-hover: #4338ca;
   --ui-pocket-accent-active: #3730a3;
@@ -139,7 +139,7 @@
   --ui-pocket-line: #262a3f;
   --ui-pocket-ink: #eceef8;
   --ui-pocket-ink-soft: #a2a6c0;
-  --ui-pocket-ink-faint: #666b88;
+  --ui-pocket-ink-faint: #737894;   /* deshabilitado: 3.7:1 sobre card-hover */
   --ui-pocket-accent: #8b8dff;
   --ui-pocket-accent-hover: #a2a4ff;
   --ui-pocket-accent-active: #b8b9ff;

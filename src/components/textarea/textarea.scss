@@ -49,6 +49,11 @@
   box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
 }
 
+.ui-textarea__el[readonly]:not(:disabled) {
+  color: var(--ui-textarea-text);
+  cursor: default;
+}
+
 .ui-textarea__el:disabled {
   cursor: not-allowed;
   background-color: var(--ui-textarea-disabled-bg);

@@ -45,6 +45,11 @@
   box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
 }
 
+.ui-input__el[readonly]:not(:disabled) {
+  color: var(--ui-input-text);
+  cursor: default;
+}
+
 .ui-input__el:disabled {
   cursor: not-allowed;
   background-color: var(--ui-input-disabled-bg);
