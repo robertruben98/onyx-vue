@@ -1,10 +1,12 @@
 <script lang="ts">
 export type Severity =
   | "critical"
+  | "very-high"
   | "high"
   | "moderate"
   | "medium"
   | "low"
+  | "very-low"
   | "unknown";
 
 /**
@@ -15,13 +17,19 @@ export type Severity =
  * the same rung under two names — GitHub's dependency alerts say one and its
  * code scanning says the other. Anything unrecognised goes to the back rather
  * than to the front: an unknown severity is not an emergency.
+ *
+ * The five-level scale `very-low | low | medium | high | very-high` (the
+ * English trainer's mistake severities) shares the rungs: `very-high` sits
+ * with `critical` and `very-low` comes after `low`.
  */
 const RANK: Record<string, number> = {
   critical: 0,
+  "very-high": 0,
   high: 1,
   moderate: 2,
   medium: 2,
   low: 3,
+  "very-low": 4,
   unknown: 9,
 };
 
@@ -53,9 +61,11 @@ const level = computed(() =>
 const rootClasses = computed(() => ({
   "ui-severity-badge": true,
   "ui-severity-badge--critical": level.value === "critical",
+  "ui-severity-badge--very-high": level.value === "very-high",
   "ui-severity-badge--high": level.value === "high",
   "ui-severity-badge--moderate": level.value === "moderate",
   "ui-severity-badge--low": level.value === "low",
+  "ui-severity-badge--very-low": level.value === "very-low",
   "ui-severity-badge--unknown": level.value === "unknown",
 }));
 </script>
