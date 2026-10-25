@@ -9,6 +9,28 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.6.1 — 2026-10-25
+
+Three fixes found while testing the English trainer on a phone. No API changes.
+
+### Fixed
+
+- `UiSegmented` and `UiRadioGroup` follow the model when the parent refuses a change (a leave
+  guard that keeps its value). Vue did not repaint `checked`, because the bound value had not
+  changed, so the native radio stayed on the tapped option: `UiSegmented` highlighted the old
+  value while tapping the new one again fired no `change`, and `UiRadioGroup` showed the
+  refused option as selected. After emitting, both now put every radio's `checked` back in line
+  with the model on the next tick. `UiTabs` has no native state and was not affected.
+- 44px hit areas under a coarse pointer for the `UiDrawer` and `UiDialog` close buttons (24×24
+  and about 12×20 before), which also reach 24px with any pointer (WCAG 2.5.8). In a scrolling
+  `UiChipRow` the 32px chips' 44px hit area was clipped by the scroll box; under a coarse pointer
+  the row now has enough vertical padding for it. The toast action and dismiss buttons and
+  `UiChip` already had the hit area and are now covered by `touch-targets.test.ts`.
+- The `UiTabs` scroll arrows no longer sit on half a word. The strip is fully transparent under
+  each arrow and fades in after it, reaching full opacity at `max(--ui-tabs-fade, arrow + 1rem)`;
+  `scroll-padding-inline` is that same distance, so a focused tab clears the arrow and the fade.
+  A selected tab too wide to be centred clear of them is aligned just after them instead.
+
 ## 0.6.0 — 2026-10-25
 
 What the English trainer still built by hand, now in the library: full-width buttons with
