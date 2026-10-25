@@ -8,7 +8,10 @@ export const toastDoc: ComponentDoc = {
     "Transient messages about something that just happened. Call useToast().show() from anywhere — a click handler, a polling composable — and mount one UiToastHost per page to render them. Danger toasts go to an assertive live region, the rest to a polite one; at most three are shown.",
   imports: ["UiToastHost", "useToast", "UiButton"],
   api: [
-    { name: "useToast().show", type: "(message, { tone?, duration? }) => id", default: "—", description: "Queues a message. duration in ms (default 3200); 0 keeps it until dismissed." },
+    { name: "useToast().show", type: "(message, { tone?, duration?, action? }) => id", default: "—", description: "Queues a message. duration in ms (default 3200, or 6000 with an action); 0 keeps it until dismissed. The countdown stops while focus or the pointer is inside the toast." },
+    { name: "action", type: "{ label: string; onAction: () => void }", default: "undefined", description: "A button on the toast, such as Undo. It is in the Tab order (the host sits at the end of the page); activating it runs onAction, closes the toast and returns focus to where it came from." },
+    { name: "useToast().pause / resume", type: "(id) => void", default: "—", description: "Stop and restart a toast's countdown. The host calls them on focus and hover; rarely needed by hand." },
+    { name: "useToast().act", type: "(id) => void", default: "—", description: "Runs a toast's action and closes it, as if its button were pressed." },
     { name: "useToast().dismiss", type: "(id) => void", default: "—", description: "Removes one message." },
     { name: "useToast().clear", type: "() => void", default: "—", description: "Removes all messages." },
     { name: "tone", type: "'neutral' | 'success' | 'warning' | 'danger'", default: "'neutral'", description: "Semantic tone; danger is announced assertively." },
@@ -27,6 +30,17 @@ export const toastDoc: ComponentDoc = {
 <UiButton size="sm" variant="secondary" @clicked="show('PR encolada', { tone: 'success' })">success</UiButton>
 <UiButton size="sm" variant="secondary" @clicked="show('cuota casi llena', { tone: 'warning' })">warning</UiButton>
 <UiButton size="sm" variant="danger" @clicked="show('no se pudo lanzar', { tone: 'danger' })">danger</UiButton>`,
+    },
+    {
+      title: "With an action (Undo)",
+      description: "Tab reaches the Undo button; the toast stays while it has focus.",
+      setup: () => {
+        const { show } = useToast();
+        const remove = () => show("Removed from today's plan", { action: { label: "Undo", onAction: () => show("Restored") } });
+        return { remove };
+      },
+      code: `<UiToastHost />
+<UiButton size="sm" variant="secondary" @clicked="remove">Remove</UiButton>`,
     },
   ],
 };
