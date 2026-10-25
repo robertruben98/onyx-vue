@@ -654,6 +654,8 @@
   --ui-crt-overlay-ink: 0 0 0;
   --ui-drawer-duration: 200ms;
   --ui-drawer-title-size: var(--ui-font-size-md);
+  --ui-drawer-bottom-max-height: 85dvh;
+  --ui-drawer-bottom-radius: var(--ui-radii-lg);
   --ui-toast-offset: 1.625rem;
   --ui-toast-bg: var(--ui-color-surface);
   --ui-toast-border: var(--ui-color-border-strong);

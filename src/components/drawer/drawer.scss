@@ -37,6 +37,29 @@
   animation-name: ui-drawer-in-left;
 }
 
+// Bottom sheet: rises from the bottom edge, full width, as tall as its content
+// up to a cap, with the top corners rounded like a phone sheet.
+.ui-drawer__backdrop--bottom {
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ui-drawer__panel--bottom {
+  width: 100%;
+  height: auto;
+  max-height: var(--ui-drawer-bottom-max-height);
+  border-left: 0;
+  border-top: var(--ui-border-width) solid var(--ui-drawer-edge);
+  border-radius: var(--ui-drawer-bottom-radius) var(--ui-drawer-bottom-radius) 0 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation-name: ui-drawer-in-bottom;
+}
+
+@keyframes ui-drawer-in-bottom {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
 @keyframes ui-drawer-in {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
