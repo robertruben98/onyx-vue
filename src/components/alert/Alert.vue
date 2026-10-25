@@ -4,6 +4,7 @@ import "./alert.scss";
 
 export type AlertVariant = "neutral" | "info" | "success" | "warning" | "danger";
 export type AlertAppearance = "boxed" | "band";
+export type AlertLive = "polite" | "assertive" | "off";
 
 const props = withDefaults(
   defineProps<{
@@ -21,6 +22,13 @@ const props = withDefaults(
     dismissible?: boolean;
     /** Accessible name for the dismiss button. */
     dismissLabel?: string;
+    /**
+     * How a screen reader announces the alert. `polite` is `role="status"`,
+     * `assertive` is `role="alert"`, and `off` is a static `role="note"` for
+     * hints that are on the page from the start and should not be announced.
+     * Unset, it follows the variant: `danger` is assertive, the rest polite.
+     */
+    live?: AlertLive;
   }>(),
   {
     variant: "info",
@@ -28,6 +36,7 @@ const props = withDefaults(
     title: "",
     dismissible: false,
     dismissLabel: "Dismiss",
+    live: undefined,
   },
 );
 
@@ -37,8 +46,13 @@ const emit = defineEmits<{ dismissed: [] }>();
 /** Whether the alert has been dismissed (drives [hidden]). */
 const hidden = ref(false);
 
-/** danger -> assertive (alert); others -> polite (status). */
-const role = computed(() => (props.variant === "danger" ? "alert" : "status"));
+/** `live` decides; unset, danger -> assertive (alert) and others -> polite (status). */
+const role = computed(() => {
+  if (props.live === "off") return "note";
+  if (props.live === "assertive") return "alert";
+  if (props.live === "polite") return "status";
+  return props.variant === "danger" ? "alert" : "status";
+});
 
 const rootClasses = computed(() => ({
   "ui-alert": true,
