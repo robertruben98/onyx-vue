@@ -42,3 +42,53 @@
   font-size: var(--ui-font-size-sm);
   color: var(--ui-color-text-muted);
 }
+
+// --- 0.8: plain and card variants -------------------------------------------
+// In both, the heading and everything under it start on the same line: the
+// header, the body, the empty line and the footer share one inset token.
+// A description list brings its own side padding (it lines up with the header of
+// a default panel, whose body is unpadded); inside these bodies it would be
+// inset twice, so it drops it.
+.ui-panel--plain,
+.ui-panel--card {
+  --ui-description-list-padding-x: 0;
+}
+
+.ui-panel--plain {
+  --ui-panel-padding-x: var(--ui-panel-plain-padding-x);
+  margin-bottom: var(--ui-panel-plain-gap);
+}
+
+.ui-panel--plain .ui-panel__header {
+  border-bottom: 0;
+}
+
+.ui-panel--plain .ui-panel__body {
+  padding: var(--ui-panel-plain-body-gap) var(--ui-panel-padding-x) 0;
+}
+
+.ui-panel--plain .ui-panel__footer {
+  border-top: 0;
+}
+
+.ui-panel--card {
+  --ui-panel-padding-x: var(--ui-panel-card-padding-x);
+  box-sizing: border-box;
+  padding: var(--ui-panel-card-padding-y) 0;
+  background-color: var(--ui-panel-card-bg);
+  border: var(--ui-border-width) solid var(--ui-panel-card-border);
+  border-radius: var(--ui-panel-card-radius);
+  box-shadow: var(--ui-panel-card-shadow);
+}
+
+.ui-panel--card .ui-panel__header {
+  border-bottom: 0;
+}
+
+.ui-panel--card .ui-panel__body {
+  padding: var(--ui-space-3) var(--ui-panel-padding-x) 0;
+}
+
+.ui-panel--card .ui-panel__footer {
+  margin-top: var(--ui-space-3);
+}

@@ -14,6 +14,7 @@ export const panelDoc: ComponentDoc = {
     { name: "empty", type: "boolean", default: "false", description: "Replaces the body with emptyText and dims the title." },
     { name: "emptyText", type: "string", default: "'Nothing here.'", description: "What an empty panel says." },
     { name: "padded", type: "boolean", default: "false", description: "Pads the body, for prose instead of a table." },
+    { name: "variant", type: "'default' | 'plain' | 'card'", default: "'default'", description: "`default`: a header band with a rule and an unpadded body (tables run edge to edge; `padded` for prose). `plain`: no rule, more space, header and body on the same inset. `card`: a surface with radius, header and body on the same inset." },
     { name: "landmark", type: "boolean", default: "true", description: "A `<section>` region landmark named by the heading. `false` renders a plain `<div>`: use it when a page has many panels, so the landmark list stays short." },
     { name: "#actions", type: "slot", default: "—", description: "Buttons beside the count." },
     { name: "#controls", type: "slot", default: "—", description: "Controls pushed to the far end." },
@@ -37,6 +38,16 @@ export const panelDoc: ComponentDoc = {
       code: `<UiPanel title="notas" padded>
   Prose sits inset from the rules.
   <template #footer>actualizado 10:04</template>
+</UiPanel>`,
+    },
+    {
+      title: "Plain and card",
+      description: "The heading and the body start on the same line in both.",
+      code: `<UiPanel title="Your exam" variant="plain" :landmark="false">
+  <p style="margin: 0">LanguageCert B1 Achiever, Monday 26 October.</p>
+</UiPanel>
+<UiPanel title="Activity" variant="card" :landmark="false">
+  <p style="margin: 0">128 answers, 42 marked by the AI.</p>
 </UiPanel>`,
     },
   ],
