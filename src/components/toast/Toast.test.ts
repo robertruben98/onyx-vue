@@ -105,6 +105,36 @@ describe("Toast (Vue)", () => {
       trigger.remove();
     });
 
+    it("F8 moves focus to the newest toast's first button, and focus returns after the action", async () => {
+      const onAction = vi.fn();
+      const trigger = document.createElement("button");
+      document.body.prepend(trigger);
+      render(ToastHost);
+      show("older");
+      show("Marked done", { action: { label: "Undo", onAction } });
+      await nextTick();
+      const user = userEvent.setup();
+      trigger.focus();
+      await user.keyboard("{F8}");
+      expect(document.activeElement).toBe(screen.getByRole("button", { name: "Undo" }));
+      await user.keyboard("{Enter}");
+      expect(onAction).toHaveBeenCalledTimes(1);
+      expect(document.activeElement).toBe(trigger);
+      trigger.remove();
+    });
+
+    it("the hotkey can be changed or turned off", async () => {
+      const trigger = document.createElement("button");
+      document.body.prepend(trigger);
+      render(ToastHost, { props: { hotkey: null } });
+      show("Saved", { action: { label: "Undo", onAction: () => {} } });
+      await nextTick();
+      trigger.focus();
+      await userEvent.setup().keyboard("{F8}");
+      expect(document.activeElement).toBe(trigger);
+      trigger.remove();
+    });
+
     it("waits 6000ms by default when it has an action, 3200 without", async () => {
       vi.useFakeTimers();
       render(ToastHost);
