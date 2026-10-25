@@ -73,3 +73,32 @@
   color: var(--ui-color-text-muted);
   border-color: var(--ui-color-border);
 }
+
+// WCAG 2.5.8: at least 24px to hit (it was 10x17), without growing the tag.
+.ui-tag__remove {
+  position: relative;
+}
+
+.ui-tag__remove::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 24px);
+  height: max(100%, 24px);
+  transform: translate(-50%, -50%);
+}
+
+// Con puntero grueso (dedo), un area invisible de 44px alrededor del control,
+// como UiCheckbox y UiSwitch, sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-tag__remove::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

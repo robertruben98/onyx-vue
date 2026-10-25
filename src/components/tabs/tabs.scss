@@ -140,3 +140,17 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+// Con puntero grueso (dedo), un area invisible de 44px alrededor del control,
+// como UiCheckbox y UiSwitch, sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-tabs__arrow::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

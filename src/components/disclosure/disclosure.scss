@@ -76,6 +76,15 @@
   padding: var(--ui-space-2) 0 0;
 }
 
+// Con puntero grueso, la fila que abre mide al menos lo que un control (44px
+// como minimo): con el relleno de antes se quedaba en 42px.
+@media (pointer: coarse) {
+  .ui-disclosure__summary {
+    box-sizing: border-box;
+    min-height: max(44px, var(--ui-size-control-md));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ui-disclosure__marker {
     transition: none;

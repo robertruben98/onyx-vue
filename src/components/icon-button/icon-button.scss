@@ -53,3 +53,21 @@
 .ui-icon-button__glyph {
   font-size: var(--ui-font-size-sm);
 }
+
+// Con puntero grueso (dedo), un area invisible de 44px alrededor del control,
+// como UiCheckbox y UiSwitch, sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-icon-button {
+    position: relative;
+  }
+
+  .ui-icon-button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

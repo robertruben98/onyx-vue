@@ -105,3 +105,32 @@
   border-radius: 0;
   border-bottom: var(--ui-border-width) solid var(--ui-alert-band-border);
 }
+
+// WCAG 2.5.8: at least 24px to hit (it was 12x20), without growing the alert.
+.ui-alert__close {
+  position: relative;
+}
+
+.ui-alert__close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 24px);
+  height: max(100%, 24px);
+  transform: translate(-50%, -50%);
+}
+
+// Con puntero grueso (dedo), un area invisible de 44px alrededor del control,
+// como UiCheckbox y UiSwitch, sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-alert__close::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
