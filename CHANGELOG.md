@@ -9,6 +9,62 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.6.0 — 2026-10-25
+
+What the English trainer still built by hand, now in the library: full-width buttons with
+icons, tappable cards, suggestion chips, a toast with Undo and the microphone button with its
+level meter. Every new prop defaults to the old behaviour.
+
+### Added
+
+- `UiButton block` (default `false`): full width of the container. `UiButton wrap` (default
+  `false`): a long label may take two lines; the height becomes a `min-height`, so the text no
+  longer spills out of a fixed-height button. Slots `#leading` and `#trailing` for decorative
+  icons (`aria-hidden`, sized by `--ui-button-icon-size`); a loading button shows its spinner
+  in place of the leading icon.
+- `UiCard as` (`'div'` default, `'button'`, `'a'`), `href` and `disabled`: the whole card is one
+  native control, with hover, an outline focus ring, a pressed state (none under reduced
+  motion), keyboard activation and a 44px minimum height. Its header, body and footer render as
+  spans so a button holds valid content. Tokens `--ui-card-interactive-min-height`,
+  `--ui-card-bg-hover`, `--ui-card-bg-active`, `--ui-card-border-hover`,
+  `--ui-card-shadow-hover`, `--ui-card-active-scale`.
+- `UiChip`: a suggestion chip, a one-shot action with no pressed state and no count (that is
+  `UiFilterChip`). `#leading` icon slot, `disabled`, `@clicked`, a 44px hit area under a coarse
+  pointer.
+- `UiChipRow`: lays chips out, `overflow="wrap"` (default) or `"scroll"` (one line). In scroll
+  mode an inset as wide as the focus ring keeps the first and last chip and the focus ring from
+  being clipped. `label` makes it a named group.
+- Toast action: `useToast().show(message, { action: { label, onAction } })` adds a button such as
+  Undo. It is in the Tab order; activating it runs `onAction`, closes the toast and returns
+  focus to where it came from. With an action the default duration is 6000ms. New `pause`,
+  `resume` and `act` on `useToast()`, type `ToastAction`, token `--ui-toast-action-text`.
+- `UiRecordButton`: the microphone toggle. Idle, recording (`aria-pressed`, danger colour, a
+  pulse that becomes a static halo under reduced motion) and busy (spinner, `aria-busy`) states;
+  `label`, `recordingLabel`, `busyLabel`, `size` (`'lg'` 56px default, `'md'`), `block`;
+  slots `#icon`, `#detail` (a timer) and `#meter` (shown while recording), the last two
+  `aria-hidden`; emits `toggled` with the next state. Pocket paints it in the FAB gradient.
+- `UiLevelMeter` (onyx-vue#71, first part): `level` 0–1, `bars` (5), `label`. Smoothed bars in
+  `currentColor`, without the transition under reduced motion.
+
+### Changed
+
+- A toast holds still while focus or the pointer is inside it and then resumes with the time it
+  had left, so its action can be reached before it times out (WCAG 2.2.1).
+
+### Fixed
+
+- Focus rings are outlines on the rest of the controls: `UiTabs` tabs and scroll arrows, the
+  `UiSelect` trigger, `UiInput`, `UiTextarea`, `UiCheckbox`, `UiRadioGroup`, `UiSwitch`, the
+  `UiAppBar` menu button, the `UiMenu` trigger and items, `UiFilterChip`, the toast, dialog and
+  drawer close buttons. A box-shadow ring can be replaced by a preset shadow and disappears in
+  forced-colors mode. Tabs and menu items draw the ring inset (a scrolling tab strip clipped an
+  outer ring); invalid inputs recolour the outline. `UiSegmented` and `UiFab` already used
+  outlines and are now covered by `focus-ring.test.ts` too.
+- `--ui-space-6` was used by `--ui-fab-bottom` and `--ui-check-tree-indent` but never declared,
+  so both were invalid. It is now 1.5rem.
+- The toast dismiss button reaches 24px, and both toast buttons get a 44px hit area under a
+  coarse pointer.
+
 ## 0.5.0 — 2026-10-25
 
 Accessibility and touch, found by an end-to-end audit of the English trainer on phones and
