@@ -1,5 +1,7 @@
 # Onyx Vue
 
+[![Demo](https://img.shields.io/badge/demo-online-brightgreen)](https://robertruben98.github.io/onyx-vue/)
+
 Vue 3 port of [Onyx UI](https://onyx.a-robertdev.com) — accessible, token-themed
 components in **styled mode**. Same design-token engine as the Angular library:
 one CSS layer drives every component, so re-skinning a whole app is a token swap,
