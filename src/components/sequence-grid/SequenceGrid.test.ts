@@ -71,6 +71,21 @@ describe("SequenceGrid (Vue)", () => {
     expect(container.querySelectorAll(".ui-sequence-grid__cell").length).toBe(0);
   });
 
+  it("works from what is present: every other number is a gap", () => {
+    const { container } = render(SequenceGrid, { props: { present: [1, 2, 5] } });
+    expect(states(container)).toEqual(["present", "present", "missing", "missing", "present"]);
+  });
+
+  it("takes max over present when both are given, and ignores missing then", () => {
+    const { container } = render(SequenceGrid, { props: { present: [2], max: 3, missing: [2] } });
+    expect(states(container)).toEqual(["missing", "present", "missing"]);
+  });
+
+  it("renders nothing for an empty present list with no max", () => {
+    const { container } = render(SequenceGrid, { props: { present: [] } });
+    expect(container.querySelectorAll(".ui-sequence-grid__cell").length).toBe(0);
+  });
+
   it("has no axe violations", async () => {
     const { container } = render(SequenceGrid, {
       props: { max: 8, missing: [3, 4], label: "Episodes" },
