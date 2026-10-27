@@ -56,6 +56,8 @@ const focusable: [file: string, selector: string][] = [
   ["course-switcher/course-switcher.scss", ".ui-course-switcher__tile:focus-visible"],
   // New in 0.8.0: a tappable stat card (as="button" | as="a").
   ["stat-card/stat-card.scss", ".ui-stat-card--interactive:focus-visible"],
+  // New in 0.11.0: the title link of a media card.
+  ["media-card/media-card.scss", ".ui-media-card__title a:focus-visible"],
 ];
 
 /** Files whose every :focus-visible rule must draw with an outline, never a box-shadow. */
