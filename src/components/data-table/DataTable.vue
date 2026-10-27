@@ -119,6 +119,14 @@ const props = withDefaults(
      * buttons, links and inputs inside a row stay theirs.
      */
     activatable?: boolean;
+    /**
+     * Viewport width (px) under which every row is drawn as a card: one line
+     * per column, its header beside its value. Under a phone's width a row of
+     * five columns either scrolls sideways or squeezes every value into a
+     * sliver; a card keeps all of them readable. `0` never stacks. Paginated
+     * and plain modes only: virtual scroll needs rows of one fixed height.
+     */
+    stackBelow?: number;
   }>(),
   {
     rows: () => [],
@@ -135,6 +143,7 @@ const props = withDefaults(
     maxHeight: "",
     rowClass: undefined,
     activatable: false,
+    stackBelow: 0,
   },
 );
 
@@ -266,7 +275,14 @@ const rangeEnd = computed(() =>
 // Responsive columns (`hideBelow`)
 // ----------------------------------------------------------------------------
 const viewportWidth = ref(typeof window === "undefined" ? Infinity : window.innerWidth);
-const wantsWidth = computed(() => props.columns.some((c) => c.hideBelow != null));
+const wantsWidth = computed(
+  () => props.columns.some((c) => c.hideBelow != null) || props.stackBelow > 0,
+);
+
+/** Rows as cards: under `stackBelow`, and never in virtual mode (fixed row height). */
+const stacked = computed(
+  () => props.stackBelow > 0 && props.mode !== "virtual" && viewportWidth.value < props.stackBelow,
+);
 
 function onResize(): void {
   viewportWidth.value = window.innerWidth;
@@ -595,7 +611,7 @@ function onGridKeydown(event: KeyboardEvent): void {
 </script>
 
 <template>
-  <span ref="root" class="ui-data-table">
+  <span ref="root" :class="['ui-data-table', { 'ui-data-table--stacked': stacked }]">
     <div
       class="ui-dt__grid"
       role="grid"
@@ -748,6 +764,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                   }"
                   :data-row="item.index + 1"
                   :data-col="dataColOf(ci)"
+                  :data-label="col.header"
                   :tabindex="isActiveCell(item.index + 1, dataColOf(ci)) ? 0 : -1"
                 >
                   <slot
@@ -808,6 +825,7 @@ function onGridKeydown(event: KeyboardEvent): void {
               }"
               :data-row="i + 1"
               :data-col="dataColOf(ci)"
+              :data-label="col.header"
               :tabindex="isActiveCell(i + 1, dataColOf(ci)) ? 0 : -1"
             >
               <slot

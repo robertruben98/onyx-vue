@@ -52,6 +52,13 @@ export const dataTableDoc: ComponentDoc = {
       default: "false",
       description: "Rows open something: a click on a row, or Enter on a cell without its own control, emits @rowActivated(row, event). Controls inside a row keep their clicks.",
     },
+    {
+      name: "stackBelow",
+      type: "number",
+      default: "0",
+      description:
+        "Viewport width (px) under which every row is drawn as a card: one line per column, its header beside its value; a column with an empty header (row actions) takes the whole line. `0` never stacks. Paginated and plain modes only. Wider than that, a table too wide for its box scrolls sideways inside it rather than clipping columns.",
+    },
     { name: "rows", type: "T[]", default: "[]", description: "All rows; sorting and paging are client-side." },
     {
       name: "rowKey",
@@ -137,6 +144,20 @@ export const dataTableDoc: ComponentDoc = {
     { name: "v-model:expanded", type: "Set<RowKey>", default: "new Set()", description: "Keys of the expanded rows (emits `update:expanded`); see `expanded`." },
   ],
   demos: [
+    {
+      title: "Rows as cards on a phone",
+      description:
+        "With `stack-below=\"640\"` the rows turn into cards under 640px. Narrow the window to see it; here it is set above any desktop width so it shows.",
+      code: `<UiDataTable
+  caption="Team members"
+  row-key="id"
+  mode="plain"
+  :columns="columns"
+  :rows="rows"
+  :stack-below="100000"
+/>`,
+      setup: () => ({ columns: PLAIN, rows: ROWS }),
+    },
     {
       title: "Sorting",
       description: "Click a header to sort; Shift+click adds a second column.",

@@ -9,6 +9,45 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.9.0 — 2026-10-27
+
+Two components the anime-dl panel (download.local.com) was drawing by hand, found while moving it
+onto onyx. Nothing existing changes.
+
+### Added
+
+- `UiTabBar`: the bottom navigation of a phone. The first `visible` destinations (4) sit in a bar
+  fixed to the bottom edge, above the safe-area inset, and the rest go behind "More", a sheet that
+  opens upwards and closes with Escape (focus back on the button), a tap outside or choosing an
+  entry. When only one destination would be left over it goes in the bar instead. Entries are real
+  `<a href>` links with `aria-current="page"`; `itemClicked` fires on a plain left click so a
+  single-page app can `preventDefault()` and route it (a click with a modifier key is left to the
+  browser). `count` shows a badge (hidden at 0), `live` a dot named by `liveLabel`. Under
+  `hideAbove` (640px) only: on a wider screen it is not rendered, spacer included. A spacer keeps
+  the end of the page out from under the bar. Tokens `--ui-tab-bar-*`, layer `--ui-tab-bar-z`
+  (900, below the teleported surfaces).
+- `UiSequenceGrid`: a numbered run, each number there or not — the episodes of a season on disk.
+  `max`, `missing`, `start` (1), `label`, `itemLabel`, `presentLabel`, `missingLabel`. Every number
+  is printed; a gap differs in fill, text and a dashed outline, so it does not rely on telling red
+  from green. The list's accessible name gives the count and the gaps as ranges ("8 of 12 present,
+  missing 4, 10-12"), and each cell says its state in words. Exports `formatRanges`. Tokens
+  `--ui-sequence-grid-*`, built on the success/danger surfaces.
+
+### Changed (opt-in; defaults unchanged)
+
+- `UiDataTable` `stackBelow`: under that viewport width every row is drawn as a card, one line per
+  column with its header beside its value (`data-label` on each cell); a column with an empty
+  header, such as row actions, takes the whole line. `0` (the default) never stacks; virtual mode
+  never stacks, since its rows have one fixed height.
+
+### Fixed
+
+- `UiDataTable`: columns that do not fit scroll sideways inside the table. The grid was
+  `overflow: hidden`, so every column past the right edge was cut off with nothing to say it was
+  there — on a phone, most of the table.
+- `UiDataTable`: a long word with nowhere to break (a path, an id, a URL) wraps inside its cell.
+  It used to run past the column and the table's `overflow: hidden` cut it off silently.
+
 ## 0.8.0 — 2026-10-25
 
 Components for a learner's profile page (phone first, 360px): a progress ring, a live

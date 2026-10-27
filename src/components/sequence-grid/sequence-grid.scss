@@ -1,0 +1,63 @@
+// Sequence grid — a numbered run, each cell there or not. References ONLY
+// semantic / component tokens.
+//
+// Present and missing differ in three ways, not one: fill colour, text colour
+// and the outline style (solid against dashed). Red and green are the pair a
+// colour-blind reader is most likely to confuse, and a gap is the thing this
+// component exists to show.
+
+.ui-sequence-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-sequence-grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-sequence-grid__cell {
+  min-width: var(--ui-sequence-grid-cell-width);
+  padding: var(--ui-sequence-grid-cell-padding);
+  border-radius: var(--ui-sequence-grid-cell-radius);
+  border: var(--ui-border-width) solid transparent;
+  font-size: var(--ui-sequence-grid-font-size);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.ui-sequence-grid__cell--present {
+  background: var(--ui-sequence-grid-present-bg);
+  color: var(--ui-sequence-grid-present-text);
+  border-color: var(--ui-sequence-grid-present-border);
+}
+
+.ui-sequence-grid__cell--missing {
+  background: var(--ui-sequence-grid-missing-bg);
+  color: var(--ui-sequence-grid-missing-text);
+  border-color: var(--ui-sequence-grid-missing-border);
+  border-style: dashed;
+}
+
+// The state in words, for a screen reader reading cell by cell.
+.ui-sequence-grid__state {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (forced-colors: active) {
+  .ui-sequence-grid__cell--present {
+    border-color: CanvasText;
+  }
+  .ui-sequence-grid__cell--missing {
+    border-color: GrayText;
+    color: GrayText;
+  }
+}
