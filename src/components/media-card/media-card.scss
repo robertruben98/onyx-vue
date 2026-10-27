@@ -10,6 +10,9 @@
   color: var(--ui-media-card-text);
   border: var(--ui-border-width) solid var(--ui-media-card-border);
   border-radius: var(--ui-media-card-radius);
+  // As tall as its row: UiGrid aligns items to the top, and cards of one row ended at different
+  // heights with their actions out of line. The body grows, so the actions sit at the bottom.
+  align-self: stretch;
   transition:
     border-color var(--ui-media-card-zoom-duration) var(--ui-media-card-zoom-easing),
     box-shadow var(--ui-media-card-zoom-duration) var(--ui-media-card-zoom-easing);

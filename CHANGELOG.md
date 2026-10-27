@@ -9,6 +9,14 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.11.1 — 2026-10-27
+
+### Fixed
+
+- `UiMediaCard` is as tall as its grid row (`align-self: stretch`), so the actions of every card in
+  a row line up at the bottom. UiGrid aligns its items to the top, and a card with a one-line title
+  ended higher than its neighbours.
+
 ## 0.11.0 — 2026-10-27
 
 ### Added

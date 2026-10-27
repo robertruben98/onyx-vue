@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { fireEvent, render } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import MediaCard from "./MediaCard.vue";
@@ -76,5 +78,12 @@ describe("MediaCard (Vue)", () => {
       slots: { default: "E17 · Tue", actions: "<button>Follow</button>" },
     });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+
+  // Static, like the other stylesheet checks: jsdom does not lay out a grid.
+  it("stretches to the height of its grid row", () => {
+    const css = readFileSync(join(process.cwd(), "src", "components", "media-card", "media-card.scss"), "utf8");
+    const root = css.match(/\n\.ui-media-card \{([^}]*)\}/)?.[1] ?? "";
+    expect(root).toMatch(/align-self:\s*stretch/);
   });
 });
