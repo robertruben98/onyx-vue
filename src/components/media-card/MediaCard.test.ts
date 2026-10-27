@@ -86,4 +86,10 @@ describe("MediaCard (Vue)", () => {
     const root = css.match(/\n\.ui-media-card \{([^}]*)\}/)?.[1] ?? "";
     expect(root).toMatch(/align-self:\s*stretch/);
   });
+
+  it("gives each badge a solid backing over the picture", () => {
+    const css = readFileSync(join(process.cwd(), "src", "components", "media-card", "media-card.scss"), "utf8");
+    const badge = css.match(/\n\.ui-media-card \.ui-media-card__badges > \* \{([^}]*)\}/)?.[1] ?? "";
+    expect(badge).toMatch(/background-color:\s*var\(--ui-media-card-badge-bg\)/);
+  });
 });
