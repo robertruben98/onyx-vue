@@ -22,10 +22,17 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v4
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
+      # The gallery (docs/) compiles the library from ../src, so both installs are needed.
       - run: npm ci
-      - run: npx vite build --config vite.demo.config.ts
+      - run: npm ci
+        working-directory: docs
+      - run: npx vite build --base /onyx-vue/ --outDir ../site --emptyOutDir
+        working-directory: docs
+      # GitHub Pages has no SPA fallback: an unknown path serves 404.html, so a deep link
+      # (/onyx-vue/components/button) gets the app, and the router takes it from there.
+      - run: cp site/index.html site/404.html
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
         with:
           path: site
