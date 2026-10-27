@@ -92,7 +92,7 @@ const rootClasses = computed(() => ({
       class="ui-metric-chip__value"
       :state="countState"
       :value="value"
-      :tone="tone === 'info' ? 'neutral' : tone"
+      :tone="tone === 'info' || tone === 'muted' ? 'neutral' : tone"
       :label="label"
     />
   </component>
