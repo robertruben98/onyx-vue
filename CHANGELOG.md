@@ -9,6 +9,15 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.10.0 — 2026-10-27
+
+### Changed (opt-in; defaults unchanged)
+
+- `UiSequenceGrid` `present`: give the numbers that are there (the files on disk) and every other
+  number from `start` to `max` is a gap; `missing` is ignored then. `max` is now optional and
+  defaults to the highest of `present`. The anime-dl panel was turning its list of files into a
+  list of gaps by hand before passing it in.
+
 ## 0.9.0 — 2026-10-27
 
 Two components the anime-dl panel (download.local.com) was drawing by hand, found while moving it
