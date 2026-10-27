@@ -9,6 +9,15 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.11.2 — 2026-10-27
+
+### Fixed
+
+- `UiMediaCard` `#badges` each get a solid backing (`--ui-media-card-badge-bg`, blurred behind). A
+  tag's fill is a translucent tint made for a plain surface; on a poster it took the poster's
+  colours, and "followed" on a red or white cover could not be read. The tag keeps its text and
+  border colour.
+
 ## 0.11.1 — 2026-10-27
 
 ### Fixed
