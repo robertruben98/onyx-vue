@@ -563,6 +563,33 @@
   --ui-heat-strip-l3: color-mix(in srgb, var(--ui-color-success) 72%, transparent);
   --ui-heat-strip-l4: var(--ui-color-success);
   --ui-heat-strip-legend-font-size: 0.625rem;
+  /* --- Tab bar: the phone's bottom navigation. Below the teleported layers
+     (a dialog opened from the page covers it) and above the page. */
+  --ui-tab-bar-z: 900;
+  --ui-tab-bar-height: 3.5rem;
+  --ui-tab-bar-bg: var(--ui-color-surface);
+  --ui-tab-bar-text: var(--ui-color-text-muted);
+  --ui-tab-bar-active: var(--ui-color-primary);
+  --ui-tab-bar-item-gap: 2px;
+  --ui-tab-bar-font-size: 0.6875rem;
+  --ui-tab-bar-icon-size: 1.125rem;
+  --ui-tab-bar-count-bg: var(--ui-color-primary);
+  --ui-tab-bar-count-text: var(--ui-color-on-primary);
+  --ui-tab-bar-count-font-size: 0.625rem;
+  --ui-tab-bar-live: var(--ui-color-info);
+  /* --- Sequence grid: built on the success/danger surfaces, so a preset that
+     re-routes them re-colours the grid. */
+  --ui-sequence-grid-gap: 3px;
+  --ui-sequence-grid-cell-width: 2.1rem;
+  --ui-sequence-grid-cell-padding: 0.1rem 0.3rem;
+  --ui-sequence-grid-cell-radius: var(--ui-radii-sm);
+  --ui-sequence-grid-font-size: var(--ui-font-size-sm);
+  --ui-sequence-grid-present-bg: var(--ui-color-success-surface);
+  --ui-sequence-grid-present-text: var(--ui-color-text);
+  --ui-sequence-grid-present-border: var(--ui-color-success);
+  --ui-sequence-grid-missing-bg: var(--ui-color-danger-surface);
+  --ui-sequence-grid-missing-text: var(--ui-color-text);
+  --ui-sequence-grid-missing-border: var(--ui-color-danger);
   --ui-spark-bars-gap: var(--ui-space-3);
   --ui-spark-bars-bar-gap: var(--ui-space-1);
   --ui-spark-bars-bar-width: 2.875rem;

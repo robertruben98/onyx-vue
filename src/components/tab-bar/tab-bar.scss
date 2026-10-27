@@ -1,0 +1,169 @@
+// Tab bar — the bottom navigation of a phone. References ONLY semantic /
+// component tokens.
+//
+// Fixed to the bottom edge, with the safe-area inset under it: on a phone with
+// a home indicator the labels would otherwise sit under the gesture bar. The
+// spacer takes the same height in the flow, so the last row of the page is
+// never hidden behind the bar.
+
+.ui-tab-bar__spacer {
+  height: calc(var(--ui-tab-bar-height) + env(safe-area-inset-bottom, 0px));
+}
+
+.ui-tab-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--ui-tab-bar-z);
+  background: var(--ui-tab-bar-bg);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.ui-tab-bar__items {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: var(--ui-tab-bar-height);
+}
+
+.ui-tab-bar__slot {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+}
+
+.ui-tab-bar__item {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-tab-bar-item-gap);
+  min-width: 0;
+  // At least a fingertip, whatever the bar's height is set to.
+  min-height: 44px;
+  padding: 0 var(--ui-space-1);
+  border: 0;
+  background: transparent;
+  color: var(--ui-tab-bar-text);
+  font: inherit;
+  font-size: var(--ui-tab-bar-font-size);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ui-tab-bar__item:hover {
+  color: var(--ui-color-text);
+}
+
+.ui-tab-bar__item:focus-visible,
+.ui-tab-bar__sheet-link:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: calc(var(--ui-focus-ring-width) * -1);
+}
+
+// The current page is said twice: colour and a bar across the top of the slot.
+// Colour alone is not enough for everyone, and the bar is what still reads
+// under forced colours.
+.ui-tab-bar__item--active {
+  color: var(--ui-tab-bar-active);
+  font-weight: var(--ui-font-weight-medium);
+}
+.ui-tab-bar__item--active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  height: var(--ui-border-width-thick);
+  background: currentColor;
+}
+
+.ui-tab-bar__icon {
+  font-size: var(--ui-tab-bar-icon-size);
+  line-height: 1;
+}
+
+.ui-tab-bar__label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-tab-bar__count {
+  display: inline-block;
+  min-width: 1.1rem;
+  padding: 0 var(--ui-space-1);
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-tab-bar-count-bg);
+  color: var(--ui-tab-bar-count-text);
+  font-size: var(--ui-tab-bar-count-font-size);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.ui-tab-bar__live {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-tab-bar-live);
+}
+
+.ui-tab-bar__item > .ui-tab-bar__count,
+.ui-tab-bar__item > .ui-tab-bar__live {
+  position: absolute;
+  top: var(--ui-space-1);
+  left: calc(50% + 0.5rem);
+}
+
+// The overflow opens upwards from the bar, as wide as the screen: on a phone a
+// small popover near the corner is a smaller target for no reason.
+.ui-tab-bar__sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  margin: 0;
+  padding: var(--ui-space-2) 0;
+  list-style: none;
+  background: var(--ui-tab-bar-bg);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.ui-tab-bar__sheet-link {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-height: 44px;
+  padding: 0 var(--ui-space-4);
+  color: var(--ui-color-text);
+  text-decoration: none;
+}
+
+.ui-tab-bar__sheet-link:hover {
+  background: var(--ui-color-surface-hover);
+}
+
+.ui-tab-bar__sheet-link--active {
+  color: var(--ui-tab-bar-active);
+  font-weight: var(--ui-font-weight-medium);
+  box-shadow: inset var(--ui-border-width-thick) 0 0 currentColor;
+}
+
+@media (forced-colors: active) {
+  .ui-tab-bar__live,
+  .ui-tab-bar__count {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+}
