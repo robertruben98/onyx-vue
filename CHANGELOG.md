@@ -33,8 +33,18 @@ onto onyx. Nothing existing changes.
   missing 4, 10-12"), and each cell says its state in words. Exports `formatRanges`. Tokens
   `--ui-sequence-grid-*`, built on the success/danger surfaces.
 
+### Changed (opt-in; defaults unchanged)
+
+- `UiDataTable` `stackBelow`: under that viewport width every row is drawn as a card, one line per
+  column with its header beside its value (`data-label` on each cell); a column with an empty
+  header, such as row actions, takes the whole line. `0` (the default) never stacks; virtual mode
+  never stacks, since its rows have one fixed height.
+
 ### Fixed
 
+- `UiDataTable`: columns that do not fit scroll sideways inside the table. The grid was
+  `overflow: hidden`, so every column past the right edge was cut off with nothing to say it was
+  there — on a phone, most of the table.
 - `UiDataTable`: a long word with nowhere to break (a path, an id, a URL) wraps inside its cell.
   It used to run past the column and the table's `overflow: hidden` cut it off silently.
 
