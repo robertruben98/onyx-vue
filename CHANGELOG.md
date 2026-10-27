@@ -33,6 +33,11 @@ onto onyx. Nothing existing changes.
   missing 4, 10-12"), and each cell says its state in words. Exports `formatRanges`. Tokens
   `--ui-sequence-grid-*`, built on the success/danger surfaces.
 
+### Fixed
+
+- `UiDataTable`: a long word with nowhere to break (a path, an id, a URL) wraps inside its cell.
+  It used to run past the column and the table's `overflow: hidden` cut it off silently.
+
 ## 0.8.0 — 2026-10-25
 
 Components for a learner's profile page (phone first, 360px): a progress ring, a live
