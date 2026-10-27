@@ -97,6 +97,10 @@
   padding: var(--ui-data-table-cell-padding-y)
     var(--ui-data-table-cell-padding-x);
   min-width: 0;
+  // A path, an id or a URL has no space to break at. Without this it ran past
+  // its cell and the table's `overflow: hidden` cut it off with no sign that
+  // anything was missing; now it wraps inside the column.
+  overflow-wrap: anywhere;
 }
 
 .ui-dt__th:focus-visible,
