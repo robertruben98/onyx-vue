@@ -11,7 +11,10 @@
   background-color: var(--ui-data-table-bg);
   color: var(--ui-data-table-text);
   font-size: var(--ui-data-table-font-size);
-  overflow: hidden;
+  // Scroll, not clip: `overflow: hidden` kept the rounded corners and silently
+  // cut off every column past the right edge — on a phone, most of the table.
+  // `auto` clips to the corners just the same.
+  overflow-x: auto;
 }
 
 .ui-dt__head {
@@ -223,4 +226,42 @@
 // already there for every row.
 .ui-dt__tr--activatable {
   cursor: pointer;
+}
+
+// ---------------------------------------------------------------------------
+// Stacked rows (`stackBelow`): each row a card, each cell "header  value".
+// ---------------------------------------------------------------------------
+.ui-data-table--stacked .ui-dt__head {
+  display: none;
+}
+
+.ui-data-table--stacked .ui-dt__tr {
+  display: flex;
+  flex-direction: column;
+  padding: var(--ui-data-table-cell-padding-y) 0;
+}
+
+.ui-data-table--stacked .ui-dt__td {
+  display: grid;
+  grid-template-columns: minmax(5.5rem, 34%) minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  align-items: baseline;
+  padding-top: var(--ui-space-1);
+  padding-bottom: var(--ui-space-1);
+  text-align: left;
+}
+
+.ui-data-table--stacked .ui-dt__td::before {
+  content: attr(data-label);
+  color: var(--ui-data-table-header-text);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-data-table-header-font-weight);
+}
+
+// A column with no header (row actions) takes the whole line.
+.ui-data-table--stacked .ui-dt__td[data-label=""] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ui-data-table--stacked .ui-dt__td[data-label=""]::before {
+  display: none;
 }
