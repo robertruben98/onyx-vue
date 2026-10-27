@@ -590,6 +590,21 @@
   --ui-sequence-grid-missing-bg: var(--ui-color-danger-surface);
   --ui-sequence-grid-missing-text: var(--ui-color-text);
   --ui-sequence-grid-missing-border: var(--ui-color-danger);
+  /* --- Media card: a card surface that leads with its image. */
+  --ui-media-card-bg: var(--ui-card-bg);
+  --ui-media-card-text: var(--ui-card-text);
+  --ui-media-card-border: var(--ui-card-border);
+  --ui-media-card-radius: var(--ui-radii-md);
+  --ui-media-card-media-bg: var(--ui-color-neutral-surface);
+  --ui-media-card-padding-x: var(--ui-space-3);
+  --ui-media-card-padding-y: var(--ui-space-3);
+  --ui-media-card-padding: var(--ui-media-card-padding-y) var(--ui-media-card-padding-x);
+  --ui-media-card-title-font-size: var(--ui-font-size-md);
+  --ui-media-card-title-font-weight: var(--ui-font-weight-medium);
+  --ui-media-card-subtitle: var(--ui-color-text-muted);
+  --ui-media-card-placeholder-text: var(--ui-avatar-gradient-text);
+  --ui-media-card-placeholder-font-size: 2rem;
+  --ui-media-card-badge-inset: var(--ui-space-2);
   --ui-spark-bars-gap: var(--ui-space-3);
   --ui-spark-bars-bar-gap: var(--ui-space-1);
   --ui-spark-bars-bar-width: 2.875rem;
