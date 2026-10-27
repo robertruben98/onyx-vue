@@ -20,10 +20,10 @@ export const tooltipDoc: ComponentDoc = {
       description: "Preferred placement, centered on the cross axis.",
     },
     {
-      name: "@toggle",
+      name: "@toggled / @toggle",
       type: "(shown: boolean) => void",
       default: "—",
-      description: "Emitted whenever the tooltip is shown or hidden.",
+      description: "Emitted whenever the tooltip is shown or hidden. `@toggle` is the deprecated name of the same event, still emitted until 1.0.",
     },
     { name: "#default", type: "slot", default: "—", description: "The trigger." },
   ],

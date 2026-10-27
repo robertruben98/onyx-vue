@@ -28,17 +28,14 @@
     box-shadow 150ms ease;
 }
 
+// The ring is an outline, not a box-shadow: a preset that gives a variant its
+// own shadow (pocket's primary) used to replace the ring and leave the focused
+// button looking unfocused. An outline also survives forced-colors mode.
 .ui-button__el:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
-.ui-button__el:disabled {
-  cursor: not-allowed;
-  background-color: var(--ui-color-disabled-bg);
-  color: var(--ui-color-disabled-text);
-  border-color: transparent;
-}
 
 // --- Variants -------------------------------------------------------------
 .ui-button--primary .ui-button__el {
@@ -96,6 +93,64 @@
   height: var(--ui-button-height-lg);
 }
 
+// --- Icons (0.6) ------------------------------------------------------------
+// Decorative glyphs on either side of the label. They never shrink, so a long
+// label wraps (or is squeezed) before an icon is.
+.ui-button__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-button-icon-size);
+  height: var(--ui-button-icon-size);
+}
+
+.ui-button__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+// --- Block (0.6) ------------------------------------------------------------
+// Full width of the container: the root becomes a block and the button fills it.
+.ui-button--block {
+  display: block;
+  width: 100%;
+}
+
+.ui-button--block .ui-button__el {
+  width: 100%;
+}
+
+// --- Wrap (0.6) -------------------------------------------------------------
+// A label that does not fit goes onto a second line. The fixed height becomes a
+// minimum and the line height opens up, so two lines stay inside the button
+// instead of spilling over its border. Without `wrap` nothing changes.
+.ui-button--wrap {
+  max-width: 100%;
+}
+
+.ui-button--wrap .ui-button__el {
+  max-width: 100%;
+  height: auto;
+  min-height: var(--ui-button-height);
+  line-height: var(--ui-button-wrap-line-height);
+  white-space: normal;
+  text-align: center;
+}
+
+.ui-button--wrap .ui-button__label {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.ui-button--wrap.ui-button--sm .ui-button__el {
+  min-height: var(--ui-button-height-sm);
+}
+
+.ui-button--wrap.ui-button--lg .ui-button__el {
+  min-height: var(--ui-button-height-lg);
+}
+
 // --- Loading --------------------------------------------------------------
 .ui-button--loading .ui-button__label {
   opacity: 0.7;
@@ -115,4 +170,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+// --- Disabled -------------------------------------------------------------
+// Al final y con la raiz delante: con `.ui-button__el:disabled` a secas y al
+// principio del fichero, cada variante (`.ui-button--secondary .ui-button__el`,
+// misma especificidad y escrita despues) le pisaba el fondo y el color, y un
+// boton deshabilitado se veia identico al activo; solo cambiaba el cursor, que
+// ni el teclado ni el movil ven. Lo destapo el pattern del asistente.
+// Cargando tambien deshabilita el <button>, pero conserva el aspecto de su
+// variante con el spinner: un "guardando..." gris parece un boton muerto.
+.ui-button:not(.ui-button--loading) .ui-button__el:disabled {
+  cursor: not-allowed;
+  background-color: var(--ui-color-disabled-bg);
+  color: var(--ui-color-disabled-text);
+  border-color: transparent;
 }

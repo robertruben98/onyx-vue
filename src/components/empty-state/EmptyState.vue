@@ -24,7 +24,11 @@ const props = withDefaults(
 /** Emitted when the primary action is activated. */
 /** Emitted when the secondary action is activated. */
 const emit = defineEmits<{
+  primaryClicked: [event: MouseEvent];
+  /** @deprecated Use `primaryClicked`; still emitted until 1.0. */
   primaryAction: [event: MouseEvent];
+  secondaryClicked: [event: MouseEvent];
+  /** @deprecated Use `secondaryClicked`; still emitted until 1.0. */
   secondaryAction: [event: MouseEvent];
 }>();
 
@@ -89,7 +93,7 @@ const describedBy = computed(() => (hasDescription.value ? descriptionId : undef
         v-if="hasPrimary"
         variant="primary"
         :disabled="disabled"
-        @clicked="(e) => emit('primaryAction', e)"
+        @clicked="(e) => (emit('primaryClicked', e), emit('primaryAction', e))"
       >
         <slot name="primaryAction" />
       </UiButton>
@@ -97,7 +101,7 @@ const describedBy = computed(() => (hasDescription.value ? descriptionId : undef
         v-if="hasSecondary"
         variant="secondary"
         :disabled="disabled"
-        @clicked="(e) => emit('secondaryAction', e)"
+        @clicked="(e) => (emit('secondaryClicked', e), emit('secondaryAction', e))"
       >
         <slot name="secondaryAction" />
       </UiButton>

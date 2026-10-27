@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { h } from "vue";
 import NavRail from "./NavRail.vue";
 import NavRailGroup from "./NavRailGroup.vue";
@@ -108,5 +110,11 @@ describe("NavRailItem (Vue)", () => {
       props: { label: "payment", count: 3, active: true, title: "atajo 1" },
     });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+  it("a link entry is never wider than the rail", () => {
+    // Una entrada con `href` es un <a>, que mide su caja de contenido: con
+    // width 100% y el padding se salia del rail y tapaba el contador.
+    const css = readFileSync(join(process.cwd(), "src/components/nav-rail/nav-rail.scss"), "utf8");
+    expect(css).toMatch(/\.ui-nav-rail__item\s*\{[^}]*box-sizing:\s*border-box/);
   });
 });

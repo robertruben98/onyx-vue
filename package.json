@@ -1,25 +1,46 @@
 {
   "name": "onyx-vue",
-  "version": "0.0.0",
+  "version": "0.11.1",
   "description": "Vue 3 port of Onyx UI — accessible, token-themed components (styled mode).",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertruben98/onyx-vue.git"
+  },
+  "homepage": "https://vue.a-robertdev.com",
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "ui",
+    "design-tokens",
+    "accessibility",
+    "onyx"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "files": [
     "dist"
   ],
   "main": "./dist/onyx-vue.umd.js",
   "module": "./dist/onyx-vue.es.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/onyx-vue.es.js",
       "require": "./dist/onyx-vue.umd.js"
     },
-    "./style.css": "./dist/onyx-vue.css"
+    "./style.css": "./dist/onyx-vue.css",
+    "./styles/*": "./dist/styles/*"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vue-tsc -p tsconfig.build.json",
     "test": "vitest run",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "score": "node scorecard/run.mjs"
   },
   "peerDependencies": {
     "vue": "^3.4.0"
@@ -30,13 +51,20 @@
     "@types/jest-axe": "^3.5.9",
     "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vitest/coverage-v8": "^5.0.3",
+    "axe-core": "4.10",
     "jest-axe": "^11.0.0",
     "jsdom": "^30.0.1",
+    "playwright": "^1.63.0",
     "sass": "^1.105.1",
-    "typescript": "~7.0.2",
+    "typescript": "~6.0.3",
     "vite": "^8.3.0",
     "vitest": "^5.0.3",
     "vue": "^3.5.42",
     "vue-tsc": "^3.3.12"
-  }
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ]
 }

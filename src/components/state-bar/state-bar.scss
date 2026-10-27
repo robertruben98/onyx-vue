@@ -1,0 +1,85 @@
+// State bar — progress and composition in one track. Semantic tokens only.
+//
+// Each segment takes the colour its state takes in `UiRunState`, so the bar and
+// the chips in the list below it cannot drift apart. `omitido` is hollow rather
+// than filled for the same reason it is dashed in the chip: it did not
+// conclude, and a solid block would read as an outcome.
+
+.ui-state-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ui-state-bar__track {
+  display: flex;
+  gap: 2px;
+  height: 18px;
+  padding: 2px;
+  background-color: var(--ui-color-neutral-surface);
+  border: var(--ui-border-width, 1px) solid var(--ui-color-border);
+  border-radius: var(--ui-radii-sm, 2px);
+  overflow: hidden;
+}
+
+.ui-state-bar__seg {
+  min-width: 0;
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-state-bar__seg { transition: none; }
+}
+
+.ui-state-bar__seg--fallo     { background-color: var(--ui-color-danger); }
+.ui-state-bar__seg--defecto   { background-color: var(--ui-color-danger); opacity: 0.62; }
+.ui-state-bar__seg--aviso     { background-color: var(--ui-color-warning); }
+.ui-state-bar__seg--arreglado { background-color: var(--ui-color-success); opacity: 0.62; }
+.ui-state-bar__seg--ok        { background-color: var(--ui-color-success); }
+.ui-state-bar__seg--info      { background-color: var(--ui-color-info); }
+
+// Hollow: it did not conclude, so it is not an outcome.
+.ui-state-bar__seg--omitido {
+  background-color: transparent;
+  border: 1px dashed var(--ui-color-neutral);
+}
+
+// Pending is emptier still: nothing has happened there yet.
+.ui-state-bar__seg--pending { background-color: transparent; }
+
+.ui-state-bar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-state-bar__entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  background: none;
+  border: 0;
+  border-radius: var(--ui-radii-sm, 2px);
+  color: inherit;
+  font: inherit;
+}
+
+button.ui-state-bar__entry { cursor: pointer; }
+button.ui-state-bar__entry:hover { background-color: var(--ui-color-surface-hover); }
+button.ui-state-bar__entry:focus-visible {
+  outline: 2px solid var(--ui-focus-ring);
+  outline-offset: 1px;
+}
+
+.ui-state-bar__entry--active { background-color: var(--ui-color-surface-hover); }
+
+.ui-state-bar__count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--ui-color-text);
+}

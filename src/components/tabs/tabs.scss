@@ -5,15 +5,42 @@
 
 .ui-tabs {
   display: block;
+  // Dentro de un grid o un flex, una tira con overflow="scroll" no puede imponer
+  // su ancho de una fila al contenedor: se desliza dentro de el (si no, la pagina
+  // entera medía 616px en un movil de 360).
+  min-width: 0;
 }
 
 .ui-tabs__list {
   display: flex;
+  // Una tira que no cabe REPARTE, no se sale. Sin esto los ultimos botones se
+  // pintan fuera del contenedor -- no recortados, sino por encima de lo que
+  // haya al lado-, y son justo los que nadie encuentra: la pestana que se sale
+  // por la derecha no existe para quien mira la pagina.
+  flex-wrap: wrap;
   gap: var(--ui-tabs-gap);
   border-bottom: var(--ui-tabs-border-width) solid var(--ui-tabs-border);
 }
 
+// overflow="scroll": una sola fila que se desliza con el dedo, sin barra visible.
+.ui-tabs__list--scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.ui-tabs__list--scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .ui-tabs__tab {
+  // Ni encoge ni parte la etiqueta: un boton es una etiqueta entera o no se
+  // lee. Con el encogido por defecto, "Sin concluir" caia en dos lineas para
+  // ganar unos pixeles que de todas formas no bastaban, asi que la tira seguia
+  // sobresaliendo Y ademas se leia peor. Reparte antes de encoger.
+  flex: 0 0 auto;
+  white-space: nowrap;
   padding: var(--ui-tabs-padding-y) var(--ui-tabs-padding-x);
   font-family: inherit;
   font-size: var(--ui-tabs-font-size);
@@ -34,8 +61,10 @@
 }
 
 .ui-tabs__tab:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  // Inside the ring: a scrolling strip (overflow-x: auto) clips anything drawn
+  // outside the tab, so an outer ring lost its top and bottom.
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: calc(var(--ui-focus-ring-width) * -1);
   border-radius: var(--ui-tabs-radius);
 }
 
@@ -51,4 +80,109 @@
 
 .ui-tabs__panels {
   padding: var(--ui-tabs-panel-padding-y) var(--ui-tabs-panel-padding-x);
+}
+
+// --- Scroll hints (0.4) --------------------------------------------------------
+// La tira que se desplaza lleva un degradado y una flecha en el borde que
+// esconde pestanas; el degradado es una mascara, asi que sirve sobre cualquier
+// fondo.
+.ui-tabs__bar {
+  position: relative;
+  min-width: 0;
+}
+
+// Bajo la flecha la tira es transparente del todo, y el degradado empieza
+// donde la flecha acaba: antes empezaba en el borde, asi que la flecha se
+// sentaba sobre media palabra ("‹ ning") que asomaba casi opaca a su lado.
+// `--ui-tabs-fade-clear` es lo que tapa la flecha y `--ui-tabs-fade-solid`
+// donde la tira vuelve a ser opaca (nunca menos de 1rem de degradado).
+.ui-tabs__list--scroll {
+  --ui-tabs-fade-clear: var(--ui-tabs-arrow-size);
+  --ui-tabs-fade-solid: max(var(--ui-tabs-fade), calc(var(--ui-tabs-arrow-size) + 1rem));
+  // Una pestana que recibe el foco (o que se lleva a la vista) queda fuera de
+  // la flecha y del degradado.
+  scroll-padding-inline: var(--ui-tabs-fade-solid);
+}
+
+.ui-tabs__bar--hidden-start .ui-tabs__list--scroll {
+  -webkit-mask-image: linear-gradient(to right, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
+  mask-image: linear-gradient(to right, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
+}
+
+.ui-tabs__bar--hidden-end .ui-tabs__list--scroll {
+  -webkit-mask-image: linear-gradient(to left, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
+  mask-image: linear-gradient(to left, transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid));
+}
+
+.ui-tabs__bar--hidden-start.ui-tabs__bar--hidden-end .ui-tabs__list--scroll {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent var(--ui-tabs-fade-clear),
+    #000 var(--ui-tabs-fade-solid),
+    #000 calc(100% - var(--ui-tabs-fade-solid)),
+    transparent calc(100% - var(--ui-tabs-fade-clear))
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent var(--ui-tabs-fade-clear),
+    #000 var(--ui-tabs-fade-solid),
+    #000 calc(100% - var(--ui-tabs-fade-solid)),
+    transparent calc(100% - var(--ui-tabs-fade-clear))
+  );
+}
+
+.ui-tabs__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-tabs-arrow-size);
+  height: var(--ui-tabs-arrow-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-tabs-arrow-bg);
+  color: var(--ui-tabs-arrow-text);
+  box-shadow: var(--ui-tabs-arrow-shadow);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.ui-tabs__arrow:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-tabs__arrow--start {
+  left: 0;
+}
+
+.ui-tabs__arrow--end {
+  right: 0;
+}
+
+.ui-tabs__arrow svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// Con puntero grueso (dedo), un area invisible de 44px alrededor del control,
+// como UiCheckbox y UiSwitch, sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-tabs__arrow::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
 }

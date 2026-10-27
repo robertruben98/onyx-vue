@@ -31,6 +31,11 @@
   display: flex;
   align-items: center;
   gap: var(--ui-space-2);
+  // A link entry (`href`) is an <a>, and an <a> sizes its content box: with
+  // width 100% plus the padding it came out wider than the rail, pushed the
+  // count out of sight and scrolled the rail sideways. A <button> is already
+  // border-box, which is why the button entries never showed it.
+  box-sizing: border-box;
   width: 100%;
   min-height: var(--ui-nav-rail-item-height);
   padding: 0 var(--ui-nav-rail-padding-x);

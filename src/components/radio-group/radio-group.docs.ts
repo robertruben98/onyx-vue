@@ -29,10 +29,10 @@ export const radioGroupDoc: ComponentDoc = {
       description: "Disables the whole group; selection is ignored.",
     },
     {
-      name: "@valueChange",
+      name: "@valueChanged / @valueChange",
       type: "(value: string) => void",
       default: "—",
-      description: "Emitted on every selection change.",
+      description: "Emitted on every selection change. `@valueChange` is the deprecated name of the same event, still emitted until 1.0.",
     },
   ],
   demos: [

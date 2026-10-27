@@ -23,10 +23,10 @@ export const switchDoc: ComponentDoc = {
       description: "A disabled switch never emits `checkedChange`.",
     },
     {
-      name: "@checkedChange",
+      name: "@checkedChanged / @checkedChange",
       type: "(value: boolean) => void",
       default: "—",
-      description: "Emitted on every change, in addition to `v-model`.",
+      description: "Emitted on every change, in addition to `v-model`. `@checkedChange` is the deprecated name of the same event, still emitted until 1.0.",
     },
   ],
   demos: [

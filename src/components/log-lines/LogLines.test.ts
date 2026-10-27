@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import LogLines from "./LogLines.vue";
@@ -63,5 +65,10 @@ describe("LogLines (Vue)", () => {
       props: { lines, label: "workflow activity" },
     });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+  it("wraps a long detail instead of widening the list", () => {
+    // Una URL sin espacios empujaba la lista fuera de su caja en /oidc/.
+    const css = readFileSync(join(process.cwd(), "src/components/log-lines/log-lines.scss"), "utf8");
+    expect(css).toMatch(/\.ui-log-lines__result\s*\{[^}]*overflow-wrap:\s*anywhere/);
   });
 });

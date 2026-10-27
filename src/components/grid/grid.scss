@@ -1,0 +1,12 @@
+// Grid — equal columns, fixed or fitted to the room. References ONLY
+// semantic / component tokens.
+
+.ui-grid {
+  display: grid;
+  // Toma el ancho que tiene: dentro de un contenedor flex una rejilla sin ancho
+  // se encogia a su contenido y `minItemWidth` daba una sola columna estrecha.
+  width: 100%;
+  gap: var(--ui-grid-gap);
+  align-items: start;
+  min-width: 0;
+}

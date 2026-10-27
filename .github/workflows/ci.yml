@@ -1,0 +1,26 @@
+# Cada PR y cada push: tipos, tests y build. Sin esto un PR no tenia checks, y nada
+# decia si una rama rompia la libreria antes de publicar el tgz.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master, feat/console-lists]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

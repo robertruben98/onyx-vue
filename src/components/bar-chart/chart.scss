@@ -1,0 +1,161 @@
+// Charts — shared by UiBarChart and UiBarList. References ONLY semantic /
+// component tokens. SVG text takes text tokens, never the series colour: the
+// colour is carried by the mark next to it.
+
+.ui-chart {
+  width: 100%;
+  min-width: 0;
+}
+
+.ui-chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.ui-chart--ok { fill: var(--ui-chart-ok); background-color: var(--ui-chart-ok); }
+.ui-chart--warn { fill: var(--ui-chart-warn); background-color: var(--ui-chart-warn); }
+.ui-chart--bad { fill: var(--ui-chart-bad); background-color: var(--ui-chart-bad); }
+.ui-chart--none { fill: var(--ui-chart-none); background-color: var(--ui-chart-none); }
+.ui-chart--one { fill: var(--ui-chart-one); background-color: var(--ui-chart-one); }
+
+// `background-color` above is for the legend swatches (HTML); on SVG paths it
+// does nothing, and `fill` does nothing on the swatches.
+
+.ui-chart__grid {
+  stroke: var(--ui-chart-grid);
+  stroke-width: 1;
+}
+
+.ui-chart__tick {
+  fill: var(--ui-color-text-muted);
+  font-family: var(--ui-font-family-mono, var(--ui-font-family, monospace));
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-chart__tick--dim {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.ui-chart__cat {
+  fill: var(--ui-color-text-muted);
+  font-family: var(--ui-font-family-mono, var(--ui-font-family, monospace));
+  font-size: 12px;
+}
+
+.ui-chart__val {
+  fill: var(--ui-color-text);
+  font-family: var(--ui-font-family-mono, var(--ui-font-family, monospace));
+  font-size: 12px;
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+// The one exception to "text is not inside the colour": a count inside a
+// segment, drawn only when it fits with room to spare.
+.ui-chart__inseg {
+  fill: var(--ui-chart-inseg);
+  font-family: var(--ui-font-family-mono, var(--ui-font-family, monospace));
+  font-size: 10.5px;
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-chart__inseg--light {
+  fill: var(--ui-chart-inseg-light);
+}
+
+.ui-chart__start { text-anchor: start; }
+.ui-chart__mid { text-anchor: middle; }
+.ui-chart__end { text-anchor: end; }
+
+.ui-chart__hit {
+  fill: transparent;
+  outline: none;
+}
+
+.ui-chart__hit:hover,
+.ui-chart__hit:focus-visible {
+  fill: color-mix(in srgb, var(--ui-color-primary) 12%, transparent);
+}
+
+.ui-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-4);
+  margin-bottom: var(--ui-space-3);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-chart__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ui-chart__swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--ui-radius);
+}
+
+.ui-chart__twin {
+  margin-top: var(--ui-space-3);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-chart__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ui-font-size-sm);
+}
+
+// The table scrolls inside its fold on a phone instead of widening the page.
+.ui-chart__twin .ui-disclosure__body {
+  overflow-x: auto;
+}
+
+.ui-chart__table th,
+.ui-chart__table td {
+  padding: 4px 8px;
+  text-align: left;
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+  white-space: nowrap;
+}
+
+.ui-chart__table th {
+  font-size: 0.5625rem;
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-chart__table td {
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-chart__table .ui-chart__num {
+  text-align: right;
+}
+
+.ui-chart__tip {
+  position: fixed;
+  z-index: var(--ui-tooltip-z);
+  transform: translate(-50%, calc(-100% - 8px));
+  max-width: min(30rem, calc(100vw - 16px));
+  padding: 6px 10px;
+  border: var(--ui-border-width) solid var(--ui-color-border-strong, var(--ui-color-border));
+  border-radius: var(--ui-radius);
+  background-color: var(--ui-color-surface);
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-sm);
+  white-space: normal;
+  pointer-events: none;
+}

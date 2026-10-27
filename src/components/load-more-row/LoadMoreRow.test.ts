@@ -19,7 +19,9 @@ describe("LoadMoreRow (Vue)", () => {
     const { emitted } = render(LoadMoreRow, { props: { remaining: 5 } });
     (screen.getByRole("button") as HTMLButtonElement).click();
     expect(emitted().loadMore).toBeTruthy();
+    expect(emitted().loadMoreRequested).toBeTruthy();
     expect(emitted().loadMore!.length).toBe(1);
+    expect(emitted().loadMoreRequested!.length).toBe(1);
   });
 
   it("renders nothing at all when nothing remains", () => {
@@ -37,6 +39,7 @@ describe("LoadMoreRow (Vue)", () => {
     const button = screen.getByRole("button") as HTMLButtonElement;
     button.click();
     expect(emitted().loadMore).toBeFalsy();
+    expect(emitted().loadMoreRequested).toBeFalsy();
   });
 
   it("has no axe violations", async () => {

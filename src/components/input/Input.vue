@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./input.scss";
 
 export type InputType =
@@ -9,7 +10,10 @@ export type InputType =
   | "number"
   | "tel"
   | "url"
-  | "search";
+  | "search"
+  | "date"
+  | "time"
+  | "datetime-local";
 export type InputSize = "sm" | "md" | "lg";
 
 const props = withDefaults(
@@ -28,6 +32,17 @@ const props = withDefaults(
     invalid?: boolean;
     /** Disabled state. */
     disabled?: boolean;
+    /**
+     * Read-only: the value can be read, selected and copied but not edited,
+     * and keeps the normal text colour. Use it for "your answer" after a check;
+     * `disabled` greys the text out.
+     */
+    readonly?: boolean;
+    /**
+     * Takes the full width of its container (block, `width: 100%`) instead of
+     * sitting inline at its intrinsic width.
+     */
+    fluid?: boolean;
   }>(),
   {
     type: "text",
@@ -37,11 +52,17 @@ const props = withDefaults(
     ariaLabel: "",
     invalid: false,
     disabled: false,
+    readonly: false,
+    fluid: false,
   },
 );
 
 /** Emitted on every value change (in addition to v-model). */
-const emit = defineEmits<{ valueChange: [value: string] }>();
+const emit = defineEmits<{
+  valueChanged: [value: string];
+  /** @deprecated Use `valueChanged`; still emitted until 1.0. */
+  valueChange: [value: string];
+}>();
 
 /** Two-way bound value (v-model). */
 const value = defineModel<string>({ default: "" });
@@ -49,12 +70,20 @@ const value = defineModel<string>({ default: "" });
 const uid = useId();
 const inputId = `ui-input-${uid}`;
 
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId, fieldInvalid } = useForwardedAttrs(inputId, { field: true });
+/** Invalido por su prop o por el UiFormField que lo envuelve. */
+const isInvalid = (): boolean => props.invalid || fieldInvalid();
+
 const rootClasses = computed(() => ({
   "ui-input": true,
   "ui-input--sm": props.size === "sm",
   "ui-input--lg": props.size === "lg",
-  "ui-input--invalid": props.invalid,
+  "ui-input--invalid": isInvalid(),
   "ui-input--disabled": props.disabled,
+  "ui-input--fluid": props.fluid,
 }));
 
 function handleInput(event: Event): void {
@@ -63,7 +92,8 @@ function handleInput(event: Event): void {
   }
   const next = (event.target as HTMLInputElement).value;
   value.value = next;
-  emit("valueChange", next);
+  emit("valueChanged", next);
+  emit("valueChange", next); // obsoleto, ver src/deprecations.ts
 }
 /**
  * Foco programatico. Sin esto, quien quiera enfocar la caja tiene que sacar el
@@ -87,20 +117,22 @@ defineExpose({ focus, select, elemento });
 </script>
 
 <template>
-  <span :class="rootClasses">
-    <label v-if="label" class="ui-input__label" :for="inputId">{{
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
+    <label v-if="label" class="ui-input__label" :for="controlId()">{{
       label
     }}</label>
     <input
+      v-bind="controlAttrs()"
       ref="elemento"
       class="ui-input__el"
-      :id="inputId"
+      :id="controlId()"
       :type="type"
       :value="value"
       :disabled="disabled"
+      :readonly="readonly || undefined"
       :placeholder="placeholder || undefined"
       :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-      :aria-invalid="invalid ? 'true' : undefined"
+      :aria-invalid="isInvalid() ? 'true' : undefined"
       @input="handleInput"
     />
   </span>

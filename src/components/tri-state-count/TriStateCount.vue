@@ -1,4 +1,5 @@
 <script lang="ts">
+import { canonicalTone, type LegacyTone } from "../../internal/tone";
 /**
  * The three things a counter can be.
  *
@@ -10,7 +11,7 @@
 export type TriState = "known" | "pending" | "unrequested";
 
 /** Semantic tone for a known value — ignored when state is pending or unrequested. */
-export type TriStateTone = "neutral" | "ok" | "warn" | "danger";
+export type TriStateTone = "neutral" | "success" | "warning" | "danger" | LegacyTone;
 
 /** Derive the state from the shape a data layer usually reports. */
 export function resolveTriState(input: {
@@ -53,6 +54,9 @@ const props = withDefaults(
   },
 );
 
+/** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
+const tone = computed(() => canonicalTone(props.tone));
+
 /**
  * `state` alone is not enough: `known` with no value on hand is the exact
  * conflation this component exists to prevent — "no open alerts" and "we
@@ -92,9 +96,9 @@ const known = computed(() => effectiveState.value === "known");
 
 const rootClasses = computed(() => ({
   "ui-tri-state-count": true,
-  "ui-tri-state-count--ok": known.value && props.tone === "ok",
-  "ui-tri-state-count--warn": known.value && props.tone === "warn",
-  "ui-tri-state-count--danger": known.value && props.tone === "danger",
+  "ui-tri-state-count--ok": known.value && tone.value === "success",
+  "ui-tri-state-count--warn": known.value && tone.value === "warning",
+  "ui-tri-state-count--danger": known.value && tone.value === "danger",
   "ui-tri-state-count--quiet": !known.value,
 }));
 </script>

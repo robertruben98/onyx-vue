@@ -1,0 +1,33 @@
+// Form field — label, control, hint and error in one column. References ONLY
+// semantic / component tokens.
+
+.ui-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-form-field-gap);
+  min-width: 0;
+}
+
+.ui-form-field__label {
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-form-field-label);
+}
+
+.ui-form-field__required {
+  color: var(--ui-form-field-required);
+}
+
+.ui-form-field__help,
+.ui-form-field__error {
+  margin: 0;
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-form-field__help {
+  color: var(--ui-form-field-help);
+}
+
+.ui-form-field__error {
+  color: var(--ui-form-field-error);
+}

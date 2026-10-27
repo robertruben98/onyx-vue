@@ -1,0 +1,15 @@
+/* La capa de tokens, SIN presets.
+ *
+ * Es lo minimo que necesita un consumidor para que los componentes se pinten:
+ * las variables que todos ellos leen. Los presets (dark, acme, console, matrix)
+ * son opcionales y se importan aparte, uno a uno.
+ *
+ * Existe porque `index.css` los trae los cuatro de una pieza, y una pagina que
+ * solo usa `ui-theme-console` cargaba ademas acme y matrix sin usarlos. No es
+ * un problema de tamano nada mas: cada preset nuevo engordaba a TODOS los
+ * consumidores, y ese patron no tiene techo.
+ *
+ *   import "@onyx/vue/styles/base.css";
+ *   import "@onyx/vue/styles/console.css";
+ */
+@import "./tokens.css";

@@ -2,8 +2,10 @@ import { createApp, type Component } from "vue";
 import App from "./App.vue";
 import { router } from "./router";
 
-// Importar el indice de la libreria una vez arrastra la hoja de tokens (el
-// indice importa su CSS), asi que la app de documentacion tiene el tema gratis.
+// El paquete COMPLETO de estilos, y aqui si esta justificado: este sitio tiene
+// un selector de preset y los ofrece los cuatro. Una pagina que use uno solo
+// importa `styles/base.css` mas el suyo.
+import "@onyx/vue/styles/index.css";
 import * as onyx from "@onyx/vue";
 
 // Cromo del sitio: fuente, fondo y tipografia de la pagina.

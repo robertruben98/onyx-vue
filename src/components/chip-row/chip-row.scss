@@ -1,0 +1,39 @@
+// Chip row (0.6). References ONLY semantic / component tokens.
+
+.ui-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-chip-row-gap);
+  min-width: 0;
+}
+
+// One line that slides with the finger. The padding is the room a focus ring
+// needs (width + offset) so neither the first/last chip nor the ring of the
+// focused chip is cut by the scroll box, and scroll-padding keeps a chip that
+// receives focus fully inside it.
+.ui-chip-row--scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding: var(--ui-chip-row-inset);
+  scroll-padding-inline: var(--ui-chip-row-inset);
+}
+
+.ui-chip-row--scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.ui-chip-row--scroll > * {
+  flex: none;
+}
+
+// Con puntero grueso cada chip lleva un area de 44px (::after) que sobresale
+// por arriba y por abajo; la caja que se desliza la recortaria, asi que el
+// relleno vertical deja sitio para ella.
+@media (pointer: coarse) {
+  .ui-chip-row--scroll {
+    padding-block: max(var(--ui-chip-row-inset), calc((44px - var(--ui-chip-height)) / 2));
+  }
+}

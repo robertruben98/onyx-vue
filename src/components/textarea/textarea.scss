@@ -11,6 +11,13 @@
   gap: var(--ui-input-label-gap);
 }
 
+// Fluid: fills its column. Inline-flex at its intrinsic width, a transcript
+// box sat at 230px in a 334px column on a phone.
+.ui-textarea--fluid {
+  display: flex;
+  width: 100%;
+}
+
 .ui-textarea__label {
   font-size: var(--ui-input-label-font-size);
   font-weight: var(--ui-input-label-font-weight);
@@ -37,9 +44,14 @@
 }
 
 .ui-textarea__el:focus-visible {
-  outline: none;
   border-color: var(--ui-textarea-border-focus);
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: 0;
+}
+
+.ui-textarea__el[readonly]:not(:disabled) {
+  color: var(--ui-textarea-text);
+  cursor: default;
 }
 
 .ui-textarea__el:disabled {
@@ -52,5 +64,5 @@
   border-color: var(--ui-textarea-border-invalid);
 }
 .ui-textarea--invalid .ui-textarea__el:focus-visible {
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-textarea-border-invalid);
+  outline-color: var(--ui-textarea-border-invalid);
 }

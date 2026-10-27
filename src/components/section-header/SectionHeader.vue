@@ -15,11 +15,14 @@ const props = withDefaults(
     quiet?: boolean;
     /** Heading level, so a page with several sections keeps a sane outline. */
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Id of the heading, so a container can point `aria-labelledby` at it. */
+    headingId?: string;
   }>(),
   {
     count: null,
     quiet: false,
     headingLevel: 2,
+    headingId: undefined,
   },
 );
 
@@ -36,7 +39,7 @@ const rootClasses = computed(() => ({
 
 <template>
   <div :class="rootClasses">
-    <component :is="heading" class="ui-section-header__title">{{ title }}</component>
+    <component :is="heading" :id="headingId" class="ui-section-header__title">{{ title }}</component>
     <span v-if="hasCount" class="ui-section-header__count">{{ count }}</span>
     <slot name="actions" />
     <div v-if="$slots.controls" class="ui-section-header__controls">

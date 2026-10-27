@@ -19,7 +19,11 @@ const props = withDefaults(
 );
 
 /** Emitted when the user asks for the rest. */
-const emit = defineEmits<{ loadMore: [] }>();
+const emit = defineEmits<{
+  loadMoreRequested: [];
+  /** @deprecated Use `loadMoreRequested`; still emitted until 1.0. */
+  loadMore: [];
+}>();
 
 /**
  * A row that offers to load nothing is worse than no row: it says the list is
@@ -32,7 +36,7 @@ const text = computed(() => props.label || `show the remaining ${props.remaining
 
 <template>
   <div v-if="visible" class="ui-load-more-row">
-    <UiButton size="sm" variant="secondary" :loading="loading" @clicked="emit('loadMore')">
+    <UiButton size="sm" variant="secondary" :loading="loading" @clicked="(emit('loadMoreRequested'), emit('loadMore'))">
       {{ text }}
     </UiButton>
   </div>

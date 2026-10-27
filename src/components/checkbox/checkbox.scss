@@ -27,8 +27,8 @@
 }
 
 .ui-checkbox__el:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 .ui-checkbox__label {
@@ -59,4 +59,24 @@
 }
 .ui-checkbox--disabled .ui-checkbox__label {
   color: var(--ui-checkbox-disabled-text);
+}
+
+// --- Touch target --------------------------------------------------------------
+// Con el dedo, la caja de 20px es un blanco dificil. Una zona invisible de 44px
+// alrededor del control (WCAG 2.5.8 pide 24; las guias de iOS y Android, 44-48)
+// sin mover nada del diseno.
+@media (pointer: coarse) {
+  .ui-checkbox__wrap {
+    position: relative;
+  }
+
+  .ui-checkbox__wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
 }

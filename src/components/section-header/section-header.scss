@@ -8,6 +8,8 @@
 
 .ui-section-header {
   display: flex;
+  // Los controles bajan bajo el titulo cuando no caben a su lado.
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ui-section-header-gap);
   min-height: var(--ui-section-header-height);
@@ -37,6 +39,8 @@
 .ui-section-header__controls {
   margin-left: auto;
   display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
   align-items: center;
   gap: var(--ui-space-2);
 }

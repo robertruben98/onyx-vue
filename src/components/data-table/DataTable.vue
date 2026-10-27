@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, watch, nextTick , useSlots } from "vue";
+import { computed, ref, watch, nextTick, onBeforeUnmount, onMounted, useSlots } from "vue";
 import UiCheckbox from "../checkbox/Checkbox.vue";
 import "./data-table.scss";
 
@@ -58,6 +58,13 @@ export interface DataTableColumn<T> {
   sortable?: boolean;
   /** Sort key accessor; defaults to the `value`/`field` value. */
   sortAccessor?(row: T): string | number;
+  /**
+   * Drops the column — header and cells together — when the viewport is
+   * narrower than this many pixels. A narrow window loses its least useful
+   * columns instead of squeezing every track into an ellipsis or scrolling
+   * the page sideways.
+   */
+  hideBelow?: number;
 }
 
 const props = withDefaults(
@@ -106,6 +113,20 @@ const props = withDefaults(
      * renders it.
      */
     rowClass?(row: T): string | string[] | undefined;
+    /**
+     * Rows are things you open: a click anywhere on a row, or Enter on a cell
+     * with no control of its own, emits `rowActivated`. Clicks on the
+     * buttons, links and inputs inside a row stay theirs.
+     */
+    activatable?: boolean;
+    /**
+     * Viewport width (px) under which every row is drawn as a card: one line
+     * per column, its header beside its value. Under a phone's width a row of
+     * five columns either scrolls sideways or squeezes every value into a
+     * sliver; a card keeps all of them readable. `0` never stacks. Paginated
+     * and plain modes only: virtual scroll needs rows of one fixed height.
+     */
+    stackBelow?: number;
   }>(),
   {
     rows: () => [],
@@ -121,8 +142,25 @@ const props = withDefaults(
     viewportHeight: "400px",
     maxHeight: "",
     rowClass: undefined,
+    activatable: false,
+    stackBelow: 0,
   },
 );
+
+const emit = defineEmits<{
+  /** A row was opened: clicked, or Enter on a cell without its own control. */
+  rowActivated: [row: T, event: Event];
+}>();
+
+/** What inside a row keeps its own click: activating the row would steal it. */
+const INTERACTIVE = 'button, a, input, select, textarea, label, summary, [role="checkbox"], [role="button"]';
+
+function onRowClick(row: T, event: MouseEvent): void {
+  if (!props.activatable) return;
+  const target = event.target as HTMLElement | null;
+  if (target?.closest(INTERACTIVE)) return;
+  emit("rowActivated", row, event);
+}
 
 const slots = useSlots();
 
@@ -233,9 +271,40 @@ const rangeEnd = computed(() =>
   Math.min((currentPage.value + 1) * pageSize.value, total.value),
 );
 
+// ----------------------------------------------------------------------------
+// Responsive columns (`hideBelow`)
+// ----------------------------------------------------------------------------
+const viewportWidth = ref(typeof window === "undefined" ? Infinity : window.innerWidth);
+const wantsWidth = computed(
+  () => props.columns.some((c) => c.hideBelow != null) || props.stackBelow > 0,
+);
+
+/** Rows as cards: under `stackBelow`, and never in virtual mode (fixed row height). */
+const stacked = computed(
+  () => props.stackBelow > 0 && props.mode !== "virtual" && viewportWidth.value < props.stackBelow,
+);
+
+function onResize(): void {
+  viewportWidth.value = window.innerWidth;
+}
+
+onMounted(() => {
+  if (typeof window !== "undefined") window.addEventListener("resize", onResize);
+});
+onBeforeUnmount(() => {
+  if (typeof window !== "undefined") window.removeEventListener("resize", onResize);
+});
+
+/** The columns that fit the current viewport. */
+const shownColumns = computed<DataTableColumn<T>[]>(() =>
+  wantsWidth.value
+    ? props.columns.filter((c) => c.hideBelow == null || viewportWidth.value >= c.hideBelow)
+    : props.columns,
+);
+
 /** CSS grid track template derived from column widths (+ selection column). */
 const templateColumns = computed(() => {
-  const tracks = props.columns.map((c) => c.width ?? "minmax(0, 1fr)");
+  const tracks = shownColumns.value.map((c) => c.width ?? "minmax(0, 1fr)");
   if (props.selectable !== "none") {
     tracks.unshift("var(--ui-data-table-select-col-width)");
   }
@@ -243,7 +312,7 @@ const templateColumns = computed(() => {
 });
 
 const colCount = computed(
-  () => props.columns.length + (props.selectable !== "none" ? 1 : 0),
+  () => shownColumns.value.length + (props.selectable !== "none" ? 1 : 0),
 );
 
 const ariaRowCount = computed(() => props.rows.length + 1);
@@ -354,9 +423,23 @@ function onViewportScroll(event: Event): void {
   scrollTop.value = (event.target as HTMLElement).scrollTop;
 }
 
+// La altura se vuelve a medir cuando el viewport cambia de tamano: medida una
+// sola vez al montar, una tabla montada oculta (una pestana cerrada, un
+// <details>) o un viewport redimensionado dejaban la ventana con el tamano
+// viejo y una franja en blanco bajo las filas (DataTable #4).
+let viewportObserver: ResizeObserver | null = null;
 watch(viewport, (el) => {
+  viewportObserver?.disconnect();
+  viewportObserver = null;
   viewportClientHeight.value = el ? el.clientHeight : 0;
+  if (el && typeof ResizeObserver !== "undefined") {
+    viewportObserver = new ResizeObserver(() => {
+      viewportClientHeight.value = el.clientHeight;
+    });
+    viewportObserver.observe(el);
+  }
 });
+onBeforeUnmount(() => viewportObserver?.disconnect());
 
 const virtualStart = computed(() =>
   Math.max(0, Math.floor(scrollTop.value / props.rowHeight) - OVERSCAN),
@@ -412,6 +495,11 @@ function scrollIndexIntoView(index: number): void {
   if (top < vp.scrollTop) vp.scrollTop = top;
   else if (bottom > vp.scrollTop + vp.clientHeight)
     vp.scrollTop = bottom - vp.clientHeight;
+  // La ventana se mueve ya, sin esperar al evento `scroll`: el navegador lo
+  // entrega en una tarea posterior, y en el `nextTick` de focusCell la fila
+  // destino aun no existia. La celda con el foco se desmontaba y el foco caia
+  // a <body> (DataTable #1).
+  scrollTop.value = vp.scrollTop;
 }
 
 function focusCell(row: number, col: number): void {
@@ -443,9 +531,32 @@ function activateCell(): void {
   cell?.focus();
 }
 
+/** The row behind a data-row index (0-based over what is rendered). */
+function rowAt(index: number): T | undefined {
+  if (props.mode === "virtual") return sorted.value[index];
+  return visibleRows.value[index];
+}
+
+/**
+ * Las celdas tienen tabindex=-1, asi que un clic les da el foco; la celda
+ * activa del roving tabindex tiene que seguirlo. Si no, Enter y las flechas
+ * actuaban sobre la ultima celda que dejo el teclado (al principio la cabecera:
+ * clic en una celda + Enter ordenaba la tabla) (DataTable #2).
+ */
+function onGridFocusin(event: FocusEvent): void {
+  const cell = (event.target as HTMLElement | null)?.closest<HTMLElement>("[data-row][data-col]");
+  if (!cell || !root.value?.contains(cell)) return;
+  const row = Number(cell.dataset.row);
+  const col = Number(cell.dataset.col);
+  if (!Number.isInteger(row) || !Number.isInteger(col)) return;
+  if (row !== activeCell.value.row || col !== activeCell.value.col) activeCell.value = { row, col };
+}
+
 function onGridKeydown(event: KeyboardEvent): void {
   const a = activeCell.value;
-  const rowMax = visibleRows.value.length; // header = 0, data rows = 1..N
+  // header = 0, data rows = 1..N. Mientras carga solo se pinta el aviso: bajar
+  // a una fila que no existe dejaba la rejilla sin parada de Tab (DataTable #3).
+  const rowMax = props.loading ? 0 : visibleRows.value.length;
   const colMax = colCount.value - 1;
   let { row, col } = a;
   switch (event.key) {
@@ -476,10 +587,20 @@ function onGridKeydown(event: KeyboardEvent): void {
       row = Math.max(0, row - pageJump());
       break;
     case "Enter":
-    case " ":
+    case " ": {
       event.preventDefault();
+      const cell = root.value?.querySelector<HTMLElement>(
+        `[data-row="${a.row}"][data-col="${a.col}"]`,
+      );
+      const hasControl = !!cell?.querySelector(INTERACTIVE);
+      if (props.activatable && a.row > 0 && !hasControl) {
+        const r = rowAt(a.row - 1);
+        if (r !== undefined) emit("rowActivated", r, event);
+        return;
+      }
       activateCell();
       return;
+    }
     default:
       return;
   }
@@ -490,7 +611,7 @@ function onGridKeydown(event: KeyboardEvent): void {
 </script>
 
 <template>
-  <span ref="root" class="ui-data-table">
+  <span ref="root" :class="['ui-data-table', { 'ui-data-table--stacked': stacked }]">
     <div
       class="ui-dt__grid"
       role="grid"
@@ -503,6 +624,7 @@ function onGridKeydown(event: KeyboardEvent): void {
         overflowY: maxHeight ? 'auto' : undefined,
       }"
       @keydown="onGridKeydown"
+      @focusin="onGridFocusin"
     >
       <!-- Header row -->
       <div
@@ -530,7 +652,7 @@ function onGridKeydown(event: KeyboardEvent): void {
         </div>
 
         <div
-          v-for="(col, ci) in columns"
+          v-for="(col, ci) in shownColumns"
           :key="col.id"
           role="columnheader"
           class="ui-dt__th"
@@ -563,10 +685,21 @@ function onGridKeydown(event: KeyboardEvent): void {
 
       <!-- Body -->
       <div class="ui-dt__body" :role="mode === 'virtual' ? undefined : 'rowgroup'">
-        <div v-if="loading" class="ui-dt__status" role="status">Loading…</div>
+        <!-- Cargando y vacio van dentro de una fila y una celda que ocupa todas
+             las columnas: un rowgroup solo puede contener filas, y un texto
+             suelto ahi dejaba la rejilla con una estructura ARIA rota (axe:
+             aria-required-children, critico). El aviso de carga sigue siendo
+             un `status` para que se anuncie. -->
+        <div v-if="loading" class="ui-dt__status-row" role="row">
+          <div class="ui-dt__status" role="gridcell" :aria-colspan="colCount">
+            <span role="status">Loading…</span>
+          </div>
+        </div>
 
-        <div v-else-if="!visibleRows.length" class="ui-dt__status">
-          {{ emptyText }}
+        <div v-else-if="!visibleRows.length" class="ui-dt__status-row" role="row">
+          <div class="ui-dt__status" role="gridcell" :aria-colspan="colCount">
+            {{ emptyText }}
+          </div>
         </div>
 
         <!-- Virtual scroll (hand-rolled windowing) -->
@@ -575,6 +708,8 @@ function onGridKeydown(event: KeyboardEvent): void {
           ref="viewport"
           class="ui-dt__viewport"
           role="rowgroup"
+          tabindex="0"
+          :aria-label="caption ? `${caption}, rows` : 'Rows'"
           :style="{ height: viewportHeight }"
           @scroll="onViewportScroll"
         >
@@ -593,9 +728,11 @@ function onGridKeydown(event: KeyboardEvent): void {
                   {
                     'ui-dt__tr--selected':
                       selectable !== 'none' && isSelected(item.row),
+                    'ui-dt__tr--activatable': activatable,
                   },
                   rowClass ? rowClass(item.row) : undefined,
                 ]"
+                @click="onRowClick(item.row, $event)"
                 :style="{
                   height: rowHeight + 'px',
                   gridTemplateColumns: templateColumns,
@@ -617,7 +754,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                   />
                 </div>
                 <div
-                  v-for="(col, ci) in columns"
+                  v-for="(col, ci) in shownColumns"
                   :key="col.id"
                   role="gridcell"
                   class="ui-dt__td"
@@ -627,6 +764,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                   }"
                   :data-row="item.index + 1"
                   :data-col="dataColOf(ci)"
+                  :data-label="col.header"
                   :tabindex="isActiveCell(item.index + 1, dataColOf(ci)) ? 0 : -1"
                 >
                   <slot
@@ -654,9 +792,11 @@ function onGridKeydown(event: KeyboardEvent): void {
               {
                 'ui-dt__tr--selected': selectable !== 'none' && isSelected(row),
                 'ui-dt__tr--expanded': isExpanded(row),
+                'ui-dt__tr--activatable': activatable,
               },
               rowClass ? rowClass(row) : undefined,
             ]"
+            @click="onRowClick(row, $event)"
             :style="{ gridTemplateColumns: templateColumns }"
           >
             <div
@@ -675,7 +815,7 @@ function onGridKeydown(event: KeyboardEvent): void {
               />
             </div>
             <div
-              v-for="(col, ci) in columns"
+              v-for="(col, ci) in shownColumns"
               :key="col.id"
               role="gridcell"
               class="ui-dt__td"
@@ -685,6 +825,7 @@ function onGridKeydown(event: KeyboardEvent): void {
               }"
               :data-row="i + 1"
               :data-col="dataColOf(ci)"
+              :data-label="col.header"
               :tabindex="isActiveCell(i + 1, dataColOf(ci)) ? 0 : -1"
             >
               <slot

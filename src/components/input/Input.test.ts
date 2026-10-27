@@ -23,7 +23,9 @@ describe("Input (Vue)", () => {
     const el = screen.getByLabelText("Name") as HTMLInputElement;
     await fireEvent.update(el, "abc");
     expect(emitted().valueChange).toBeTruthy();
+    expect(emitted().valueChanged).toBeTruthy();
     expect(emitted().valueChange.at(-1)).toEqual(["abc"]);
+    expect(emitted().valueChanged.at(-1)).toEqual(["abc"]);
   });
 
   it("supports v-model via update:modelValue", async () => {
@@ -62,6 +64,7 @@ describe("Input (Vue)", () => {
     expect(el.disabled).toBe(true);
     await fireEvent.input(el, { target: { value: "abc" } });
     expect(emitted().valueChange).toBeFalsy();
+    expect(emitted().valueChanged).toBeFalsy();
   });
 
   it("has no axe violations (default)", async () => {
@@ -138,4 +141,25 @@ describe("Input (Vue)", () => {
     });
   });
 
+
+  it("is inline by default and fills its column with fluid", () => {
+    const { container, unmount } = render(Input, { props: { ariaLabel: "Notes" } });
+    expect(container.querySelector(".ui-input--fluid")).toBeNull();
+    unmount();
+    const fluid = render(Input, { props: { ariaLabel: "Notes", fluid: true } });
+    expect(fluid.container.querySelector(".ui-input--fluid")).toBeTruthy();
+  });
+
+  it("readonly keeps the value readable: not disabled, not editable", () => {
+    render(Input, { props: { ariaLabel: "Your answer", readonly: true, modelValue: "I have gone" } });
+    const el = screen.getByRole("textbox", { name: "Your answer" }) as HTMLInputElement;
+    expect(el.readOnly).toBe(true);
+    expect(el.disabled).toBe(false);
+    expect(el.value).toBe("I have gone");
+  });
+
+  it("is not readonly by default", () => {
+    render(Input, { props: { ariaLabel: "Notes" } });
+    expect(screen.getByRole("textbox").hasAttribute("readonly")).toBe(false);
+  });
 });

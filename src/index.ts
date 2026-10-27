@@ -1,47 +1,101 @@
-// Token layer (theming) — imported once so consumers get the CSS variables.
-import "./styles/index.css";
+// La hoja NO se importa aqui, a proposito, y el README ya lo documenta asi
+// (`import "onyx-vue/style.css"`). Importarla desde el indice obligaba a que
+// cualquier `import { UiButton } from "@onyx/vue"` arrastrase los cuatro
+// presets, usara uno o ninguno.
+//
+//   import "@onyx/vue/styles/base.css";     // tokens
+//   import "@onyx/vue/styles/console.css";  // y el preset que uses
+//
+// O `styles/index.css` si los quieres todos.
 
 export * from "./docs-model";
+export * from "./deprecations";
 export * from "./components/accordion";
 export * from "./components/action-cluster";
 export * from "./components/alert";
+export * from "./components/ansi-terminal";
+export * from "./components/app-bar";
+export * from "./components/app-shell";
 export * from "./components/avatar";
 export * from "./components/badge";
+export * from "./components/bar-chart";
+export * from "./components/bar-list";
 export * from "./components/block-meter";
+export * from "./components/brand-mark";
+export * from "./components/breadcrumb";
 export * from "./components/bulk-bar";
 export * from "./components/button";
 export * from "./components/card";
 export * from "./components/check-row";
+export * from "./components/chip";
+export * from "./components/chip-row";
 export * from "./components/check-tree";
 export * from "./components/checkbox";
+export * from "./components/code-block";
+export * from "./components/confirm-button";
+export * from "./components/course-switcher";
+export * from "./components/countdown";
+export * from "./components/crt-overlay";
 export * from "./components/data-table";
+export * from "./components/date-input";
+export * from "./components/description-list";
 export * from "./components/dialog";
+export * from "./components/digital-rain";
+export * from "./components/disclosure";
 export * from "./components/divider";
+export * from "./components/drawer";
 export * from "./components/empty-state";
+export * from "./components/fieldset";
+export * from "./components/filter-bar";
 export * from "./components/filter-chip";
+export * from "./components/form-field";
+export * from "./components/grid";
 export * from "./components/group-header";
 export * from "./components/heat-strip";
+export * from "./components/hud-frame";
+export * from "./components/icon-button";
+export * from "./components/fab";
 export * from "./components/input";
 export * from "./components/key-hints";
+export * from "./components/kpi-strip";
+export * from "./components/level-meter";
 export * from "./components/load-more-row";
 export * from "./components/log-lines";
+export * from "./components/media-card";
 export * from "./components/menu";
 export * from "./components/metric-chip";
 export * from "./components/nav-rail";
+export * from "./components/pagination";
+export * from "./components/panel";
 export * from "./components/popover";
+export * from "./components/profile-header";
 export * from "./components/progress-bar";
+export * from "./components/progress-ring";
 export * from "./components/radio-group";
+export * from "./components/readout";
+export * from "./components/record-button";
 export * from "./components/relative-time";
+export * from "./components/run-state";
 export * from "./components/section-header";
+export * from "./components/segmented";
 export * from "./components/select";
+export * from "./components/sequence-grid";
 export * from "./components/severity-badge";
+export * from "./components/skeleton";
+export * from "./components/slider";
 export * from "./components/spark-bars";
 export * from "./components/spinner";
+export * from "./components/stack";
+export * from "./components/stat-card";
+export * from "./components/state-bar";
 export * from "./components/status-dot";
+export * from "./components/stepper";
 export * from "./components/switch";
+export * from "./components/tab-bar";
 export * from "./components/tabs";
 export * from "./components/tag";
 export * from "./components/textarea";
+export * from "./components/toast";
 export * from "./components/tooltip";
 export * from "./components/tri-state-count";
 export * from "./components/truncate";

@@ -1,0 +1,70 @@
+// HUD frame — a chassis, not a card. References only semantic tokens, so the
+// brackets take the theme's strong rule colour under any preset.
+
+.ui-hud-frame {
+  --ui-hud-frame-bracket: 13px;
+  --ui-hud-frame-padding: 14px;
+
+  position: relative;
+  background-color: var(--ui-color-surface);
+  border: var(--ui-border-width, 1px) solid var(--ui-color-border);
+  border-radius: var(--ui-radii-lg, 2px);
+}
+
+// Two corners in diagonal. A closed frame reads as a box; two corners read as
+// an instrument.
+.ui-hud-frame:not(.ui-hud-frame--plain)::before,
+.ui-hud-frame:not(.ui-hud-frame--plain)::after {
+  content: "";
+  position: absolute;
+  width: var(--ui-hud-frame-bracket);
+  height: var(--ui-hud-frame-bracket);
+  pointer-events: none;
+  border-color: var(--ui-color-primary);
+  border-style: solid;
+}
+.ui-hud-frame:not(.ui-hud-frame--plain)::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+.ui-hud-frame:not(.ui-hud-frame--plain)::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+.ui-hud-frame__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px var(--ui-hud-frame-padding);
+  border-bottom: var(--ui-border-width, 1px) solid var(--ui-color-border);
+}
+
+.ui-hud-frame__title {
+  margin: 0;
+  font-size: var(--ui-font-size-sm, 11px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
+// The rule is what turns a label into a panel header: it carries the eye from
+// the title to whatever the `meta` slot puts on the right.
+.ui-hud-frame__rule {
+  flex: 1;
+  height: 1px;
+  background-color: var(--ui-color-border);
+}
+
+.ui-hud-frame__meta {
+  font-size: var(--ui-font-size-sm, 11px);
+  color: var(--ui-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-hud-frame__body {
+  padding: var(--ui-hud-frame-padding);
+}

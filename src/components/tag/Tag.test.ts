@@ -10,6 +10,16 @@ describe("Tag (Vue)", () => {
     expect(screen.getByText("Frontend")).toBeTruthy();
   });
 
+  it("draws an outline instead of a fill when asked", () => {
+    const { container } = render(Tag, {
+      props: { variant: "warning", appearance: "outline" },
+      slots: { default: "draft" },
+    });
+    const el = container.querySelector(".ui-tag") as HTMLElement;
+    expect(el.classList.contains("ui-tag--outline")).toBe(true);
+    expect(el.classList.contains("ui-tag--warning")).toBe(true);
+  });
+
   it("has no remove button unless removable", () => {
     render(Tag, { slots: { default: "Tag" } });
     expect(screen.queryByRole("button")).toBeNull();

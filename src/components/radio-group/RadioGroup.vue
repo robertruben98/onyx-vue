@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useId } from "vue";
+import { computed, nextTick, ref, useId } from "vue";
 import "./radio-group.scss";
 
 export interface RadioOption {
@@ -33,7 +33,11 @@ const props = withDefaults(
 const value = defineModel<string>({ default: "" });
 
 /** Emitted on every selection change. */
-const emit = defineEmits<{ valueChange: [value: string] }>();
+const emit = defineEmits<{
+  valueChanged: [value: string];
+  /** @deprecated Use `valueChanged`; still emitted until 1.0. */
+  valueChange: [value: string];
+}>();
 
 const uid = useId();
 const name = `ui-radio-${uid}`;
@@ -44,16 +48,30 @@ const rootClasses = computed(() => ({
   "ui-radio-group--disabled": props.disabled,
 }));
 
+const fieldset = ref<HTMLFieldSetElement | null>(null);
+
 function select(optValue: string): void {
   if (props.disabled) return;
   value.value = optValue;
-  emit("valueChange", optValue);
+  emit("valueChanged", optValue);
+  emit("valueChange", optValue); // obsoleto, ver src/deprecations.ts
+  // Si el padre no acepta el valor, Vue no vuelve a pintar `checked` (no ha
+  // cambiado) y el radio nativo se queda en la opcion rechazada. Se resincroniza.
+  void nextTick(syncChecked);
+}
+
+/** Native `checked` of every radio back in line with the model. */
+function syncChecked(): void {
+  fieldset.value?.querySelectorAll<HTMLInputElement>(".ui-radio__el").forEach((input) => {
+    input.checked = input.value === value.value;
+  });
 }
 </script>
 
 <template>
   <span :class="rootClasses">
     <fieldset
+      ref="fieldset"
       class="ui-radio-group__fieldset"
       role="radiogroup"
       :aria-label="!label && ariaLabel ? ariaLabel : undefined"

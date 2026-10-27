@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, type ComponentPublicInstance } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./checkbox.scss";
 
 export type CheckboxSize = "sm" | "md" | "lg";
@@ -36,7 +37,11 @@ const props = withDefaults(
 const checked = defineModel<boolean>({ default: false });
 
 /** Emitted on every change (in addition to v-model). */
-const emit = defineEmits<{ checkedChange: [value: boolean] }>();
+const emit = defineEmits<{
+  checkedChanged: [value: boolean];
+  /** @deprecated Use `checkedChanged`; still emitted until 1.0. */
+  checkedChange: [value: boolean];
+}>();
 
 const box = ref<HTMLInputElement | null>(null);
 
@@ -59,11 +64,18 @@ watch(
 
 const inputId = `ui-checkbox-${nextCheckboxId++}`;
 
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId, fieldInvalid } = useForwardedAttrs(inputId, { field: true });
+/** Invalido por su prop o por el UiFormField que lo envuelve. */
+const isInvalid = (): boolean => props.invalid || fieldInvalid();
+
 const rootClasses = computed(() => ({
   "ui-checkbox": true,
   "ui-checkbox--sm": props.size === "sm",
   "ui-checkbox--lg": props.size === "lg",
-  "ui-checkbox--invalid": props.invalid,
+  "ui-checkbox--invalid": isInvalid(),
   "ui-checkbox--disabled": props.disabled,
 }));
 
@@ -71,7 +83,8 @@ function handleChange(event: Event): void {
   if (props.disabled) return;
   const value = (event.target as HTMLInputElement).checked;
   checked.value = value;
-  emit("checkedChange", value);
+  emit("checkedChanged", value);
+  emit("checkedChange", value); // obsoleto, ver src/deprecations.ts
 }
 </script>
 
@@ -81,18 +94,19 @@ let nextCheckboxId = 0;
 </script>
 
 <template>
-  <span :class="rootClasses">
-    <label class="ui-checkbox__wrap" :for="inputId">
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
+    <label class="ui-checkbox__wrap" :for="controlId()">
       <input
+        v-bind="controlAttrs()"
         :ref="setBox"
         class="ui-checkbox__el"
         type="checkbox"
-        :id="inputId"
+        :id="controlId()"
         :tabindex="tabindex"
         :checked="checked"
         :disabled="disabled"
         :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-        :aria-invalid="invalid ? 'true' : undefined"
+        :aria-invalid="isInvalid() ? 'true' : undefined"
         @change="handleChange"
       />
       <span v-if="label" class="ui-checkbox__label">{{ label }}</span>

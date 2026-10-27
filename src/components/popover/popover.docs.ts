@@ -21,10 +21,10 @@ export const popoverDoc: ComponentDoc = {
     },
     { name: "label", type: "string", default: "''", description: "Accessible label for the panel." },
     {
-      name: "@toggle",
+      name: "@toggled / @toggle",
       type: "(open: boolean) => void",
       default: "—",
-      description: "Emitted whenever the open state changes.",
+      description: "Emitted whenever the open state changes. `@toggle` is the deprecated name of the same event, still emitted until 1.0.",
     },
     { name: "#trigger", type: "slot", default: "—", description: "The activator." },
     { name: "#content", type: "slot", default: "—", description: "Panel content." },

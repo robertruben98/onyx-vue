@@ -24,6 +24,7 @@
   --ui-spinner-width-lg: 0.1875rem;
   --ui-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.12);
   --ui-blue-50: #eff6ff;
+  --ui-blue-300: #60a5fa;
   --ui-blue-400: #3b82f6;
   --ui-blue-500: #2563eb;
   --ui-blue-600: #1d4ed8;
@@ -70,6 +71,7 @@
   --ui-space-3: 0.75rem;
   --ui-space-4: 1rem;
   --ui-space-5: 1.25rem;
+  --ui-space-6: 1.5rem;
   --ui-radii-sm: 0.25rem;
   --ui-radii-md: 0.375rem;
   --ui-radii-lg: 0.5rem;
@@ -246,16 +248,20 @@
   --ui-card-padding-x: var(--ui-space-5);
   --ui-card-padding-y: var(--ui-space-4);
   --ui-card-header-font-weight: var(--ui-font-weight-medium);
-  --ui-color-primary: var(--ui-emerald-500);
-  --ui-color-primary-hover: var(--ui-emerald-600);
-  --ui-color-primary-active: var(--ui-emerald-700);
+  /* emerald-700 y no el 500: con el 500 el texto blanco de un boton primario y
+     el texto primario sobre blanco quedaban a 2.5:1 (WCAG AA pide 4.5:1). El
+     700 da 5.5:1 en los dos sentidos. Medido con axe en el scorecard. */
+  --ui-color-primary: var(--ui-emerald-700);
+  --ui-color-primary-hover: var(--ui-emerald-800);
+  --ui-color-primary-active: var(--ui-emerald-900);
   --ui-color-on-primary: var(--ui-white);
   --ui-color-surface: var(--ui-white);
   --ui-color-surface-hover: var(--ui-slate-100);
   --ui-color-text: var(--ui-slate-700);
   --ui-color-text-muted: var(--ui-slate-500);
   --ui-color-border: var(--ui-slate-200);
-  --ui-color-danger: var(--ui-red-600);
+  /* red-700: el 600 sobre su propia superficie (red-50) quedaba a 4.4:1. */
+  --ui-color-danger: var(--ui-red-700);
   --ui-color-danger-surface: var(--ui-red-50);
   --ui-color-success: var(--ui-green-700);
   --ui-color-success-surface: var(--ui-green-50);
@@ -398,7 +404,10 @@
   --ui-tag-danger-bg: var(--ui-color-danger-surface);
   --ui-tag-danger-text: var(--ui-color-danger);
   --ui-tag-muted-bg: var(--ui-color-disabled-bg);
-  --ui-tag-muted-text: var(--ui-color-disabled-text);
+  /* Un tag apagado no esta deshabilitado: con el gris de deshabilitado quedaba
+     a 2.3:1 sobre su fondo, y con el de texto secundario a 4.3:1. Mezclado con
+     el color de texto pasa de 4.5:1 en claro y en oscuro sin dejar de ser gris. */
+  --ui-tag-muted-text: color-mix(in srgb, var(--ui-color-text-muted) 70%, var(--ui-color-text));
   --ui-status-dot-size: 0.5rem;
   --ui-status-dot-live: var(--ui-color-success);
   --ui-status-dot-dead: var(--ui-color-danger);
@@ -435,9 +444,15 @@
   --ui-severity-badge-low-text: var(--ui-color-info);
   --ui-severity-badge-unknown-bg: var(--ui-color-neutral-surface);
   --ui-severity-badge-unknown-text: var(--ui-color-neutral);
+  --ui-severity-badge-very-high-bg: var(--ui-severity-badge-critical-bg);
+  --ui-severity-badge-very-high-text: var(--ui-severity-badge-critical-text);
+  --ui-severity-badge-very-low-bg: var(--ui-color-success-surface);
+  --ui-severity-badge-very-low-text: var(--ui-color-success);
   --ui-tri-state-count-font-size: var(--ui-font-size-sm);
   --ui-tri-state-count-font-weight: var(--ui-font-weight-medium);
-  --ui-tri-state-count-neutral: var(--ui-color-text-muted);
+  /* Mezclado con el color de texto, como el tag apagado: el gris secundario solo
+     quedaba a 4.3:1 sobre el fondo de un chip. */
+  --ui-tri-state-count-neutral: color-mix(in srgb, var(--ui-color-text-muted) 70%, var(--ui-color-text));
   --ui-tri-state-count-ok: var(--ui-color-success);
   --ui-tri-state-count-warn: var(--ui-color-warning);
   --ui-tri-state-count-danger: var(--ui-color-danger);
@@ -483,7 +498,7 @@
   --ui-load-more-row-padding-y: var(--ui-space-3);
   --ui-load-more-row-border: var(--ui-color-border);
   --ui-action-cluster-gap: var(--ui-space-1);
-  --ui-action-cluster-quiet-opacity: 0.32;
+  --ui-action-cluster-quiet-opacity: 1;
   --ui-action-cluster-transition: 0.12s;
   /* --- Capas de las superficies teletransportadas -----------------------
      Dialog, Menu, Select, Popover y Tooltip se pintan en `body`, fuera del
@@ -514,7 +529,7 @@
   --ui-filter-chip-text-hover: var(--ui-color-text);
   --ui-filter-chip-pressed-bg: var(--ui-color-surface-hover);
   --ui-filter-chip-pressed-text: var(--ui-color-text);
-  --ui-filter-chip-empty-opacity: 0.42;
+  --ui-filter-chip-empty-opacity: 1;
   --ui-block-meter-gap: var(--ui-space-2);
   --ui-block-meter-font-size: var(--ui-font-size-sm);
   /* The block glyphs carry side bearings meant for prose; at eight in a row
@@ -535,7 +550,7 @@
   --ui-metric-chip-label-tracking: 0.16em;
   --ui-metric-chip-label-color: var(--ui-color-text-muted);
   --ui-metric-chip-value-font-size: var(--ui-font-size-lg);
-  --ui-metric-chip-stale-opacity: 0.55;
+  --ui-metric-chip-stale-opacity: 1;
   --ui-heat-strip-gap: 2px;
   --ui-heat-strip-cell-size: 0.6875rem;
   --ui-heat-strip-cell-radius: var(--ui-radii-sm);
@@ -548,6 +563,54 @@
   --ui-heat-strip-l3: color-mix(in srgb, var(--ui-color-success) 72%, transparent);
   --ui-heat-strip-l4: var(--ui-color-success);
   --ui-heat-strip-legend-font-size: 0.625rem;
+  /* --- Tab bar: the phone's bottom navigation. Below the teleported layers
+     (a dialog opened from the page covers it) and above the page. */
+  --ui-tab-bar-z: 900;
+  --ui-tab-bar-height: 3.5rem;
+  --ui-tab-bar-bg: var(--ui-color-surface);
+  --ui-tab-bar-text: var(--ui-color-text-muted);
+  --ui-tab-bar-active: var(--ui-color-primary);
+  --ui-tab-bar-item-gap: 2px;
+  --ui-tab-bar-font-size: 0.6875rem;
+  --ui-tab-bar-icon-size: 1.125rem;
+  --ui-tab-bar-count-bg: var(--ui-color-primary);
+  --ui-tab-bar-count-text: var(--ui-color-on-primary);
+  --ui-tab-bar-count-font-size: 0.625rem;
+  --ui-tab-bar-live: var(--ui-color-info);
+  /* --- Sequence grid: built on the success/danger surfaces, so a preset that
+     re-routes them re-colours the grid. */
+  --ui-sequence-grid-gap: 3px;
+  --ui-sequence-grid-cell-width: 2.1rem;
+  --ui-sequence-grid-cell-padding: 0.1rem 0.3rem;
+  --ui-sequence-grid-cell-radius: var(--ui-radii-sm);
+  --ui-sequence-grid-font-size: var(--ui-font-size-sm);
+  --ui-sequence-grid-present-bg: var(--ui-color-success-surface);
+  --ui-sequence-grid-present-text: var(--ui-color-text);
+  --ui-sequence-grid-present-border: var(--ui-color-success);
+  --ui-sequence-grid-missing-bg: var(--ui-color-danger-surface);
+  --ui-sequence-grid-missing-text: var(--ui-color-text);
+  --ui-sequence-grid-missing-border: var(--ui-color-danger);
+  /* --- Media card: a card surface that leads with its image. */
+  --ui-media-card-bg: var(--ui-card-bg);
+  --ui-media-card-text: var(--ui-card-text);
+  --ui-media-card-border: var(--ui-card-border);
+  --ui-media-card-radius: var(--ui-radii-md);
+  --ui-media-card-media-bg: var(--ui-color-neutral-surface);
+  --ui-media-card-padding-x: var(--ui-space-3);
+  --ui-media-card-padding-y: var(--ui-space-3);
+  --ui-media-card-padding: var(--ui-media-card-padding-y) var(--ui-media-card-padding-x);
+  --ui-media-card-title-font-size: var(--ui-font-size-md);
+  --ui-media-card-title-font-weight: var(--ui-font-weight-medium);
+  --ui-media-card-subtitle: var(--ui-color-text-muted);
+  --ui-media-card-placeholder-text: var(--ui-avatar-gradient-text);
+  --ui-media-card-placeholder-font-size: 2rem;
+  --ui-media-card-badge-inset: var(--ui-space-2);
+  /* Hover: the picture zooms inside its box, slow out of a quick start. */
+  --ui-media-card-zoom: 1.08;
+  --ui-media-card-zoom-duration: 450ms;
+  --ui-media-card-zoom-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ui-media-card-border-hover: var(--ui-color-border-strong);
+  --ui-media-card-shadow-hover: 0 2px 4px rgba(15, 23, 42, 0.08), 0 6px 16px -6px rgba(15, 23, 42, 0.18);
   --ui-spark-bars-gap: var(--ui-space-3);
   --ui-spark-bars-bar-gap: var(--ui-space-1);
   --ui-spark-bars-bar-width: 2.875rem;
@@ -600,4 +663,355 @@
   --ui-nav-rail-item-font-size: var(--ui-font-size-md);
   --ui-nav-rail-marks-gap: var(--ui-space-1);
   --ui-nav-rail-marks-font-size: var(--ui-font-size-sm);
+  /* --- Layout of a console page (app shell, brand mark, app bar, panel,
+     fieldset) ---------------------------------------------------------- */
+  --ui-app-shell-rail-width: 14.5rem;
+  --ui-app-shell-rule: var(--ui-color-border);
+  --ui-brand-mark-gap: var(--ui-space-2);
+  --ui-brand-mark-height: 3.25rem;
+  --ui-brand-mark-padding-x: var(--ui-space-4);
+  --ui-brand-mark-tile-size: 1.375rem;
+  --ui-brand-mark-tile-font-size: 0.5625rem;
+  --ui-brand-mark-font-size: 0.6875rem;
+  --ui-brand-mark-sub-font-size: var(--ui-font-size-sm);
+  --ui-app-bar-height: 3.25rem;
+  --ui-app-bar-gap: var(--ui-space-3);
+  --ui-app-bar-padding-x: var(--ui-space-5);
+  --ui-app-bar-bg: var(--ui-color-surface);
+  --ui-app-bar-z: 20;
+  --ui-app-bar-title-size: 0.75rem;
+  --ui-app-bar-eyebrow-size: 0.625rem;
+  --ui-panel-gap: 1.625rem;
+  --ui-panel-padding-x: var(--ui-space-4);
+  --ui-fieldset-legend-size: 0.625rem;
+  --ui-fieldset-row-gap: 2px;
+  --ui-fieldset-column-gap: var(--ui-space-3);
+  /* --- Overlays: drawer and toast ----------------------------------- */
+  /* A rule one step above --ui-color-border, for the edge of something that
+     sits over the page. Presets with their own strong rule re-map it. */
+  --ui-color-border-strong: var(--ui-color-text-muted);
+  --ui-drawer-width: 55rem;
+  --ui-drawer-padding-x: var(--ui-space-5);
+  --ui-drawer-bg: var(--ui-color-surface);
+  --ui-drawer-edge: var(--ui-color-border-strong);
+  --ui-drawer-backdrop: rgba(15, 23, 42, 0.45);
+  /* El dialogo usaba este token sin que estuviera definido: su telon salia
+     transparente. Sigue al del drawer, asi que un preset que cambie uno cambia
+     los dos. */
+  --ui-dialog-backdrop: var(--ui-drawer-backdrop);
+  /* Tinta de las scanlines y la vineta del CRT, como canales rgb. */
+  --ui-crt-overlay-ink: 0 0 0;
+  --ui-drawer-duration: 200ms;
+  --ui-drawer-title-size: var(--ui-font-size-md);
+  --ui-drawer-bottom-max-height: 85dvh;
+  --ui-drawer-bottom-radius: var(--ui-radii-lg);
+  --ui-toast-offset: 1.625rem;
+  --ui-toast-bg: var(--ui-color-surface);
+  --ui-toast-border: var(--ui-color-border-strong);
+  --ui-toast-action-text: var(--ui-color-primary);
+  /* --- Actions: icon button ------------------------------------------ */
+  --ui-icon-button-size: var(--ui-size-control-sm);
+  --ui-icon-button-size-sm: 1.375rem;
+  --ui-icon-button-glyph: 0.875rem;
+  /* --- Data and disclosure: filter bar, description list, KPI strip,
+     stepper, code block, status-dot ring -------------------------------- */
+  --ui-filter-bar-height: 3rem;
+  --ui-filter-bar-padding-x: var(--ui-space-4);
+  --ui-filter-bar-search-width: 17.5rem;
+  --ui-description-list-min: 16rem;
+  --ui-description-list-padding-x: var(--ui-space-4);
+  --ui-description-list-term-size: 0.625rem;
+  --ui-kpi-strip-label-size: 0.625rem;
+  --ui-kpi-strip-value-size: 1.1875rem;
+  --ui-stepper-icon-size: 1.125rem;
+  --ui-code-block-font-size: var(--ui-font-size-sm);
+  --ui-code-block-bg: var(--ui-color-surface);
+  --ui-status-dot-ring: var(--ui-color-neutral);
+  /* --- Console: ANSI terminal ---------------------------------------- */
+  --ui-ansi-terminal-font-size: var(--ui-font-size-sm);
+  --ui-ansi-terminal-bg: var(--ui-color-surface);
+  --ui-terminal-black: var(--ui-color-text-muted);
+  --ui-terminal-red: var(--ui-color-danger);
+  --ui-terminal-green: var(--ui-color-success);
+  --ui-terminal-yellow: var(--ui-color-warning);
+  --ui-terminal-blue: var(--ui-color-primary);
+  /* Oscurecidos para un fondo claro: los vivos (#c58af9, #5fd7d7) quedaban a
+     2.5:1 y 1.7:1 sobre blanco. Los presets oscuros devuelven los vivos. */
+  --ui-terminal-magenta: #a21caf;
+  --ui-terminal-cyan: #0e7490;
+  --ui-terminal-white: var(--ui-color-text);
+  /* --- Charts --------------------------------------------------------
+     Mixed from the semantic tones one step darker, not the tones themselves:
+     fills need a lower lightness than text, and the plain tones fall outside
+     the fill band on dark presets. */
+  --ui-chart-ok: color-mix(in srgb, var(--ui-color-success) 78%, black);
+  --ui-chart-warn: color-mix(in srgb, var(--ui-color-warning) 85%, black);
+  --ui-chart-bad: color-mix(in srgb, var(--ui-color-danger) 78%, black);
+  --ui-chart-none: var(--ui-color-neutral);
+  --ui-chart-one: var(--ui-color-info);
+  --ui-chart-grid: var(--ui-color-border);
+  --ui-chart-inseg: var(--ui-color-surface);
+  --ui-chart-inseg-light: var(--ui-color-on-primary);
+
+  /* --- Forms and layout (0.2): segmented, slider, date input, form field,
+     pagination, skeleton, stack, grid ------------------------------------ */
+  --ui-segmented-bg: var(--ui-color-surface);
+  --ui-segmented-border: var(--ui-color-border-strong);
+  --ui-segmented-text: var(--ui-color-text);
+  --ui-segmented-selected-bg: var(--ui-color-primary);
+  --ui-segmented-selected-text: var(--ui-color-on-primary);
+  --ui-segmented-hover-bg: var(--ui-color-surface-hover);
+  --ui-segmented-radius: var(--ui-radius);
+  --ui-segmented-padding-x: var(--ui-space-3);
+  /* Raya entre segmentos y hueco alrededor del elegido (pocket: sin raya, la
+     pildora elegida flota dentro de la pista). */
+  --ui-segmented-divider: var(--ui-segmented-border);
+  --ui-segmented-inset: 0px;
+  --ui-segmented-item-radius: 0px;
+  /* --- Floating action button (0.4) ----------------------------------- */
+  --ui-fab-size: 3.25rem;
+  --ui-fab-size-compact: 3rem;
+  --ui-fab-glyph: 1.375rem;
+  --ui-fab-inset: var(--ui-space-4);
+  --ui-fab-bottom: var(--ui-space-6);
+  --ui-fab-z: 40;
+  --ui-fab-bg: var(--ui-color-primary);
+  --ui-fab-bg-hover: var(--ui-color-primary-hover);
+  --ui-fab-text: var(--ui-color-on-primary);
+  --ui-fab-font-weight: var(--ui-font-weight-bold);
+  --ui-fab-shadow: 0 10px 30px -10px rgba(10, 12, 24, 0.45);
+  /* --- Button icons and wrapping labels (0.6) ------------------------- */
+  --ui-button-icon-size: 1.125em;
+  --ui-button-wrap-line-height: 1.25;
+  /* --- Interactive card (0.6) ---------------------------------------- */
+  --ui-card-interactive-min-height: 44px;
+  --ui-card-bg-hover: var(--ui-color-surface-hover);
+  --ui-card-bg-active: var(--ui-color-surface-hover);
+  --ui-card-border-hover: var(--ui-color-border-strong);
+  --ui-card-shadow-hover: 0 2px 4px rgba(15, 23, 42, 0.08), 0 6px 16px -6px rgba(15, 23, 42, 0.18);
+  --ui-card-active-scale: 0.985;
+  /* --- Suggestion chip and chip row (0.6) ---------------------------- */
+  --ui-chip-height: 2rem;
+  --ui-chip-padding-x: var(--ui-space-3);
+  --ui-chip-gap: var(--ui-space-1);
+  --ui-chip-radius: var(--ui-radii-full);
+  --ui-chip-font-size: var(--ui-font-size-sm);
+  --ui-chip-font-weight: var(--ui-font-weight-medium);
+  --ui-chip-icon-size: 1em;
+  --ui-chip-bg: var(--ui-color-surface);
+  --ui-chip-bg-hover: var(--ui-color-surface-hover);
+  --ui-chip-bg-active: var(--ui-color-surface-hover);
+  --ui-chip-text: var(--ui-color-text);
+  --ui-chip-border: var(--ui-color-border);
+  --ui-chip-border-hover: var(--ui-color-border-strong);
+  --ui-chip-row-gap: var(--ui-space-2);
+  --ui-chip-row-inset: calc(var(--ui-focus-ring-width) + var(--ui-focus-ring-offset));
+  /* --- Record button (0.6) ------------------------------------------- */
+  --ui-record-button-height: 3.5rem;
+  --ui-record-button-padding-x: var(--ui-space-6);
+  --ui-record-button-gap: var(--ui-space-2);
+  --ui-record-button-radius: var(--ui-radii-full);
+  --ui-record-button-font-size: var(--ui-font-size-lg);
+  --ui-record-button-font-weight: var(--ui-font-weight-bold);
+  --ui-record-button-icon-size: 1.375rem;
+  --ui-record-button-bg: var(--ui-color-primary);
+  --ui-record-button-bg-hover: var(--ui-color-primary-hover);
+  --ui-record-button-text: var(--ui-color-on-primary);
+  --ui-record-button-shadow: none;
+  --ui-record-button-recording-bg: var(--ui-color-danger);
+  --ui-record-button-recording-text: var(--ui-color-on-primary);
+  --ui-record-button-pulse: color-mix(in srgb, var(--ui-color-danger) 50%, transparent);
+  --ui-record-button-pulse-size: 14px;
+  --ui-record-button-pulse-duration: 1.6s;
+  --ui-record-button-ring-offset: 3px;
+  /* --- Level meter (0.6) --------------------------------------------- */
+  --ui-level-meter-height: 1.25rem;
+  --ui-level-meter-bar-width: 3px;
+  --ui-level-meter-gap: 2px;
+  --ui-level-meter-color: currentColor;
+  --ui-level-meter-smoothing: 90ms;
+  /* --- Course switcher (0.7): flag + score in the bar, panel of tiles -- */
+  --ui-course-switcher-gap: var(--ui-space-1);
+  --ui-course-switcher-trigger-height: 44px;
+  --ui-course-switcher-trigger-padding-x: var(--ui-space-2);
+  --ui-course-switcher-trigger-radius: var(--ui-radius);
+  --ui-course-switcher-trigger-bg: transparent;
+  --ui-course-switcher-trigger-bg-hover: var(--ui-color-surface-hover);
+  --ui-course-switcher-trigger-text: var(--ui-color-text);
+  --ui-course-switcher-icon-size: 1.5rem;
+  --ui-course-switcher-badge-font-size: var(--ui-font-size-md);
+  --ui-course-switcher-badge-font-weight: var(--ui-font-weight-bold);
+  --ui-course-switcher-z: var(--ui-popover-z);
+  --ui-course-switcher-backdrop: var(--ui-drawer-backdrop);
+  --ui-course-switcher-duration: 160ms;
+  --ui-course-switcher-panel-width: 24rem;
+  --ui-course-switcher-panel-offset: var(--ui-space-1);
+  --ui-course-switcher-panel-padding: var(--ui-space-4);
+  --ui-course-switcher-panel-bg: var(--ui-popover-bg);
+  --ui-course-switcher-panel-border: var(--ui-popover-border);
+  --ui-course-switcher-panel-radius: var(--ui-radii-lg);
+  --ui-course-switcher-panel-shadow: var(--ui-popover-shadow);
+  --ui-course-switcher-tile-gap: var(--ui-space-2);
+  --ui-course-switcher-tile-size: 5.5rem;
+  --ui-course-switcher-tile-icon-size: 2.5rem;
+  --ui-course-switcher-tile-radius: var(--ui-radii-lg);
+  --ui-course-switcher-tile-bg: var(--ui-color-surface);
+  --ui-course-switcher-tile-bg-hover: var(--ui-color-surface-hover);
+  --ui-course-switcher-tile-text: var(--ui-color-text);
+  --ui-course-switcher-tile-border: var(--ui-color-border);
+  --ui-course-switcher-tile-border-width: var(--ui-border-width-thick);
+  --ui-course-switcher-tile-selected-border: var(--ui-color-primary);
+  --ui-course-switcher-tile-selected-bg: color-mix(in srgb, var(--ui-color-primary) 10%, var(--ui-color-surface));
+  /* --- Tabs that scroll (0.4): fade and arrow at the hidden edge -------- */
+  --ui-tabs-fade: 2.5rem;
+  --ui-tabs-arrow-size: 2rem;
+  --ui-tabs-arrow-bg: var(--ui-color-surface);
+  --ui-tabs-arrow-text: var(--ui-color-text);
+  --ui-tabs-arrow-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.25);
+
+  --ui-slider-track: var(--ui-color-border-strong);
+  --ui-slider-fill: var(--ui-color-primary);
+  --ui-slider-thumb: var(--ui-color-primary);
+  --ui-slider-thumb-border: var(--ui-color-surface);
+  --ui-slider-track-height: 4px;
+  --ui-slider-thumb-size: 16px;
+
+  --ui-form-field-gap: var(--ui-space-1);
+  --ui-form-field-label: var(--ui-color-text);
+  --ui-form-field-help: var(--ui-color-text-muted);
+  --ui-form-field-error: var(--ui-color-danger);
+  --ui-form-field-required: var(--ui-color-danger);
+
+  --ui-pagination-gap: var(--ui-space-1);
+  --ui-pagination-current-bg: var(--ui-color-primary);
+  --ui-pagination-current-text: var(--ui-color-on-primary);
+  --ui-pagination-ellipsis: var(--ui-color-text-muted);
+
+  --ui-skeleton-bg: var(--ui-color-neutral-surface);
+  --ui-skeleton-shine: var(--ui-color-surface);
+  --ui-skeleton-radius: var(--ui-radius);
+  --ui-skeleton-line-height: 0.8em;
+
+  --ui-stack-gap: var(--ui-space-3);
+  --ui-grid-gap: var(--ui-space-4);
+
+  /* --- 0.8: profile components (progress ring, countdown, stat card, ----
+     profile header) and the variants of avatar, KPI strip, description list,
+     panel and progress bar ------------------------------------------------ */
+  --ui-progress-ring-size-sm: 2.5rem;
+  --ui-progress-ring-size-md: 4rem;
+  --ui-progress-ring-size-lg: 6rem;
+  --ui-progress-ring-size-xl: 8rem;
+  --ui-progress-ring-track: var(--ui-color-neutral-surface);
+  --ui-progress-ring-fill: var(--ui-color-primary);
+  --ui-progress-ring-fill-success: var(--ui-color-success);
+  --ui-progress-ring-fill-warning: var(--ui-color-warning);
+  --ui-progress-ring-fill-danger: var(--ui-color-danger);
+  --ui-progress-ring-fill-neutral: var(--ui-color-neutral);
+  --ui-progress-ring-gradient-from: var(--ui-color-primary);
+  --ui-progress-ring-gradient-to: var(--ui-color-primary);
+  --ui-progress-ring-text: var(--ui-color-text);
+  --ui-progress-ring-unit-text: var(--ui-color-text-muted);
+  --ui-progress-ring-value-scale: 0.26;
+  --ui-progress-ring-value-weight: 800;
+  --ui-progress-ring-duration: 700ms;
+  --ui-progress-ring-easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ui-progress-ring-spin-duration: 1s;
+
+  --ui-countdown-gap: var(--ui-space-2);
+  --ui-countdown-value-size-sm: var(--ui-font-size-md);
+  --ui-countdown-value-size-md: 1.5rem;
+  --ui-countdown-value-size-lg: 2.25rem;
+  --ui-countdown-value-weight: 800;
+  --ui-countdown-value-text: var(--ui-color-text);
+  --ui-countdown-unit-text: var(--ui-color-text-muted);
+  --ui-countdown-label-size: var(--ui-font-size-sm);
+  --ui-countdown-label-text: var(--ui-color-text-muted);
+
+  --ui-stat-card-bg: var(--ui-color-surface);
+  --ui-stat-card-bg-hover: var(--ui-color-surface-hover);
+  --ui-stat-card-border: var(--ui-color-border);
+  --ui-stat-card-border-hover: var(--ui-color-border-strong);
+  --ui-stat-card-radius: var(--ui-radii-lg);
+  --ui-stat-card-shadow: none;
+  --ui-stat-card-padding-sm: var(--ui-space-3);
+  --ui-stat-card-padding-md: var(--ui-space-4);
+  --ui-stat-card-padding-lg: var(--ui-space-5);
+  --ui-stat-card-gap: var(--ui-space-1);
+  --ui-stat-card-value-size-sm: 1.375rem;
+  --ui-stat-card-value-size-md: 1.875rem;
+  --ui-stat-card-value-size-lg: 2.5rem;
+  --ui-stat-card-value-weight: 800;
+  --ui-stat-card-value-text: var(--ui-color-text);
+  --ui-stat-card-label-size: var(--ui-font-size-sm);
+  --ui-stat-card-label-weight: var(--ui-font-weight-medium);
+  --ui-stat-card-label-text: var(--ui-color-text-muted);
+  --ui-stat-card-hint-size: 0.8125rem;
+  --ui-stat-card-hint-text: var(--ui-color-text-muted);
+  --ui-stat-card-icon-size: 1.5rem;
+  --ui-stat-card-icon-color: var(--ui-color-primary);
+  --ui-stat-card-interactive-min-height: 44px;
+  --ui-stat-card-active-scale: 0.985;
+  --ui-stat-card-trend-up: var(--ui-color-success);
+  --ui-stat-card-trend-down: var(--ui-color-danger);
+  --ui-stat-card-trend-flat: var(--ui-color-text-muted);
+
+  --ui-profile-header-gap: var(--ui-space-4);
+  --ui-profile-header-name-size: 1.5rem;
+  --ui-profile-header-name-weight: 800;
+  --ui-profile-header-name-text: var(--ui-color-text);
+  --ui-profile-header-subtitle-size: var(--ui-font-size-md);
+  --ui-profile-header-subtitle-text: var(--ui-color-text-muted);
+  --ui-profile-header-stats-gap: var(--ui-space-2);
+  --ui-profile-header-bg: var(--ui-color-surface);
+  --ui-profile-header-border: var(--ui-color-border);
+  --ui-profile-header-radius: var(--ui-radii-xl);
+  --ui-profile-header-shadow: none;
+  --ui-profile-header-padding: var(--ui-space-4);
+
+  --ui-avatar-size-xl: 4.5rem;
+  --ui-avatar-font-size-xl: 1.75rem;
+  /* Initials on a gradient are white; every stop is dark enough for 4.5:1. */
+  --ui-avatar-gradient-text: var(--ui-white);
+  --ui-avatar-gradient-1: linear-gradient(135deg, #4338ca, #6d28d9);
+  --ui-avatar-gradient-2: linear-gradient(135deg, #1d4ed8, #0e7490);
+  --ui-avatar-gradient-3: linear-gradient(135deg, #047857, #0f766e);
+  --ui-avatar-gradient-4: linear-gradient(135deg, #b91c1c, #be123c);
+  --ui-avatar-gradient-5: linear-gradient(135deg, #c2410c, #b45309);
+  --ui-avatar-gradient-6: linear-gradient(135deg, #a21caf, #7e22ce);
+  --ui-avatar-gradient-7: linear-gradient(135deg, #334155, #475569);
+  --ui-avatar-gradient-8: linear-gradient(135deg, #15803d, #0369a1);
+  --ui-avatar-ring-gap: 2px;
+  --ui-avatar-ring-width: 4px;
+
+  --ui-kpi-strip-value-size-lg: 1.75rem;
+  --ui-kpi-strip-plain-gap: var(--ui-space-2);
+  --ui-kpi-strip-plain-bg: var(--ui-color-surface);
+  --ui-kpi-strip-plain-border: var(--ui-color-border);
+  --ui-kpi-strip-plain-radius: var(--ui-radii-lg);
+  --ui-kpi-strip-plain-shadow: none;
+  --ui-kpi-strip-plain-label-size: var(--ui-font-size-sm);
+  --ui-kpi-strip-icon-size: 1.25rem;
+  --ui-kpi-strip-icon-color: var(--ui-color-primary);
+
+  --ui-description-list-emphasis-term-size: var(--ui-font-size-sm);
+  --ui-description-list-emphasis-value-size: var(--ui-font-size-lg);
+  --ui-description-list-emphasis-value-weight: var(--ui-font-weight-medium);
+  --ui-description-list-inline-gap: var(--ui-space-2);
+
+  --ui-panel-plain-padding-x: 0;
+  --ui-panel-plain-gap: 2.25rem;
+  --ui-panel-plain-body-gap: var(--ui-space-3);
+  --ui-panel-card-bg: var(--ui-color-surface);
+  --ui-panel-card-border: var(--ui-color-border);
+  --ui-panel-card-radius: var(--ui-radii-xl);
+  --ui-panel-card-shadow: none;
+  --ui-panel-card-padding-x: var(--ui-space-4);
+  --ui-panel-card-padding-y: var(--ui-space-4);
+
+  --ui-progress-height-sm: 0.25rem;
+  --ui-progress-height-lg: 0.75rem;
+  --ui-progress-label-gap: var(--ui-space-2);
+  --ui-progress-label-size: var(--ui-font-size-sm);
+  --ui-progress-label-text: var(--ui-color-text-muted);
 }

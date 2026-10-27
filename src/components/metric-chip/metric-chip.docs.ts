@@ -28,9 +28,9 @@ export const metricChipDoc: ComponentDoc = {
     },
     {
       name: "tone",
-      type: "'neutral' | 'ok' | 'warn' | 'danger' | 'info'",
+      type: "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
       default: "'neutral'",
-      description: "Tone of a known value. An error is always danger.",
+      description: "Tone of a known value. An error is always danger. Legacy spellings `ok`, `warn` and `default` still work and are deprecated.",
     },
     {
       name: "stale",
@@ -63,15 +63,15 @@ export const metricChipDoc: ComponentDoc = {
       title: "The four states",
       description:
         "A zero, a dot, a dash and a bang are four different claims. Only the first one says the work was counted and came to nothing.",
-      code: `<UiMetricChip label="commits hoy" :value="23" tone="ok" />
+      code: `<UiMetricChip label="commits hoy" :value="23" tone="success" />
 <UiMetricChip label="commits hoy" :value="0" />
 <UiMetricChip label="commits hoy" state="pending" />
 <UiMetricChip label="commits hoy" state="error" />`,
     },
     {
       title: "Stale, and clickable",
-      code: `<UiMetricChip label="commits hoy" :value="23" tone="ok" stale />
-<UiMetricChip label="commits hoy" :value="23" tone="ok" interactive />`,
+      code: `<UiMetricChip label="commits hoy" :value="23" tone="success" stale />
+<UiMetricChip label="commits hoy" :value="23" tone="success" interactive />`,
     },
   ],
 };

@@ -4,7 +4,7 @@ export const tabsDoc: ComponentDoc = {
   id: "tabs",
   title: "Tabs",
   description:
-    "Tab list plus panels. The parent assigns the ids in mount order so every trigger's `aria-controls` lines up with its panel; arrow keys move between tabs and skip the disabled ones.",
+    "Tab list plus panels. Triggers and panels are numbered from the same list, by position, so a list that grows while it is on screen keeps every trigger's `aria-controls` on its own panel; arrow keys move between tabs and skip the disabled ones.",
   imports: ["UiTabs", "UiTab"],
   api: [
     {
@@ -20,6 +20,12 @@ export const tabsDoc: ComponentDoc = {
       description: "Accessible name for the tab list, on `UiTabs`.",
     },
     {
+      name: "overflow",
+      type: "'wrap' | 'scroll'",
+      default: "'wrap'",
+      description: "When the tabs do not fit: wrap onto more rows, or keep one row that scrolls sideways (phones). The selected tab is centred, and each edge that hides tabs shows a fade and an arrow button (for mouse and touch; the keyboard moves with the arrow keys).",
+    },
+    {
       name: "label",
       type: "string",
       default: "— (required)",
@@ -32,6 +38,7 @@ export const tabsDoc: ComponentDoc = {
       description: "Skipped by the keyboard and unselectable, on `UiTab`.",
     },
     { name: "#default", type: "slot", default: "—", description: "Panel content, on `UiTab`." },
+    { name: "index", type: "number", default: "—", description: "Internal: Tabs sets each Tab's position itself. Do not pass it." },
   ],
   demos: [
     {

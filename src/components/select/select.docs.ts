@@ -26,12 +26,18 @@ export const selectDoc: ComponentDoc = {
       description: "Shown when nothing is selected. Also the fallback accessible name.",
     },
     { name: "ariaLabel", type: "string", default: "''", description: "Accessible name." },
+    {
+      name: "ariaLabelledby",
+      type: "string",
+      default: "''",
+      description: "Id of the element that names the combobox (e.g. a UiFieldRow label). Wins over ariaLabel.",
+    },
     { name: "disabled", type: "boolean", default: "false", description: "Disabled state." },
     {
-      name: "@change",
+      name: "@changed / @change",
       type: "(value: string | null) => void",
       default: "—",
-      description: "Emitted when the user picks an option.",
+      description: "Emitted when the user picks an option. `@change` is the deprecated name of the same event, still emitted until 1.0.",
     },
   ],
   demos: [

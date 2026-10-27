@@ -10,7 +10,7 @@ export const loadMoreRowDoc: ComponentDoc = {
     { name: "remaining", type: "number", default: "—", description: "Rows still hidden. At zero or below nothing renders." },
     { name: "label", type: "string", default: "''", description: "Overrides the generated label." },
     { name: "loading", type: "boolean", default: "false", description: "Shows the button busy and suppresses activation." },
-    { name: "@loadMore", type: "() => void", default: "—", description: "Emitted when the user asks for the rest." },
+    { name: "@loadMoreRequested / @loadMore", type: "() => void", default: "—", description: "Emitted when the user asks for the rest. `@loadMore` is the deprecated name of the same event, still emitted until 1.0." },
   ],
   demos: [
     {

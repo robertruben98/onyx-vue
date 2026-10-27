@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { computed, provide, ref, useSlots, type VNode } from "vue";
+import { cloneVNode, computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useSlots, watch, type VNode } from "vue";
 import "./tabs.scss";
-import {
-  TABS_CONTEXT,
-  type TabHandle,
-  type TabRegistration,
-  type TabsContext,
-} from "./context";
+import { TABS_CONTEXT, type TabRegistration, type TabsContext } from "./context";
 import Tab from "./Tab.vue";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     /** Accessible label for the tab list. */
     ariaLabel?: string;
+    /**
+     * What the tab list does when it does not fit: `wrap` onto more rows, or
+     * `scroll` sideways in one row (phones: five tabs in two rows of 360px
+     * read as two separate menus).
+     */
+    overflow?: "wrap" | "scroll";
   }>(),
   {
     ariaLabel: "",
+    overflow: "wrap",
   },
 );
 
@@ -35,7 +37,7 @@ const slots = useSlots();
  * 7 failures.
  */
 const tabs = computed<TabRegistration[]>(() => {
-  const nodes = flattenTabs(slots.default?.() ?? []);
+  const nodes = tabNodes();
   return nodes.map((vnode, uid) => {
     const tabProps = (vnode.props ?? {}) as {
       label?: string;
@@ -53,22 +55,7 @@ const tabs = computed<TabRegistration[]>(() => {
   });
 });
 
-// Mount-order counter. `Tab` children run their setup in slot order, so this
-// index matches the slot-derived trigger index — keeping panel ids aligned
-// with the triggers' `aria-controls`.
-let mountIndex = 0;
-
 const context: TabsContext = {
-  register(): TabHandle {
-    const index = mountIndex++;
-    return {
-      index,
-      tabId: `ui-tab-${index}`,
-      panelId: `ui-tabpanel-${index}`,
-      isActive: () => index === selectedIndex.value,
-      unregister: () => {},
-    };
-  },
   isActive(index) {
     return index === selectedIndex.value;
   },
@@ -77,6 +64,69 @@ const context: TabsContext = {
 provide(TABS_CONTEXT, context);
 
 const trigger = ref<HTMLButtonElement[]>([]);
+
+const list = ref<HTMLElement | null>(null);
+/**
+ * En una tira que se desplaza, que se note que hay mas: un degradado y una
+ * flecha en cada borde que esconde pestanas. Sin ellos, nueve pestanas en un
+ * movil eran "Today Writing Speaking AI exa" y las otras cinco no existian
+ * para nadie.
+ */
+const hiddenStart = ref(false);
+const hiddenEnd = ref(false);
+function measure(): void {
+  const el = list.value;
+  if (!el || props.overflow !== "scroll") return;
+  // RTL da scrollLeft negativo: se mide por el valor absoluto.
+  const x = Math.abs(el.scrollLeft);
+  hiddenStart.value = x > 1;
+  hiddenEnd.value = x + el.clientWidth < el.scrollWidth - 1;
+}
+
+/**
+ * La pestana elegida, centrada en la tira (con "nearest" quedaba pegada al borde, medio tapada por el degradado).
+ * Si es tan ancha que centrada no libra la flecha y el degradado (el `scroll-padding-inline`
+ * de la hoja), se alinea su principio justo despues de ellos.
+ */
+function reveal(i: number, smooth = true): void {
+  const el = list.value;
+  const tab = trigger.value[i];
+  if (!el || !tab || props.overflow !== "scroll") return;
+  const inset = parseFloat(getComputedStyle(el).scrollPaddingLeft) || 0;
+  const margin = (el.clientWidth - tab.offsetWidth) / 2;
+  const left = margin >= inset ? tab.offsetLeft - margin : tab.offsetLeft - inset;
+  if (typeof el.scrollTo === "function") el.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
+  else el.scrollLeft = left;
+  measure();
+}
+
+/** Las flechas avanzan casi una pantalla de tira. */
+function page(dir: -1 | 1): void {
+  const el = list.value;
+  if (!el) return;
+  const by = dir * Math.max(el.clientWidth * 0.8, 80);
+  if (typeof el.scrollBy === "function") el.scrollBy({ left: by, behavior: "smooth" });
+  else el.scrollLeft += by;
+  measure();
+}
+
+watch(selectedIndex, async (i) => {
+  if (props.overflow !== "scroll") return;
+  await nextTick();
+  reveal(i);
+});
+
+let observer: ResizeObserver | null = null;
+onMounted(() => {
+  if (props.overflow !== "scroll") return;
+  reveal(selectedIndex.value, false);
+  measure();
+  if (typeof ResizeObserver !== "undefined" && list.value) {
+    observer = new ResizeObserver(measure);
+    observer.observe(list.value);
+  }
+});
+onBeforeUnmount(() => observer?.disconnect());
 
 function select(index: number): void {
   if (tabs.value[index]?.disabled.value) return;
@@ -122,6 +172,32 @@ function nextEnabled(from: number, step: number): number | null {
   return null;
 }
 
+/**
+ * The panels, each one carrying ITS OWN position in the list.
+ *
+ * This is the whole point: triggers and panels are numbered from the same
+ * array, in the same pass, so there is no second numbering that can drift from
+ * the first. The child used to work out its own index with a counter that went
+ * up on mount, which matches the slot order only while the list is fixed. Add
+ * a tab to a list already on screen — a console that grows a tab per kind of
+ * result the run produces — and the newcomer mounts LAST while it is listed in
+ * the middle: from there on, every trigger after it opened the wrong panel,
+ * silently and with the right label on top.
+ *
+ * It is a function and not a `computed` on purpose: caching vnodes buys
+ * nothing here and a stale entry would be a panel showing the previous run.
+ */
+function panels(): VNode[] {
+  return tabNodes().map((vnode, index) =>
+    cloneVNode(vnode, { index, key: vnode.key ?? `ui-tabpanel-${index}` }),
+  );
+}
+
+/** The `Tab` children of the default slot, in slot order. */
+function tabNodes(): VNode[] {
+  return flattenTabs(slots.default?.() ?? []);
+}
+
 /** Collect the `Tab` vnodes from the slot, flattening fragments/arrays. */
 function flattenTabs(nodes: VNode[]): VNode[] {
   const out: VNode[] = [];
@@ -138,7 +214,33 @@ function flattenTabs(nodes: VNode[]): VNode[] {
 
 <template>
   <div class="ui-tabs">
-    <div class="ui-tabs__list" role="tablist" :aria-label="ariaLabel || undefined">
+    <div
+      class="ui-tabs__bar"
+      :class="{
+        'ui-tabs__bar--scroll': overflow === 'scroll',
+        'ui-tabs__bar--hidden-start': hiddenStart,
+        'ui-tabs__bar--hidden-end': hiddenEnd,
+      }"
+    >
+    <!-- Ayuda para raton y dedo: el teclado ya recorre las pestanas con las flechas, asi que no entran en el orden de foco. -->
+    <button
+      v-if="overflow === 'scroll' && hiddenStart"
+      type="button"
+      class="ui-tabs__arrow ui-tabs__arrow--start"
+      tabindex="-1"
+      aria-hidden="true"
+      @click="page(-1)"
+    >
+      <svg viewBox="0 0 24 24" focusable="false"><path d="m15 18-6-6 6-6" /></svg>
+    </button>
+    <div
+      ref="list"
+      class="ui-tabs__list"
+      :class="{ 'ui-tabs__list--scroll': overflow === 'scroll' }"
+      role="tablist"
+      :aria-label="ariaLabel || undefined"
+      @scroll.passive="measure"
+    >
       <button
         v-for="(tab, i) in tabs"
         :key="tab.tabId"
@@ -158,8 +260,19 @@ function flattenTabs(nodes: VNode[]): VNode[] {
         {{ tab.label.value }}
       </button>
     </div>
+    <button
+      v-if="overflow === 'scroll' && hiddenEnd"
+      type="button"
+      class="ui-tabs__arrow ui-tabs__arrow--end"
+      tabindex="-1"
+      aria-hidden="true"
+      @click="page(1)"
+    >
+      <svg viewBox="0 0 24 24" focusable="false"><path d="m9 18 6-6-6-6" /></svg>
+    </button>
+    </div>
     <div class="ui-tabs__panels">
-      <slot />
+      <component :is="panel" v-for="panel in panels()" :key="panel.key ?? 0" />
     </div>
   </div>
 </template>

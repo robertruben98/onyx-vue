@@ -21,9 +21,9 @@ export const triStateCountDoc: ComponentDoc = {
     },
     {
       name: "tone",
-      type: "'neutral' | 'ok' | 'warn' | 'danger'",
+      type: "'neutral' | 'success' | 'warning' | 'danger'",
       default: "'neutral'",
-      description: "Semantic tone. Ignored unless the value is known.",
+      description: "Semantic tone. Ignored unless the value is known. Legacy spellings `ok`, `warn` and `default` still work and are deprecated.",
     },
     {
       name: "label",
@@ -63,8 +63,8 @@ export const triStateCountDoc: ComponentDoc = {
     },
     {
       title: "Tones",
-      code: `<UiTriStateCount :value="3" tone="ok" label="ready to merge" />
-<UiTriStateCount :value="7" tone="warn" label="stale" />
+      code: `<UiTriStateCount :value="3" tone="success" label="ready to merge" />
+<UiTriStateCount :value="7" tone="warning" label="stale" />
 <UiTriStateCount :value="2" tone="danger" label="secrets" />`,
     },
   ],

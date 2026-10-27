@@ -1,6 +1,8 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
-import { defineComponent, h, nextTick } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 import Tabs from "./Tabs.vue";
 import Tab from "./Tab.vue";
 
@@ -123,5 +125,297 @@ describe("Tabs (Vue)", () => {
   it("has no axe violations", async () => {
     const { container } = await renderTabs();
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+/**
+ * La hoja, leida como fuente.
+ *
+ * jsdom no calcula layout: no hay forma de preguntarle "¿se sale la tira?" a un
+ * render de prueba, porque ahi todo mide cero. Lo que si se puede fijar es la
+ * decision que evita el desbordamiento, y es la que se perdio una vez.
+ */
+/**
+ * Una lista de pestanas que CRECE mientras se mira.
+ *
+ * `ORDEN` es fijo -- las pestanas no se mueven de sitio entre ejecuciones-, y
+ * cada una aparece cuando hay algo que ensenar en ella. Es la vista de consola
+ * de un banco de pruebas: «Completadas» no existe hasta que el run completa
+ * algo, y para entonces «Info» puede llevar rato en pantalla.
+ */
+const ORDEN = ["Fallos", "Completadas", "Info"];
+
+/** Las pestanas que hay ahora mismo. Fuera del componente para moverla desde el test. */
+const presentes = ref<string[]>([]);
+
+/** Llega una pestana nueva, en el sitio que le toca de ORDEN. */
+async function aparece(nombre: string) {
+  presentes.value = [...presentes.value, nombre];
+  await nextTick();
+}
+
+function renderCreciente() {
+  presentes.value = ["Fallos"];
+  const Harness = defineComponent({
+    components: { Tabs, Tab },
+    data() {
+      return { index: 0 };
+    },
+    render() {
+      return h(
+        Tabs,
+        {
+          ariaLabel: "Resultados",
+          selectedIndex: this.index,
+          "onUpdate:selectedIndex": (v: number) => {
+            this.index = v;
+          },
+        },
+        () =>
+          ORDEN.filter((n) => presentes.value.includes(n)).map((n) =>
+            h(Tab, { label: n, key: n }, () => `panel ${n}`),
+          ),
+      );
+    },
+  });
+  return render(Harness);
+}
+
+describe("Tabs (Vue) with a list that grows", () => {
+  it("opens the panel of the tab that was clicked, not the one that mounted in its place", async () => {
+    // El orden de APARICION es el reves del de la lista: "Info" llega antes que
+    // "Completadas", que va delante de ella. Con el indice contado al montar,
+    // "Completadas" se quedaba con el numero de "Info" y abria el panel de
+    // "Info" -- con su propia etiqueta encima, que es lo que lo hacia dificil
+    // de ver: el rotulo lo pinta quien lo sabe, el panel lo elegia otro.
+    renderCreciente();
+    await aparece("Info");
+    await aparece("Completadas");
+
+    expect(screen.getAllByRole("tab").map((t) => t.textContent?.trim())).toEqual(
+      ORDEN,
+    );
+
+    await fireEvent.click(screen.getByRole("tab", { name: "Completadas" }));
+    await nextTick();
+
+    // Un unico panel visible, y es el suyo.
+    expect(screen.getByRole("tabpanel").textContent).toBe("panel Completadas");
+  });
+
+  it("keeps aria-controls pointing at the panel that is shown", async () => {
+    // La otra mitad del mismo fallo, y la que ningun ojo ve: un lector de
+    // pantalla sigue `aria-controls` y llegaba a un panel escondido.
+    renderCreciente();
+    await aparece("Info");
+    await aparece("Completadas");
+
+    await fireEvent.click(screen.getByRole("tab", { name: "Info" }));
+    await nextTick();
+
+    const trigger = screen.getByRole("tab", { name: "Info" });
+    const panel = screen.getByRole("tabpanel");
+    expect(panel.id).toBe(trigger.getAttribute("aria-controls"));
+    expect(panel.textContent).toBe("panel Info");
+  });
+
+  it("survives a tab leaving and another arriving", async () => {
+    // Con un contador que solo sube, una pestana que se va y otra que llega
+    // dejaban el numero fuera del rango de la lista: ningun panel activo y el
+    // tablist entero en blanco por debajo.
+    renderCreciente();
+    await aparece("Info");
+    presentes.value = ["Fallos", "Completadas"];
+    await nextTick();
+
+    await fireEvent.click(screen.getByRole("tab", { name: "Completadas" }));
+    await nextTick();
+
+    expect(screen.getByRole("tabpanel").textContent).toBe("panel Completadas");
+  });
+});
+
+describe("tabs stylesheet", () => {
+  // Desde la raiz del proyecto y no desde `import.meta.url`: bajo jsdom vitest
+  // lo reescribe a una URL de navegador y el `.pathname` no existe en disco.
+  const hoja = readFileSync(
+    join(process.cwd(), "src", "components", "tabs", "tabs.scss"),
+    "utf8",
+  );
+
+  // Los comentarios fuera ANTES de mirar: la cabecera de cada regla explica el
+  // fallo que evita, y escanear la prosa acusaria a la hoja de cometerlo.
+  const css = hoja.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+
+  /** El cuerpo de una regla, ya sin comentarios. */
+  function regla(selector: string): string {
+    const m = new RegExp(`\\${selector}\\s*\\{([^}]*)\\}`).exec(css);
+    // A throw rather than `expect(m, msg)`: the globals typing in this repo
+    // takes a single argument, and the two-argument call broke the typecheck.
+    if (!m) throw new Error(`no rule for ${selector}`);
+    return m[1];
+  }
+
+  it("wraps the strip instead of letting tabs spill out of it", () => {
+    // Un flex en fila sin esto NO recorta lo que no cabe: lo pinta fuera del
+    // contenedor, encima de lo que tenga al lado. Con siete pestanas en un
+    // panel estrecho, las dos ultimas acababan fuera de la ventana.
+    expect(regla(".ui-tabs__list")).toMatch(/flex-wrap:\s*wrap/);
+  });
+
+  it("keeps each label on one line rather than shrinking it", () => {
+    // Encoger es lo que hace un item de flex por defecto, y aqui es la peor de
+    // las dos salidas: parte la etiqueta en dos lineas y ni asi cabe la tira.
+    const tab = regla(".ui-tabs__tab");
+    expect(tab).toMatch(/flex:\s*0\s+0\s+auto/);
+    expect(tab).toMatch(/white-space:\s*nowrap/);
+  });
+});
+
+describe("Tabs (Vue) — keyboard and markup details", () => {
+  it("moves with ArrowDown and ArrowUp like ArrowRight and ArrowLeft", async () => {
+    await renderTabs(0);
+    const [one, two] = screen.getAllByRole("tab");
+    await fireEvent.keyDown(one, { key: "ArrowDown" });
+    expect(two.getAttribute("aria-selected")).toBe("true");
+    await fireEvent.keyDown(two, { key: "ArrowUp" });
+    expect(one.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("ignores keys that do not move", async () => {
+    await renderTabs(0);
+    const [one] = screen.getAllByRole("tab");
+    await fireEvent.keyDown(one, { key: "a" });
+    expect(one.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("finds tabs rendered by v-for, takes a bare disabled attribute and an empty label", async () => {
+    render({
+      components: { Tabs, Tab },
+      template: `<Tabs aria-label="Results">
+        <Tab v-for="n in 2" :key="n" :label="'Tab ' + n">Panel {{ n }}</Tab>
+        <Tab disabled>Off</Tab>
+      </Tabs>`,
+    });
+    await nextTick();
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs.map((t) => t.textContent?.trim())).toEqual(["Tab 1", "Tab 2", ""]);
+    expect((tabs[2] as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("does nothing on arrow keys when every tab is disabled", async () => {
+    render({
+      components: { Tabs, Tab },
+      template: `<Tabs aria-label="Locked"><Tab label="A" disabled>a</Tab><Tab label="B" disabled>b</Tab></Tabs>`,
+    });
+    await nextTick();
+    const [a] = screen.getAllByRole("tab");
+    await fireEvent.keyDown(a, { key: "ArrowRight" });
+    expect(screen.getAllByRole("tab")[1].getAttribute("aria-selected")).toBe("false");
+  });
+
+  it("overflow=scroll keeps one row that scrolls, and centres the selected tab", async () => {
+    const calls: { left?: number }[] = [];
+    const original = HTMLElement.prototype.scrollTo;
+    HTMLElement.prototype.scrollTo = function (o?: ScrollToOptions | number) { if (typeof o === "object") calls.push(o); } as typeof HTMLElement.prototype.scrollTo;
+    const Harness = defineComponent({
+      setup() { const i = ref(0); return { i }; },
+      render() {
+        return h(Tabs, { overflow: "scroll", selectedIndex: this.i, "onUpdate:selectedIndex": (v: number) => { this.i = v; } },
+          () => [h(Tab, { label: "One" }, () => "1"), h(Tab, { label: "Two" }, () => "2")]);
+      },
+    });
+    const { container } = render(Harness);
+    await nextTick();
+    expect(container.querySelector(".ui-tabs__list--scroll")).toBeTruthy();
+    const two = screen.getByRole("tab", { name: "Two" });
+    Object.defineProperty(two, "offsetLeft", { configurable: true, value: 300 });
+    Object.defineProperty(two, "offsetWidth", { configurable: true, value: 80 });
+    const list = container.querySelector(".ui-tabs__list") as HTMLElement;
+    Object.defineProperty(list, "clientWidth", { configurable: true, value: 200 });
+    calls.length = 0;
+    await fireEvent.click(two);
+    await nextTick();
+    expect(calls.at(-1)?.left).toBe(240); // 300 - (200 - 80) / 2: en el centro, no pegada al borde
+    HTMLElement.prototype.scrollTo = original;
+  });
+
+  it("overflow=scroll shows a fade and an arrow on each edge that hides tabs", async () => {
+    const { container } = render({
+      components: { Tabs, Tab },
+      template: `<Tabs overflow="scroll"><Tab label="A">a</Tab><Tab label="B">b</Tab><Tab label="C">c</Tab></Tabs>`,
+    });
+    await nextTick();
+    const bar = container.querySelector(".ui-tabs__bar") as HTMLElement;
+    const list = container.querySelector(".ui-tabs__list") as HTMLElement;
+    expect(container.querySelector(".ui-tabs__arrow")).toBeNull(); // todo cabe (jsdom mide 0)
+    Object.defineProperty(list, "clientWidth", { configurable: true, value: 200 });
+    Object.defineProperty(list, "scrollWidth", { configurable: true, value: 600 });
+    list.scrollLeft = 0;
+    await fireEvent.scroll(list);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-end")).toBe(true);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-start")).toBe(false);
+    const end = container.querySelector(".ui-tabs__arrow--end") as HTMLElement;
+    expect(end.getAttribute("aria-hidden")).toBe("true"); // el teclado ya tiene las flechas
+    list.scrollLeft = 200;
+    await fireEvent.scroll(list);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-start")).toBe(true);
+    expect(bar.classList.contains("ui-tabs__bar--hidden-end")).toBe(true);
+    list.scrollLeft = 400;
+    await fireEvent.scroll(list);
+    expect(container.querySelector(".ui-tabs__arrow--end")).toBeNull();
+    // la flecha del principio vuelve atras
+    await fireEvent.click(container.querySelector(".ui-tabs__arrow--start") as HTMLElement);
+    expect(list.scrollLeft).toBeLessThan(400);
+  });
+
+  it("overflow=scroll: a tab too wide to centre clear of the arrow starts right after it", async () => {
+    const calls: { left?: number }[] = [];
+    const original = HTMLElement.prototype.scrollTo;
+    HTMLElement.prototype.scrollTo = function (o?: ScrollToOptions | number) { if (typeof o === "object") calls.push(o); } as typeof HTMLElement.prototype.scrollTo;
+    const Harness = defineComponent({
+      setup() { const i = ref(0); return { i }; },
+      render() {
+        return h(Tabs, { overflow: "scroll", selectedIndex: this.i, "onUpdate:selectedIndex": (v: number) => { this.i = v; } },
+          () => [h(Tab, { label: "One" }, () => "1"), h(Tab, { label: "Two" }, () => "2")]);
+      },
+    });
+    const { container } = render(Harness);
+    await nextTick();
+    const list = container.querySelector(".ui-tabs__list") as HTMLElement;
+    list.style.scrollPaddingLeft = "48px"; // la hoja: flecha (32) + degradado
+    Object.defineProperty(list, "clientWidth", { configurable: true, value: 200 });
+    const two = screen.getByRole("tab", { name: "Two" });
+    Object.defineProperty(two, "offsetLeft", { configurable: true, value: 300 });
+    Object.defineProperty(two, "offsetWidth", { configurable: true, value: 160 });
+    calls.length = 0;
+    await fireEvent.click(two);
+    await nextTick();
+    expect(calls.at(-1)?.left).toBe(252); // 300 - 48; centrada (280) quedaria 20px bajo la flecha
+    HTMLElement.prototype.scrollTo = original;
+  });
+
+  it("overflow=scroll: the strip is clear under the arrow and fades in after it", () => {
+    const css = readFileSync(join(process.cwd(), "src", "components", "tabs", "tabs.scss"), "utf8")
+      .replace(/^\s*\/\/.*$/gm, "");
+    // Every rule for the selector, joined: `.ui-tabs__list--scroll` has two.
+    const rule = (sel: string) =>
+      [...css.matchAll(new RegExp(`(?:^|\\n)${sel.replace(/[.]/g, "\\.")} \\{([^}]*)\\}`, "g"))].map((m) => m[1]).join("\n");
+    const scroll = rule(".ui-tabs__list--scroll");
+    expect(scroll).toContain("--ui-tabs-fade-clear: var(--ui-tabs-arrow-size)");
+    expect(scroll).toContain("--ui-tabs-fade-solid: max(var(--ui-tabs-fade), calc(var(--ui-tabs-arrow-size) + 1rem))");
+    expect(scroll).toContain("scroll-padding-inline: var(--ui-tabs-fade-solid)");
+    for (const sel of [".ui-tabs__bar--hidden-start .ui-tabs__list--scroll", ".ui-tabs__bar--hidden-end .ui-tabs__list--scroll"]) {
+      const body = rule(sel);
+      expect(body).toContain("mask-image: linear-gradient(");
+      expect(body).toContain("transparent var(--ui-tabs-fade-clear), #000 var(--ui-tabs-fade-solid)");
+    }
+    const both = rule(".ui-tabs__bar--hidden-start.ui-tabs__bar--hidden-end .ui-tabs__list--scroll");
+    expect(both).toContain("transparent calc(100% - var(--ui-tabs-fade-clear))");
+  });
+
+  it("wraps by default", async () => {
+    const { container } = await renderTabs();
+    expect(container.querySelector(".ui-tabs__list--scroll")).toBeNull();
   });
 });

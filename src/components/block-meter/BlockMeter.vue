@@ -1,6 +1,7 @@
 <script lang="ts">
+import { canonicalTone, type LegacyTone } from "../../internal/tone";
 /** Semantic tone applied to the filled part of the meter. */
-export type BlockMeterTone = "neutral" | "ok" | "warn" | "danger" | "info";
+export type BlockMeterTone = "neutral" | "info" | "success" | "warning" | "danger" | LegacyTone;
 </script>
 
 <script setup lang="ts">
@@ -37,6 +38,9 @@ const props = withDefaults(
   },
 );
 
+/** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
+const tone = computed(() => canonicalTone(props.tone));
+
 /**
  * A meter drawn in text rather than in boxes.
  *
@@ -64,10 +68,10 @@ const ariaLabel = computed(() => {
 
 const rootClasses = computed(() => ({
   "ui-block-meter": true,
-  "ui-block-meter--ok": props.tone === "ok",
-  "ui-block-meter--warn": props.tone === "warn",
-  "ui-block-meter--danger": props.tone === "danger",
-  "ui-block-meter--info": props.tone === "info",
+  "ui-block-meter--ok": tone.value === "success",
+  "ui-block-meter--warn": tone.value === "warning",
+  "ui-block-meter--danger": tone.value === "danger",
+  "ui-block-meter--info": tone.value === "info",
 }));
 </script>
 

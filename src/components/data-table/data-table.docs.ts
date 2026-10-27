@@ -44,7 +44,20 @@ export const dataTableDoc: ComponentDoc = {
       name: "columns",
       type: "DataTableColumn<T>[]",
       default: "— (required)",
-      description: "`{ id, header, field?, sortable?, align?, width? }` per column.",
+      description: "`{ id, header, field?, sortable?, align?, width?, hideBelow? }` per column. `hideBelow` (px) drops the column, header and cells together, on narrower viewports.",
+    },
+    {
+      name: "activatable",
+      type: "boolean",
+      default: "false",
+      description: "Rows open something: a click on a row, or Enter on a cell without its own control, emits @rowActivated(row, event). Controls inside a row keep their clicks.",
+    },
+    {
+      name: "stackBelow",
+      type: "number",
+      default: "0",
+      description:
+        "Viewport width (px) under which every row is drawn as a card: one line per column, its header beside its value; a column with an empty header (row actions) takes the whole line. `0` never stacks. Paginated and plain modes only. Wider than that, a table too wide for its box scrolls sideways inside it rather than clipping columns.",
     },
     { name: "rows", type: "T[]", default: "[]", description: "All rows; sorting and paging are client-side." },
     {
@@ -127,8 +140,24 @@ export const dataTableDoc: ComponentDoc = {
       description:
         "The drawer under an expanded row. The row itself carries no aria-expanded — that is only valid on a treegrid row — so put the disclosure on the control the user actually activates.",
     },
+    { name: "@rowActivated", type: "(row: T, event: Event) => void", default: "—", description: "A row was opened: clicked, or Enter on a cell without its own control. Needs `activatable`." },
+    { name: "v-model:expanded", type: "Set<RowKey>", default: "new Set()", description: "Keys of the expanded rows (emits `update:expanded`); see `expanded`." },
   ],
   demos: [
+    {
+      title: "Rows as cards on a phone",
+      description:
+        "With `stack-below=\"640\"` the rows turn into cards under 640px. Narrow the window to see it; here it is set above any desktop width so it shows.",
+      code: `<UiDataTable
+  caption="Team members"
+  row-key="id"
+  mode="plain"
+  :columns="columns"
+  :rows="rows"
+  :stack-below="100000"
+/>`,
+      setup: () => ({ columns: PLAIN, rows: ROWS }),
+    },
     {
       title: "Sorting",
       description: "Click a header to sort; Shift+click adds a second column.",

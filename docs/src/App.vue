@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
+import { useRoute } from "vue-router";
+import { UiCrtOverlay, UiDigitalRain } from "@onyx/vue";
 import { NAV } from "./nav";
 
 // Dark-mode toggle, persisted (the pre-paint script in index.html reads this).
@@ -25,6 +27,9 @@ const PRESETS = [
   { id: "default", label: "Default" },
   { id: "acme", label: "Acme" },
   { id: "console", label: "Console" },
+  { id: "matrix", label: "Matrix" },
+  { id: "classroom", label: "Classroom" },
+  { id: "pocket", label: "Pocket" },
 ] as const;
 
 const preset = ref(
@@ -33,21 +38,70 @@ const preset = ref(
     "default",
 );
 
-function applyPreset(id: string) {
+/**
+ * La atmosfera del preset `matrix` para TODA la doc.
+ *
+ * No vive en el tema a proposito: un preset re-mapea tokens, y colgarle un
+ * canvas animado a cualquier pagina que lo active seria decidir por el
+ * consumidor. Aqui, en cambio, la doc SI quiere ensenar el tema entero — sin la
+ * lluvia y las scanlines el preset se lee como "verde sobre negro" y no como la
+ * pantalla que es.
+ */
+const atmosfera = computed(() => preset.value === "matrix");
+
+function setPresetClass(id: string) {
   const root = document.documentElement;
   for (const p of PRESETS) root.classList.remove(`ui-theme-${p.id}`);
   if (id !== "default") root.classList.add(`ui-theme-${id}`);
   preset.value = id;
+}
+
+function applyPreset(id: string) {
+  setPresetClass(id);
   try {
     localStorage.setItem("onyx-preset", id);
   } catch {
     /* ignore */
   }
 }
+
+/**
+ * La vista previa de un pattern es esta misma app dentro de un iframe. El
+ * script de pre-pintado de index.html le pone el tema al cargar, pero un cambio
+ * posterior en la pagina de fuera no le llegaria. `storage` salta en los OTROS
+ * documentos del mismo origen cuando uno escribe en localStorage, asi que el
+ * marco sigue al selector sin recargar.
+ */
+function onStorage(event: StorageEvent) {
+  if (event.key === "onyx-preset") setPresetClass(event.newValue || "default");
+  if (event.key === "onyx-dark") {
+    dark.value = event.newValue === "true";
+    document.documentElement.classList.toggle("app-dark", dark.value);
+  }
+}
+window.addEventListener("storage", onStorage);
+onBeforeUnmount(() => window.removeEventListener("storage", onStorage));
+
+// El marco de un pattern (`meta.bare`) se pinta sin la barra lateral.
+const route = useRoute();
+const bare = computed(() => route.meta.bare === true);
 </script>
 
 <template>
-  <div class="docs">
+  <!-- Opacidad mas baja que en una vista de ejecucion: estas paginas son texto
+       largo, y por encima de ~0.15 la lluvia empieza a competir con lo que hay
+       que leer.
+
+       Las scanlines, mas bajas todavia. Multiplican, asi que solo se ven sobre
+       lo claro — y en una galeria de componentes lo claro son los rellenos
+       solidos de los botones, que a 0.16 salian a rayas y parecian un fallo de
+       pintado en vez de un tubo. A 0.09 el tubo sigue ahi y el boton no. -->
+  <UiDigitalRain v-if="atmosfera" :opacity="0.13" />
+  <UiCrtOverlay v-if="atmosfera" :scanlines="0.09" :vignette="0.5" />
+
+  <RouterView v-if="bare" />
+
+  <div v-else class="docs">
     <aside class="docs__sidebar">
       <RouterLink class="docs__brand" to="/introduction">Onyx UI</RouterLink>
       <button type="button" class="docs__theme" @click="toggleDark">
@@ -91,7 +145,10 @@ function applyPreset(id: string) {
 <style scoped>
 .docs {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  /* `minmax(0, 1fr)` y no `1fr`: una pista `1fr` crece hasta el ancho minimo
+     de su contenido, y un bloque de codigo o la tabla de API ensanchaban la
+     pagina entera en el movil (a 360 px median 416-585 px). */
+  grid-template-columns: 240px minmax(0, 1fr);
   min-height: 100vh;
   color: var(--ui-color-text);
   background: var(--ui-color-background, var(--ui-color-surface));
@@ -181,7 +238,7 @@ function applyPreset(id: string) {
 }
 @media (max-width: 720px) {
   .docs {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .docs__sidebar {
     position: static;

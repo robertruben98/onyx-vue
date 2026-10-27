@@ -10,6 +10,10 @@
   display: flex;
   align-items: flex-end;
   gap: var(--ui-spark-bars-gap);
+  // Una serie que no cabe se desplaza dentro de su caja en vez de ensanchar
+  // la pagina; para muchos puntos, UiBarChart.
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .ui-spark-bars__bar {
@@ -18,7 +22,9 @@
   align-items: center;
   gap: var(--ui-spark-bars-bar-gap);
   width: var(--ui-spark-bars-bar-width);
-  flex: none;
+  // Encoge hasta la mitad antes de que la serie tenga que desplazarse.
+  flex: 0 1 var(--ui-spark-bars-bar-width);
+  min-width: calc(var(--ui-spark-bars-bar-width) / 2);
 }
 
 .ui-spark-bars__value {

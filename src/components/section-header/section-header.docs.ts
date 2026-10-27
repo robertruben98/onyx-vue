@@ -21,6 +21,7 @@ export const sectionHeaderDoc: ComponentDoc = {
       default: "2",
       description: "Heading level used for the title.",
     },
+    { name: "headingId", type: "string", default: "undefined", description: "Id of the heading, for a container's `aria-labelledby`." },
     { name: "#actions", type: "slot", default: "—", description: "Buttons placed beside the count." },
     { name: "#controls", type: "slot", default: "—", description: "Controls pushed to the far end, e.g. a sort select." },
   ],

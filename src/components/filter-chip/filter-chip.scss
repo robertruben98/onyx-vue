@@ -30,8 +30,8 @@
 }
 
 .ui-filter-chip:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 .ui-filter-chip:disabled {
@@ -70,11 +70,23 @@
 }
 
 // --- Empty ----------------------------------------------------------------
-// Dimmed, still clickable, and it lights back up on hover so the label stays
-// readable while you scan the bar.
-.ui-filter-chip--empty {
+// Apagado, todavia pulsable, y recupera su tono al pasar por encima. Apagado
+// con el gris de texto secundario y no con opacidad: transparente quedaba a
+// menos de 2:1 y la etiqueta no se leia.
+.ui-filter-chip.ui-filter-chip--empty {
+  color: var(--ui-color-text-muted);
   opacity: var(--ui-filter-chip-empty-opacity);
 }
 .ui-filter-chip--empty:hover {
+  opacity: 1;
+}
+
+// --- Dashed ---------------------------------------------------------------
+// A notice about the filters rather than a filter: outlined in its own tone.
+.ui-filter-chip--dashed {
+  border-style: dashed;
+  border-color: currentColor;
+}
+.ui-filter-chip--dashed.ui-filter-chip--empty {
   opacity: 1;
 }

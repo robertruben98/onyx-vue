@@ -14,10 +14,10 @@ export const menuDoc: ComponentDoc = {
       description: "`{ id, label, disabled? }` per item. Disabled items are skipped by the keyboard.",
     },
     {
-      name: "@itemSelect",
+      name: "@itemSelected / @itemSelect",
       type: "(item: MenuItem) => void",
       default: "—",
-      description: "Emitted with the chosen item.",
+      description: "Emitted with the chosen item. `@itemSelect` is the deprecated name of the same event, still emitted until 1.0.",
     },
     { name: "#default", type: "slot", default: "—", description: "Trigger label." },
   ],

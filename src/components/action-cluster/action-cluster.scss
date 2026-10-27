@@ -14,13 +14,20 @@
   gap: var(--ui-action-cluster-gap);
 }
 
+// Callado = sin color, no transparente. Con opacidad (0.32) el texto de las
+// acciones quedaba a 1.3:1 y no se leia ni buscandolo; en gris conserva su
+// luminancia, y con ella el contraste, y el color vuelve al pasar o enfocar.
 .ui-action-cluster--quiet {
+  filter: grayscale(1);
   opacity: var(--ui-action-cluster-quiet-opacity);
-  transition: opacity var(--ui-action-cluster-transition);
+  transition:
+    filter var(--ui-action-cluster-transition),
+    opacity var(--ui-action-cluster-transition);
 }
 
 .ui-action-cluster--quiet:hover,
 .ui-action-cluster--quiet:focus-within {
+  filter: none;
   opacity: 1;
 }
 

@@ -1,0 +1,50 @@
+// App shell — rail + content. References ONLY semantic / component tokens.
+
+.ui-app-shell {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+.ui-app-shell__rail {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  flex: 0 0 var(--ui-app-shell-rail-width);
+  width: var(--ui-app-shell-rail-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  // The select of a group and the marks of a busy entry add up to more than
+  // the rail; entries truncate their names, so nothing is lost by clipping.
+  overflow-x: hidden;
+  border-right: var(--ui-border-width) solid var(--ui-app-shell-rule);
+}
+
+.ui-app-shell__content {
+  flex: 1 1 auto;
+  // Without this a wide table inside the content pushes the page sideways
+  // instead of scrolling inside its own box.
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// A media query cannot read a custom property, so the collapse width is
+// written here and documented as the token's value.
+@media (max-width: 56.25rem) {
+  .ui-app-shell {
+    flex-direction: column;
+  }
+  .ui-app-shell__rail {
+    position: static;
+    width: 100%;
+    flex-basis: auto;
+    height: auto;
+    max-height: none;
+    border-right: 0;
+    border-bottom: var(--ui-border-width) solid var(--ui-app-shell-rule);
+  }
+}

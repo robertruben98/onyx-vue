@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./button.scss";
 
 export type ButtonVariant = "primary" | "secondary" | "danger" | "text";
@@ -18,6 +19,13 @@ const props = withDefaults(
     disabled?: boolean;
     /** Loading state — shows a spinner and suppresses interaction. */
     loading?: boolean;
+    /** Full width: the button fills its container (a block-level root). */
+    block?: boolean;
+    /**
+     * Lets a long label wrap onto more lines: the height becomes a minimum
+     * instead of a fixed value, so the text never spills out of the button.
+     */
+    wrap?: boolean;
   }>(),
   {
     variant: "primary",
@@ -25,11 +33,18 @@ const props = withDefaults(
     type: "button",
     disabled: false,
     loading: false,
+    block: false,
+    wrap: false,
   },
 );
 
 /** Emitted on activation when interactive. */
 const emit = defineEmits<{ clicked: [event: MouseEvent] }>();
+
+// Los atributos del consumidor van al elemento nativo, no a la envoltura
+// (ver internal/forward-attrs.ts).
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs } = useForwardedAttrs();
 
 const isInteractive = computed(() => !props.disabled && !props.loading);
 
@@ -43,6 +58,8 @@ const rootClasses = computed(() => ({
   "ui-button--lg": props.size === "lg",
   "ui-button--loading": props.loading,
   "ui-button--disabled": props.disabled,
+  "ui-button--block": props.block,
+  "ui-button--wrap": props.wrap,
 }));
 
 function handleClick(event: MouseEvent): void {
@@ -56,8 +73,9 @@ function handleClick(event: MouseEvent): void {
 </script>
 
 <template>
-  <span :class="rootClasses">
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
     <button
+      v-bind="controlAttrs()"
       class="ui-button__el"
       :type="type"
       :disabled="disabled || loading"
@@ -65,7 +83,13 @@ function handleClick(event: MouseEvent): void {
       @click="handleClick"
     >
       <span v-if="loading" class="ui-button__spinner" aria-hidden="true"></span>
+      <span v-else-if="$slots.leading" class="ui-button__icon ui-button__icon--leading" aria-hidden="true"
+        ><slot name="leading"
+      /></span>
       <span class="ui-button__label"><slot /></span>
+      <span v-if="$slots.trailing" class="ui-button__icon ui-button__icon--trailing" aria-hidden="true"
+        ><slot name="trailing"
+      /></span>
     </button>
   </span>
 </template>

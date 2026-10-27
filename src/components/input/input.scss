@@ -10,6 +10,11 @@
   gap: var(--ui-input-label-gap);
 }
 
+.ui-input--fluid {
+  display: flex;
+  width: 100%;
+}
+
 .ui-input__label {
   font-size: var(--ui-input-label-font-size);
   font-weight: var(--ui-input-label-font-weight);
@@ -35,9 +40,14 @@
 }
 
 .ui-input__el:focus-visible {
-  outline: none;
   border-color: var(--ui-input-border-focus);
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring);
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: 0;
+}
+
+.ui-input__el[readonly]:not(:disabled) {
+  color: var(--ui-input-text);
+  cursor: default;
 }
 
 .ui-input__el:disabled {
@@ -59,5 +69,5 @@
   border-color: var(--ui-input-border-invalid);
 }
 .ui-input--invalid .ui-input__el:focus-visible {
-  box-shadow: 0 0 0 var(--ui-focus-ring-width) var(--ui-input-border-invalid);
+  outline-color: var(--ui-input-border-invalid);
 }

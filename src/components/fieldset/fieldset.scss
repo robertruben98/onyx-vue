@@ -1,0 +1,78 @@
+// Fieldset and field row — groups of settings. References ONLY semantic /
+// component tokens.
+
+.ui-fieldset {
+  margin: 0;
+  padding: var(--ui-space-3) 0;
+  min-width: 0;
+  border: 0;
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-fieldset:last-of-type {
+  border-bottom: 0;
+}
+
+// `float` takes the legend out of the fieldset's border notch, so it lays out
+// like any other block and the gap under it is a margin we control.
+.ui-fieldset__legend {
+  float: left;
+  width: 100%;
+  margin: 0 0 var(--ui-space-2);
+  padding: 0;
+  font-family: var(--ui-font-family-display, inherit);
+  font-size: var(--ui-fieldset-legend-size);
+  font-weight: var(--ui-font-weight-medium);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-fieldset__body {
+  clear: both;
+  display: grid;
+  gap: var(--ui-fieldset-row-gap) var(--ui-fieldset-column-gap);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ui-fieldset__body--cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ui-fieldset__body--cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+// Three columns of checkbox labels are unreadable on a phone.
+@media (max-width: 40rem) {
+  .ui-fieldset__body--cols-2,
+  .ui-fieldset__body--cols-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ui-fieldset__note {
+  margin: var(--ui-space-2) 0 0;
+  font-size: var(--ui-font-size-sm);
+  line-height: 1.55;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-field-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  min-height: var(--ui-size-control-sm);
+}
+
+.ui-field-row__label {
+  flex: 1 1 auto;
+  font-size: var(--ui-font-size-md);
+  color: var(--ui-color-text-muted);
+}
+
+.ui-field-row__control {
+  flex: none;
+  max-width: 100%;
+}

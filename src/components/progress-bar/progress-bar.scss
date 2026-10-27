@@ -26,6 +26,36 @@
   animation: ui-progress-indeterminate 1200ms ease-in-out infinite;
 }
 
+// --- 0.8: sizes and end labels ---------------------------------------------
+.ui-progress--sm .ui-progress__track {
+  height: var(--ui-progress-height-sm);
+}
+
+.ui-progress--lg .ui-progress__track {
+  height: var(--ui-progress-height-lg);
+}
+
+// "18 ━━━━━━ 19": the labels sit at the ends, the track takes the rest.
+.ui-progress--ends {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-progress-label-gap);
+}
+
+.ui-progress--ends .ui-progress__track {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ui-progress__end {
+  flex: 0 0 auto;
+  font-size: var(--ui-progress-label-size);
+  font-weight: var(--ui-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--ui-progress-label-text);
+}
+
 @keyframes ui-progress-indeterminate {
   0% {
     transform: translateX(-120%);

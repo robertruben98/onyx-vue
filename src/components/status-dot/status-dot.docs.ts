@@ -14,6 +14,12 @@ export const statusDotDoc: ComponentDoc = {
       description: "State the dot reports.",
     },
     {
+      name: "offStyle",
+      type: "'filled' | 'ring'",
+      default: "'filled'",
+      description: "Draws the off state as an empty ring, so a stopped service reads as absence rather than another colour.",
+    },
+    {
       name: "label",
       type: "string",
       default: "''",
@@ -29,6 +35,10 @@ export const statusDotDoc: ComponentDoc = {
 <UiStatusDot state="dead" label="Down" />
 <UiStatusDot state="off" label="Stopped" />
 <UiStatusDot state="unknown" label="Unknown" />`,
+    },
+    {
+      title: "Off as a ring",
+      code: `<UiStatusDot state="live" /> <UiStatusDot state="off" off-style="ring" label="apagado" />`,
     },
   ],
 };

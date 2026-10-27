@@ -130,7 +130,16 @@ describe("capas de las superficies teletransportadas", () => {
     for (const componente of readdirSync(dir)) {
       const hoja = join(dir, componente, `${componente}.scss`);
       if (!existsSync(hoja)) continue;
-      const css = readFileSync(hoja, "utf8");
+      // Sin comentarios: este escaner mira declaraciones, y con los comentarios
+      // dentro acaba leyendo prosa. `digital-rain.scss` explica en su cabecera
+      // por que NO usa un token, citando `z-index: var(--undefined)` como el
+      // fallo que se quiere evitar — y eso bastaba para que el test lo acusara
+      // de cometerlo. El mismo agujero que tenian los dos escaneres de
+      // selectores de matrix.test.ts.
+      // `//` solo al principio de linea: dentro de un valor puede ser una URL.
+      const css = readFileSync(hoja, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .replace(/^\s*\/\/.*$/gm, "");
       for (const m of css.matchAll(/z-index:[^;]*var\((--[\w-]+)/g)) {
         usados.add(m[1]);
       }

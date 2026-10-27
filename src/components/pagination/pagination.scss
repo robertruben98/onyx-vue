@@ -1,0 +1,19 @@
+// Pagination — previous, the pages around the current one, next. References
+// ONLY semantic / component tokens. The buttons are UiButton.
+
+.ui-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-pagination-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-pagination__gap {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--ui-space-1);
+  color: var(--ui-pagination-ellipsis);
+}

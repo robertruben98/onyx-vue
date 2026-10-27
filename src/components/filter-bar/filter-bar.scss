@@ -1,0 +1,52 @@
+// Filter bar — search + chips. References ONLY semantic / component tokens.
+
+.ui-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1) var(--ui-space-2);
+  min-height: var(--ui-filter-bar-height);
+  padding: var(--ui-space-1) var(--ui-filter-bar-padding-x);
+  border-bottom: var(--ui-border-width) solid var(--ui-color-border);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.ui-filter-bar__search {
+  flex: 0 1 var(--ui-filter-bar-search-width);
+  min-width: 10rem;
+}
+
+.ui-filter-bar__rule {
+  flex: none;
+  width: var(--ui-border-width);
+  height: 1.375rem;
+  margin: 0 var(--ui-space-1);
+  background-color: var(--ui-color-border);
+}
+
+.ui-filter-bar__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px 2px;
+  min-width: 0;
+}
+
+.ui-filter-bar__trailing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin-left: auto;
+}
+
+// On a phone the search box takes the whole first row.
+@media (max-width: 40rem) {
+  .ui-filter-bar__search {
+    flex-basis: 100%;
+  }
+  .ui-filter-bar__rule {
+    display: none;
+  }
+}

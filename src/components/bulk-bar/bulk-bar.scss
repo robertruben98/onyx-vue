@@ -8,6 +8,8 @@
 
 .ui-bulk-bar {
   display: flex;
+  // En un movil las acciones bajan de linea en vez de salirse de la barra.
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ui-bulk-bar-gap);
   padding: var(--ui-bulk-bar-padding-y) var(--ui-bulk-bar-padding-x);

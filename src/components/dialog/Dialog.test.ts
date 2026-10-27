@@ -169,3 +169,48 @@ describe("Dialog (Vue)", () => {
     expect(document.getElementById(secondId!)?.textContent).toBe("Second");
   });
 });
+
+describe("Dialog (Vue) — focus trap", () => {
+  function renderWithButtons() {
+    return renderDialog({}, {
+      default: () => [h("button", { type: "button" }, "First"), h("button", { type: "button" }, "Second")],
+    });
+  }
+
+  it("wraps Tab from the last focusable element to the first", async () => {
+    renderWithButtons();
+    const dialog = await screen.findByRole("dialog");
+    const buttons = dialog.querySelectorAll<HTMLElement>("button");
+    const last = buttons[buttons.length - 1];
+    last.focus();
+    await fireEvent.keyDown(dialog, { key: "Tab" });
+    expect(document.activeElement).toBe(buttons[0]);
+  });
+
+  it("wraps Shift+Tab from the first focusable element to the last", async () => {
+    renderWithButtons();
+    const dialog = await screen.findByRole("dialog");
+    const buttons = dialog.querySelectorAll<HTMLElement>("button");
+    buttons[0].focus();
+    await fireEvent.keyDown(dialog, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(buttons[buttons.length - 1]);
+  });
+
+  it("leaves Tab alone in the middle of the dialog", async () => {
+    renderWithButtons();
+    const dialog = await screen.findByRole("dialog");
+    const buttons = dialog.querySelectorAll<HTMLElement>("button");
+    const middle = buttons[1];
+    middle.focus();
+    await fireEvent.keyDown(dialog, { key: "Tab" });
+    expect(document.activeElement).toBe(middle);
+  });
+
+  it("ignores keys that are neither Escape nor Tab", async () => {
+    const { emitted } = renderDialog();
+    const dialog = await screen.findByRole("dialog");
+    await fireEvent.keyDown(dialog, { key: "a" });
+    expect(screen.getByRole("dialog")).toBeTruthy();
+    expect(emitted().closed).toBeFalsy();
+  });
+});

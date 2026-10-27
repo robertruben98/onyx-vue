@@ -1,0 +1,23 @@
+// Digital rain — a fixed, decorative backdrop. It sits behind everything and
+// never takes a pointer event, so it cannot swallow a click meant for the page.
+//
+// The z-index is a literal and not a token on purpose. The token scale
+// (--ui-overlay-z 1000 … --ui-tooltip-z 1300) exists to order the surfaces that
+// teleport into `body`; decoration that must sit BEHIND the page has no place
+// on that ladder, and inventing a token for it would mean shipping one that
+// tokens.css — which is generated from the Angular lib — does not define. A
+// `z-index: var(--undefined)` is an invalid declaration that silently falls
+// back to `auto`, which is exactly the bug the layer test in console.test.ts
+// was written to catch.
+
+.ui-digital-rain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  // The canvas renders glyphs with the page font, so the rain matches whatever
+  // monospace the active preset chose.
+  font-family: var(--ui-font-family);
+}
