@@ -19,7 +19,9 @@ Consumers that build from source (the control-panel dashboard aliases
   the ones on screen. A missing or broken image becomes the title's initials on the gradient
   UiAvatar gives the same name. `title` (a heading, `titleTag`), `subtitle`, `href` / `target`
   (`_blank` adds `rel="noopener"`); slots `#badges` (over the image), `#default` (details) and
-  `#actions`. Lay several out with `UiGrid min-item-width`. The anime-dl panel wanted a poster view
+  `#actions`. On hover (or when the title link has focus) the picture zooms inside its box —
+  `zoom`, on by default; 450 ms eased, off under `prefers-reduced-motion` and where nothing can
+  hover. Lay several out with `UiGrid min-item-width`. The anime-dl panel wanted a poster view
   of what is airing.
 
 ## 0.10.0 — 2026-10-27
