@@ -7,12 +7,19 @@ export const sequenceGridDoc: ComponentDoc = {
     "A numbered run of things, each one there or not: the episodes of a season on disk, the chapters done, the days of a streak. Every number is printed, and a gap differs from a present cell in colour, text and a dashed outline, so it does not depend on telling red from green.",
   imports: ["UiSequenceGrid"],
   api: [
-    { name: "max", type: "number", default: "—", description: "The last number of the run." },
+    { name: "max", type: "number", default: "highest of present", description: "The last number of the run." },
     {
       name: "missing",
       type: "number[]",
       default: "[]",
       description: "The numbers that are not there; every other number from `start` to `max` is.",
+    },
+    {
+      name: "present",
+      type: "number[] | null",
+      default: "null",
+      description:
+        "The numbers that are there, when that is what you hold (the files on disk). Every other number from `start` to `max` is then missing, and `missing` is ignored.",
     },
     { name: "start", type: "number", default: "1", description: "The first number of the run." },
     {
@@ -34,6 +41,11 @@ export const sequenceGridDoc: ComponentDoc = {
     {
       title: "Complete",
       code: `<UiSequenceGrid :max="6" label="Chapters" item-label="Chapter" present-label="done" missing-label="to do" />`,
+    },
+    {
+      title: "From what is on disk",
+      description: "Give `present` and the gaps follow; `max` defaults to the highest one.",
+      code: `<UiSequenceGrid :present="[1, 2, 3, 5, 8, 9]" label="Season 2 episodes" item-label="Episode" />`,
     },
     {
       title: "Not starting at 1",
