@@ -88,6 +88,16 @@
   gap: var(--ui-space-1);
 }
 
+// Each badge gets a solid backing of its own. A tag's fill is a translucent tint made for a plain
+// surface; laid on a poster it took the poster's colours, and "followed" on a red or white cover
+// could not be read. The backing replaces the tint, the tag keeps its own text and border colour.
+// Two classes: a tag's own `.ui-tag--info` is one, and its stylesheet loads after this one.
+.ui-media-card .ui-media-card__badges > * {
+  background-color: var(--ui-media-card-badge-bg);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
 .ui-media-card__body {
   display: flex;
   flex: 1;

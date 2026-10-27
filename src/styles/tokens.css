@@ -605,6 +605,7 @@
   --ui-media-card-placeholder-text: var(--ui-avatar-gradient-text);
   --ui-media-card-placeholder-font-size: 2rem;
   --ui-media-card-badge-inset: var(--ui-space-2);
+  --ui-media-card-badge-bg: rgba(10, 12, 16, 0.86);
   /* Hover: the picture zooms inside its box, slow out of a quick start. */
   --ui-media-card-zoom: 1.08;
   --ui-media-card-zoom-duration: 450ms;
