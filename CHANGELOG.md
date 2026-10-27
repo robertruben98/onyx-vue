@@ -9,6 +9,21 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.11.0 — 2026-10-27
+
+### Added
+
+- `UiMediaCard`: a card that leads with its image — a series by its poster, a book by its cover.
+  The image sits in a box of a fixed `ratio` (`2 / 3` by default), so a grid of them lines up
+  whatever size each file is, and loads lazily (`loading="lazy"`): a grid of 150 posters fetches
+  the ones on screen. A missing or broken image becomes the title's initials on the gradient
+  UiAvatar gives the same name. `title` (a heading, `titleTag`), `subtitle`, `href` / `target`
+  (`_blank` adds `rel="noopener"`); slots `#badges` (over the image), `#default` (details) and
+  `#actions`. On hover (or when the title link has focus) the picture zooms inside its box —
+  `zoom`, on by default; 450 ms eased, off under `prefers-reduced-motion` and where nothing can
+  hover. Lay several out with `UiGrid min-item-width`. The anime-dl panel wanted a poster view
+  of what is airing.
+
 ## 0.10.0 — 2026-10-27
 
 ### Changed (opt-in; defaults unchanged)

@@ -61,6 +61,7 @@ export * from "./components/kpi-strip";
 export * from "./components/level-meter";
 export * from "./components/load-more-row";
 export * from "./components/log-lines";
+export * from "./components/media-card";
 export * from "./components/menu";
 export * from "./components/metric-chip";
 export * from "./components/nav-rail";
