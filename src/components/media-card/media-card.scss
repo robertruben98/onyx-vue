@@ -10,6 +10,9 @@
   color: var(--ui-media-card-text);
   border: var(--ui-border-width) solid var(--ui-media-card-border);
   border-radius: var(--ui-media-card-radius);
+  transition:
+    border-color var(--ui-media-card-zoom-duration) var(--ui-media-card-zoom-easing),
+    box-shadow var(--ui-media-card-zoom-duration) var(--ui-media-card-zoom-easing);
 }
 
 .ui-media-card__media {
@@ -27,6 +30,34 @@
 
 .ui-media-card__image {
   object-fit: cover;
+}
+
+// Hovering the card (or tabbing to its link) zooms the picture inside its box: the box keeps its
+// size and clips, so the grid does not move. Transform only, so it stays on the compositor. Only
+// where a pointer can hover — on a touch screen the zoom would stick after a tap.
+.ui-media-card--zoom .ui-media-card__image,
+.ui-media-card--zoom .ui-media-card__placeholder {
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform var(--ui-media-card-zoom-duration) var(--ui-media-card-zoom-easing);
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  .ui-media-card--zoom:hover {
+    border-color: var(--ui-media-card-border-hover);
+    box-shadow: var(--ui-media-card-shadow-hover);
+  }
+
+  .ui-media-card--zoom:hover .ui-media-card__image,
+  .ui-media-card--zoom:hover .ui-media-card__placeholder {
+    transform: scale(var(--ui-media-card-zoom));
+  }
+}
+
+.ui-media-card--zoom:focus-within .ui-media-card__image,
+.ui-media-card--zoom:focus-within .ui-media-card__placeholder {
+  transform: scale(var(--ui-media-card-zoom));
 }
 
 .ui-media-card__placeholder {
@@ -110,6 +141,21 @@
   flex-wrap: wrap;
   gap: var(--ui-space-2);
   padding: 0 var(--ui-media-card-padding-x) var(--ui-media-card-padding-y);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-media-card,
+  .ui-media-card--zoom .ui-media-card__image,
+  .ui-media-card--zoom .ui-media-card__placeholder {
+    transition: none;
+  }
+
+  .ui-media-card--zoom:hover .ui-media-card__image,
+  .ui-media-card--zoom:hover .ui-media-card__placeholder,
+  .ui-media-card--zoom:focus-within .ui-media-card__image,
+  .ui-media-card--zoom:focus-within .ui-media-card__placeholder {
+    transform: none;
+  }
 }
 
 @media (forced-colors: active) {

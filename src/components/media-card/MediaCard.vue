@@ -31,6 +31,11 @@ const props = withDefaults(
     ratio?: string;
     /** Heading element of the title, to fit the page's outline. */
     titleTag?: "h2" | "h3" | "h4" | "h5" | "h6" | "p";
+    /**
+     * Zoom the picture inside its box on hover (and when the title link has focus). Off under
+     * `prefers-reduced-motion`, and never on a screen that cannot hover.
+     */
+    zoom?: boolean;
   }>(),
   {
     src: "",
@@ -40,6 +45,7 @@ const props = withDefaults(
     target: undefined,
     ratio: "2 / 3",
     titleTag: "h3",
+    zoom: true,
   },
 );
 
@@ -62,7 +68,7 @@ const rel = computed(() => (props.target === "_blank" ? "noopener" : undefined))
 </script>
 
 <template>
-  <article class="ui-media-card">
+  <article :class="['ui-media-card', { 'ui-media-card--zoom': zoom }]">
     <div class="ui-media-card__media" :style="{ aspectRatio: ratio }">
       <img
         v-if="showImage"
