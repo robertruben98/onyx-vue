@@ -63,6 +63,13 @@ describe("MediaCard (Vue)", () => {
     expect(full.getByRole("button", { name: "Get" })).toBeTruthy();
   });
 
+  it("zooms on hover by default, and not when zoom is off", () => {
+    const on = render(MediaCard, { props: { title: "x" } });
+    expect(on.container.querySelector(".ui-media-card")!.classList.contains("ui-media-card--zoom")).toBe(true);
+    const off = render(MediaCard, { props: { title: "y", zoom: false } });
+    expect(off.container.querySelector(".ui-media-card")!.classList.contains("ui-media-card--zoom")).toBe(false);
+  });
+
   it("has no axe violations", async () => {
     const { container } = render(MediaCard, {
       props: { title: "Red River", subtitle: "Sora wa Akai Kawa no Hotori", src: "p.jpg", href: "#" },
