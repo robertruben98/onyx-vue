@@ -1420,3 +1420,16 @@ describe("DataTable (Vue) — sorting edge cases", () => {
     expect(names()).toEqual(["Alice", "Bob", "Charlie"]);
   });
 });
+
+describe("DataTable (Vue) — long words", () => {
+  // Static, like the preset tests: jsdom neither compiles SCSS nor lays out text.
+  // A path or an id has no space to break at; the cell has to break it anyway,
+  // because the table clips what spills out of it.
+  it("breaks a word with no space in it inside the cell", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const css = readFileSync(join(process.cwd(), "src/components/data-table/data-table.scss"), "utf8");
+    const body = /\.ui-dt__td\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(body).toMatch(/overflow-wrap:\s*anywhere/);
+  });
+});
