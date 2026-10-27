@@ -1433,3 +1433,50 @@ describe("DataTable (Vue) — long words", () => {
     expect(body).toMatch(/overflow-wrap:\s*anywhere/);
   });
 });
+
+describe("DataTable (Vue) — stacked rows (stackBelow)", () => {
+  const columns: DataTableColumn<{ id: number; name: string }>[] = [
+    { id: "name", header: "Name", field: "name" },
+    { id: "actions", header: "" },
+  ];
+  const rows = [{ id: 1, name: "Ada" }];
+  const original = window.innerWidth;
+  const setWidth = (w: number) =>
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: w });
+  afterEach(() => setWidth(original));
+
+  it("draws rows as cards under stackBelow, each cell labelled by its header", () => {
+    setWidth(400);
+    const { container } = render(DataTable, { props: { columns, rows, stackBelow: 640, mode: "plain" } });
+    expect(container.querySelector(".ui-data-table--stacked")).not.toBeNull();
+    const cell = container.querySelector('[role="gridcell"][data-col]');
+    expect(cell?.getAttribute("data-label")).toBe("Name");
+  });
+
+  it("stays a table at or above stackBelow, and when stackBelow is 0", () => {
+    setWidth(800);
+    const wide = render(DataTable, { props: { columns, rows, stackBelow: 640 } });
+    expect(wide.container.querySelector(".ui-data-table--stacked")).toBeNull();
+    setWidth(400);
+    const off = render(DataTable, { props: { columns, rows } });
+    expect(off.container.querySelector(".ui-data-table--stacked")).toBeNull();
+  });
+
+  it("never stacks in virtual mode, whose rows have one fixed height", () => {
+    setWidth(400);
+    const { container } = render(DataTable, {
+      props: { columns, rows, stackBelow: 640, mode: "virtual" },
+    });
+    expect(container.querySelector(".ui-data-table--stacked")).toBeNull();
+  });
+
+  it("scrolls a grid too wide for its box instead of clipping it", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const css = readFileSync(join(process.cwd(), "src/components/data-table/data-table.scss"), "utf8");
+    const code = css.replace(/^\s*\/\/.*$/gm, "");
+    const body = /\.ui-dt__grid\s*\{([^}]*)\}/.exec(code)?.[1] ?? "";
+    expect(body).not.toMatch(/overflow:\s*hidden/);
+    expect(body).toMatch(/overflow-x:\s*auto/);
+  });
+});
