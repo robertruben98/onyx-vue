@@ -33,10 +33,15 @@ import "./sequence-grid.scss";
  */
 const props = withDefaults(
   defineProps<{
-    /** The last number of the run. */
-    max: number;
+    /** The last number of the run. Defaults to the highest of `present`. */
+    max?: number;
     /** The numbers that are not there. Everything else from `start` to `max` is. */
     missing?: number[];
+    /**
+     * The numbers that are there, for when that is what you hold (the files on disk). When given,
+     * every other number in the run is missing and `missing` is ignored.
+     */
+    present?: number[] | null;
     /** The first number of the run. */
     start?: number;
     /** What the run is, for the accessible name: "Season 1 episodes". */
@@ -49,7 +54,9 @@ const props = withDefaults(
     missingLabel?: string;
   }>(),
   {
+    max: undefined,
     missing: () => [],
+    present: null,
     start: 1,
     label: "",
     itemLabel: "Item",
@@ -58,11 +65,19 @@ const props = withDefaults(
   },
 );
 
-const gaps = computed(() => new Set(props.missing));
+const top = computed(() => props.max ?? Math.max(props.start - 1, ...(props.present ?? [])));
+
+const gaps = computed(() => {
+  if (!props.present) return new Set(props.missing);
+  const have = new Set(props.present);
+  const out = new Set<number>();
+  for (let n = props.start; n <= top.value; n++) if (!have.has(n)) out.add(n);
+  return out;
+});
 
 const cells = computed(() => {
   const out: { n: number; missing: boolean }[] = [];
-  for (let n = props.start; n <= props.max; n++) out.push({ n, missing: gaps.value.has(n) });
+  for (let n = props.start; n <= top.value; n++) out.push({ n, missing: gaps.value.has(n) });
   return out;
 });
 
