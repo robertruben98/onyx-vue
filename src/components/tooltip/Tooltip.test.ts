@@ -19,7 +19,9 @@ describe("Tooltip (Vue)", () => {
 
     const tip = await screen.findByRole("tooltip");
     expect(tip.textContent).toBe("Helpful hint");
-    expect(trigger.parentElement!.getAttribute("aria-describedby")).toBe(tip.id);
+    // The focusable control is described, not its display:contents wrapper.
+    expect(trigger.getAttribute("aria-describedby")).toBe(tip.id);
+    expect(trigger.parentElement!.getAttribute("aria-describedby")).toBeNull();
   });
 
   it("hides the tooltip on unhover", async () => {
@@ -34,6 +36,7 @@ describe("Tooltip (Vue)", () => {
       expect(screen.queryByRole("tooltip")).toBeNull(),
     );
     expect(host.getAttribute("aria-describedby")).toBeNull();
+    expect(trigger.getAttribute("aria-describedby")).toBeNull();
   });
 
   it("shows on focus and hides on Escape", async () => {
@@ -93,8 +96,8 @@ describe("Tooltip (Vue)", () => {
     await fireEvent.mouseEnter(screen.getByRole("button", { name: "One" }).parentElement!);
     await fireEvent.mouseEnter(screen.getByRole("button", { name: "Two" }).parentElement!);
 
-    const hostOne = screen.getByRole("button", { name: "One" }).parentElement!;
-    const hostTwo = screen.getByRole("button", { name: "Two" }).parentElement!;
+    const hostOne = screen.getByRole("button", { name: "One" });
+    const hostTwo = screen.getByRole("button", { name: "Two" });
     const describedByOne = hostOne.getAttribute("aria-describedby");
     const describedByTwo = hostTwo.getAttribute("aria-describedby");
     expect(describedByOne).toBeTruthy();
