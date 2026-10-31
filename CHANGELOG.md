@@ -9,6 +9,14 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Tests
+
+- Run Chromium regression tests against the built docs demos in a separate PR CI job:
+  select stacking, selection and dismissal inside a dialog, and checkbox size and
+  first-line alignment with wrapping labels at 390 px. Run locally with `npm run test:browser`.
+
 ## 0.13.1 — 2026-10-31
 
 ### Fixed

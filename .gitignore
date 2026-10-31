@@ -6,3 +6,6 @@ coverage
 
 # scorecard: salidas intermedias de cada medicion
 scorecard/.out
+
+# Playwright failure artifacts
+test-results/
