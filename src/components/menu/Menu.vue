@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useOverlay } from "../../internal/useOverlay";
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
-import { computed, nextTick, ref, useId, watch } from "vue";
+import { computed, ref, useId } from "vue";
 import "./menu.scss";
 
 export interface MenuItem {
@@ -52,7 +53,10 @@ const open = ref(false);
 const triggerEl = ref<HTMLButtonElement | null>(null);
 const panelEl = ref<HTMLDivElement | null>(null);
 
-const panelStyle = ref<Record<string, string>>({});
+const { style: panelStyle, close, toggle, onBackdrop } = useOverlay({
+  kind: "menu", open, trigger: triggerEl, panel: panelEl,
+  onOpened: () => itemElements()[0]?.focus({ preventScroll: true }),
+});
 
 /** Enabled menuitem buttons currently in the panel. */
 function itemElements(): HTMLButtonElement[] {
@@ -63,60 +67,10 @@ function itemElements(): HTMLButtonElement[] {
   );
 }
 
-const EDGE = 8; // px libres hasta el borde de la ventana
-
-/**
- * Debajo del boton y alineado a su izquierda, salvo que no quepa: entonces se
- * alinea a su derecha (un menu de cuenta en la esquina se salia de la pantalla y
- * cortaba el email) y, si tampoco cabe debajo, se abre hacia arriba.
- */
-function positionPanel(): void {
-  const trigger = triggerEl.value;
-  if (!trigger) return;
-  const rect = trigger.getBoundingClientRect();
-  const panel = panelEl.value?.getBoundingClientRect();
-  const width = panel?.width ?? 0;
-  const height = panel?.height ?? 0;
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  let left = rect.left;
-  if (left + width > vw - EDGE) left = Math.max(EDGE, Math.min(rect.right, vw - EDGE) - width);
-  const top = rect.bottom + height > vh - EDGE && rect.top - height >= EDGE ? rect.top - height : rect.bottom;
-  panelStyle.value = { position: "fixed", top: `${top}px`, left: `${left}px` };
-}
-
-async function openMenu(): Promise<void> {
-  open.value = true;
-  await nextTick();
-  // Dos pasadas: hasta estar "fixed" el panel mide lo que el body (todo el ancho);
-  // ya colocado mide lo suyo, y con eso se decide si cabe a la derecha.
-  positionPanel();
-  await nextTick();
-  positionPanel();
-  // El foco, cuando el panel YA esta en su sitio: antes estaba aun al final del
-  // body y el navegador desplazaba la pagina hasta alli al enfocarlo.
-  await nextTick();
-  itemElements()[0]?.focus({ preventScroll: true });
-}
-
-function close(): void {
-  if (!open.value) return;
-  open.value = false;
-  triggerEl.value?.focus();
-}
-
-function toggle(): void {
-  if (open.value) {
-    close();
-  } else {
-    void openMenu();
-  }
-}
-
 function onTriggerKeydown(event: KeyboardEvent): void {
   if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
     event.preventDefault();
-    if (!open.value) void openMenu();
+    if (!open.value) open.value = true;
   }
 }
 
@@ -141,7 +95,6 @@ function onMenuKeydown(event: KeyboardEvent): void {
       event.preventDefault();
       items[items.length - 1].focus();
       break;
-    case "Escape":
     case "Tab":
       close();
       break;
@@ -161,20 +114,6 @@ function isCheckable(item: MenuItem): boolean {
 }
 
 const triggerControls = computed(() => (open.value ? menuId : undefined));
-
-// Re-position on scroll/resize while the menu is open.
-function onWindowChange(): void {
-  if (open.value) positionPanel();
-}
-watch(open, (isOpen) => {
-  if (isOpen) {
-    window.addEventListener("scroll", onWindowChange, true);
-    window.addEventListener("resize", onWindowChange);
-  } else {
-    window.removeEventListener("scroll", onWindowChange, true);
-    window.removeEventListener("resize", onWindowChange);
-  }
-});
 
 if (isDev()) useDeprecatedEvents();
 </script>
@@ -198,7 +137,7 @@ if (isDev()) useDeprecatedEvents();
 
     <Teleport to="body">
       <template v-if="open">
-        <div class="ui-menu__backdrop" @click="close"></div>
+        <div class="ui-menu__backdrop" @click="onBackdrop"></div>
         <div
           :id="menuId"
           ref="panelEl"

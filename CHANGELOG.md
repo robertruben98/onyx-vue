@@ -56,6 +56,25 @@ Consumers that build from source (the control-panel dashboard aliases
 - `UiDrawer` has its own layer, `--ui-drawer-z` (1150): above dialogs (1100), below menus,
   selects and popovers (1200). It shared the dialog's layer, so a drawer opened from a dialog
   could end up underneath it.
+- Select, Menu, Popover and Tooltip share an internal overlay lifecycle and an
+  explicit Escape stack. Escape dismisses only the most recently opened surface,
+  even inside a dialog's DOM; focus returns to interactive triggers. Menu retains
+  viewport flip/clamp, Select follows scroll/resize, and unmount removes listeners.
+  Public props, events, slots, classes and layer tokens are unchanged.
+
+- `UiSelect` uses its `UiFormField` label as its accessible name instead of the
+  placeholder. Bare selects keep the placeholder fallback; explicit `ariaLabel`
+  and `ariaLabelledby` retain their precedence. `UiFieldRow` labels continue to
+  work through its `labelId` slot binding.
+- `UiRadioGroup` and `UiSegmented` now inherit the visible label and field metadata
+  from `UiFormField`, with a shared accessible-name contract covering all nine controls.
+### Fixed
+
+- `UiDrawer` now uses `--ui-drawer-z` (1150), above dialogs (1100) and below menus,
+  selects and popovers (1200). A drawer opened from a dialog stays above it.
+- Source-derived layer tests cover every component that teleports to `body`, including
+  each independent surface and inline style bindings. Inline `z-index` is forbidden;
+  surfaces must use a layer token above the dialog, except its own backdrop.
 
 ### Removed
 
