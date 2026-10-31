@@ -65,8 +65,11 @@ const listboxEl = ref<HTMLUListElement | null>(null);
 const { style: paneStyle, close, onBackdrop } = useOverlay({
   kind: "select", open, trigger: triggerEl, panel: listboxEl,
   onOpened: () => {
-    listboxEl.value?.focus();
-    scrollActiveIntoView();
+    // The overlay opens synchronously; wait for the teleported list to mount.
+    void nextTick(() => {
+      listboxEl.value?.focus();
+      scrollActiveIntoView();
+    });
   },
 });
 
@@ -87,8 +90,9 @@ function scrollActiveIntoView(): void {
   if (list && option) {
     const bounds = list.getBoundingClientRect();
     const item = option.getBoundingClientRect();
-    const top = bounds.top + list.clientTop;
-    const bottom = top + list.clientHeight;
+    const style = getComputedStyle(list);
+    const top = bounds.top + list.clientTop + (parseFloat(style.paddingTop) || 0);
+    const bottom = bounds.top + list.clientTop + list.clientHeight - (parseFloat(style.paddingBottom) || 0);
     if (item.top < top) list.scrollTop -= top - item.top;
     else if (item.bottom > bottom) list.scrollTop += item.bottom - bottom;
   }
