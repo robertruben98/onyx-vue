@@ -1,0 +1,18 @@
+<html><body><div id="app"></div><script type="module">
+import { createApp, h } from 'vue';
+import Checkbox from '/src/components/checkbox/Checkbox.vue';
+import Radio from '/src/components/radio-group/RadioGroup.vue';
+import Switch from '/src/components/switch/Switch.vue';
+import CheckRow from '/src/components/check-row/CheckRow.vue';
+import '/src/styles/base.css';
+const cases = [
+  ...['sm', 'md', 'lg'].map(size => ({ id: `checkbox-${size}`, component: Checkbox, props: { size } })),
+  { id: 'radio', component: Radio }, { id: 'switch', component: Switch },
+  ...['pending', 'running', 'done', 'failed'].flatMap(state => [false, true].map(dense => ({ id: `check-row-${state}-${dense}`, component: CheckRow, props: { state, dense } }))),
+];
+createApp({ render: () => cases.flatMap(c => ['short', 'long', 'bare'].map(kind => {
+  const label = kind === 'bare' ? '' : kind === 'short' ? 'Short label' : 'Please review the notification settings before continuing with your subscription and confirm the changes for everyone in your household';
+  const props = c.id === 'radio' ? { options: [{ label, value: 'a' }] } : c.id.startsWith('check-row') ? { name: label } : { label, ariaLabel: 'Control' };
+  return h('div', { id: `${c.id}-${kind}`, class: 'sample' }, [h(c.component, { ...c.props, ...props })]);
+})) }).mount('#app');
+</script><style>* { box-sizing: border-box; } body { margin: 0; font: 16px/1.5 Arial; } .sample { width: 390px; margin-bottom: 16px; }</style></body></html>
