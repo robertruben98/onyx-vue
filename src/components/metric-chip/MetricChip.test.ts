@@ -85,3 +85,81 @@ describe("MetricChip (Vue)", () => {
     }
   });
 });
+
+const PLAIN_CHIP_0113 = "<span class=\"ui-metric-chip ui-metric-chip--ok\"><span class=\"ui-metric-chip__label\">conf</span><span class=\"ui-tri-state-count ui-tri-state-count--ok ui-metric-chip__value\" aria-label=\"74 conf\" role=\"img\"><span aria-hidden=\"true\">74</span></span></span>";
+
+describe("MetricChip previous / delta", () => {
+  const delta = (c: Element) => c.querySelector(".ui-metric-chip__delta");
+
+  it("without previous renders exactly what 0.11.3 rendered", () => {
+    const { container } = render(MetricChip, { props: { label: "conf", value: 74, tone: "success" } });
+    expect(container.innerHTML.replace(/<!--[\s\S]*?-->/g, "")).toBe(PLAIN_CHIP_0113);
+  });
+
+  it("shows a rise as (+16), toned good, read as 'up 16'", () => {
+    const { container } = render(MetricChip, { props: { label: "conf", value: 74, previous: 58 } });
+    const d = delta(container)!;
+    expect(d.querySelector("[aria-hidden='true']")!.textContent).toBe("(+16)");
+    expect(d.querySelector(".ui-metric-chip__sr")!.textContent).toBe("up 16");
+    expect(d.classList.contains("ui-metric-chip__delta--up")).toBe(true);
+    expect(d.classList.contains("ui-metric-chip__delta--good")).toBe(true);
+  });
+
+  it("shows a fall with a real minus sign, toned bad", () => {
+    const { container } = render(MetricChip, { props: { label: "conf", value: 40, previous: 58 } });
+    const d = delta(container)!;
+    expect(d.textContent).toContain("(\u221218)");
+    expect(d.querySelector(".ui-metric-chip__sr")!.textContent).toBe("down 18");
+    expect(d.classList.contains("ui-metric-chip__delta--bad")).toBe(true);
+  });
+
+  it("shows no change as (±0), neither good nor bad", () => {
+    const { container } = render(MetricChip, { props: { label: "conf", value: 58, previous: 58 } });
+    const d = delta(container)!;
+    expect(d.textContent).toContain("(±0)");
+    expect(d.classList.contains("ui-metric-chip__delta--same")).toBe(true);
+    expect(d.classList.contains("ui-metric-chip__delta--good")).toBe(false);
+    expect(d.classList.contains("ui-metric-chip__delta--bad")).toBe(false);
+    expect(d.querySelector(".ui-metric-chip__sr")!.textContent).toBe("unchanged");
+  });
+
+  it("flips the tone with lower-is-better, never the sign", () => {
+    const { container } = render(MetricChip, {
+      props: { label: "errores", value: 3, previous: 5, deltaPolarity: "lower-is-better" },
+    });
+    const d = delta(container)!;
+    expect(d.textContent).toContain("(\u22122)");
+    expect(d.classList.contains("ui-metric-chip__delta--good")).toBe(true);
+  });
+
+  it("speaks in the page's language with deltaLabels", () => {
+    const { container } = render(MetricChip, {
+      props: { label: "conf", value: 74, previous: 58, deltaLabels: { up: "sube {n}", down: "baja {n}", same: "igual" } },
+    });
+    expect(container.querySelector(".ui-metric-chip__sr")!.textContent).toBe("sube 16");
+  });
+
+  it("rounds away float noise", () => {
+    const { container } = render(MetricChip, { props: { label: "x", value: 0.3, previous: 0.1 } });
+    expect(delta(container)!.textContent).toContain("(+0.2)");
+  });
+
+  it("shows no delta unless both numbers are known", () => {
+    for (const props of [
+      { label: "x", value: 74, previous: null },
+      { label: "x", value: null, previous: 58 },
+      { label: "x", value: 74, previous: 58, state: "pending" as const },
+      { label: "x", value: 74, previous: 58, state: "error" as const },
+    ]) {
+      const { container } = render(MetricChip, { props });
+      expect(delta(container)).toBeNull();
+    }
+  });
+
+  it("has no axe violations with a delta, plain and interactive", async () => {
+    for (const interactive of [false, true]) {
+      const { container } = render(MetricChip, { props: { label: "conf", value: 74, previous: 58, interactive } });
+      expect(await axe(container, axeOptions)).toHaveNoViolations();
+    }
+  });
+});
