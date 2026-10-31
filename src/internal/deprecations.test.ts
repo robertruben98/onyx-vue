@@ -52,3 +52,38 @@ it("does not warn with the production flag", async () => {
   canonicalTone("ok");
   expect(console.warn).not.toHaveBeenCalled();
 });
+
+it("warns even when an error state does not render the supplied tone", async () => {
+  const { default: Chip } = await import("../components/metric-chip/MetricChip.vue");
+  render(Chip, { props: { label: "Failed", state: "error", tone: "warn" } });
+  expect(console.warn).toHaveBeenCalledWith(expect.stringMatching(/warn.*warning.*1\.0/));
+});
+
+it("warns independently for every legacy tone, but only once per spelling", async () => {
+  const { canonicalTone } = await import("./tone");
+  for (const tone of ["ok", "warn", "default", "ok", "warn", "default"]) canonicalTone(tone);
+  expect(console.warn).toHaveBeenCalledTimes(3);
+  expect(console.warn).toHaveBeenCalledWith(expect.stringMatching(/default.*neutral.*1\.0/));
+});
+
+it("recognizes all declared deprecated events and ignores undeclared native listeners", async () => {
+  const { defineComponent, h } = await import("vue");
+  const { useDeprecatedEvents } = await import("./deprecated-events");
+  const { DEPRECATED_EVENTS } = await import("../deprecations");
+  for (const [name, replacement] of Object.entries(DEPRECATED_EVENTS)) {
+    const Component = defineComponent({
+      emits: [name, replacement],
+      setup() { useDeprecatedEvents(); return () => h("div"); },
+    });
+    render(Component, { props: { [`on${name[0].toUpperCase()}${name.slice(1)}Once`]: vi.fn() } });
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining(`use "${replacement}"`));
+  }
+  expect(console.warn).toHaveBeenCalledTimes(Object.keys(DEPRECATED_EVENTS).length);
+  vi.mocked(console.warn).mockClear();
+  const Native = defineComponent({
+    emits: ["clicked"],
+    setup() { useDeprecatedEvents(); return () => h("div"); },
+  });
+  render(Native, { attrs: { onChange: vi.fn() } });
+  expect(console.warn).not.toHaveBeenCalled();
+});
