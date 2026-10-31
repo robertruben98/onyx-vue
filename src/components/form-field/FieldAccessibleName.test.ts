@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/vue";
 import { computeAccessibleName } from "dom-accessibility-api";
+import { axe } from "jest-axe";
 import FormField from "./FormField.vue";
 import { UiInput } from "../input";
 import { UiTextarea } from "../textarea";
@@ -30,7 +31,28 @@ describe("Form control accessible-name contract", () => {
       components,
       template: `<FormField label="Name"><${component} :options="[{ value: 'a', label: 'Option A' }]" /></FormField>`,
     });
-    expect(screen.getByRole(role, { name: "Name", exact: true })).toBeTruthy();
+    expect(screen.getByRole(role, { name: "Name" })).toBeTruthy();
+  });
+
+  it.each(["UiRadioGroup", "UiSegmented"])("%s inherits field metadata on the named group", async (component) => {
+    const { container } = render({
+      components,
+      template: `<FormField label="Name" help="Hint" error="Error" required><${component} :options="[{ value: 'a', label: 'Option A' }]" /></FormField>`,
+    });
+    const group = screen.getByRole("radiogroup", { name: "Name" });
+    expect(group.getAttribute("aria-required")).toBe("true");
+    expect(group.getAttribute("aria-invalid")).toBe("true");
+    expect(group.getAttribute("aria-describedby")?.split(" ").map((id) => document.getElementById(id)?.textContent)).toEqual(["Hint", "Error"]);
+    expect(screen.getByRole("radio", { name: "Option A" })).toBeTruthy();
+    expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
+  });
+
+  it.each(["UiRadioGroup", "UiSegmented"])("%s preserves an explicit group name", (component) => {
+    render({
+      components,
+      template: `<FormField label="Name"><${component} aria-label="Custom" :options="[{ value: 'a', label: 'Option A' }]" /></FormField>`,
+    });
+    expect(screen.getByRole("radiogroup", { name: "Custom" })).toBeTruthy();
   });
 
   it.each(["date", "time", "datetime-local"])("UiDateInput (%s) is named exactly by its field", (type) => {

@@ -24,16 +24,16 @@ describe("Select (Vue)", () => {
       template: `<FormField label="Estado"><Select :options="options" /></FormField>`,
       data: () => ({ options: OPTIONS }),
     });
-    const trigger = screen.getByRole("combobox", { name: "Estado", exact: true });
+    const trigger = screen.getByRole("combobox", { name: "Estado" });
     expect(trigger.hasAttribute("aria-label")).toBe(false);
     await fireEvent.click(trigger);
     await fireEvent.click(await screen.findByRole("option", { name: "RxJS" }));
-    expect(screen.getByRole("combobox", { name: "Estado", exact: true })).toBe(trigger);
+    expect(screen.getByRole("combobox", { name: "Estado" })).toBe(trigger);
   });
 
   it.each(["Select…", "Choose a state"])("keeps the bare placeholder name %s and passes axe", async (placeholder) => {
     const { container } = renderSelect({ placeholder });
-    expect(screen.getByRole("combobox", { name: placeholder, exact: true })).toBeTruthy();
+    expect(screen.getByRole("combobox", { name: placeholder })).toBeTruthy();
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 
@@ -44,7 +44,7 @@ describe("Select (Vue)", () => {
         ? `<FormField label="Estado"><Select aria-label="Custom name" placeholder="Choose" /></FormField>`
         : `<Select aria-label="Custom name" placeholder="Choose" />`,
     });
-    expect(screen.getByRole("combobox", { name: "Custom name", exact: true })).toBeTruthy();
+    expect(screen.getByRole("combobox", { name: "Custom name" })).toBeTruthy();
   });
 
   it("uses the FieldRow slot label without a placeholder aria-label", () => {
@@ -52,7 +52,7 @@ describe("Select (Vue)", () => {
       components: { FieldRow, Select },
       template: `<FieldRow label="Estado" v-slot="{ labelId }"><Select :aria-labelledby="labelId" /></FieldRow>`,
     });
-    expect(screen.getByRole("combobox", { name: "Estado", exact: true }).hasAttribute("aria-label")).toBe(false);
+    expect(screen.getByRole("combobox", { name: "Estado" }).hasAttribute("aria-label")).toBe(false);
   });
 
   it("takes its name from a visible label when given its id", () => {
