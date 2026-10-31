@@ -77,3 +77,19 @@
   color: var(--ui-menu-item-disabled-text);
   cursor: not-allowed;
 }
+
+// A checkable item (`checked` set) carries a check column; it is hidden, not
+// removed, while unchecked so the labels of a group of options line up.
+.ui-menu__item--checkable {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-menu-gap);
+}
+
+.ui-menu__check {
+  visibility: hidden;
+}
+
+.ui-menu__item[aria-checked="true"] .ui-menu__check {
+  visibility: visible;
+}
