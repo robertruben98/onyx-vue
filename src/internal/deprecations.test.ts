@@ -1,9 +1,11 @@
 import { cleanup, render } from "@testing-library/vue";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { vi } from "vitest";
 
 beforeEach(() => {
   vi.resetModules();
-  vi.stubEnv("DEV", true);
+  vi.stubEnv("NODE_ENV", "development");
   vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 afterEach(() => {
@@ -45,7 +47,7 @@ it("warns for listeners added on update, including once listeners", async () => 
 });
 
 it("does not warn with the production flag", async () => {
-  vi.stubEnv("DEV", false);
+  vi.stubEnv("NODE_ENV", "production");
   const { default: Select } = await import("../components/select/Select.vue");
   const { canonicalTone } = await import("./tone");
   render(Select, { props: { onChange: vi.fn() } });
@@ -86,4 +88,28 @@ it("recognizes all declared deprecated events and ignores undeclared native list
   });
   render(Native, { attrs: { onChange: vi.fn() } });
   expect(console.warn).not.toHaveBeenCalled();
+});
+
+it("warns on @checkedChange on UiCheckbox (the call must run inside setup)", async () => {
+  const { default: Checkbox } = await import("../components/checkbox/Checkbox.vue");
+  render(Checkbox, { props: { label: "x", onCheckedChange: vi.fn() } });
+  expect(console.warn).toHaveBeenCalledWith(expect.stringMatching(/checkedChange.*checkedChanged.*1\.0/));
+});
+
+it("never asks import.meta.env: the library build would freeze it to false", () => {
+  // Vite replaces `import.meta.env.DEV` when it builds the library, so the
+  // warnings were stripped from `dist` and a tgz consumer never saw one. The
+  // decision belongs to the consumer's bundler, via `isDev()`.
+  const walk = (dir: string): string[] =>
+    readdirSync(dir).flatMap((f) => {
+      const p = join(dir, f);
+      return statSync(p).isDirectory() ? walk(p) : /\.(ts|vue)$/.test(f) && !/\.test\.ts$/.test(f) ? [p] : [];
+    });
+  const offenders = walk(join(process.cwd(), "src")).filter((f) =>
+    readFileSync(f, "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .split("\n")
+      .some((l) => !/^\s*\/\//.test(l) && l.includes("import.meta.env")),
+  );
+  expect(offenders).toEqual([]);
 });
