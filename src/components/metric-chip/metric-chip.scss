@@ -87,3 +87,30 @@
   text-decoration: underline dotted;
   text-underline-offset: 0.2em;
 }
+
+// The change since the last value: smaller than the value and after it, so the
+// number still reads first. The sign carries the direction; the tone says
+// whether that direction is good news.
+.ui-metric-chip__delta {
+  font-size: var(--ui-metric-chip-delta-font-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-metric-chip-delta-same);
+}
+.ui-metric-chip__delta--good {
+  color: var(--ui-metric-chip-delta-good);
+}
+.ui-metric-chip__delta--bad {
+  color: var(--ui-metric-chip-delta-bad);
+}
+
+.ui-metric-chip__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
