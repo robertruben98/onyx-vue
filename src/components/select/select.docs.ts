@@ -4,7 +4,7 @@ export const selectDoc: ComponentDoc = {
   id: "select",
   title: "Select",
   description:
-    "Escape closes only the most recently opened overlay; a containing dialog remains open until the next Escape. The open list follows its trigger on scroll and resize. Single-choice combobox with a listbox that teleports to `body`, so it escapes any ancestor's `overflow: hidden`. That teleport is also why a theme preset has to be applied on the root element and not on a wrapper. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
+    "Type to find enabled options by label, ignoring case and accents. Characters typed within 500 ms form a prefix; repeating one letter cycles matches. On the closed, focused trigger, typing selects immediately and emits changed without opening. In the open list, typing moves the active option; Enter or Space confirms it. Keyboard navigation keeps the active option visible, and clipped edges fade when more options are available. Escape closes only the most recently opened overlay; a containing dialog remains open until the next Escape. The open list follows its trigger on scroll and resize. Single-choice combobox with a listbox that teleports to `body`, so it escapes any ancestor's `overflow: hidden`. That teleport is also why a theme preset has to be applied on the root element and not on a wrapper. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiSelect", "UiDialog", "UiButton", "UiFormField"],
   api: [
     {
@@ -41,6 +41,29 @@ export const selectDoc: ComponentDoc = {
     },
   ],
   demos: [
+    {
+      title: "Long list and type-ahead",
+      description: "Try c repeatedly, dr quickly, or un for Única. Scroll or use Home/End to see the clipped-edge fades disappear at each end.",
+      code: `<UiSelect v-model="state" :options="states" aria-label="Long state list" />
+<span>selected: {{ state ?? '(none)' }}</span>`,
+      setup: () => ({
+        state: null,
+        states: [
+          { value: "approved", label: "Aprobada" },
+          { value: "cancelled", label: "Cancelada" },
+          { value: "closed", label: "Cerrada", disabled: true },
+          { value: "completed", label: "Completada" },
+          { value: "done", label: "Done" },
+          { value: "dropped", label: "Dropped" },
+          { value: "pending", label: "Pendiente" },
+          { value: "review", label: "Revisión" },
+          { value: "unique", label: "Única" },
+          { value: "united", label: "Unida" },
+          { value: "verified", label: "Verificada" },
+          { value: "waiting", label: "Waiting" },
+        ],
+      }),
+    },
     {
       title: "Labelled by a form field",
       description: "The visible field label names the combobox automatically; the placeholder only describes the empty selection. In UiFieldRow, bind its slot labelId to aria-labelledby.",
