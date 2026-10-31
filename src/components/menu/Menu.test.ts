@@ -210,3 +210,58 @@ describe("Menu (Vue) — keyboard and positioning details", () => {
     HTMLElement.prototype.focus = original;
   });
 });
+
+describe("Menu (Vue) — trigger label and checkable items", () => {
+  it("names a glyph-only trigger with the label prop", () => {
+    render(Menu, { props: { items: ITEMS, label: "More actions" }, slots: { default: "⋯" } });
+    const trigger = screen.getByRole("button", { name: "More actions" });
+    expect(trigger.getAttribute("aria-label")).toBe("More actions");
+    expect(trigger.getAttribute("title")).toBe("More actions");
+  });
+
+  it("leaves aria-label and title off without the label prop", () => {
+    renderMenu();
+    const trigger = screen.getByRole("button", { name: "Actions" });
+    expect(trigger.hasAttribute("aria-label")).toBe(false);
+    expect(trigger.hasAttribute("title")).toBe(false);
+  });
+
+  const CHECKABLE: MenuItem[] = [
+    { id: "seen", label: "Seen", checked: true },
+    { id: "skip", label: "Not interested", checked: false },
+    { id: "follow", label: "Follow" },
+  ];
+
+  it("renders checked items as menuitemcheckbox with aria-checked", async () => {
+    render(Menu, { props: { items: CHECKABLE, label: "More actions" }, slots: { default: "⋯" } });
+    await fireEvent.click(screen.getByRole("button", { name: "More actions" }));
+    await screen.findByRole("menu");
+    const seen = screen.getByRole("menuitemcheckbox", { name: "Seen" });
+    const skip = screen.getByRole("menuitemcheckbox", { name: "Not interested" });
+    expect(seen.getAttribute("aria-checked")).toBe("true");
+    expect(skip.getAttribute("aria-checked")).toBe("false");
+    const follow = screen.getByRole("menuitem", { name: "Follow" });
+    expect(follow.hasAttribute("aria-checked")).toBe(false);
+  });
+
+  it("walks checkable and plain items with the keyboard and emits a checkable one", async () => {
+    const { emitted } = render(Menu, { props: { items: CHECKABLE }, slots: { default: "Actions" } });
+    await fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    const menu = await screen.findByRole("menu");
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("menuitemcheckbox", { name: "Seen" })));
+    await fireEvent.keyDown(menu, { key: "End" });
+    expect(document.activeElement?.textContent).toContain("Follow");
+    await fireEvent.keyDown(menu, { key: "ArrowDown" });
+    expect(document.activeElement?.textContent).toContain("Seen");
+    await fireEvent.click(screen.getByRole("menuitemcheckbox", { name: "Not interested" }));
+    expect((emitted().itemSelected as unknown[][])[0][0]).toMatchObject({ id: "skip", checked: false });
+  });
+
+  it("has no axe violations with a labelled glyph trigger and checkable items", async () => {
+    render(Menu, { props: { items: CHECKABLE, label: "More actions" }, slots: { default: "⋯" } });
+    expect(await axe(document.body, axeOptions)).toHaveNoViolations();
+    await fireEvent.click(screen.getByRole("button", { name: "More actions" }));
+    await screen.findByRole("menu");
+    expect(await axe(document.body, axeOptions)).toHaveNoViolations();
+  });
+});

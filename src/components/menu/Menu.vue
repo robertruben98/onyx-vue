@@ -9,6 +9,11 @@ export interface MenuItem {
   label: string;
   /** Whether the item is disabled. */
   disabled?: boolean;
+  /**
+   * Checked state. Leave it out for a plain action (`menuitem`); set it, true
+   * or false, for an option that toggles (`menuitemcheckbox` + `aria-checked`).
+   */
+  checked?: boolean;
 }
 
 // Sin asignar a una variable: en `<script setup>` las props llegan solas a la
@@ -18,9 +23,15 @@ withDefaults(
   defineProps<{
     /** Menu items. */
     items?: MenuItem[];
+    /**
+     * Accessible name of the trigger (`aria-label` and `title`). Needed when the
+     * slot is only a glyph, such as "⋯"; leave it out when the slot is text.
+     */
+    label?: string;
   }>(),
   {
     items: () => [],
+    label: undefined,
   },
 );
 
@@ -45,7 +56,7 @@ function itemElements(): HTMLButtonElement[] {
   const el = panelEl.value;
   if (!el) return [];
   return Array.from(
-    el.querySelectorAll<HTMLButtonElement>('[role="menuitem"]:not([disabled])'),
+    el.querySelectorAll<HTMLButtonElement>('.ui-menu__item:not([disabled])'),
   );
 }
 
@@ -141,6 +152,11 @@ function activate(item: MenuItem): void {
   close();
 }
 
+// Un item con `checked` (true o false) es una opcion que se marca, no una accion.
+function isCheckable(item: MenuItem): boolean {
+  return typeof item.checked === "boolean";
+}
+
 const triggerControls = computed(() => (open.value ? menuId : undefined));
 
 // Re-position on scroll/resize while the menu is open.
@@ -167,6 +183,8 @@ watch(open, (isOpen) => {
       aria-haspopup="menu"
       :aria-expanded="open ? 'true' : 'false'"
       :aria-controls="triggerControls"
+      :aria-label="label || undefined"
+      :title="label || undefined"
       @click="toggle"
       @keydown="onTriggerKeydown"
     >
@@ -188,12 +206,15 @@ watch(open, (isOpen) => {
             v-for="item in items"
             :key="item.id ?? item.label"
             type="button"
-            role="menuitem"
+            :role="isCheckable(item) ? 'menuitemcheckbox' : 'menuitem'"
+            :aria-checked="isCheckable(item) ? (item.checked ? 'true' : 'false') : undefined"
             class="ui-menu__item"
+            :class="{ 'ui-menu__item--checkable': isCheckable(item) }"
             tabindex="-1"
             :disabled="item.disabled || undefined"
             @click="activate(item)"
           >
+            <span v-if="isCheckable(item)" class="ui-menu__check" aria-hidden="true">✓</span>
             {{ item.label }}
           </button>
         </div>
