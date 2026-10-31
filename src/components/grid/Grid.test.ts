@@ -11,7 +11,7 @@ const scss = readFileSync(join(process.cwd(), "src", "components", "grid", "grid
 /** Body of the first rule whose selector is exactly `selector`. */
 function rule(selector: string): string {
   const at = scss.indexOf(`${selector} {`);
-  expect(at, `${selector} not found in grid.scss`).toBeGreaterThan(-1);
+  expect(at).toBeGreaterThan(-1);
   return scss.slice(at, scss.indexOf("}", at));
 }
 
