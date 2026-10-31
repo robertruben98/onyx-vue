@@ -1,0 +1,45 @@
+name: Auto tag
+
+on:
+  push:
+    branches: [master]
+
+permissions: {}
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+      created: ${{ steps.tag.outputs.created }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - name: Decide and create annotated tag
+        id: tag
+        env:
+          PUSHED_SHA: ${{ github.sha }}
+        run: node scripts/auto-tag.mjs "$PUSHED_SHA"
+      - name: Push new tag without moving existing tags
+        if: steps.tag.outputs.created == 'true'
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: git push origin "refs/tags/$TAG:refs/tags/$TAG"
+
+  release:
+    needs: tag
+    if: needs.tag.outputs.created == 'true'
+    permissions:
+      contents: write
+    # GITHUB_TOKEN tag pushes do not trigger workflows; call the asset job directly.
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ needs.tag.outputs.tag }}
