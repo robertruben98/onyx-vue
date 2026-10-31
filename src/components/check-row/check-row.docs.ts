@@ -42,6 +42,15 @@ export const checkRowDoc: ComponentDoc = {
   ],
   demos: [
     {
+      title: "Long labels in a narrow column",
+      description: "Controls keep their token size and align with the first line when the label wraps. Unlabelled controls keep their existing alignment.",
+      code: `<div style="display: grid; gap: 8px; width: 100%; max-width: 390px">
+  <UiCheckRow name="Short label" state="done" />
+  <UiCheckRow name="Review the notification settings before continuing with your subscription and confirm the changes for everyone in your household" state="pending" />
+  <UiCheckRow name="Review the notification settings before continuing with your subscription and confirm the changes for everyone in your household" state="running" dense />
+</div>`,
+    },
+    {
       title: "A checklist with actions",
       code: `<UiCheckRow state="done" name="CI pasando" detail="todos los checks en SUCCESS">
   <template #actions><UiButton size="sm" variant="secondary">verificar</UiButton></template>

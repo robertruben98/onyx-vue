@@ -43,6 +43,9 @@ Consumers that build from source (the control-panel dashboard aliases
 
 - Removed the unused `--ui-overlay-z` token. No component or docs stylesheet reads it;
   teleported surfaces use their component layer tokens instead.
+### Fixed
+
+- Radio, Switch and CheckRow keep their control size and align with the first line of wrapped labels. Share Checkbox's first-line alignment mixin and add narrow-column demos.
 
 ## 0.13.1 — 2026-10-31
 

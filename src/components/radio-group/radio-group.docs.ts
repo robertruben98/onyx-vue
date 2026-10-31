@@ -37,6 +37,13 @@ export const radioGroupDoc: ComponentDoc = {
   ],
   demos: [
     {
+      title: "Long labels in a narrow column",
+      description: "Controls keep their token size and align with the first line when the label wraps. Unlabelled controls keep their existing alignment.",
+      code: `<div style="display: grid; gap: 8px; width: 100%; max-width: 390px">
+  <UiRadioGroup :options="[{ label: 'Short label', value: 'short' }, { label: 'Review the notification settings before continuing with your subscription and confirm the changes for everyone in your household', value: 'long' }]" />
+</div>`,
+    },
+    {
       title: "Basic",
       code: `<UiRadioGroup v-model="size" label="Size" :options="options" />
 <span>selected: {{ size || '(none)' }}</span>`,

@@ -31,6 +31,14 @@ export const switchDoc: ComponentDoc = {
   ],
   demos: [
     {
+      title: "Long labels in a narrow column",
+      description: "Controls keep their token size and align with the first line when the label wraps. Unlabelled controls keep their existing alignment.",
+      code: `<div style="display: grid; gap: 8px; width: 100%; max-width: 390px">
+  <UiSwitch label="Short label" />
+  <UiSwitch label="Review the notification settings before continuing with your subscription and confirm the changes for everyone in your household" />
+</div>`,
+    },
+    {
       title: "Basic",
       code: `<UiSwitch v-model="on" label="Enable notifications" />
 <span>{{ on ? 'on' : 'off' }}</span>`,
