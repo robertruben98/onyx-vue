@@ -20,6 +20,9 @@
   font-size: var(--ui-button-font-size);
   font-weight: var(--ui-button-font-weight);
   line-height: 1;
+  // One line unless `wrap` is asked for: a narrow table cell broke "Dismiss" into
+  // "Dismi / ss" inside a fixed-height button.
+  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 150ms ease,
