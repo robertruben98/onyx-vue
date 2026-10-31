@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, nextTick, ref, useId } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./radio-group.scss";
@@ -71,6 +73,8 @@ function syncChecked(): void {
     input.checked = input.value === value.value;
   });
 }
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

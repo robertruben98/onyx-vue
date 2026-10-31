@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, ref, useId } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./textarea.scss";
@@ -83,6 +85,8 @@ function handleInput(event: Event): void {
 function handleBlur(): void {
   touched.value = true;
 }
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

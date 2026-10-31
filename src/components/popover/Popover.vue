@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import "./popover.scss";
 
@@ -146,6 +148,8 @@ onBeforeUnmount(() => {
 const rootClasses = computed(() => ({ "ui-popover": true }));
 
 defineExpose({ open, close, toggle });
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

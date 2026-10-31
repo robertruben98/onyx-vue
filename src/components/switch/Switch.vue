@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, useId } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./switch.scss";
@@ -58,6 +60,8 @@ function handleChange(event: Event): void {
   emit("checkedChanged", value);
   emit("checkedChange", value); // obsoleto, ver src/deprecations.ts
 }
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

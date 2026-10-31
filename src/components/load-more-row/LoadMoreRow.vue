@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed } from "vue";
 import { UiButton } from "../button";
 import "./load-more-row.scss";
@@ -32,6 +34,8 @@ const emit = defineEmits<{
 const visible = computed(() => props.remaining > 0);
 
 const text = computed(() => props.label || `show the remaining ${props.remaining}`);
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, nextTick, ref, useId, watch } from "vue";
 import "./menu.scss";
 
@@ -172,6 +174,8 @@ watch(open, (isOpen) => {
     window.removeEventListener("resize", onWindowChange);
   }
 });
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

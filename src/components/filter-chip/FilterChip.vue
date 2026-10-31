@@ -18,6 +18,7 @@ export type FilterChipTone =
 </script>
 
 <script setup lang="ts">
+import { watchEffect } from "vue";
 import { computed } from "vue";
 import { UiTriStateCount, type TriState } from "../tri-state-count";
 import "./filter-chip.scss";
@@ -55,6 +56,9 @@ const props = withDefaults(
 
 /** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
 const tone = computed(() => canonicalTone(props.tone));
+
+// Validate supplied aliases even when the current state does not display a tone.
+if (import.meta.env.DEV) watchEffect(() => { canonicalTone(props.tone); });
 
 /** Emitted on activation, carrying the state the chip is moving TO. */
 const emit = defineEmits<{ toggled: [pressed: boolean] }>();

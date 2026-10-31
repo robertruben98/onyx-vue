@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./select.scss";
@@ -202,6 +204,8 @@ watch(isDisabled, (d) => {
 onBeforeUnmount(() => {
   open.value = false;
 });
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

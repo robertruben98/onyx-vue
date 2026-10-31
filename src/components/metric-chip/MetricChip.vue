@@ -33,6 +33,7 @@ export const DEFAULT_DELTA_LABELS: MetricChipDeltaLabels = {
 </script>
 
 <script setup lang="ts">
+import { watchEffect } from "vue";
 import { computed } from "vue";
 import { UiTriStateCount, type TriState } from "../tri-state-count";
 import "./metric-chip.scss";
@@ -81,6 +82,9 @@ const props = withDefaults(
 
 /** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
 const tone = computed(() => canonicalTone(props.tone));
+
+// Validate supplied aliases even when the current state does not display a tone.
+if (import.meta.env.DEV) watchEffect(() => { canonicalTone(props.tone); });
 
 /** Emitted when an interactive chip is activated. */
 const emit = defineEmits<{ activated: [] }>();

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
 import "./tooltip.scss";
 
@@ -108,6 +110,8 @@ onBeforeUnmount(() => {
 const rootClasses = computed(() => ({ "ui-tooltip-host": true }));
 
 defineExpose({ show, hide, shown });
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>

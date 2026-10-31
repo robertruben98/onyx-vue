@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, useId, useSlots } from "vue";
 import { UiButton } from "../button";
 import "./empty-state.scss";
@@ -64,6 +66,8 @@ const labelledBy = computed(() =>
   props.ariaLabel || !hasTitle.value ? undefined : titleId,
 );
 const describedBy = computed(() => (hasDescription.value ? descriptionId : undefined));
+
+if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>
