@@ -5,7 +5,7 @@ export const selectDoc: ComponentDoc = {
   title: "Select",
   description:
     "Single-choice combobox with a listbox that teleports to `body`, so it escapes any ancestor's `overflow: hidden`. That teleport is also why a theme preset has to be applied on the root element and not on a wrapper.",
-  imports: ["UiSelect"],
+  imports: ["UiSelect", "UiDialog", "UiButton"],
   api: [
     {
       name: "v-model",
@@ -63,6 +63,34 @@ export const selectDoc: ComponentDoc = {
         options: [
           { value: "vue", label: "Vue" },
           { value: "rx", label: "RxJS" },
+        ],
+      }),
+    },
+    {
+      title: "Inside a dialog",
+      description:
+        "The list opens over the dialog, even where it covers the next field. A click outside the list closes the list and leaves the dialog open; Esc closes the list first and the dialog on a second press.",
+      code: `<UiButton @clicked="open = true">Edit row</UiButton>
+<UiDialog v-model:open="open" heading="Edit row">
+  <div style="display: grid; gap: 12px">
+    <UiSelect v-model="state" :options="states" aria-label="State" />
+    <UiSelect v-model="result" :options="results" aria-label="Result" />
+  </div>
+</UiDialog>`,
+      setup: () => ({
+        open: false,
+        state: "open",
+        result: "pending",
+        states: [
+          { value: "open", label: "Open" },
+          { value: "done", label: "Done" },
+          { value: "dropped", label: "Dropped" },
+          { value: "parked", label: "Parked" },
+        ],
+        results: [
+          { value: "pending", label: "Pending" },
+          { value: "won", label: "Won" },
+          { value: "lost", label: "Lost" },
         ],
       }),
     },

@@ -61,6 +61,17 @@ export const checkboxDoc: ComponentDoc = {
 <UiCheckbox size="lg" label="Large" />`,
     },
     {
+      title: "Long labels in a narrow column",
+      description:
+        "A label that wraps keeps the box at its size and on the first line, so a list of mixed lengths lines up.",
+      code: `<div style="display: grid; gap: 8px; max-width: 16rem">
+  <UiCheckbox label="Cancel the trial" />
+  <UiCheckbox label="Move the gym membership to the cheaper plan before it renews in November" />
+  <UiCheckbox label="Ask the bank" />
+  <UiCheckbox size="lg" label="Sell the second monitor and the old phone on a second-hand site" />
+</div>`,
+    },
+    {
       title: "Invalid and disabled",
       code: `<UiCheckbox invalid label="Invalid" />
 <UiCheckbox disabled label="Disabled" />`,
