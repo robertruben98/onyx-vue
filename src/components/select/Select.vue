@@ -83,18 +83,25 @@ function updateScrollHints(): void {
   moreBelow.value = !!list && list.scrollHeight - list.clientHeight - list.scrollTop > 1;
 }
 
-// Scroll only the list, not the dialog or page containing the trigger.
+// Scroll only the list, not the dialog or page containing the trigger. Offsets
+// and not rects: the list is the options' offsetParent (it is positioned), and
+// measuring rects is the overlay's job (src/internal/useOverlay.ts).
 function scrollActiveIntoView(): void {
   const list = listboxEl.value;
   const option = list?.children[activeIndex.value] as HTMLElement | undefined;
   if (list && option) {
-    const bounds = list.getBoundingClientRect();
-    const item = option.getBoundingClientRect();
+    // The list's own padding is part of the scroll range: an option at an end
+    // scrolls with it, so the first and last options reach the very edge.
     const style = getComputedStyle(list);
-    const top = bounds.top + list.clientTop + (parseFloat(style.paddingTop) || 0);
-    const bottom = bounds.top + list.clientTop + list.clientHeight - (parseFloat(style.paddingBottom) || 0);
-    if (item.top < top) list.scrollTop -= top - item.top;
-    else if (item.bottom > bottom) list.scrollTop += item.bottom - bottom;
+    const padTop = parseFloat(style.paddingTop) || 0;
+    const padBottom = parseFloat(style.paddingBottom) || 0;
+    const index = activeIndex.value;
+    const top = index === 0 ? 0 : option.offsetTop - padTop;
+    const bottom = index === list.children.length - 1
+      ? list.scrollHeight
+      : option.offsetTop + option.offsetHeight + padBottom;
+    if (top < list.scrollTop) list.scrollTop = top;
+    else if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight;
   }
   updateScrollHints();
 }
