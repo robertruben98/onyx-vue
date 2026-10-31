@@ -32,6 +32,17 @@ Consumers that build from source (the control-panel dashboard aliases
   radiogroup) instead of the root wrapper, like the other form controls: `class` and `style`
   stay on the root, everything else (`id`, `data-*`, `aria-*`) moves to the control.
 
+- Pushes to `master` automatically create an annotated `v<version>` tag on the
+  pushed commit when `package.json` differs from its first parent and the tag
+  is missing. Existing tags are never moved; a tag on another commit produces
+  a warning. The auto-tag workflow calls the reusable release workflow to build
+  and attach the package asset.
+
+- Tag pushes matching `v*.*.*` now build and attach an `onyx-vue-X.Y.Z.tgz` to
+  the GitHub Release, using that version's CHANGELOG section as release notes.
+  The workflow checks the tag against `package.json` before installing dependencies,
+  then runs typecheck, tests and build before packing. Reruns update the release
+  notes and replace the package asset.
 ### Fixed
 
 - `UiSelect` inside `UiFormField` is named by the field's label instead of its placeholder
@@ -647,6 +658,17 @@ A source consumer should refuse to build against any other version; the
 dashboard does it by comparing its pinned version with this `package.json`
 (`web/package.json` → `onyxVue`).
 
-To release: bump `version` in `package.json`, add a section here, merge, then
-tag the merge commit: `git tag -a vX.Y.Z -m "onyx-vue X.Y.Z" <sha> && git push
-origin vX.Y.Z`.
+To release: bump `version` in `package.json` (and the lockfile), move the
+relevant Unreleased entries into a matching version section here, and merge to
+`master`. The push workflow compares the pushed commit with its first parent,
+creates the missing annotated `vX.Y.Z` tag on that exact commit, and pushes it.
+An unchanged version creates no tag, even if its tag is missing. Existing tags
+are never moved; a tag pointing elsewhere produces a workflow warning.
+
+The tag is pushed with `GITHUB_TOKEN`, which does not trigger other workflows.
+After a successful new-tag push, the auto-tag workflow explicitly calls
+`.github/workflows/release.yml` through `workflow_call`, passing the tag to check
+out, verify, build, pack and attach to the GitHub Release. Manually pushed tags
+still use the same release workflow. If the asset job fails, rerun the failed
+job in that workflow run; rerunning the tagging job skips an already-existing
+tag. No personal access token or manual tagging step is needed.
