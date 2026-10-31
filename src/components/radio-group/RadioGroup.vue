@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useId } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./radio-group.scss";
 
 export interface RadioOption {
@@ -39,12 +40,16 @@ const emit = defineEmits<{
   valueChange: [value: string];
 }>();
 
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId, fieldLabelId, fieldInvalid } = useForwardedAttrs(undefined, { field: true, group: true });
+const isInvalid = () => props.invalid || fieldInvalid();
+
 const uid = useId();
 const name = `ui-radio-${uid}`;
 
 const rootClasses = computed(() => ({
   "ui-radio-group": true,
-  "ui-radio-group--invalid": props.invalid,
+  "ui-radio-group--invalid": isInvalid(),
   "ui-radio-group--disabled": props.disabled,
 }));
 
@@ -69,13 +74,16 @@ function syncChecked(): void {
 </script>
 
 <template>
-  <span :class="rootClasses">
+  <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
     <fieldset
+      :aria-labelledby="!label && !ariaLabel ? fieldLabelId() : undefined"
+      v-bind="controlAttrs()"
+      :id="controlId()"
       ref="fieldset"
       class="ui-radio-group__fieldset"
       role="radiogroup"
       :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-      :aria-invalid="invalid ? 'true' : undefined"
+      :aria-invalid="isInvalid() ? 'true' : undefined"
     >
       <legend v-if="label" class="ui-radio-group__legend">{{ label }}</legend>
       <label v-for="opt in options" :key="opt.value" class="ui-radio">

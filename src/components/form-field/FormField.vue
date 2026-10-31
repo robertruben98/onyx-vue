@@ -27,6 +27,7 @@ const props = withDefaults(
  */
 const base = `ui-form-field-${useId()}`;
 const id = `${base}-control`;
+const labelId = `${base}-label`;
 const helpId = `${base}-help`;
 const errorId = `${base}-error`;
 
@@ -36,14 +37,14 @@ const describedBy = computed(
 );
 
 // El control de dentro (UiInput, UiSelect, UiTextarea, UiDateInput, UiCheckbox,
-// UiSwitch, UiSlider) recoge esto solo; el slot lo sigue dando para cualquier
+// UiSwitch, UiSlider, UiRadioGroup, UiSegmented) recoge esto solo; el slot lo sigue dando para cualquier
 // otro control o para quien prefiera escribirlo.
-provideField({ id, describedBy, invalid, required: computed(() => props.required) });
+provideField({ id, labelId, describedBy, invalid, required: computed(() => props.required) });
 </script>
 
 <template>
   <div :class="['ui-form-field', { 'ui-form-field--invalid': invalid }]">
-    <label class="ui-form-field__label" :for="id">
+    <label :id="labelId" class="ui-form-field__label" :for="id">
       {{ label }}<span v-if="required" class="ui-form-field__required" aria-hidden="true"> *</span>
     </label>
     <slot :id="id" :describedBy="describedBy" :invalid="invalid" :required="required" />

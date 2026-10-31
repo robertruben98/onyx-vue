@@ -23,6 +23,14 @@ Consumers that build from source (the control-panel dashboard aliases
   The workflow checks the tag against `package.json` before installing dependencies,
   then runs typecheck, tests and build before packing. Reruns update the release
   notes and replace the package asset.
+### Fixed
+
+- `UiSelect` uses its `UiFormField` label as its accessible name instead of the
+  placeholder. Bare selects keep the placeholder fallback; explicit `ariaLabel`
+  and `ariaLabelledby` retain their precedence. `UiFieldRow` labels continue to
+  work through its `labelId` slot binding.
+- `UiRadioGroup` and `UiSegmented` now inherit the visible label and field metadata
+  from `UiFormField`, with a shared accessible-name contract covering all nine controls.
 
 ## 0.13.1 — 2026-10-31
 

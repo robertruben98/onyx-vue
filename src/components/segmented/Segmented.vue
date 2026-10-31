@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
+import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./segmented.scss";
 
 export interface SegmentedOption {
@@ -47,6 +48,9 @@ const emit = defineEmits<{ changed: [value: string] }>();
  * a row of `aria-pressed` buttons would have to fake (gap G4: the dashboard's
  * calendar/list switch and its session picker).
  */
+defineOptions({ inheritAttrs: false });
+const { rootAttrs, controlAttrs, controlId, fieldLabelId } = useForwardedAttrs(undefined, { field: true, group: true });
+
 const name = `ui-segmented-${useId()}`;
 
 /**
@@ -132,7 +136,16 @@ function syncChecked(): void {
 </script>
 
 <template>
-  <div ref="root" :class="rootClasses" role="radiogroup" :aria-label="ariaLabel || undefined">
+  <div
+    ref="root"
+    :aria-labelledby="!ariaLabel ? fieldLabelId() : undefined"
+    v-bind="controlAttrs()"
+    :id="controlId()"
+    :class="[rootClasses, rootAttrs().class]"
+    :style="rootAttrs().style"
+    role="radiogroup"
+    :aria-label="ariaLabel || undefined"
+  >
     <label
       v-for="opt in options"
       :key="opt.value"

@@ -19,7 +19,7 @@ import { useField } from "./field-context";
  * dia pero no es reactivo, y un `computed` se quedaria con el primero. La
  * plantilla las llama en cada render, que es justo cuando cambian.
  */
-export function useForwardedAttrs(fallbackId?: string, options: { field?: boolean } = {}) {
+export function useForwardedAttrs(fallbackId?: string, options: { field?: boolean; group?: boolean } = {}) {
   const attrs = useAttrs();
   // Solo los controles de formulario recogen el campo que los envuelve: un
   // boton dentro de un UiFormField no debe quedarse con el id de su etiqueta.
@@ -35,7 +35,9 @@ export function useForwardedAttrs(fallbackId?: string, options: { field?: boolea
         if (rest["aria-describedby"] == null && field.describedBy.value) {
           rest["aria-describedby"] = field.describedBy.value;
         }
-        if (rest.required == null && field.required.value) rest.required = true;
+        if (options.group) {
+          if (rest["aria-required"] == null && field.required.value) rest["aria-required"] = "true";
+        } else if (rest.required == null && field.required.value) rest.required = true;
         if (rest["aria-invalid"] == null && field.invalid.value) rest["aria-invalid"] = "true";
       }
       return rest;
@@ -43,6 +45,8 @@ export function useForwardedAttrs(fallbackId?: string, options: { field?: boolea
     /** El `id` del control: el del consumidor, si no el de su campo, si no el generado. */
     controlId: () =>
       typeof attrs.id === "string" && attrs.id ? attrs.id : (field?.id ?? fallbackId),
+    /** The visible field label, including for non-labelable group containers. */
+    fieldLabelId: () => field?.labelId,
     /** Si el campo que lo envuelve esta marcado como invalido. */
     fieldInvalid: () => Boolean(field?.invalid.value),
   };
