@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ github.ref }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Verify version and extract release notes
+        env:
+          TAG: ${{ github.ref_name }}
+        run: node scripts/release.mjs "$TAG" > "$RUNNER_TEMP/release-notes.md"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Pack built package
+        id: pack
+        run: |
+          asset=$(npm pack --silent --pack-destination "$RUNNER_TEMP")
+          echo "asset=$RUNNER_TEMP/$asset" >> "$GITHUB_OUTPUT"
+      - name: Create or update release and attach package
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          ASSET: ${{ steps.pack.outputs.asset }}
+        run: |
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file "$RUNNER_TEMP/release-notes.md"
+          else
+            gh release create "$TAG" --verify-tag --title "$TAG" --notes-file "$RUNNER_TEMP/release-notes.md"
+          fi
+          gh release upload "$TAG" "$ASSET" --clobber
