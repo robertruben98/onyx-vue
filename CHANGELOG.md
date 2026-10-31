@@ -9,6 +9,32 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.12.0 — 2026-10-31
+
+### Added
+
+- `UiTimeline`: what happened to one thing, newest first — the versions of an idea, the decisions
+  taken on it. `events` (`{ id?, date, title, body?, tag?, tagTone? }`) in any order; the timeline
+  sorts them (stable; an unreadable date goes last) and renders an `<ol>` with each date in a
+  `<time datetime>`. `dateFormat` `absolute` (Intl, `locale` / `dateOptions`, or your own
+  `formatDate`) or `relative` (UiRelativeTime, `now`, `units`). Slots `#event` (the body) and
+  `#empty`. It is not a gantt: nothing has a duration. `sortNewestFirst` is exported.
+- `UiDiffView`: a read-only unified diff, one folding block per file — path, `+N −M` (spoken as
+  "N added, M removed"), optional subject, then the hunks with old and new line numbers and
+  signed, coloured lines. Takes `diff` (text from `git diff`, `format-patch` or `diff -u`) or
+  `files` already parsed (the shape control-panel's publish-tray diff serves). `collapsed`,
+  `lineNumbers`, `@toggled`. Slots `#line-actions` and `#line-after` (`{ file, hunk, line }`) for a
+  page that comments on lines, `#file-actions`, `#empty`. Hunks off screen are not laid out
+  (`content-visibility: auto`), so a 2000-line diff opens without stalling. `parseUnifiedDiff` and
+  `diffFileStats` are exported.
+- `UiNavRailItem` `meta` (`string | string[]`) and `#meta`: one or two quiet lines under the label,
+  each truncated on its own ("37 pending · next 07-11"). Without them the entry renders the same
+  DOM as before.
+- `UiMetricChip` `previous`: the change after the value — `74 (+16)`, `40 (−18)`, `58 (±0)` — only
+  when both numbers are known. `deltaPolarity` (`higher-is-better` | `lower-is-better`) sets the
+  tone, never the sign; `deltaLabels` is what a screen reader hears (`up {n}` by default; pass
+  `sube {n}` on a Spanish page). Without `previous` the chip is unchanged.
+
 ## 0.11.3 — 2026-10-31
 
 ### Fixed
