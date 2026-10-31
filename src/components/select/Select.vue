@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useOverlay } from "../../internal/useOverlay";
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
-import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
+import { computed, nextTick, ref, useId, watch } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./select.scss";
 
@@ -60,10 +61,9 @@ const activeIndex = ref(-1);
 
 const triggerEl = ref<HTMLButtonElement | null>(null);
 const listboxEl = ref<HTMLUListElement | null>(null);
-const panePos = ref<{ top: number; left: number; width: number }>({
-  top: 0,
-  left: 0,
-  width: 0,
+const { style: paneStyle, close, onBackdrop } = useOverlay({
+  kind: "select", open, trigger: triggerEl, panel: listboxEl,
+  onOpened: () => listboxEl.value?.focus(),
 });
 
 const isDisabled = computed(() => props.disabled);
@@ -92,30 +92,10 @@ function nextEnabled(from: number, step: number): number {
   return from;
 }
 
-function positionPane(): void {
-  const trigger = triggerEl.value;
-  if (!trigger) return;
-  const rect = trigger.getBoundingClientRect();
-  panePos.value = {
-    top: rect.bottom + window.scrollY,
-    left: rect.left + window.scrollX,
-    width: rect.width,
-  };
-}
-
 function openPanel(): void {
-  positionPane();
   const selected = props.options.findIndex((o) => o.value === model.value);
   activeIndex.value = selected >= 0 ? selected : nextEnabled(-1, 1);
   open.value = true;
-  void nextTick(() => listboxEl.value?.focus());
-}
-
-function close(): void {
-  if (!open.value) return;
-  open.value = false;
-  // Restore focus to the trigger (focus restoration).
-  triggerEl.value?.focus();
 }
 
 function toggle(): void {
@@ -158,7 +138,6 @@ function onListboxKeydown(event: KeyboardEvent): void {
       event.preventDefault();
       selectOption(activeIndex.value);
       break;
-    case "Escape":
     case "Tab":
       close();
       break;
@@ -202,10 +181,6 @@ watch(isDisabled, (d) => {
   if (d && open.value) close();
 });
 
-onBeforeUnmount(() => {
-  open.value = false;
-});
-
 if (isDev()) useDeprecatedEvents();
 </script>
 
@@ -236,7 +211,7 @@ if (isDev()) useDeprecatedEvents();
     <Teleport to="body">
       <template v-if="open">
         <!-- Backdrop: click-outside closes the panel. -->
-        <div class="ui-select__backdrop" @mousedown="close"></div>
+        <div class="ui-select__backdrop" @mousedown="onBackdrop"></div>
         <ul
           ref="listboxEl"
           role="listbox"
@@ -244,11 +219,7 @@ if (isDev()) useDeprecatedEvents();
           class="ui-select__listbox ui-select__pane"
           tabindex="-1"
           :aria-activedescendant="activeId ?? undefined"
-          :style="{
-            top: panePos.top + 'px',
-            left: panePos.left + 'px',
-            width: panePos.width + 'px',
-          }"
+          :style="paneStyle"
           @keydown="onListboxKeydown"
           @focusout="onPaneFocusOut"
         >

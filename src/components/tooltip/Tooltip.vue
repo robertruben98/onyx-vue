@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useOverlay } from "../../internal/useOverlay";
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
-import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
+import { computed, ref, useId, watch } from "vue";
 import "./tooltip.scss";
 
 export type TooltipPlacement = "top" | "bottom" | "left" | "right";
@@ -29,7 +30,10 @@ const emit = defineEmits<{
 const triggerRef = ref<HTMLElement | null>(null);
 const paneRef = ref<HTMLElement | null>(null);
 const shown = ref(false);
-const paneStyle = ref<Record<string, string>>({});
+const { style: paneStyle, close: closeOverlay } = useOverlay({
+  kind: "tooltip", open: shown, trigger: triggerRef, panel: paneRef,
+  placement: () => props.placement,
+});
 
 const uid = useId();
 const id = `ui-tooltip-${uid}`;
@@ -37,52 +41,13 @@ const id = `ui-tooltip-${uid}`;
 /** Only shown when there is text to display (mirrors the Angular guard). */
 const canShow = computed(() => !!props.text);
 
-function position(): void {
-  const trigger = triggerRef.value;
-  const pane = paneRef.value;
-  if (!trigger || !pane) return;
-  const r = trigger.getBoundingClientRect();
-  const p = pane.getBoundingClientRect();
-  let top = 0;
-  let left = 0;
-  // `align: "center"` on the cross-axis, matching the Angular overlay config.
-  switch (props.placement) {
-    case "bottom":
-      top = r.bottom;
-      left = r.left + r.width / 2 - p.width / 2;
-      break;
-    case "left":
-      top = r.top + r.height / 2 - p.height / 2;
-      left = r.left - p.width;
-      break;
-    case "right":
-      top = r.top + r.height / 2 - p.height / 2;
-      left = r.right;
-      break;
-    case "top":
-    default:
-      top = r.top - p.height;
-      left = r.left + r.width / 2 - p.width / 2;
-      break;
-  }
-  paneStyle.value = {
-    top: `${Math.round(top)}px`,
-    left: `${Math.round(left)}px`,
-  };
-}
-
 function show(): void {
   if (shown.value || !canShow.value) return;
   shown.value = true;
 }
 
 function hide(): void {
-  if (!shown.value) return;
-  shown.value = false;
-}
-
-function onTriggerKeydown(event: KeyboardEvent): void {
-  if (event.key === "Escape") hide();
+  closeOverlay();
 }
 
 watch(shown, (isShown, was) => {
@@ -91,21 +56,9 @@ watch(shown, (isShown, was) => {
   emit("toggle", isShown); // obsoleto, ver src/deprecations.ts
   if (isShown) {
     triggerRef.value?.setAttribute("aria-describedby", id);
-    nextTick(() => {
-      position();
-      window.addEventListener("resize", position);
-      window.addEventListener("scroll", position, true);
-    });
   } else {
-    window.removeEventListener("resize", position);
-    window.removeEventListener("scroll", position, true);
     triggerRef.value?.removeAttribute("aria-describedby");
   }
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", position);
-  window.removeEventListener("scroll", position, true);
 });
 
 const rootClasses = computed(() => ({ "ui-tooltip-host": true }));
@@ -123,7 +76,6 @@ if (isDev()) useDeprecatedEvents();
     @mouseleave="hide"
     @focusin="show"
     @focusout="hide"
-    @keydown="onTriggerKeydown"
   >
     <slot />
 

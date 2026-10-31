@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useOverlay } from "../../internal/useOverlay";
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import "./popover.scss";
 
 export type PopoverPlacement = "top" | "bottom" | "left" | "right";
@@ -35,9 +36,11 @@ const emit = defineEmits<{
 
 const triggerRef = ref<HTMLElement | null>(null);
 const panelRef = ref<HTMLElement | null>(null);
-const panelStyle = ref<Record<string, string>>({});
-
-let restoreFocusEl: HTMLElement | null = null;
+const { style: panelStyle, close: closeOverlay, toggle: toggleOverlay, onBackdrop: onBackdropClick } = useOverlay({
+  kind: "popover", open, trigger: triggerRef, panel: panelRef,
+  placement: () => props.placement,
+  onOpened: () => (focusable()[0] ?? panelRef.value)?.focus(),
+});
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -50,55 +53,16 @@ function focusable(): HTMLElement[] {
   );
 }
 
-function position(): void {
-  const trigger = triggerRef.value;
-  const panel = panelRef.value;
-  if (!trigger || !panel) return;
-  const r = trigger.getBoundingClientRect();
-  const p = panel.getBoundingClientRect();
-  let top = 0;
-  let left = 0;
-  switch (props.placement) {
-    case "top":
-      top = r.top - p.height;
-      left = r.left;
-      break;
-    case "left":
-      top = r.top;
-      left = r.left - p.width;
-      break;
-    case "right":
-      top = r.top;
-      left = r.right;
-      break;
-    case "bottom":
-    default:
-      top = r.bottom;
-      left = r.left;
-      break;
-  }
-  panelStyle.value = { top: `${Math.round(top)}px`, left: `${Math.round(left)}px` };
-}
-
 function toggle(): void {
-  open.value = !open.value;
+  toggleOverlay();
 }
 
 /** Close the popover programmatically. */
 function close(): void {
-  if (open.value) open.value = false;
-}
-
-function onBackdropClick(): void {
-  close();
+  closeOverlay();
 }
 
 function onPanelKeydown(event: KeyboardEvent): void {
-  if (event.key === "Escape") {
-    event.preventDefault();
-    close();
-    return;
-  }
   if (event.key !== "Tab") return;
   // Hand-rolled focus trap.
   const items = focusable();
@@ -123,27 +87,6 @@ watch(open, (isOpen, was) => {
   if (isOpen === was) return;
   emit("toggled", isOpen);
   emit("toggle", isOpen); // obsoleto, ver src/deprecations.ts
-  if (isOpen) {
-    restoreFocusEl = document.activeElement as HTMLElement | null;
-    nextTick(() => {
-      position();
-      // cdkTrapFocusAutoCapture + cdkFocusInitial: focus the panel, then first.
-      const items = focusable();
-      (items[0] ?? panelRef.value)?.focus();
-      window.addEventListener("resize", position);
-      window.addEventListener("scroll", position, true);
-    });
-  } else {
-    window.removeEventListener("resize", position);
-    window.removeEventListener("scroll", position, true);
-    restoreFocusEl?.focus?.();
-    restoreFocusEl = null;
-  }
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", position);
-  window.removeEventListener("scroll", position, true);
 });
 
 const rootClasses = computed(() => ({ "ui-popover": true }));
