@@ -87,3 +87,46 @@
 .ui-nav-rail__item--active .ui-nav-rail__count {
   --ui-tri-state-count-neutral: var(--ui-color-primary);
 }
+
+// An entry with meta: the name on top, one or two quiet lines under it, the
+// marks level with the name. The entry grows to fit; the plain entry keeps its
+// one-line height.
+.ui-nav-rail__item--meta {
+  align-items: flex-start;
+  padding-top: var(--ui-nav-rail-meta-padding-y);
+  padding-bottom: var(--ui-nav-rail-meta-padding-y);
+}
+
+.ui-nav-rail__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-nav-rail__text .ui-nav-rail__name {
+  flex: none;
+}
+
+.ui-nav-rail__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--ui-nav-rail-meta-font-size);
+  line-height: 1.35;
+  color: var(--ui-nav-rail-meta-color);
+}
+
+// Each line truncates on its own: a rail never widens and never wraps a line
+// of meta into a third.
+.ui-nav-rail__meta > * {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Level with the first line (the name), not centred against the whole block.
+.ui-nav-rail__item--meta .ui-nav-rail__marks {
+  min-height: calc(var(--ui-nav-rail-item-font-size) * 1.5);
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 import { UiTriStateCount, type TriState, type TriStateTone } from "../tri-state-count";
 import "./nav-rail.scss";
 
@@ -19,6 +19,12 @@ const props = withDefaults(
     href?: string;
     /** Tooltip: the full name, the shortcut that also gets here. */
     title?: string;
+    /**
+     * Secondary lines under the label ("37 pending · last 31-10"). A string is
+     * one line, an array one line per item; each truncates on its own. The
+     * `#meta` slot replaces it.
+     */
+    meta?: string | string[];
   }>(),
   {
     active: false,
@@ -27,8 +33,11 @@ const props = withDefaults(
     countTone: "neutral",
     href: "",
     title: "",
+    meta: undefined,
   },
 );
+
+const slots = useSlots();
 
 /** Emitted when a button entry is activated. Links navigate on their own. */
 const emit = defineEmits<{ selected: [] }>();
@@ -51,9 +60,22 @@ const hasCount = computed(
   () => props.count !== null || props.countState !== "known",
 );
 
+/** Las lineas de `meta`, sin las vacias: un `""` no debe abrir un hueco bajo el nombre. */
+const metaLines = computed(() =>
+  (Array.isArray(props.meta) ? props.meta : props.meta ? [props.meta] : []).filter((l) => l !== ""),
+);
+
+/**
+ * Sin meta la entrada es exactamente la de siempre — mismo DOM, misma altura
+ * de una linea —; el bloque de dos pisos solo aparece cuando hay algo que poner
+ * en el segundo.
+ */
+const hasMeta = computed(() => metaLines.value.length > 0 || !!slots.meta);
+
 const rootClasses = computed(() => ({
   "ui-nav-rail__item": true,
   "ui-nav-rail__item--active": props.active,
+  "ui-nav-rail__item--meta": hasMeta.value,
 }));
 </script>
 
@@ -67,7 +89,15 @@ const rootClasses = computed(() => ({
     :aria-current="active ? 'page' : undefined"
     @click="!isLink && emit('selected')"
   >
-    <span class="ui-nav-rail__name">{{ label }}</span>
+    <span v-if="hasMeta" class="ui-nav-rail__text">
+      <span class="ui-nav-rail__name">{{ label }}</span>
+      <span class="ui-nav-rail__meta">
+        <slot name="meta">
+          <span v-for="(line, i) in metaLines" :key="i" class="ui-nav-rail__meta-line">{{ line }}</span>
+        </slot>
+      </span>
+    </span>
+    <span v-else class="ui-nav-rail__name">{{ label }}</span>
     <span class="ui-nav-rail__marks">
       <!-- Los avisos van ANTES del contador: son lo que hace mirar la fila. -->
       <slot name="marks" />
