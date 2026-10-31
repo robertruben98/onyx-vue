@@ -1,0 +1,78 @@
+// Timeline — what happened to one thing, newest first. References ONLY
+// semantic / component tokens.
+//
+// A rule down the left edge with a dot per event: the line is what says "these
+// are one story", and the dot is where each chapter starts. It is not a gantt:
+// nothing here has a duration, so nothing is drawn to scale.
+
+.ui-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ui-timeline-font-size);
+  line-height: var(--ui-timeline-line-height);
+  color: var(--ui-color-text);
+}
+
+.ui-timeline__event {
+  position: relative;
+  padding: 0 0 var(--ui-timeline-gap) var(--ui-timeline-indent);
+  border-left: var(--ui-border-width-thick) solid var(--ui-timeline-rule);
+  margin-left: calc(var(--ui-timeline-marker-size) / 2);
+}
+
+// The last event ends the story: the rule stops at its dot instead of running
+// on into whatever sits below the list.
+.ui-timeline__event:last-child {
+  padding-bottom: 0;
+  border-left-color: transparent;
+}
+
+.ui-timeline__marker {
+  position: absolute;
+  top: calc((1em * var(--ui-timeline-line-height) - var(--ui-timeline-marker-size)) / 2);
+  left: calc(var(--ui-timeline-marker-size) / -2 - var(--ui-border-width-thick) / 2);
+  width: var(--ui-timeline-marker-size);
+  height: var(--ui-timeline-marker-size);
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: var(--ui-border-width-thick) solid var(--ui-timeline-marker-border);
+  background: var(--ui-timeline-marker-bg);
+}
+
+// The newest event is the one that is still true: its dot is filled.
+.ui-timeline__event:first-child .ui-timeline__marker {
+  background: var(--ui-timeline-marker-border);
+}
+
+.ui-timeline__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ui-space-1) var(--ui-space-2);
+}
+
+.ui-timeline__date {
+  flex: none;
+  font-size: var(--ui-timeline-date-font-size);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-timeline-date-color);
+}
+
+.ui-timeline__title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: var(--ui-font-weight-medium);
+}
+
+.ui-timeline__body {
+  margin-top: var(--ui-space-1);
+  overflow-wrap: anywhere;
+  color: var(--ui-timeline-body-color);
+}
+
+.ui-timeline__empty {
+  margin: 0;
+  font-size: var(--ui-timeline-font-size);
+  color: var(--ui-color-text-muted);
+}

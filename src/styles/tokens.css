@@ -1019,4 +1019,42 @@
   --ui-progress-label-gap: var(--ui-space-2);
   --ui-progress-label-size: var(--ui-font-size-sm);
   --ui-progress-label-text: var(--ui-color-text-muted);
+
+  --ui-timeline-font-size: var(--ui-font-size-sm);
+  --ui-timeline-line-height: 1.45;
+  --ui-timeline-gap: var(--ui-space-4);
+  --ui-timeline-indent: var(--ui-space-4);
+  --ui-timeline-rule: var(--ui-color-border);
+  --ui-timeline-marker-size: 0.625rem;
+  --ui-timeline-marker-border: var(--ui-color-primary);
+  --ui-timeline-marker-bg: var(--ui-color-surface);
+  --ui-timeline-date-font-size: var(--ui-font-size-sm);
+  --ui-timeline-date-color: var(--ui-color-text-muted);
+  --ui-timeline-body-color: var(--ui-color-text-muted);
+
+  --ui-diff-view-font-size: 0.75rem;
+  --ui-diff-view-line-height: 1.4;
+  --ui-diff-view-bg: var(--ui-color-surface);
+  --ui-diff-view-border: var(--ui-color-border);
+  --ui-diff-view-radius: var(--ui-radius);
+  --ui-diff-view-header-bg: var(--ui-color-surface-hover);
+  --ui-diff-view-gap: var(--ui-space-3);
+  --ui-diff-view-number-color: var(--ui-color-text-muted);
+  --ui-diff-view-number-width: 3.5ch;
+  --ui-diff-view-hunk-color: var(--ui-color-info);
+  --ui-diff-view-hunk-bg: color-mix(in srgb, var(--ui-color-info) 8%, transparent);
+  --ui-diff-view-add-color: var(--ui-color-success);
+  --ui-diff-view-add-bg: color-mix(in srgb, var(--ui-color-success) 12%, transparent);
+  --ui-diff-view-del-color: var(--ui-color-danger);
+  --ui-diff-view-del-bg: color-mix(in srgb, var(--ui-color-danger) 12%, transparent);
+  --ui-diff-view-chevron-duration: 120ms;
+
+  --ui-nav-rail-meta-font-size: 0.75rem;
+  --ui-nav-rail-meta-color: var(--ui-color-text-muted);
+  --ui-nav-rail-meta-padding-y: var(--ui-space-1);
+
+  --ui-metric-chip-delta-font-size: var(--ui-font-size-sm);
+  --ui-metric-chip-delta-good: var(--ui-color-success);
+  --ui-metric-chip-delta-bad: var(--ui-color-danger);
+  --ui-metric-chip-delta-same: var(--ui-color-text-muted);
 }
