@@ -11,6 +11,8 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ## Unreleased
 
+## 0.15.0 — 2026-10-31
+
 ### Added
 
 - `provideOnyxLocale(messages, app?)` sets the library's default texts once: accessible
@@ -20,6 +22,10 @@ Consumers that build from source (the control-panel dashboard aliases
 - Releases tag themselves: a push to `master` whose `package.json` version differs from its
   first parent's creates the annotated tag `v<version>` on that commit and runs the release
   workflow, which attaches the tgz. An existing tag is never moved.
+- `UiSelect` type-ahead, like a native select: typing jumps to the next option that starts
+  with the typed letters (case and accent insensitive, repeated letter cycles); on the closed
+  trigger it selects the match. The active option stays in view, and a clipped list fades at
+  the edge that has more (`--ui-select-scroll-fade-size`).
 
 ### Changed
 
@@ -37,9 +43,6 @@ Consumers that build from source (the control-panel dashboard aliases
   is positioned again once its own size is known.
 - `UiTooltip` sets `aria-describedby` on the focusable control it wraps instead of on the
   wrapper, so screen readers announce the tooltip text with the button.
-- `UiSelect` supports case- and accent-insensitive type-ahead on its open list
-  and closed trigger, keeps keyboard-active options visible, and fades clipped
-  list edges using theme tokens. The Select docs include a long-list demo.
 
 ## 0.14.0 — 2026-10-31
 
