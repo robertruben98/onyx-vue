@@ -513,8 +513,8 @@
      El orden es el de apertura: un menu o un select se abren DENTRO de un
      dialogo y tienen que quedar por encima de el, y el tooltip por encima de
      todo porque puede salir de cualquiera de los anteriores. */
-  --ui-overlay-z: 1000;
   --ui-dialog-z: 1100;
+  --ui-drawer-z: 1150;
   /* El select tenia su propia capa en `--ui-overlay-z`, por DEBAJO del
      dialogo: dentro de un modal la lista se abria detras y el campo siguiente
      se llevaba el clic de la opcion pintada encima (0.13.1). Ahora va al nivel

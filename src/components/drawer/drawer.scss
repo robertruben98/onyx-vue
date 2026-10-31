@@ -7,7 +7,7 @@
 .ui-drawer__backdrop {
   position: fixed;
   inset: 0;
-  z-index: var(--ui-dialog-z);
+  z-index: var(--ui-drawer-z);
   display: flex;
   justify-content: flex-end;
   background-color: var(--ui-drawer-backdrop);

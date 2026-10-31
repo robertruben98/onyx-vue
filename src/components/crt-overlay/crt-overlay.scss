@@ -7,7 +7,7 @@
 
 // Literal and not a token, for the same reason as the rain: 1 puts the glass
 // over ordinary page content and stays far below every teleported surface
-// (--ui-overlay-z is 1000), so a dialog is never seen through the scanlines.
+// (--ui-dialog-z is 1100), so a dialog is never seen through the scanlines.
 .ui-crt-overlay {
   position: fixed;
   inset: 0;
