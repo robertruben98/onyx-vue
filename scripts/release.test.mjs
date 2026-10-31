@@ -22,7 +22,7 @@ describe('tagged release', () => {
       expect(position).toBeGreaterThan(previous);
       previous = position;
     }
-    expect(workflow).toContain('ref: ${{ github.ref }}');
+    expect(workflow).toContain('ref: ${{ inputs.tag || github.ref }}');
     expect(workflow).toContain('GH_TOKEN: ${{ github.token }}');
     expect(workflow).toContain('gh release create');
     expect(workflow).toContain('gh release edit');
