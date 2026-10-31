@@ -16,6 +16,13 @@ Consumers that build from source (the control-panel dashboard aliases
 - Run Chromium regression tests against the built docs demos in a separate PR CI job:
   select stacking, selection and dismissal inside a dialog, and checkbox size and
   first-line alignment with wrapping labels at 390 px. Run locally with `npm run test:browser`.
+### Added
+
+- Tag pushes matching `v*.*.*` now build and attach an `onyx-vue-X.Y.Z.tgz` to
+  the GitHub Release, using that version's CHANGELOG section as release notes.
+  The workflow checks the tag against `package.json` before installing dependencies,
+  then runs typecheck, tests and build before packing. Reruns update the release
+  notes and replace the package asset.
 
 ## 0.13.1 — 2026-10-31
 
@@ -583,6 +590,18 @@ extracted from the control-panel dashboard during its migration to onyx-vue.
 - `Tabs.test.ts` typechecks (`expect` with two arguments).
 
 ## Consuming a tagged version
+
+For tags released with the release workflow, install the built package directly
+from the GitHub Release asset (no local library build required). Replace `X.Y.Z`
+with the desired version in both places:
+
+```bash
+npm install https://github.com/robertruben98/onyx-vue/releases/download/vX.Y.Z/onyx-vue-X.Y.Z.tgz
+```
+
+Commit the consumer's updated `package.json` and lockfile to pin that asset.
+Older tags do not automatically gain assets; source consumers can still check
+out the tag:
 
 ```bash
 cd ~/Workspaces/robertdev/onyx/onyx-vue
