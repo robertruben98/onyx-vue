@@ -13,8 +13,11 @@ export interface SparkBar {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./spark-bars.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -54,7 +57,7 @@ function titleOf(bar: SparkBar): string {
 }
 
 const ariaLabel = computed(() => {
-  const what = props.label || "series";
+  const what = props.label || messages.sparkBarsLabel;
   const parts = props.bars.map((b) => `${b.label} ${b.value}`).join(", ");
   return `${what}: ${parts}`;
 });

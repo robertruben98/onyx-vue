@@ -26,6 +26,7 @@ export interface BarListItem {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, ref } from "vue";
 import {
   barPath,
@@ -79,8 +80,8 @@ const props = withDefaults(
     rowHeight: 32,
     legend: () => [],
     table: undefined,
-    tableSummary: "data",
-    tableHeaders: () => ["category", "value"],
+    tableSummary: () => useOnyxLocale().barListTableSummary,
+    tableHeaders: () => useOnyxLocale().barListTableHeaders,
   },
 );
 

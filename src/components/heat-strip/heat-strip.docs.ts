@@ -4,7 +4,7 @@ export const heatStripDoc: ComponentDoc = {
   id: "heat-strip",
   title: "Heat Strip",
   description:
-    "One cell per bucket, shaded by how busy the bucket was — the shape of a day in the width of a sentence. Intensity is relative to the busiest bucket, and any bucket with something in it is always at least one step above empty.",
+    "One cell per bucket, shaded by how busy the bucket was — the shape of a day in the width of a sentence. Intensity is relative to the busiest bucket, and any bucket with something in it is always at least one step above empty. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiHeatStrip"],
   api: [
     {

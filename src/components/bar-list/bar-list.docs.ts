@@ -4,7 +4,7 @@ export const barListDoc: ComponentDoc = {
   id: "bar-list",
   title: "Bar List",
   description:
-    "Horizontal bars, one row per category. A row is one bar with its value after the end, or a stack of segments with counts inside those that fit and a summary in a right-hand column. Labels are cut to their column; the full text stays in the tooltip and the table twin.",
+    "Horizontal bars, one row per category. A row is one bar with its value after the end, or a stack of segments with counts inside those that fit and a summary in a right-hand column. Labels are cut to their column; the full text stays in the tooltip and the table twin. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiBarList"],
   api: [
     { name: "items", type: "{ label, value?, tone?, segments?, valueText?, tip? }[]", default: "—", description: "Rows top to bottom. segments: { value, tone, label? }[]." },

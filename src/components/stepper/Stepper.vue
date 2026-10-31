@@ -29,6 +29,7 @@ export const STEP_GLYPHS: Record<StepState, string> = {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import "./stepper.scss";
 
 /**
@@ -38,7 +39,9 @@ import "./stepper.scss";
  *
  * An ordered list — the order is the content. The step in progress carries
  * `aria-current="step"`, and every state is also spoken, not only drawn.
- */
+ */const messages = useOnyxLocale();
+
+
 withDefaults(
   defineProps<{
     /** The steps, in order. */
@@ -48,17 +51,10 @@ withDefaults(
     /** Spoken names of the states, for other languages. */
     stateLabels?: Partial<Record<StepState, string>>;
   }>(),
-  { label: "Steps", stateLabels: () => ({}) },
+  { label: () => useOnyxLocale().stepperLabel, stateLabels: () => ({}) },
 );
 
-const DEFAULT_STATE_LABELS: Record<StepState, string> = {
-  done: "done",
-  active: "in progress",
-  warn: "warning",
-  error: "failed",
-  pending: "pending",
-  skipped: "skipped",
-};
+
 
 function stateOf(step: Step): StepState {
   return step.state in STEP_GLYPHS ? step.state : "pending";
@@ -78,7 +74,7 @@ function stateOf(step: Step): StepState {
         <span class="ui-stepper__label">{{ step.label }}</span>
         <span v-if="step.meta" class="ui-stepper__meta"> · {{ step.meta }}</span>
         <span class="ui-stepper__state">
-          ({{ stateLabels[stateOf(step)] ?? DEFAULT_STATE_LABELS[stateOf(step)] }})</span
+          ({{ stateLabels[stateOf(step)] ?? messages.stepperStateLabels[stateOf(step)] }})</span
         >
         <span v-if="step.note" class="ui-stepper__note">{{ step.note }}</span>
       </span>

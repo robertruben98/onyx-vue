@@ -4,7 +4,7 @@ export const tabBarDoc: ComponentDoc = {
   id: "tab-bar",
   title: "Tab Bar",
   description:
-    "The navigation a phone keeps under the thumb: the first few destinations in a bar fixed to the bottom, the rest behind \"More\", a sheet that opens upwards. Entries are real links; `itemClicked` lets a single-page app route them itself. Above `hideAbove` it is not rendered, so the page's own rail or header takes over.",
+    "The navigation a phone keeps under the thumb: the first few destinations in a bar fixed to the bottom, the rest behind \"More\", a sheet that opens upwards. Entries are real links; `itemClicked` lets a single-page app route them itself. Above `hideAbove` it is not rendered, so the page's own rail or header takes over. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiTabBar"],
   api: [
     {

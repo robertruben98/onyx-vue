@@ -4,7 +4,7 @@ export const dialogDoc: ComponentDoc = {
   id: "dialog",
   title: "Dialog",
   description:
-    "When a select, menu, popover or tooltip is open inside the dialog, Escape dismisses the most recently opened overlay first; a second Escape can close the dialog. Modal panel over a backdrop, teleported to `body`, with focus trapped inside and returned to whatever opened it. It is labelled by its heading, or by `ariaLabel` when there is no visible heading.",
+    "When a select, menu, popover or tooltip is open inside the dialog, Escape dismisses the most recently opened overlay first; a second Escape can close the dialog. Modal panel over a backdrop, teleported to `body`, with focus trapped inside and returned to whatever opened it. It is labelled by its heading, or by `ariaLabel` when there is no visible heading. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiDialog"],
   api: [
     {

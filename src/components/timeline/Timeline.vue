@@ -49,6 +49,7 @@ export function sortNewestFirst<T extends TimelineEvent>(events: readonly T[]): 
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import { UiTag } from "../tag";
 import { UiRelativeTime } from "../relative-time";
@@ -82,8 +83,8 @@ const props = withDefaults(
     formatDate: undefined,
     now: undefined,
     units: undefined,
-    label: "History",
-    emptyText: "Nothing has happened yet",
+    label: () => useOnyxLocale().timelineLabel,
+    emptyText: () => useOnyxLocale().timelineEmptyText,
   },
 );
 

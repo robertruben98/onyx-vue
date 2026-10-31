@@ -4,9 +4,10 @@ export const countdownDoc: ComponentDoc = {
   id: "countdown",
   title: "Countdown",
   description:
-    "A live countdown to a moment: \"13 h 18 min to the written exam\". The figure updates every tick, but it is a role=timer that is not a chatty live region: a screen reader reads the whole sentence when it gets there, and `announce` speaks only at coarse steps. Emits `ended` once at zero and stops its timer, also when unmounted.",
+    "A live countdown to a moment: \"13 h 18 min to the written exam\". The figure updates every tick, but it is a role=timer that is not a chatty live region: a screen reader reads the whole sentence when it gets there, and `announce` speaks only at coarse steps. Emits `ended` once at zero and stops its timer, also when unmounted. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiCountdown"],
   api: [
+    { name: "speakCountdown(parts, labels?, conjunction?)", type: "(CountdownPart[], CountdownUnitLabels?, string?) => string", default: "English labels; and", description: "Pure spoken formatter. Pass translated unit labels and a conjunction outside components; UiCountdown reads both from the locale provider." },
     { name: "to", type: "Date | string | number", default: "—", description: "The moment: a Date, an ISO string or epoch ms." },
     { name: "units", type: "('days' | 'hours' | 'minutes' | 'seconds')[] | 'auto'", default: "'auto'", description: "Units shown. `auto` is days, hours and minutes without the leading zero units. The smallest unit rounds up, so the display reaches 0 with the time." },
     { name: "format", type: "'long' | 'short'", default: "'long'", description: "`long` \"13 h 18 min\", `short` \"13:18\" (days stay apart: \"2 d 13:18\")." },

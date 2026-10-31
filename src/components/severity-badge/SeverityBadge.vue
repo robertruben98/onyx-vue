@@ -40,8 +40,11 @@ export function severityRank(severity: Severity | string): number {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./severity-badge.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -71,5 +74,5 @@ const rootClasses = computed(() => ({
 </script>
 
 <template>
-  <span :class="rootClasses"><slot>{{ severity }}</slot></span>
+  <span :class="rootClasses"><slot>{{ messages.severityLabels[severity] }}</slot></span>
 </template>

@@ -4,7 +4,7 @@ export const runStateDoc: ComponentDoc = {
   id: "run-state",
   title: "Run State",
   description:
-    "The seven-outcome scale of a run step. Ships with runStateRank() to sort worst-first and runStateMark() for the [X]/[!]/[ ] tri-state a plain-text export needs. The scale keeps three distinctions a green/red light throws away: defecto (known, documented) is not fallo (broke now), omitido means the step could not conclude rather than passed, and arreglado means a defect moved — the thing a deploy is actually asking about.",
+    "The seven-outcome scale of a run step. Ships with runStateRank() to sort worst-first and runStateMark() for the [X]/[!]/[ ] tri-state a plain-text export needs. The scale keeps three distinctions a green/red light throws away: defecto (known, documented) is not fallo (broke now), omitido means the step could not conclude rather than passed, and arreglado means a defect moved — the thing a deploy is actually asking about. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: [
     "UiRunState",
     "runStateRank",

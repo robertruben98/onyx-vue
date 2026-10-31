@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from "vue";
 import "./app-bar.scss";
 
@@ -44,7 +45,7 @@ const props = withDefaults(
     headingLevel: 1,
     sticky: true,
     collapseBelow: 0,
-    menuLabel: "Menu",
+    menuLabel: () => useOnyxLocale().appBarMenuLabel,
   },
 );
 

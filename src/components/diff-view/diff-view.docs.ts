@@ -29,7 +29,7 @@ export const diffViewDoc: ComponentDoc = {
   id: "diff-view",
   title: "Diff View",
   description:
-    "A unified diff, read-only: one block per file with its path, `+N −M` and a fold button, then its hunks with old and new line numbers and the added and removed lines coloured (and signed, for whoever cannot see the colour). Takes the diff as text (`git diff`, `format-patch`, `diff -u`) or as files already parsed. A page that does more with a line — comment on it — puts its button in `#line-actions` and its comment in `#line-after`; the diff stays the same one everywhere. Hunks off screen are not laid out, so a 2000-line diff opens without stalling.",
+    "A unified diff, read-only: one block per file with its path, `+N −M` and a fold button, then its hunks with old and new line numbers and the added and removed lines coloured (and signed, for whoever cannot see the colour). Takes the diff as text (`git diff`, `format-patch`, `diff -u`) or as files already parsed. A page that does more with a line — comment on it — puts its button in `#line-actions` and its comment in `#line-after`; the diff stays the same one everywhere. Hunks off screen are not laid out, so a 2000-line diff opens without stalling. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiDiffView", "UiButton"],
   api: [
     { name: "diff", type: "string", default: "''", description: "A unified diff as text. Parsed with `parseUnifiedDiff` (exported)." },

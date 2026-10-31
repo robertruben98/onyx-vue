@@ -4,7 +4,7 @@ export const triStateCountDoc: ComponentDoc = {
   id: "tri-state-count",
   title: "Tri-State Count",
   description:
-    "A number, or the reason there is no number. Zero is a fact, a dot means the data is in flight, and a dash means nobody asked for it — three states a plain counter collapses into one misleading zero. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",
+    "A number, or the reason there is no number. Zero is a fact, a dot means the data is in flight, and a dash means nobody asked for it — three states a plain counter collapses into one misleading zero. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiTriStateCount", "resolveTriState"],
   api: [
     {

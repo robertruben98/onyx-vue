@@ -80,9 +80,9 @@ describe("StateBar (Vue)", () => {
     const label = container
       .querySelector(".ui-state-bar__track")
       ?.getAttribute("aria-label");
-    expect(label).toContain("3 de 5");
+    expect(label).toContain("3 of 5");
     expect(label).toContain("1 defecto");
-    expect(label).toContain("2 pendientes");
+    expect(label).toContain("2 pending");
   });
 
   it("shows the legend as plain text when it is not a filter", () => {

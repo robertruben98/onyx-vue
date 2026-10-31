@@ -4,7 +4,7 @@ export const relativeTimeDoc: ComponentDoc = {
   id: "relative-time",
   title: "Relative Time",
   description:
-    "A compact age — 5m, 3h, 2d, 4mo — with the absolute date in the title and a stale flag past a threshold. Takes its clock as a prop so it can be tested.",
+    "A compact age — 5m, 3h, 2d, 4mo — with the absolute date in the title and a stale flag past a threshold. Takes its clock as a prop so it can be tested. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiRelativeTime", "formatRelative"],
   api: [
     {

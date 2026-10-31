@@ -5,7 +5,7 @@ export const toastDoc: ComponentDoc = {
   id: "toast",
   title: "Toast",
   description:
-    "Transient messages about something that just happened. Call useToast().show() from anywhere — a click handler, a polling composable — and mount one UiToastHost per page to render them. Danger toasts go to an assertive live region, the rest to a polite one; at most three are shown.",
+    "Transient messages about something that just happened. Call useToast().show() from anywhere — a click handler, a polling composable — and mount one UiToastHost per page to render them. Danger toasts go to an assertive live region, the rest to a polite one; at most three are shown. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiToastHost", "useToast", "UiButton"],
   api: [
     { name: "useToast().show", type: "(message, { tone?, duration?, action? }) => id", default: "—", description: "Queues a message. duration in ms (default 3200, or 6000 with an action); 0 keeps it until dismissed. The countdown stops while focus or the pointer is inside the toast." },

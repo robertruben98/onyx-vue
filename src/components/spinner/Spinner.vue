@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./spinner.scss";
 
@@ -13,7 +14,7 @@ const props = withDefaults(
   }>(),
   {
     size: "md",
-    label: "Loading",
+    label: () => useOnyxLocale().spinnerLabel,
   },
 );
 

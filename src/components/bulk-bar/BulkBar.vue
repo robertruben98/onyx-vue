@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import { UiButton } from "../button";
 import "./bulk-bar.scss";
@@ -20,10 +21,10 @@ const props = withDefaults(
     cancelLabel?: string;
   }>(),
   {
-    noun: () => ["selected", "selected"],
+    noun: () => useOnyxLocale().bulkBarNoun,
     question: "",
-    confirmLabel: "confirm",
-    cancelLabel: "cancel",
+    confirmLabel: () => useOnyxLocale().bulkBarConfirmLabel,
+    cancelLabel: () => useOnyxLocale().bulkBarCancelLabel,
   },
 );
 

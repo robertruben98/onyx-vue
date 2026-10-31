@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { UiDisclosure } from "../disclosure";
 import type { ChartLegendItem, ChartTable } from "./chart-kit";
 
@@ -19,6 +20,8 @@ defineProps<{
 }>();
 
 const tableOpen = defineModel<boolean>("tableOpen", { default: false });
+const messages = useOnyxLocale();
+
 </script>
 
 <template>
@@ -39,7 +42,7 @@ const tableOpen = defineModel<boolean>("tableOpen", { default: false });
     v-else-if="part === 'table' && table && table.rows.length"
     v-model:open="tableOpen"
     class="ui-chart__twin"
-    :summary="tableSummary || 'data'"
+    :summary="tableSummary || messages.chartTableSummary"
     :bordered="false"
   >
     <table class="ui-chart__table">

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./skeleton.scss";
 
@@ -20,7 +21,7 @@ const props = withDefaults(
      */
     label?: string;
   }>(),
-  { variant: "text", lines: 1, width: "", height: "", label: "Loading…" },
+  { variant: "text", lines: 1, width: "", height: "", label: () => useOnyxLocale().skeletonLabel },
 );
 
 const count = computed(() => (props.variant === "text" ? Math.max(1, Math.floor(props.lines)) : 1));

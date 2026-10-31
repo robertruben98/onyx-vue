@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, useId } from "vue";
 import { UiSectionHeader } from "../section-header";
 import "./panel.scss";
@@ -54,7 +55,7 @@ const props = withDefaults(
     headingLevel: 2,
     quiet: false,
     empty: false,
-    emptyText: "Nothing here.",
+    emptyText: () => useOnyxLocale().panelEmptyText,
     padded: false,
     variant: "default",
     landmark: true,

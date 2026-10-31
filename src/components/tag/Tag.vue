@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./tag.scss";
 
@@ -32,7 +33,7 @@ const props = withDefaults(
     variant: "neutral",
     appearance: "filled",
     removable: false,
-    removeLabel: "Remove",
+    removeLabel: () => useOnyxLocale().tagRemoveLabel,
   },
 );
 

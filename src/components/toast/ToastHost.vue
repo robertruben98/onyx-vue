@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, onBeforeUnmount, onMounted } from "vue";
 import { useToast, type ToastMessage } from "./toast-store";
 import "./toast.scss";
@@ -28,7 +29,7 @@ const props = withDefaults(
      */
     hotkey?: string | null;
   }>(),
-  { dismissLabel: "Dismiss", hotkey: "F8" },
+  { dismissLabel: () => useOnyxLocale().toastHostDismissLabel, hotkey: "F8" },
 );
 
 const { toasts, dismiss, pause, resume, act } = useToast();

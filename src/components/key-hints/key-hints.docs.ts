@@ -4,7 +4,7 @@ export const keyHintsDoc: ComponentDoc = {
   id: "key-hints",
   title: "Key Hints",
   description:
-    "The shortcut legend of a keyboard-first page. A definition list wearing a single line: the key/meaning pairs are the content, so a screen reader can tell where one ends and the next begins, and the trailing slot takes whatever status the footer also has to carry.",
+    "The shortcut legend of a keyboard-first page. A definition list wearing a single line: the key/meaning pairs are the content, so a screen reader can tell where one ends and the next begins, and the trailing slot takes whatever status the footer also has to carry. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiKeyHints"],
   api: [
     {

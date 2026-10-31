@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./heat-strip.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -49,8 +52,8 @@ function titleOf(index: number, value: number): string {
 }
 
 const ariaLabel = computed(() => {
-  const what = props.label || "activity";
-  return `${what}: ${total.value} across ${props.values.length} buckets, peak ${peak.value}`;
+  const what = props.label || messages.heatStripLabel;
+  return messages.heatStripSummary.replace("{label}", what).replace("{total}", String(total.value)).replace("{count}", String(props.values.length)).replace("{peak}", String(peak.value));
 });
 </script>
 

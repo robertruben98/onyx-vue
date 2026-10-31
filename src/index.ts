@@ -101,3 +101,5 @@ export * from "./components/toast";
 export * from "./components/tooltip";
 export * from "./components/tri-state-count";
 export * from "./components/truncate";
+
+export { provideOnyxLocale, DEFAULT_MESSAGES, ES_MESSAGES, type OnyxMessages } from "./locale";

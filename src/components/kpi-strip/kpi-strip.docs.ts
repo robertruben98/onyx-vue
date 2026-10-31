@@ -4,7 +4,7 @@ export const kpiStripDoc: ComponentDoc = {
   id: "kpi-strip",
   title: "KPI Strip",
   description:
-    "A row of headline figures above a list, drawn as one bordered instrument rather than separate cards. Folds to two columns below 1080px. Each cell reads label first, then value, then its sub-line. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",
+    "A row of headline figures above a list, drawn as one bordered instrument rather than separate cards. Folds to two columns below 1080px. Each cell reads label first, then value, then its sub-line. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiKpiStrip"],
   api: [
     { name: "items", type: "{ label, value, sub?, hint?, tone?, title? }[]", default: "—", description: "The figures. `tone` is neutral | muted | success | warning | danger (`default` still works as the deprecated name of neutral)." },

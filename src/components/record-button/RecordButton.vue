@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./record-button.scss";
 
@@ -40,7 +41,7 @@ const props = withDefaults(
     recording: false,
     busy: false,
     disabled: false,
-    label: "Record",
+    label: () => useOnyxLocale().recordButtonLabel,
     recordingLabel: undefined,
     busyLabel: undefined,
     size: "lg",

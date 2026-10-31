@@ -4,7 +4,7 @@ export const courseSwitcherDoc: ComponentDoc = {
   id: "course-switcher",
   title: "Course Switcher",
   description:
-    "The course picker of a learning app: a small icon with a number in the top bar (\"🇬🇧 56\") that opens a panel under the bar with a scrolling row of course tiles and, below them, a detail area such as a score card. Under `sheetBelow` (600px) the panel is a full-width sheet with the page dimmed, `aria-modal` and a focus trap; wider, a popover anchored to the trigger. Opening focuses the selected tile, Escape or a tap outside closes and returns focus to the trigger, arrows move between tiles, and the selected tile always follows the model, so a parent that refuses a change keeps the old course selected.",
+    "The course picker of a learning app: a small icon with a number in the top bar (\"🇬🇧 56\") that opens a panel under the bar with a scrolling row of course tiles and, below them, a detail area such as a score card. Under `sheetBelow` (600px) the panel is a full-width sheet with the page dimmed, `aria-modal` and a focus trap; wider, a popover anchored to the trigger. Opening focuses the selected tile, Escape or a tap outside closes and returns focus to the trigger, arrows move between tiles, and the selected tile always follows the model, so a parent that refuses a change keeps the old course selected. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiCourseSwitcher", "UiProgressBar"],
   api: [
     { name: "options", type: "{ value: string; label: string; disabled?: boolean }[]", default: "—", description: "The courses, in order. `label` is the tile's visible and accessible name." },

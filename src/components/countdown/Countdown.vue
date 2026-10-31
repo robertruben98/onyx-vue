@@ -1,4 +1,5 @@
 <script lang="ts">
+import { DEFAULT_MESSAGES } from "../../locale";
 export type CountdownUnit = "days" | "hours" | "minutes" | "seconds";
 export type CountdownFormat = "long" | "short";
 export type CountdownSize = "sm" | "md" | "lg";
@@ -11,12 +12,7 @@ export interface CountdownUnitLabel {
 }
 export type CountdownUnitLabels = Record<CountdownUnit, CountdownUnitLabel>;
 
-export const DEFAULT_COUNTDOWN_LABELS: CountdownUnitLabels = {
-  days: { short: "d", one: "day", other: "days" },
-  hours: { short: "h", one: "hour", other: "hours" },
-  minutes: { short: "min", one: "minute", other: "minutes" },
-  seconds: { short: "s", one: "second", other: "seconds" },
-};
+export const DEFAULT_COUNTDOWN_LABELS: CountdownUnitLabels = DEFAULT_MESSAGES.countdownUnitLabels;
 
 const ORDER: CountdownUnit[] = ["days", "hours", "minutes", "seconds"];
 const UNIT_MS: Record<CountdownUnit, number> = {
@@ -74,9 +70,9 @@ export function formatCountdown(
 }
 
 /** The spoken sentence: "13 hours and 18 minutes". */
-export function speakCountdown(parts: CountdownPart[], labels: CountdownUnitLabels = DEFAULT_COUNTDOWN_LABELS): string {
+export function speakCountdown(parts: CountdownPart[], labels: CountdownUnitLabels = DEFAULT_COUNTDOWN_LABELS, conjunction = DEFAULT_MESSAGES.countdownConjunction): string {
   const words = parts.map((p) => `${p.amount} ${p.amount === 1 ? labels[p.unit].one : labels[p.unit].other}`);
-  return words.length > 1 ? `${words.slice(0, -1).join(", ")} and ${words[words.length - 1]}` : words.join("");
+  return words.length > 1 ? `${words.slice(0, -1).join(", ")} ${conjunction} ${words[words.length - 1]}` : words.join("");
 }
 
 /** ISO 8601 duration of the parts, for `<time datetime>`: "P2DT13H18M". */
@@ -92,6 +88,7 @@ const toMs = (m: Moment): number => (m instanceof Date ? m.getTime() : typeof m 
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, onBeforeUnmount, onMounted, ref, useSlots, watch } from "vue";
 import "./countdown.scss";
 
@@ -107,6 +104,8 @@ import "./countdown.scss";
  * At zero it emits `ended` once and stops its timer; the `#ended` slot replaces
  * the figure. The timer also stops when the component unmounts.
  */
+const messages = useOnyxLocale();
+
 const props = withDefaults(
   defineProps<{
     /** The moment counted down to: a Date, an ISO string or epoch ms. */
@@ -154,7 +153,7 @@ const valid = computed(() => Number.isFinite(target.value));
 const remaining = computed(() => Math.max(0, target.value - current.value));
 const ended = computed(() => valid.value && remaining.value <= 0);
 
-const labels = computed<CountdownUnitLabels>(() => ({ ...DEFAULT_COUNTDOWN_LABELS, ...(props.unitLabels ?? {}) }));
+const labels = computed<CountdownUnitLabels>(() => ({ ...messages.countdownUnitLabels, ...(props.unitLabels ?? {}) }));
 const parts = computed(() => splitCountdown(remaining.value, props.units));
 const showsSeconds = computed(() => parts.value.some((p) => p.unit === "seconds"));
 const interval = computed(() => props.tick ?? (showsSeconds.value ? 1_000 : 30_000));
@@ -162,7 +161,7 @@ const interval = computed(() => props.tick ?? (showsSeconds.value ? 1_000 : 30_0
 const text = computed(() => (valid.value ? formatCountdown(parts.value, props.format, labels.value) : "—"));
 const sentence = computed(() => {
   if (!valid.value) return "—";
-  const s = speakCountdown(parts.value, labels.value);
+  const s = speakCountdown(parts.value, labels.value, messages.countdownConjunction);
   return props.label ? `${s} ${props.label}` : s;
 });
 

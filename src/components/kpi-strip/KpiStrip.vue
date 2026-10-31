@@ -20,6 +20,7 @@ export interface KpiItem {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { canonicalTone } from "../../internal/tone";
 import { computed } from "vue";
 import "./kpi-strip.scss";
@@ -51,7 +52,7 @@ const props = withDefaults(
      */
     variant?: "cells" | "plain";
   }>(),
-  { label: "Summary", columns: null, size: "md", variant: "cells" },
+  { label: () => useOnyxLocale().kpiStripLabel, columns: null, size: "md", variant: "cells" },
 );
 
 const rootClasses = computed(() => ({

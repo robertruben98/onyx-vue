@@ -4,7 +4,7 @@ export const tagDoc: ComponentDoc = {
   id: "tag",
   title: "Tag",
   description:
-    "Compact label for keywords and filters. Optionally removable, which adds a close button that emits `removed`.",
+    "Compact label for keywords and filters. Optionally removable, which adds a close button that emits `removed`. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiTag"],
   api: [
     {

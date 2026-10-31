@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import UiRunState from "../run-state/RunState.vue";
 import { runStateRank, type RunState } from "../run-state/RunState.vue";
@@ -23,6 +24,8 @@ import "./state-bar.scss";
  * because the counts, the segments and the selection have to agree, and three
  * copies of that arithmetic is three chances to disagree.
  */
+const messages = useOnyxLocale();
+
 const props = withDefaults(
   defineProps<{
     /** How many steps ended in each state. States with 0 are dropped. */
@@ -45,7 +48,7 @@ const props = withDefaults(
   {
     interactive: false,
     selected: null,
-    label: "Progreso de la ejecucion",
+    label: () => useOnyxLocale().stateBarLabel,
     showLegend: true,
   },
 );
@@ -76,9 +79,9 @@ function width(count: number): string {
 
 /** What a screen reader gets instead of the bar: the same reading, in words. */
 const summary = computed(() => {
-  const parts = segments.value.map(([state, n]) => `${n} ${state}`);
-  if (pending.value > 0) parts.push(`${pending.value} pendientes`);
-  return `${props.label}: ${done.value} de ${total.value}. ${parts.join(", ")}.`;
+  const parts = segments.value.map(([state, n]) => `${n} ${messages.runStateLabels[state]}`);
+  if (pending.value > 0) parts.push(messages.stateBarPending.replace('{n}', String(pending.value)));
+  return messages.stateBarSummary.replace("{label}", props.label).replace("{done}", String(done.value)).replace("{total}", String(total.value)).replace("{states}", parts.join(", "));
 });
 
 function pick(state: RunState) {

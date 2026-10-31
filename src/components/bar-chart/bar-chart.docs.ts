@@ -4,7 +4,7 @@ export const barChartDoc: ComponentDoc = {
   id: "bar-chart",
   title: "Bar Chart",
   description:
-    "Stacked vertical bars over time. Hairline grid, 2px gaps between segments, a direct label on the tallest column only, axis labels thinned when they do not fit, a full-height hit area per column for the tooltip, and a table twin with the numbers. Colours come from the --ui-chart-* tokens.",
+    "Stacked vertical bars over time. Hairline grid, 2px gaps between segments, a direct label on the tallest column only, axis labels thinned when they do not fit, a full-height hit area per column for the tooltip, and a table twin with the numbers. Colours come from the --ui-chart-* tokens. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiBarChart"],
   api: [
     { name: "series", type: "{ id, label, tone }[]", default: "—", description: "Stacked series, bottom first. tone: ok | warn | bad | none | one." },

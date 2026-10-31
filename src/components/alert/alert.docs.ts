@@ -4,7 +4,7 @@ export const alertDoc: ComponentDoc = {
   id: "alert",
   title: "Alert",
   description:
-    "Inline message with an optional title and a dismiss button. The `danger` variant announces itself assertively (`role=\"alert\"`); every other variant is polite (`role=\"status\"`), so a success message never interrupts what is being read.",
+    "Inline message with an optional title and a dismiss button. The `danger` variant announces itself assertively (`role=\"alert\"`); every other variant is polite (`role=\"status\"`), so a success message never interrupts what is being read. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiAlert"],
   api: [
     {

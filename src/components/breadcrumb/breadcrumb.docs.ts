@@ -4,7 +4,7 @@ export const breadcrumbDoc: ComponentDoc = {
   id: "breadcrumb",
   title: "Breadcrumb",
   description:
-    "Where the page sits. Levels with href are real links; the last level is the current page and is never a link. A client-side router listens to navigated and calls preventDefault() on the event.",
+    "Where the page sits. Levels with href are real links; the last level is the current page and is never a link. A client-side router listens to navigated and calls preventDefault() on the event. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiBreadcrumb"],
   api: [
     { name: "items", type: "{ label, href? }[]", default: "—", description: "The trail, root first." },

@@ -37,12 +37,21 @@ Consumers that build from source (the control-panel dashboard aliases
   is missing. Existing tags are never moved; a tag on another commit produces
   a warning. The auto-tag workflow calls the reusable release workflow to build
   and attach the package asset.
+- Add `provideOnyxLocale(messages, app?)`, typed `OnyxMessages`, English
+  `DEFAULT_MESSAGES` and Spanish `ES_MESSAGES` for library-wide default texts.
+  Explicit text props keep precedence; ancestor and app-level providers cover
+  accessible names, empty states, navigation, chart summaries and time units.
 
 - Tag pushes matching `v*.*.*` now build and attach an `onyx-vue-X.Y.Z.tgz` to
   the GitHub Release, using that version's CHANGELOG section as release notes.
   The workflow checks the tag against `package.json` before installing dependencies,
   then runs typecheck, tests and build before packing. Reruns update the release
   notes and replace the package asset.
+### Changed
+
+- `UiStateBar` now defaults to “Run progress” with English “of” and “pending”
+  announcements instead of Spanish. Provide `ES_MESSAGES` to use Spanish.
+
 ### Fixed
 
 - `UiSelect` inside `UiFormField` is named by the field's label instead of its placeholder

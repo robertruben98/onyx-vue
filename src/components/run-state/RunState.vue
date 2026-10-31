@@ -80,8 +80,11 @@ export function runStateNeedsAttention(state: RunState | string): boolean {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./run-state.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -110,6 +113,6 @@ const rootClasses = computed(() => [
     <span v-if="showMark" class="ui-run-state__mark" aria-hidden="true">{{
       runStateMark(state)
     }}</span>
-    <slot>{{ state }}</slot>
+    <slot>{{ messages.runStateLabels[state] }}</slot>
   </span>
 </template>

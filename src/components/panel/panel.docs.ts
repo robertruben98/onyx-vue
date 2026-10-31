@@ -4,7 +4,7 @@ export const panelDoc: ComponentDoc = {
   id: "panel",
   title: "Panel",
   description:
-    "A titled block of a console page: a Section Header band over a body that runs edge to edge. An empty panel stays on screen and says so, because 'nothing is waiting' is an answer.",
+    "A titled block of a console page: a Section Header band over a body that runs edge to edge. An empty panel stays on screen and says so, because 'nothing is waiting' is an answer. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiPanel", "UiButton", "UiSelect"],
   api: [
     { name: "title", type: "string", default: "—", description: "Panel name, rendered as a heading. The region is named by that heading (`aria-labelledby`)." },

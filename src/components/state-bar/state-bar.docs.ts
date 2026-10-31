@@ -4,7 +4,7 @@ export const stateBarDoc: ComponentDoc = {
   id: "state-bar",
   title: "State Bar",
   description:
-    "A run's progress and its composition in one track. UiProgressBar answers 'how far along'; this also answers 'how is it going', which is what a run view is really asked. Segments are ordered worst-first from runStateRank, so a red sliver sits at the left edge instead of hiding between two greens, and the gap at the right is what is still pending. The legend doubles as the filter, so counts, segments and selection cannot disagree.",
+    "A run's progress and its composition in one track. UiProgressBar answers 'how far along'; this also answers 'how is it going', which is what a run view is really asked. Segments are ordered worst-first from runStateRank, so a red sliver sits at the left edge instead of hiding between two greens, and the gap at the right is what is still pending. The legend doubles as the filter, so counts, segments and selection cannot disagree. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiStateBar"],
   api: [
     {
@@ -45,7 +45,7 @@ export const stateBarDoc: ComponentDoc = {
       description:
         "A legend entry was activated. Emits null when the active one is clicked again, so the same handler clears the filter.",
     },
-    { name: "label", type: "string", default: "''", description: "Accessible name of the bar." },
+    { name: "label", type: "string", default: "'Run progress'", description: "Accessible name of the bar." },
   ],
   demos: [
     {

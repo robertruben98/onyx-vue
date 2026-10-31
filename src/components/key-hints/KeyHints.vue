@@ -9,6 +9,7 @@ export interface KeyHint {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import "./key-hints.scss";
 
 withDefaults(
@@ -19,7 +20,7 @@ withDefaults(
     label?: string;
   }>(),
   {
-    label: "Keyboard shortcuts",
+    label: () => useOnyxLocale().keyHintsLabel,
   },
 );
 </script>

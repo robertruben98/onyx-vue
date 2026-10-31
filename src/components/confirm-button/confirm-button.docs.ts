@@ -4,7 +4,7 @@ export const confirmButtonDoc: ComponentDoc = {
   id: "confirm-button",
   title: "Confirm Button",
   description:
-    "A button that asks twice before doing something that cannot be taken back. The first click arms it and turns the label into the question; the second, within the timeout, confirms. It disarms on timeout, Esc, blur, and when another confirm button is armed — only one asks at a time.",
+    "A button that asks twice before doing something that cannot be taken back. The first click arms it and turns the label into the question; the second, within the timeout, confirms. It disarms on timeout, Esc, blur, and when another confirm button is armed — only one asks at a time. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiConfirmButton"],
   api: [
     { name: "label", type: "string", default: "—", description: "Resting label: what it does." },

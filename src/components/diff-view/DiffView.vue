@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, ref, useId, watch } from "vue";
 import { diffFileStats, parseUnifiedDiff, type DiffFile, type DiffHunk, type DiffLine } from "./parse-diff";
 import "./diff-view.scss";
@@ -16,6 +17,8 @@ import "./diff-view.scss";
  * laid out only when it scrolls near the screen (`content-visibility: auto`),
  * so a 2000-line diff costs its DOM nodes and not their layout.
  */
+const messages = useOnyxLocale();
+
 const props = withDefaults(
   defineProps<{
     /** A unified diff as text. Ignored when `files` is given. */
@@ -38,9 +41,9 @@ const props = withDefaults(
     files: null,
     collapsed: false,
     lineNumbers: true,
-    label: "Diff",
-    emptyText: "No changes",
-    binaryText: "Binary file",
+    label: () => useOnyxLocale().diffViewLabel,
+    emptyText: () => useOnyxLocale().diffViewEmptyText,
+    binaryText: () => useOnyxLocale().diffViewBinaryText,
   },
 );
 
@@ -97,7 +100,7 @@ function toggle(key: string, file: DiffFile): void {
 const SIGN = { add: "+", del: "-", ctx: " " } as const;
 
 function statsLabel(s: { added: number; removed: number }): string {
-  return `${s.added} added, ${s.removed} removed`;
+  return messages.diffViewStats.replace("{added}", String(s.added)).replace("{removed}", String(s.removed));
 }
 </script>
 

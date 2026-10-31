@@ -4,7 +4,7 @@ export const filterBarDoc: ComponentDoc = {
   id: "filter-bar",
   title: "Filter Bar",
   description:
-    "The strip under a page's top bar: a search box, filter chips, and trailing controls. It wraps onto more rows instead of scrolling sideways, and exposes focusSearch() for the '/' shortcut.",
+    "The strip under a page's top bar: a search box, filter chips, and trailing controls. It wraps onto more rows instead of scrolling sideways, and exposes focusSearch() for the '/' shortcut. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiFilterBar", "UiFilterChip", "UiButton"],
   api: [
     { name: "v-model:search", type: "string", default: "''", description: "The search text." },

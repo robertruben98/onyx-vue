@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, onMounted, ref, watch } from "vue";
 import { ansiClasses, createAnsiParser, type AnsiParser } from "./ansi";
 import "./ansi-terminal.scss";
@@ -40,7 +41,7 @@ const props = withDefaults(
     lines: () => [],
     live: false,
     maxHeight: "",
-    label: "Terminal output",
+    label: () => useOnyxLocale().ansiTerminalLabel,
     emptyText: "",
   },
 );

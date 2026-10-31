@@ -37,7 +37,7 @@ export const dataTableDoc: ComponentDoc = {
   id: "data-table",
   title: "Data Table",
   description:
-    "Sortable, selectable table with three layout modes. `rowKey` is what makes an update reuse the existing rows instead of rebuilding them — with it, a table that refreshes on a timer keeps the text selection and the focus.",
+    "Sortable, selectable table with three layout modes. `rowKey` is what makes an update reuse the existing rows instead of rebuilding them — with it, a table that refreshes on a timer keeps the text selection and the focus. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiDataTable"],
   api: [
     {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import "./app-shell.scss";
 
 /**
@@ -19,7 +20,7 @@ withDefaults(
     /** Accessible name of the rail landmark. */
     label?: string;
   }>(),
-  { label: "Navigation" },
+  { label: () => useOnyxLocale().appShellLabel },
 );
 </script>
 

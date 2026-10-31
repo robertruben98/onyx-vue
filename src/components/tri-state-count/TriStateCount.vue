@@ -26,10 +26,13 @@ export function resolveTriState(input: {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { isDev } from "../../internal/dev";
 import { watchEffect } from "vue";
 import { computed } from "vue";
 import "./tri-state-count.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -87,8 +90,8 @@ const text = computed(() => {
  * "em dash" tells the user nothing; "not requested" tells them everything.
  */
 const ariaLabel = computed(() => {
-  if (effectiveState.value === "pending") return "loading";
-  if (effectiveState.value === "unrequested") return "not requested";
+  if (effectiveState.value === "pending") return messages.triStateLoading;
+  if (effectiveState.value === "unrequested") return messages.triStateUnrequested;
   const n = String(props.value ?? 0);
   return props.label ? `${n} ${props.label}` : n;
 });
