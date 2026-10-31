@@ -118,3 +118,63 @@ describe("NavRailItem (Vue)", () => {
     expect(css).toMatch(/\.ui-nav-rail__item\s*\{[^}]*box-sizing:\s*border-box/);
   });
 });
+
+// El HTML de 0.11.3, sin comentarios: con o sin `meta` en el codigo, una
+// entrada que no lo usa tiene que salir identica.
+const PLAIN_0113 = "<button class=\"ui-nav-rail__item ui-nav-rail__item--active\" type=\"button\" aria-current=\"page\"><span class=\"ui-nav-rail__name\">shannon</span><span class=\"ui-nav-rail__marks\"><!-- Los avisos van ANTES del contador: son lo que hace mirar la fila. --><span class=\"ui-tri-state-count ui-nav-rail__count\" aria-label=\"37 shannon\" role=\"img\"><span aria-hidden=\"true\">37</span></span></span></button>";
+const LINK_0113 = "<a class=\"ui-nav-rail__item\" href=\"/x\"><span class=\"ui-nav-rail__name\">docs</span><span class=\"ui-nav-rail__marks\"><!-- Los avisos van ANTES del contador: son lo que hace mirar la fila. --><i>!</i><!--v-if--></span></a>";
+const noComments = (html: string) => html.replace(/<!--[\s\S]*?-->/g, "");
+
+describe("NavRailItem meta", () => {
+  it("without meta renders exactly what 0.11.3 rendered", () => {
+    const a = render(NavRailItem, { props: { label: "shannon", count: 37, active: true } });
+    expect(noComments(a.container.innerHTML)).toBe(noComments(PLAIN_0113));
+    const b = render(NavRailItem, { props: { label: "docs", href: "/x" }, slots: { marks: "<i>!</i>" } });
+    expect(noComments(b.container.innerHTML)).toBe(noComments(LINK_0113));
+    for (const empty of ["", []]) {
+      const c = render(NavRailItem, { props: { label: "shannon", count: 37, active: true, meta: empty } });
+      expect(noComments(c.container.innerHTML)).toBe(noComments(PLAIN_0113));
+    }
+  });
+
+  it("puts one line per meta entry under the label", () => {
+    const { container } = render(NavRailItem, {
+      props: { label: "shannon", count: 37, meta: ["37 pending commits", "last 31-10 · next 07-11"] },
+    });
+    const item = container.querySelector(".ui-nav-rail__item")!;
+    expect(item.classList.contains("ui-nav-rail__item--meta")).toBe(true);
+    const text = item.querySelector(".ui-nav-rail__text")!;
+    expect(text.querySelector(".ui-nav-rail__name")!.textContent).toBe("shannon");
+    expect([...text.querySelectorAll(".ui-nav-rail__meta-line")].map((l) => l.textContent)).toEqual([
+      "37 pending commits",
+      "last 31-10 · next 07-11",
+    ]);
+    // The count stays beside the name, outside the text block.
+    expect(item.querySelector(".ui-nav-rail__marks .ui-nav-rail__count")).not.toBeNull();
+  });
+
+  it("takes a single string, and the #meta slot over the prop", () => {
+    const one = render(NavRailItem, { props: { label: "gstack", meta: "4 pending" } });
+    expect(one.container.querySelectorAll(".ui-nav-rail__meta-line")).toHaveLength(1);
+    const slotted = render(NavRailItem, {
+      props: { label: "gstack", meta: "ignored" },
+      slots: { meta: "<span class='mine'>analysing… 12 min</span>" },
+    });
+    expect(slotted.container.querySelector(".ui-nav-rail__meta .mine")!.textContent).toBe("analysing… 12 min");
+    expect(slotted.container.textContent).not.toContain("ignored");
+  });
+
+  it("truncates each meta line and never lets the text block widen the rail", () => {
+    const css = readFileSync(join(process.cwd(), "src/components/nav-rail/nav-rail.scss"), "utf8");
+    expect(css).toMatch(/\.ui-nav-rail__meta > \*\s*\{[^}]*text-overflow:\s*ellipsis[^}]*white-space:\s*nowrap/);
+    expect(css).toMatch(/\.ui-nav-rail__text\s*\{[^}]*min-width:\s*0/);
+    expect(css).toMatch(/\.ui-nav-rail__meta\s*\{[^}]*min-width:\s*0/);
+  });
+
+  it("has no axe violations with meta, as a button and as a link", async () => {
+    for (const href of ["", "/repo"]) {
+      const { container } = render(NavRailItem, { props: { label: "shannon", count: 3, meta: ["a", "b"], href } });
+      expect(await axe(container, axeOptions)).toHaveNoViolations();
+    }
+  });
+});
