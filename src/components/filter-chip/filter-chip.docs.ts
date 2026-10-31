@@ -4,7 +4,7 @@ export const filterChipDoc: ComponentDoc = {
   id: "filter-chip",
   title: "Filter Chip",
   description:
-    "A toggleable filter that carries its own match count. The tone says what is being filtered for; pressed says whether the filter is applied. A chip that would match nothing dims instead of disappearing, because 'nothing matches this' is an answer worth keeping on screen.",
+    "A toggleable filter that carries its own match count. The tone says what is being filtered for; pressed says whether the filter is applied. A chip that would match nothing dims instead of disappearing, because 'nothing matches this' is an answer worth keeping on screen. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",
   imports: ["UiFilterChip"],
   api: [
     {

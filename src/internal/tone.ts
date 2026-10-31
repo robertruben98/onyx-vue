@@ -1,3 +1,6 @@
+import { isDev } from "./dev";
+import { warnDeprecated } from "./deprecation-warning";
+
 /**
  * El vocabulario de tonos de la libreria.
  *
@@ -15,13 +18,17 @@ export type SemanticTone = "neutral" | "info" | "success" | "warning" | "danger"
 /** @deprecated Spellings kept for compatibility: use `success`, `warning`, `neutral`. */
 export type LegacyTone = "ok" | "warn" | "default";
 
-const LEGACY: Record<LegacyTone, SemanticTone> = {
+export const LEGACY_TONES = {
   ok: "success",
   warn: "warning",
   default: "neutral",
-};
+} as const satisfies Record<LegacyTone, SemanticTone>;
 
 /** Traduce un nombre antiguo al canonico; el resto pasa tal cual. */
 export function canonicalTone<T extends string>(tone: T): Exclude<T, LegacyTone> | SemanticTone {
-  return (LEGACY as Record<string, SemanticTone>)[tone] ?? (tone as Exclude<T, LegacyTone>);
+  const replacement = Object.prototype.hasOwnProperty.call(LEGACY_TONES, tone)
+    ? LEGACY_TONES[tone as LegacyTone]
+    : undefined;
+  if (isDev() && replacement) warnDeprecated("tone", tone, replacement);
+  return replacement ?? (tone as Exclude<T, LegacyTone>);
 }

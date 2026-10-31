@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
+import { watchEffect } from "vue";
 import { canonicalTone } from "../../internal/tone";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { UiSpinner } from "../spinner";
@@ -49,6 +51,9 @@ const props = withDefaults(
 
 /** El tono con los nombres antiguos (`ok`, `warn`, `default`) ya traducidos. */
 const tone = computed(() => canonicalTone(props.tone));
+
+// Validate supplied aliases even when the current state does not display a tone.
+if (isDev()) watchEffect(() => { canonicalTone(props.tone); });
 
 const box = ref<HTMLElement | null>(null);
 let pinned = true;

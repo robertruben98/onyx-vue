@@ -4,7 +4,7 @@ export const blockMeterDoc: ComponentDoc = {
   id: "block-meter",
   title: "Block Meter",
   description:
-    "Progress drawn in text — eight glyphs that fit inside a dense table row where a graphical bar would not. It costs no layout, survives being copied out of the page as text, and still announces itself as a progressbar. Use ProgressBar when the bar is the point; use this one when the row is.",
+    "Progress drawn in text — eight glyphs that fit inside a dense table row where a graphical bar would not. It costs no layout, survives being copied out of the page as text, and still announces itself as a progressbar. Use ProgressBar when the bar is the point; use this one when the row is. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",
   imports: ["UiBlockMeter"],
   api: [
     {

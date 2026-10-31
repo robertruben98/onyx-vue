@@ -4,7 +4,7 @@ export const readoutDoc: ComponentDoc = {
   id: "readout",
   title: "Readout",
   description:
-    "One large instrument figure with a caption and an optional unit. Not a metric chip: a chip is one of many and stays small, a readout is the figure read from across the desk. Use one or two per view. It picks up the phosphor bloom under the matrix preset and is simply a large number everywhere else.",
+    "One large instrument figure with a caption and an optional unit. Not a metric chip: a chip is one of many and stays small, a readout is the figure read from across the desk. Use one or two per view. It picks up the phosphor bloom under the matrix preset and is simply a large number everywhere else. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",
   imports: ["UiReadout"],
   api: [
     {

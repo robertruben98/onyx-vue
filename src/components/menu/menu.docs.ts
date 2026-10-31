@@ -4,7 +4,7 @@ export const menuDoc: ComponentDoc = {
   id: "menu",
   title: "Menu",
   description:
-    "Trigger plus a list of actions. The panel teleports to `body`, opens with the first enabled item focused, and returns focus to the trigger on close.",
+    "Trigger plus a list of actions. The panel teleports to `body`, opens with the first enabled item focused, and returns focus to the trigger on close. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
   imports: ["UiMenu"],
   api: [
     {

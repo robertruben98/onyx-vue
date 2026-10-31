@@ -4,7 +4,7 @@ export const loadMoreRowDoc: ComponentDoc = {
   id: "load-more-row",
   title: "Load More Row",
   description:
-    "Closes a truncated list with a button that names how many rows are still hidden. Renders nothing when nothing remains — a row offering to load zero says the list is truncated when it is complete.",
+    "Closes a truncated list with a button that names how many rows are still hidden. Renders nothing when nothing remains — a row offering to load zero says the list is truncated when it is complete. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
   imports: ["UiLoadMoreRow"],
   api: [
     { name: "remaining", type: "number", default: "—", description: "Rows still hidden. At zero or below nothing renders." },

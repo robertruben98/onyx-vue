@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
+import { useDeprecatedEvents } from "../../internal/deprecated-events";
+
 import { computed, ref, useId } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./input.scss";
@@ -114,6 +117,8 @@ function select(): void {
 }
 
 defineExpose({ focus, select, elemento });
+
+if (isDev()) useDeprecatedEvents();
 </script>
 
 <template>

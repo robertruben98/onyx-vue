@@ -4,7 +4,7 @@ export const descriptionListDoc: ComponentDoc = {
   id: "description-list",
   title: "Description List",
   description:
-    "Terms and values in a grid — the facts of a service, a run, an agent. A real <dl>, values wrap anywhere (they are usually paths and ids), and an empty value shows an em dash instead of a blank that reads as 'not loaded'.",
+    "Terms and values in a grid — the facts of a service, a run, an agent. A real <dl>, values wrap anywhere (they are usually paths and ids), and an empty value shows an em dash instead of a blank that reads as 'not loaded'. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",
   imports: ["UiDescriptionList"],
   api: [
     { name: "items", type: "{ term, value, tone?, title? }[]", default: "—", description: "The pairs in reading order. `tone` is neutral | muted | success | warning | danger (`default` still works as the deprecated name of neutral)." },
