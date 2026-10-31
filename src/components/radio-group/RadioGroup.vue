@@ -86,7 +86,7 @@ function syncChecked(): void {
       :aria-invalid="isInvalid() ? 'true' : undefined"
     >
       <legend v-if="label" class="ui-radio-group__legend">{{ label }}</legend>
-      <label v-for="opt in options" :key="opt.value" class="ui-radio">
+      <label v-for="opt in options" :key="opt.value" :class="['ui-radio', { 'ui-radio--labelled': !!opt.label }]">
         <input
           class="ui-radio__el"
           type="radio"

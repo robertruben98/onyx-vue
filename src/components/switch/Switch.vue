@@ -62,7 +62,7 @@ function handleChange(event: Event): void {
 
 <template>
   <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
-    <label class="ui-switch__wrap" :for="controlId()">
+    <label :class="['ui-switch__wrap', { 'ui-switch__wrap--labelled': !!label }]" :for="controlId()">
       <span class="ui-switch__control">
         <input
           v-bind="controlAttrs()"

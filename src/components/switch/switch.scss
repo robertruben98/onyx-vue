@@ -1,3 +1,5 @@
+@use "../../internal/control-label";
+
 // Switch styles — ported from the Angular lib. References ONLY semantic /
 // component tokens (CLAUDE.md §3). Angular `:host` selectors are mapped to the
 // root class `.ui-switch` and its modifier classes; the markup carries those
@@ -21,7 +23,7 @@
   display: inline-block;
   width: var(--ui-switch-track-width);
   height: var(--ui-switch-track-height);
-  flex-shrink: 0;
+  flex: none;
 }
 
 // Visually-hidden but interactive native control, overlaying the track.
@@ -75,6 +77,8 @@
 }
 
 .ui-switch__label {
+  min-width: 0;
+  line-height: var(--ui-switch-label-line-height);
   font-size: var(--ui-switch-label-font-size);
   color: var(--ui-color-text);
 }
@@ -112,3 +116,6 @@
     transform: translate(-50%, -50%);
   }
 }
+
+@include control-label.first-line(".ui-switch__wrap--labelled", ".ui-switch__control",
+  var(--ui-switch-label-font-size), var(--ui-switch-label-line-height), var(--ui-switch-track-height));

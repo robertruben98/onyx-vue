@@ -1,3 +1,5 @@
+@use "../../internal/control-label";
+
 // Check row — one requirement, or one step of a running job. References ONLY
 // semantic / component tokens.
 //
@@ -29,6 +31,8 @@
 }
 
 .ui-check-row__name {
+  min-width: 0;
+  line-height: var(--ui-check-row-name-line-height);
   font-size: var(--ui-check-row-name-font-size);
   color: var(--ui-color-text);
 }
@@ -83,3 +87,16 @@
     justify-content: flex-start;
   }
 }
+
+.ui-check-row--labelled {
+  --_ui-check-row-state-size: var(--ui-status-dot-size);
+  align-content: center;
+}
+.ui-check-row--running {
+  --_ui-check-row-state-size: var(--ui-spinner-size-sm);
+}
+.ui-check-row__state > * {
+  flex: none;
+}
+@include control-label.first-line(".ui-check-row--labelled", ".ui-check-row__state",
+  var(--ui-check-row-name-font-size), var(--ui-check-row-name-line-height), var(--_ui-check-row-state-size));

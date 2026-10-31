@@ -137,10 +137,12 @@
   --ui-switch-radius: var(--ui-radii-full);
   --ui-switch-label-gap: var(--ui-space-2);
   --ui-switch-label-font-size: var(--ui-font-size-md);
+  --ui-switch-label-line-height: 1.5;
   --ui-radio-size: var(--ui-size-checkbox-md);
   --ui-radio-gap: var(--ui-space-2);
   --ui-radio-group-gap: var(--ui-space-2);
   --ui-radio-label-font-size: var(--ui-font-size-md);
+  --ui-radio-label-line-height: 1.5;
   --ui-radio-legend-font-size: var(--ui-font-size-sm);
   --ui-radio-legend-font-weight: var(--ui-font-weight-medium);
   --ui-badge-radius: var(--ui-radii-full);
@@ -640,6 +642,7 @@
   --ui-check-row-name-width-dense: 11.875rem;
   --ui-check-row-border: var(--ui-color-border);
   --ui-check-row-name-font-size: var(--ui-font-size-md);
+  --ui-check-row-name-line-height: 1.5;
   --ui-check-row-detail-font-size: var(--ui-font-size-sm);
   --ui-check-tree-gap: var(--ui-space-2);
   --ui-check-tree-group-gap: var(--ui-space-2);

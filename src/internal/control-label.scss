@@ -1,0 +1,10 @@
+// Use only on rows with visible labels. The offset follows the same tokens as
+// the label's line box, so wrapping does not move or resize the control.
+@mixin first-line($row, $control, $font-size, $line-height, $size) {
+  #{$row} {
+    align-items: flex-start;
+  }
+  #{$row} #{$control} {
+    margin-top: calc((#{$font-size} * #{$line-height} - #{$size}) / 2);
+  }
+}
