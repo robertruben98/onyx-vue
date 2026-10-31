@@ -9,6 +9,18 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.13.0 — 2026-10-31
+
+### Added
+
+- `UiMenu` `label`: the trigger's accessible name, set as its `aria-label` and `title`. A trigger
+  whose slot is only a glyph ("⋯") no longer needs a visually hidden span to be named. Without
+  `label` the trigger renders as before.
+- `UiMenu` checkable items: an item with `checked` (true or false) renders as `menuitemcheckbox`
+  with `aria-checked` and a check mark, so a chosen option reads as checked instead of a label
+  rewritten to "✓ … (undo)". Items without `checked` stay plain `menuitem`s. The menu still emits
+  `itemSelected` and closes; the page flips the state.
+
 ## 0.12.1 — 2026-10-31
 
 ### Fixed
