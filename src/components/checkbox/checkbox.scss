@@ -17,9 +17,20 @@
   cursor: pointer;
 }
 
+// Labelled: the box sits on the label's first line, not in the middle of a
+// label that wrapped onto three. Centred on that line, so a one-line label
+// looks exactly as it did with `align-items: center`.
+.ui-checkbox__wrap--labelled {
+  align-items: flex-start;
+}
+
 .ui-checkbox__el {
-  width: var(--ui-checkbox-size);
-  height: var(--ui-checkbox-size);
+  --_ui-checkbox-box: var(--ui-checkbox-size);
+  // A flex item shrinks by default: in a narrow column a long label took the
+  // room from the box, and boxes beside long labels came out smaller.
+  flex: none;
+  width: var(--_ui-checkbox-box);
+  height: var(--_ui-checkbox-box);
   margin: 0;
   accent-color: var(--ui-checkbox-bg-checked);
   border-radius: var(--ui-checkbox-radius);
@@ -31,19 +42,25 @@
   outline-offset: var(--ui-focus-ring-offset);
 }
 
+.ui-checkbox__wrap--labelled .ui-checkbox__el {
+  margin-top: calc(
+    (var(--ui-checkbox-label-font-size) * var(--ui-checkbox-label-line-height) - var(--_ui-checkbox-box)) / 2
+  );
+}
+
 .ui-checkbox__label {
+  min-width: 0;
   font-size: var(--ui-checkbox-label-font-size);
+  line-height: var(--ui-checkbox-label-line-height);
   color: var(--ui-color-text);
 }
 
 // --- Sizes ----------------------------------------------------------------
 .ui-checkbox--sm .ui-checkbox__el {
-  width: var(--ui-checkbox-size-sm);
-  height: var(--ui-checkbox-size-sm);
+  --_ui-checkbox-box: var(--ui-checkbox-size-sm);
 }
 .ui-checkbox--lg .ui-checkbox__el {
-  width: var(--ui-checkbox-size-lg);
-  height: var(--ui-checkbox-size-lg);
+  --_ui-checkbox-box: var(--ui-checkbox-size-lg);
 }
 
 // --- Invalid --------------------------------------------------------------

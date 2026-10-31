@@ -95,7 +95,7 @@ let nextCheckboxId = 0;
 
 <template>
   <span :class="[rootClasses, rootAttrs().class]" :style="rootAttrs().style">
-    <label class="ui-checkbox__wrap" :for="controlId()">
+    <label :class="['ui-checkbox__wrap', { 'ui-checkbox__wrap--labelled': !!label }]" :for="controlId()">
       <input
         v-bind="controlAttrs()"
         :ref="setBox"

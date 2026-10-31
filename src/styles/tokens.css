@@ -122,6 +122,7 @@
   --ui-checkbox-border-width: var(--ui-border-width);
   --ui-checkbox-label-gap: var(--ui-space-2);
   --ui-checkbox-label-font-size: var(--ui-font-size-md);
+  --ui-checkbox-label-line-height: 1.5;
   --ui-textarea-padding-x: var(--ui-space-3);
   --ui-textarea-padding-y: var(--ui-space-2);
   --ui-textarea-font-size: var(--ui-font-size-md);
