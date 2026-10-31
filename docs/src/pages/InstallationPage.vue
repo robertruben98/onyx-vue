@@ -24,7 +24,7 @@ import { UiButton, UiInput } from '@onyx/vue';
 
 const localization = `// main.ts
 import { createApp } from 'vue';
-import { provideOnyxLocale, ES_MESSAGES } from 'onyx-vue';
+import { provideOnyxLocale, ES_MESSAGES } from '@onyx/vue';
 import App from './App.vue';
 
 const app = createApp(App);
@@ -32,7 +32,7 @@ provideOnyxLocale(ES_MESSAGES, app);
 app.mount('#app');`;
 
 const localeSetup = `// App.vue — inside setup
-import { provideOnyxLocale, DEFAULT_MESSAGES, type OnyxMessages } from 'onyx-vue';
+import { provideOnyxLocale, DEFAULT_MESSAGES, type OnyxMessages } from '@onyx/vue';
 
 const messages: OnyxMessages = {
   ...DEFAULT_MESSAGES,
