@@ -51,7 +51,9 @@ describe('tagged release', () => {
     const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
     const result = spawnSync(process.execPath, ['scripts/release.mjs', `v${version}`], { encoding: 'utf8' });
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain('### Fixed');
+    // Any release section has at least one `### Added|Changed|Fixed…` heading;
+    // naming one would break the first release that lacks it.
+    expect(result.stdout).toMatch(/^### \S/m);
     expect(result.stdout).not.toContain('## Consuming');
     expect(result.stdout).not.toContain('## Unreleased');
   });
