@@ -11,6 +11,33 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ## Unreleased
 
+### Added
+
+- `provideOnyxLocale(messages, app?)` sets the library's default texts once: accessible
+  names, empty states, placeholders, close and dismiss labels, chart summaries, time units.
+  `DEFAULT_MESSAGES` (English, the defaults) and `ES_MESSAGES` (Spanish) are exported with
+  the `OnyxMessages` type; an explicit prop still wins.
+- Releases tag themselves: a push to `master` whose `package.json` version differs from its
+  first parent's creates the annotated tag `v<version>` on that commit and runs the release
+  workflow, which attaches the tgz. An existing tag is never moved.
+
+### Changed
+
+- `UiStateBar` defaults to English ("Run progress"); it was the one component that defaulted
+  to Spanish. Provide `ES_MESSAGES` for Spanish.
+- Select, Menu, Popover and Tooltip open through one internal overlay lifecycle with an
+  explicit Escape stack: Escape closes the most recently opened surface first, also when it is
+  inside a dialog's own DOM. No public prop, event, slot, class or token changed.
+
+### Fixed
+
+- `UiTooltip` is painted next to its trigger. Its host is `display: contents`, which has no
+  box of its own, so the tooltip was anchored to the page's top-left corner (since at least
+  0.11). A `display: contents` host is now measured by its children, and a popover or tooltip
+  is positioned again once its own size is known.
+- `UiTooltip` sets `aria-describedby` on the focusable control it wraps instead of on the
+  wrapper, so screen readers announce the tooltip text with the button.
+
 ## 0.14.0 — 2026-10-31
 
 ### Added
@@ -32,26 +59,6 @@ Consumers that build from source (the control-panel dashboard aliases
   radiogroup) instead of the root wrapper, like the other form controls: `class` and `style`
   stay on the root, everything else (`id`, `data-*`, `aria-*`) moves to the control.
 
-- Pushes to `master` automatically create an annotated `v<version>` tag on the
-  pushed commit when `package.json` differs from its first parent and the tag
-  is missing. Existing tags are never moved; a tag on another commit produces
-  a warning. The auto-tag workflow calls the reusable release workflow to build
-  and attach the package asset.
-- Add `provideOnyxLocale(messages, app?)`, typed `OnyxMessages`, English
-  `DEFAULT_MESSAGES` and Spanish `ES_MESSAGES` for library-wide default texts.
-  Explicit text props keep precedence; ancestor and app-level providers cover
-  accessible names, empty states, navigation, chart summaries and time units.
-
-- Tag pushes matching `v*.*.*` now build and attach an `onyx-vue-X.Y.Z.tgz` to
-  the GitHub Release, using that version's CHANGELOG section as release notes.
-  The workflow checks the tag against `package.json` before installing dependencies,
-  then runs typecheck, tests and build before packing. Reruns update the release
-  notes and replace the package asset.
-### Changed
-
-- `UiStateBar` now defaults to “Run progress” with English “of” and “pending”
-  announcements instead of Spanish. Provide `ES_MESSAGES` to use Spanish.
-
 ### Fixed
 
 - `UiSelect` inside `UiFormField` is named by the field's label instead of its placeholder
@@ -65,25 +72,6 @@ Consumers that build from source (the control-panel dashboard aliases
 - `UiDrawer` has its own layer, `--ui-drawer-z` (1150): above dialogs (1100), below menus,
   selects and popovers (1200). It shared the dialog's layer, so a drawer opened from a dialog
   could end up underneath it.
-- Select, Menu, Popover and Tooltip share an internal overlay lifecycle and an
-  explicit Escape stack. Escape dismisses only the most recently opened surface,
-  even inside a dialog's DOM; focus returns to interactive triggers. Menu retains
-  viewport flip/clamp, Select follows scroll/resize, and unmount removes listeners.
-  Public props, events, slots, classes and layer tokens are unchanged.
-
-- `UiSelect` uses its `UiFormField` label as its accessible name instead of the
-  placeholder. Bare selects keep the placeholder fallback; explicit `ariaLabel`
-  and `ariaLabelledby` retain their precedence. `UiFieldRow` labels continue to
-  work through its `labelId` slot binding.
-- `UiRadioGroup` and `UiSegmented` now inherit the visible label and field metadata
-  from `UiFormField`, with a shared accessible-name contract covering all nine controls.
-### Fixed
-
-- `UiDrawer` now uses `--ui-drawer-z` (1150), above dialogs (1100) and below menus,
-  selects and popovers (1200). A drawer opened from a dialog stays above it.
-- Source-derived layer tests cover every component that teleports to `body`, including
-  each independent surface and inline style bindings. Inline `z-index` is forbidden;
-  surfaces must use a layer token above the dialog, except its own backdrop.
 
 ### Removed
 
