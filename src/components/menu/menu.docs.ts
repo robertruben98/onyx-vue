@@ -11,7 +11,15 @@ export const menuDoc: ComponentDoc = {
       name: "items",
       type: "MenuItem[]",
       default: "[]",
-      description: "`{ id, label, disabled? }` per item. Disabled items are skipped by the keyboard.",
+      description:
+        "`{ id, label, disabled?, checked? }` per item. Disabled items are skipped by the keyboard. An item with `checked` (true or false) is an option that toggles: it renders as `menuitemcheckbox` with `aria-checked` and a check mark; without `checked` it is a plain `menuitem`.",
+    },
+    {
+      name: "label",
+      type: "string",
+      default: "—",
+      description:
+        "Accessible name of the trigger, set as its `aria-label` and `title`. Use it when the slot is only a glyph (\"⋯\"); a text slot names the trigger by itself.",
     },
     {
       name: "@itemSelected / @itemSelect",
@@ -36,6 +44,22 @@ export const menuDoc: ComponentDoc = {
           { id: "delete", label: "Delete", disabled: true },
         ],
       }),
+    },
+    {
+      title: "Glyph trigger and checkable items",
+      description:
+        "`label` names a \"⋯\" trigger. Items with `checked` toggle: the menu emits the item and the page flips its state.",
+      code: `<UiMenu
+  label="More actions"
+  :items="[
+    { id: 'seen', label: 'Seen', checked: seen },
+    { id: 'saved', label: 'Saved for later', checked: saved },
+    { id: 'share', label: 'Share' },
+  ]"
+  @item-selected="$event.id === 'seen' ? (seen = !seen) : $event.id === 'saved' ? (saved = !saved) : null"
+>⋯</UiMenu>
+<span>seen: {{ seen }}, saved: {{ saved }}</span>`,
+      setup: () => ({ seen: true, saved: false }),
     },
   ],
 };
