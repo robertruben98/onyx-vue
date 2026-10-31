@@ -54,12 +54,26 @@ watch(shown, (isShown, was) => {
   if (isShown === was) return;
   emit("toggled", isShown);
   emit("toggle", isShown); // obsoleto, ver src/deprecations.ts
+  // La descripcion va al control que recibe el foco, no a la envoltura: el
+  // host es `display: contents` y un lector de pantalla anuncia el boton, no el
+  // span que lo rodea, asi que en el span el texto no se leia nunca.
+  const target = describedTarget();
   if (isShown) {
-    triggerRef.value?.setAttribute("aria-describedby", id);
+    target?.setAttribute("aria-describedby", id);
   } else {
-    triggerRef.value?.removeAttribute("aria-describedby");
+    target?.removeAttribute("aria-describedby");
   }
 });
+
+const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/** The focusable control inside the host, else its first element, else the host. */
+function describedTarget(): HTMLElement | null {
+  const host = triggerRef.value;
+  if (!host) return null;
+  if (host.matches(FOCUSABLE)) return host;
+  return host.querySelector<HTMLElement>(FOCUSABLE) ?? (host.firstElementChild as HTMLElement | null) ?? host;
+}
 
 const rootClasses = computed(() => ({ "ui-tooltip-host": true }));
 

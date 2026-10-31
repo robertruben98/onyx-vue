@@ -29,6 +29,27 @@ function onEscape(event: KeyboardEvent): void {
   stack[stack.length - 1]();
 }
 
+type Box = { top: number; left: number; right: number; bottom: number; width: number; height: number };
+
+/**
+ * The box to anchor to. A `display: contents` host (UiTooltip wraps its trigger
+ * that way so it does not change the layout) has no box of its own: its rect is
+ * 0 × 0 at the page origin, and the tooltip was painted in the top-left corner
+ * of the page. Such a host is measured by the union of its children.
+ */
+export function anchorBox(el: HTMLElement): Box {
+  if (getComputedStyle(el).display !== "contents") return el.getBoundingClientRect();
+  const rects = [...el.children]
+    .map((c) => (c instanceof HTMLElement ? anchorBox(c) : c.getBoundingClientRect()))
+    .filter((r) => r.width > 0 || r.height > 0);
+  if (!rects.length) return el.getBoundingClientRect();
+  const top = Math.min(...rects.map((r) => r.top));
+  const left = Math.min(...rects.map((r) => r.left));
+  const right = Math.max(...rects.map((r) => r.right));
+  const bottom = Math.max(...rects.map((r) => r.bottom));
+  return { top, left, right, bottom, width: right - left, height: bottom - top };
+}
+
 export function useOverlay(options: OverlayOptions) {
   const { kind, open, trigger, panel } = options;
   const style = ref<Record<string, string>>({});
@@ -38,7 +59,7 @@ export function useOverlay(options: OverlayOptions) {
 
   function position(): void {
     if (!trigger.value) return;
-    const r = trigger.value.getBoundingClientRect();
+    const r = anchorBox(trigger.value);
     const p = panel.value?.getBoundingClientRect();
     const width = p?.width ?? 0;
     const height = p?.height ?? 0;
@@ -115,7 +136,16 @@ export function useOverlay(options: OverlayOptions) {
         position();
         await nextTick();
       }
-      if (current === generation) options.onOpened?.();
+      if (current !== generation) return;
+      options.onOpened?.();
+      if (kind === "popover" || kind === "tooltip") {
+        // Same reason for a panel placed above, beside or centred on its trigger:
+        // the first pass ran against a 0 × 0 panel (the tooltip sat on its
+        // trigger instead of above it). Measured again once it has its size,
+        // after the initial focus so that does not move.
+        await nextTick();
+        if (current === generation) position();
+      }
     })();
   }, { immediate: true, flush: "sync" });
   onBeforeUnmount(cleanup);
