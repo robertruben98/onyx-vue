@@ -40,6 +40,17 @@ export const mediaCardDoc: ComponentDoc = {
 </UiGrid>`,
     },
     {
+      title: "A grid of one",
+      description:
+        "One card keeps the width it has in a full row: a grid of media cards keeps its empty columns, so the column count depends on the width alone, never on how many cards there are.",
+      code: `<UiGrid min-item-width="15rem" :gap="3">
+  <UiMediaCard title="The Last: Naruto the Movie" subtitle="the only pick in this section">
+    Film · 2014
+    <template #actions><UiButton size="sm" variant="secondary">Save</UiButton></template>
+  </UiMediaCard>
+</UiGrid>`,
+    },
+    {
       title: "Other shapes",
       code: `<UiGrid min-item-width="12rem" :gap="3">
   <UiMediaCard title="Square sleeve" ratio="1" subtitle="ratio=&quot;1&quot;" />

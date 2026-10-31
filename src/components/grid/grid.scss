@@ -9,4 +9,17 @@
   gap: var(--ui-grid-gap);
   align-items: start;
   min-width: 0;
+  // Repeat keyword of a fitted grid (`minItemWidth`), read by the inline
+  // `grid-template-columns`. Set on every grid, not inherited: a grid nested in
+  // a grid of media cards must not pick up its parent's `auto-fill`.
+  --ui-grid-repeat: auto-fit;
+}
+
+// A grid of media cards keeps its empty columns (`auto-fill`). With `auto-fit`
+// the columns no item used collapsed and the rest took the room: one poster
+// stretched over the whole row (1838 px tall at 1500 px wide), and at the same
+// width a section of four cards laid out 4 wide columns where one of eight laid
+// out 5. The `tracks` prop overrides this inline.
+.ui-grid:has(> .ui-media-card) {
+  --ui-grid-repeat: auto-fill;
 }

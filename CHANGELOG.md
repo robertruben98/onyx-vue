@@ -9,6 +9,17 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.12.1 — 2026-10-31
+
+### Fixed
+
+- A `UiGrid` of `UiMediaCard` (`minItemWidth`) keeps its empty columns (`auto-fill`). With
+  `auto-fit` the columns no card used collapsed and the rest took the room: a lone poster stretched
+  over the whole row (1838 px tall at 1500 px wide), and at one width a section of four cards laid
+  out 4 wide columns where a section of eight laid out 5. The column count, and so a card's width,
+  now depends only on the grid's width. Any other grid still fits as before; the optional
+  `tracks` prop (`fit` | `fill`, additive) picks either behaviour explicitly.
+
 ## 0.12.0 — 2026-10-31
 
 ### Added
