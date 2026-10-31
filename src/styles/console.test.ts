@@ -113,7 +113,6 @@ describe("capas de las superficies teletransportadas", () => {
   // invalida, el valor caia en `auto`, y una cabecera pegajosa con `z-index: 20`
   // se pintaba encima de un modal.
   const capas = [
-    "--ui-overlay-z",
     "--ui-dialog-z",
     "--ui-select-z",
     "--ui-menu-z",
@@ -152,7 +151,6 @@ describe("capas de las superficies teletransportadas", () => {
   it("un modal queda por debajo de lo que se abre desde dentro de el", () => {
     // Un select o un menu abiertos DENTRO de un dialogo tienen que verse.
     const valor = (t: string) => Number(valueOf(tokens, t));
-    expect(valor("--ui-dialog-z")).toBeGreaterThan(valor("--ui-overlay-z"));
     expect(valor("--ui-select-z")).toBeGreaterThan(valor("--ui-dialog-z"));
     expect(valor("--ui-menu-z")).toBeGreaterThan(valor("--ui-dialog-z"));
     expect(valor("--ui-tooltip-z")).toBeGreaterThan(valor("--ui-menu-z"));

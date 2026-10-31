@@ -31,6 +31,18 @@ Consumers that build from source (the control-panel dashboard aliases
   work through its `labelId` slot binding.
 - `UiRadioGroup` and `UiSegmented` now inherit the visible label and field metadata
   from `UiFormField`, with a shared accessible-name contract covering all nine controls.
+### Fixed
+
+- `UiDrawer` now uses `--ui-drawer-z` (1150), above dialogs (1100) and below menus,
+  selects and popovers (1200). A drawer opened from a dialog stays above it.
+- Source-derived layer tests cover every component that teleports to `body`, including
+  each independent surface and inline style bindings. Inline `z-index` is forbidden;
+  surfaces must use a layer token above the dialog, except its own backdrop.
+
+### Removed
+
+- Removed the unused `--ui-overlay-z` token. No component or docs stylesheet reads it;
+  teleported surfaces use their component layer tokens instead.
 
 ## 0.13.1 — 2026-10-31
 

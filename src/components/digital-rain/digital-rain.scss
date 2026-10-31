@@ -2,7 +2,7 @@
 // never takes a pointer event, so it cannot swallow a click meant for the page.
 //
 // The z-index is a literal and not a token on purpose. The token scale
-// (--ui-overlay-z 1000 … --ui-tooltip-z 1300) exists to order the surfaces that
+// (--ui-dialog-z 1100 … --ui-tooltip-z 1300) exists to order the surfaces that
 // teleport into `body`; decoration that must sit BEHIND the page has no place
 // on that ladder, and inventing a token for it would mean shipping one that
 // tokens.css — which is generated from the Angular lib — does not define. A

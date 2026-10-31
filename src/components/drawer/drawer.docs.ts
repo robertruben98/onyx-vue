@@ -4,7 +4,7 @@ export const drawerDoc: ComponentDoc = {
   id: "drawer",
   title: "Drawer",
   description:
-    "A modal side sheet for the detail of something picked from a list. It behaves as a dialog: focus moves into it, is trapped while open and returns to the trigger on close; Esc and the backdrop close it. Only the body scrolls, so the heading, the toolbar and the footer stay in reach.",
+    "A modal side sheet for the detail of something picked from a list. It behaves as a dialog: focus moves into it, is trapped while open and returns to the trigger on close; Esc and the backdrop close it. Its backdrop uses --ui-drawer-z (1150), above dialogs and below menus, selects and popovers. Only the body scrolls, so the heading, the toolbar and the footer stay in reach.",
   imports: ["UiDrawer", "UiButton", "UiTabs", "UiTab"],
   api: [
     { name: "v-model:open", type: "boolean", default: "false", description: "Open state." },
