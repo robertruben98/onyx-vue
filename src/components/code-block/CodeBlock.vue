@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { watchEffect } from "vue";
 import { canonicalTone } from "../../internal/tone";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
@@ -52,7 +53,7 @@ const props = withDefaults(
 const tone = computed(() => canonicalTone(props.tone));
 
 // Validate supplied aliases even when the current state does not display a tone.
-if (import.meta.env.DEV) watchEffect(() => { canonicalTone(props.tone); });
+if (isDev()) watchEffect(() => { canonicalTone(props.tone); });
 
 const box = ref<HTMLElement | null>(null);
 let pinned = true;

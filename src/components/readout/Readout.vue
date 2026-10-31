@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { watchEffect } from "vue";
 import { canonicalTone, type LegacyTone } from "../../internal/tone";
 import { computed } from "vue";
@@ -33,7 +34,7 @@ const props = withDefaults(
 const tone = computed(() => canonicalTone(props.tone));
 
 // Validate supplied aliases even when the current state does not display a tone.
-if (import.meta.env.DEV) watchEffect(() => { canonicalTone(props.tone); });
+if (isDev()) watchEffect(() => { canonicalTone(props.tone); });
 
 const rootClasses = computed(() => [
   "ui-readout",

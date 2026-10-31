@@ -1,10 +1,11 @@
+import { isDev } from "./dev";
 import { getCurrentInstance, onBeforeUpdate } from "vue";
 import { DEPRECATED_EVENTS, type DeprecatedEvent } from "../deprecations";
 import { warnDeprecated } from "./deprecation-warning";
 
 /** Inspect subscriptions, including .once, without waiting for an emission. */
 export function useDeprecatedEvents() {
-  if (import.meta.env.DEV) {
+  if (isDev()) {
     const instance = getCurrentInstance();
     if (!instance) return;
     const emits = instance.type.emits ?? [];

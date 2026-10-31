@@ -1,3 +1,4 @@
+import { isDev } from "./dev";
 import { warnDeprecated } from "./deprecation-warning";
 
 /**
@@ -28,6 +29,6 @@ export function canonicalTone<T extends string>(tone: T): Exclude<T, LegacyTone>
   const replacement = Object.prototype.hasOwnProperty.call(LEGACY_TONES, tone)
     ? LEGACY_TONES[tone as LegacyTone]
     : undefined;
-  if (import.meta.env.DEV && replacement) warnDeprecated("tone", tone, replacement);
+  if (isDev() && replacement) warnDeprecated("tone", tone, replacement);
   return replacement ?? (tone as Exclude<T, LegacyTone>);
 }

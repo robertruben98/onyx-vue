@@ -5,6 +5,7 @@ export type BlockMeterTone = "neutral" | "info" | "success" | "warning" | "dange
 </script>
 
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { watchEffect } from "vue";
 import { computed } from "vue";
 import "./block-meter.scss";
@@ -43,7 +44,7 @@ const props = withDefaults(
 const tone = computed(() => canonicalTone(props.tone));
 
 // Validate supplied aliases even when the current state does not display a tone.
-if (import.meta.env.DEV) watchEffect(() => { canonicalTone(props.tone); });
+if (isDev()) watchEffect(() => { canonicalTone(props.tone); });
 
 /**
  * A meter drawn in text rather than in boxes.

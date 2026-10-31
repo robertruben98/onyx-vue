@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
@@ -205,7 +206,7 @@ onBeforeUnmount(() => {
   open.value = false;
 });
 
-if (import.meta.env.DEV) useDeprecatedEvents();
+if (isDev()) useDeprecatedEvents();
 </script>
 
 <template>

@@ -26,6 +26,7 @@ export function resolveTriState(input: {
 </script>
 
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { watchEffect } from "vue";
 import { computed } from "vue";
 import "./tri-state-count.scss";
@@ -59,7 +60,7 @@ const props = withDefaults(
 const tone = computed(() => canonicalTone(props.tone));
 
 // Validate supplied aliases even when the current state does not display a tone.
-if (import.meta.env.DEV) watchEffect(() => { canonicalTone(props.tone); });
+if (isDev()) watchEffect(() => { canonicalTone(props.tone); });
 
 /**
  * `state` alone is not enough: `known` with no value on hand is the exact

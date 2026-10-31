@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
 import { computed, useId } from "vue";
@@ -61,7 +62,7 @@ function handleChange(event: Event): void {
   emit("checkedChange", value); // obsoleto, ver src/deprecations.ts
 }
 
-if (import.meta.env.DEV) useDeprecatedEvents();
+if (isDev()) useDeprecatedEvents();
 </script>
 
 <template>

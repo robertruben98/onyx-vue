@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
 import { computed, nextTick, ref, useId } from "vue";
@@ -74,7 +75,7 @@ function syncChecked(): void {
   });
 }
 
-if (import.meta.env.DEV) useDeprecatedEvents();
+if (isDev()) useDeprecatedEvents();
 </script>
 
 <template>

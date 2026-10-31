@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
 import { computed } from "vue";
@@ -35,7 +36,7 @@ const visible = computed(() => props.remaining > 0);
 
 const text = computed(() => props.label || `show the remaining ${props.remaining}`);
 
-if (import.meta.env.DEV) useDeprecatedEvents();
+if (isDev()) useDeprecatedEvents();
 </script>
 
 <template>

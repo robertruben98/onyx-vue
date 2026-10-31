@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
 import { computed, useId, useSlots } from "vue";
@@ -67,7 +68,7 @@ const labelledBy = computed(() =>
 );
 const describedBy = computed(() => (hasDescription.value ? descriptionId : undefined));
 
-if (import.meta.env.DEV) useDeprecatedEvents();
+if (isDev()) useDeprecatedEvents();
 </script>
 
 <template>

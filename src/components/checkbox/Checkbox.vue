@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
 import { computed, ref, watch, type ComponentPublicInstance } from "vue";
@@ -88,13 +89,14 @@ function handleChange(event: Event): void {
   emit("checkedChanged", value);
   emit("checkedChange", value); // obsoleto, ver src/deprecations.ts
 }
+
+if (isDev()) useDeprecatedEvents();
 </script>
 
 <script lang="ts">
 // Module-scoped counter for stable, unique per-instance ids.
 let nextCheckboxId = 0;
 
-if (import.meta.env.DEV) useDeprecatedEvents();
 </script>
 
 <template>
