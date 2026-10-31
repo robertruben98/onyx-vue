@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import { h } from "vue";
+import FormField from "../form-field/FormField.vue";
+import FieldRow from "../fieldset/FieldRow.vue";
 import Select, { type SelectOption } from "./Select.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -16,6 +18,43 @@ function renderSelect(props: Record<string, unknown> = {}) {
 }
 
 describe("Select (Vue)", () => {
+  it("uses the FormField label instead of its placeholder, even after selection", async () => {
+    render({
+      components: { FormField, Select },
+      template: `<FormField label="Estado"><Select :options="options" /></FormField>`,
+      data: () => ({ options: OPTIONS }),
+    });
+    const trigger = screen.getByRole("combobox", { name: "Estado", exact: true });
+    expect(trigger.hasAttribute("aria-label")).toBe(false);
+    await fireEvent.click(trigger);
+    await fireEvent.click(await screen.findByRole("option", { name: "RxJS" }));
+    expect(screen.getByRole("combobox", { name: "Estado", exact: true })).toBe(trigger);
+  });
+
+  it.each(["Select…", "Choose a state"])("keeps the bare placeholder name %s and passes axe", async (placeholder) => {
+    const { container } = renderSelect({ placeholder });
+    expect(screen.getByRole("combobox", { name: placeholder, exact: true })).toBeTruthy();
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+
+  it.each([false, true])("keeps an explicit ariaLabel (inside field: %s)", (inField) => {
+    render({
+      components: { FormField, Select },
+      template: inField
+        ? `<FormField label="Estado"><Select aria-label="Custom name" placeholder="Choose" /></FormField>`
+        : `<Select aria-label="Custom name" placeholder="Choose" />`,
+    });
+    expect(screen.getByRole("combobox", { name: "Custom name", exact: true })).toBeTruthy();
+  });
+
+  it("uses the FieldRow slot label without a placeholder aria-label", () => {
+    render({
+      components: { FieldRow, Select },
+      template: `<FieldRow label="Estado" v-slot="{ labelId }"><Select :aria-labelledby="labelId" /></FieldRow>`,
+    });
+    expect(screen.getByRole("combobox", { name: "Estado", exact: true }).hasAttribute("aria-label")).toBe(false);
+  });
+
   it("takes its name from a visible label when given its id", () => {
     // Un UiFieldRow pinta la etiqueta al lado; nombrar el combobox con ella en
     // vez de con un aria-label repetido es lo que hace que no se separen.
