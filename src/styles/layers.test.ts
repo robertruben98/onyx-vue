@@ -96,7 +96,7 @@ function layerErrors(vue: string, scss: string): string[] {
 
 function inlineLayers(source: string): string[] {
   // Also inspect script bindings: :style="panelStyle" must not hide zIndex.
-  return uncomment(source).match(/\bz-index\s*:|\bzIndex\s*:|["']z-index["']\s*:/g) ?? [];
+  return uncomment(source).match(/\b(?:z-index|zIndex)["']?\s*:/g) ?? [];
 }
 
 describe("teleported surface layer contract", () => {
@@ -104,7 +104,7 @@ describe("teleported surface layer contract", () => {
     expect(inlineLayers(read(path))).toEqual([]);
   });
 
-  const teleported = components.filter((path) => /<Teleport\b[^>]*\bto=["']body["']/.test(uncomment(read(path))));
+  const teleported = components.filter((path) => /<Teleport\b[^>]*\bto\s*=\s*["']body["']/i.test(uncomment(read(path))));
   it("discovers teleported components", () => expect(teleported.length).toBeGreaterThan(0));
   it.each(teleported.map((path) => [relative(root, path), path]))("%s surfaces stack above the dialog", (_, path) => {
     const scss = sources.filter((file) => dirname(file) === dirname(path) && file.endsWith(".scss")).map(read).join("\n");
@@ -120,6 +120,16 @@ describe("teleported surface layer contract", () => {
   });
   it.each(['style="z-index: 1200"', ':style="{ zIndex: 1200 }"', ':style="{ \'z-index\': 1200 }"'])("rejects %s", (style) => {
     expect(inlineLayers(`<template><div ${style} /></template>`).length).toBeGreaterThan(0);
+  });
+  it("checks every root even when another sibling has a valid layer", () => {
+    const siblings = fixture.replace('<div class="new-surface" />', '<div class="new-surface"></div><div class="panel"></div>');
+    expect(layerErrors(siblings, ".new-surface { position: fixed; z-index: var(--ui-menu-z); } .panel { display: flex; }")).toContain("Teleport root panel: missing z-index token");
+  });
+  it.each(["var(--ui-course-switcher-z)", "calc(var(--ui-menu-z) + 1)"])("resolves aliases and calc: %s", (layer) => {
+    expect(layerErrors(fixture, `.new-surface { position: fixed; z-index: ${layer}; }`)).toEqual([]);
+  });
+  it("keeps the dialog backdrop at the dialog layer", () => {
+    expect(layerErrors(fixture.replace("new-surface", "ui-dialog__backdrop"), ".ui-dialog__backdrop { position: fixed; z-index: var(--ui-dialog-z); }")).toEqual([]);
   });
   it("removes the unused overlay token", () => {
     expect(uncomment(tokens)).not.toMatch(/--ui-overlay-z\s*:/);
