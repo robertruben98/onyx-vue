@@ -86,7 +86,17 @@
 
 // Overlay panel positioning (Teleport to body; Angular used the CDK overlay
 // primitive). Position is computed inline from the trigger rect.
+// Both live at `--ui-select-z`, above `--ui-dialog-z`: a select opened inside a
+// modal has to paint over it, and so does its click-outside backdrop, or a
+// click outside the list lands on the dialog's next field. The pane comes
+// after the backdrop in the DOM, so at the same z it is painted on top.
+.ui-select__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-select-z);
+}
+
 .ui-select__pane {
   position: absolute;
-  z-index: var(--ui-overlay-z, 1000);
+  z-index: var(--ui-select-z);
 }
