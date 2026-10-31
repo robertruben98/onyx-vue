@@ -4,7 +4,7 @@ export const skeletonDoc: ComponentDoc = {
   id: "skeleton",
   title: "Skeleton",
   description:
-    "A placeholder in the shape of the content that is loading, so the page does not jump when it arrives. Announced once as a status; still for anyone who prefers reduced motion.",
+    "A placeholder in the shape of the content that is loading, so the page does not jump when it arrives. Announced once as a status; still for anyone who prefers reduced motion. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiSkeleton"],
   api: [
     { name: "variant", type: "'text' | 'block' | 'circle'", default: "'text'", description: "Lines of text, a block (image, chart) or a circle (avatar)." },

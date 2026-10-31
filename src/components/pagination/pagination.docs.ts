@@ -4,7 +4,7 @@ export const paginationDoc: ComponentDoc = {
   id: "pagination",
   title: "Pagination",
   description:
-    "Previous, next and the pages around the current one, with gaps for the rest. The current page is announced as such (`aria-current`).",
+    "Previous, next and the pages around the current one, with gaps for the rest. The current page is announced as such (`aria-current`). Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiPagination"],
   api: [
     { name: "v-model:page", type: "number", default: "1", description: "The current page, from 1." },

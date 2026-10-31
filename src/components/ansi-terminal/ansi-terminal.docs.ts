@@ -6,7 +6,7 @@ export const ansiTerminalDoc: ComponentDoc = {
   id: "ansi-terminal",
   title: "ANSI Terminal",
   description:
-    "The raw output of another program with its ANSI colours, live while it runs. It only appends: when lines grows, only the new tail is parsed, continuing the colour state the previous chunk left open. Text goes in as text, never markup. createAnsiParser() and stripAnsi() are exported for other renderers and downloads.",
+    "The raw output of another program with its ANSI colours, live while it runs. It only appends: when lines grows, only the new tail is parsed, continuing the colour state the previous chunk left open. Text goes in as text, never markup. createAnsiParser() and stripAnsi() are exported for other renderers and downloads. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiAnsiTerminal", "UiCheckbox", "createAnsiParser", "stripAnsi"],
   api: [
     { name: "lines", type: "string[]", default: "[]", description: "The output, one entry per line. Append; replacing it starts over." },

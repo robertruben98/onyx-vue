@@ -4,7 +4,7 @@ export const severityBadgeDoc: ComponentDoc = {
   id: "severity-badge",
   title: "Severity Badge",
   description:
-    "The severity scale of a security or alert list. Ships with severityRank(), the sort key that orders worst first, so every consumer sorts on the same scale instead of copying its own map.",
+    "The severity scale of a security or alert list. Ships with severityRank(), the sort key that orders worst first, so every consumer sorts on the same scale instead of copying its own map. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiSeverityBadge", "severityRank"],
   api: [
     {

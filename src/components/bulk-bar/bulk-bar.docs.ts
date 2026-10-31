@@ -4,7 +4,7 @@ export const bulkBarDoc: ComponentDoc = {
   id: "bulk-bar",
   title: "Bulk Bar",
   description:
-    "What is selected and what can be done to it, in two phases. Passing a `question` swaps the actions for confirm and cancel and moves the bar onto the warning surface — the phase that acts on N rows at once should not look like the phase that only offers to. At zero selected the bar does not render.",
+    "What is selected and what can be done to it, in two phases. Passing a `question` swaps the actions for confirm and cancel and moves the bar onto the warning surface — the phase that acts on N rows at once should not look like the phase that only offers to. At zero selected the bar does not render. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiBulkBar", "UiButton"],
   api: [
     {

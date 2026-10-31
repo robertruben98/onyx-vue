@@ -4,7 +4,7 @@ export const recordButtonDoc: ComponentDoc = {
   id: "record-button",
   title: "Record Button",
   description:
-    "The big microphone toggle of a spoken answer, with idle, recording and busy states. It is a toggle button (`aria-pressed` while recording); recording pulses (a static halo under reduced motion) and busy shows a spinner with `aria-busy`. A level meter and a timer go in slots that are hidden from assistive tech.",
+    "The big microphone toggle of a spoken answer, with idle, recording and busy states. It is a toggle button (`aria-pressed` while recording); recording pulses (a static halo under reduced motion) and busy shows a spinner with `aria-busy`. A level meter and a timer go in slots that are hidden from assistive tech. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiRecordButton"],
   api: [
     { name: "recording", type: "boolean", default: "false", description: "Recording now: `aria-pressed=\"true\"`, the danger colour and the pulse." },

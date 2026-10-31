@@ -22,6 +22,25 @@ import { UiButton, UiInput } from '@onyx/vue';
   <UiButton @click="submit">Sign in</UiButton>
 </template>`;
 
+const localization = `// main.ts
+import { createApp } from 'vue';
+import { provideOnyxLocale, ES_MESSAGES } from 'onyx-vue';
+import App from './App.vue';
+
+const app = createApp(App);
+provideOnyxLocale(ES_MESSAGES, app);
+app.mount('#app');`;
+
+const localeSetup = `// App.vue — inside setup
+import { provideOnyxLocale, DEFAULT_MESSAGES, type OnyxMessages } from 'onyx-vue';
+
+const messages: OnyxMessages = {
+  ...DEFAULT_MESSAGES,
+  selectPlaceholder: 'Choose an option…',
+  dialogCloseLabel: 'Close dialog',
+};
+provideOnyxLocale(messages);`;
+
 const dark = `// Toggle dark mode from anywhere
 document.documentElement.classList.toggle('app-dark');`;
 </script>
@@ -51,6 +70,39 @@ document.documentElement.classList.toggle('app-dark');`;
       components never branch on theme.
     </p>
     <pre class="code"><code>{{ dark }}</code></pre>
+
+    <h2 id="localization">Localization</h2>
+    <p>
+      Set the library's default texts once with <code>provideOnyxLocale</code>.
+      Pass <code>ES_MESSAGES</code> for Spanish, or build a typed
+      <code>OnyxMessages</code> catalog by spreading <code>DEFAULT_MESSAGES</code>
+      (English). This covers visible defaults and accessible names, including
+      teleported dialogs, table controls, state announcements and time units.
+    </p>
+    <pre class="code"><code>{{ localization }}</code></pre>
+    <p>
+      Alternatively, call it synchronously in a root or ancestor component's setup.
+      It applies to descendants; the nearest provider wins. Explicit component
+      text props and slots take precedence; existing empty-string fallbacks are unchanged.
+    </p>
+    <pre class="code"><code>{{ localeSetup }}</code></pre>
+    <p>
+      Configure the locale before mounting consumers. Prop defaults are resolved
+      when a component is created; changing the catalog is not a live language
+      switch. Nested catalogs, such as <code>relativeTimeUnits</code>,
+      <code>metricChipDeltaLabels</code> and <code>countdownUnitLabels</code>,
+      must retain all their fields. Keep placeholder tokens such as
+      <code>{n}</code> and <code>{label}</code> in translated messages.
+    </p>
+    <p>
+      Without a provider, existing English defaults are used. UiStateBar now
+      defaults to “Run progress” and announces “of” and “pending” in English.
+      Supplied content and date/number formatting are unchanged. Exported pure
+      formatters and their default constants remain English; pass translated
+      units explicitly when calling them outside components.
+      <code>speakCountdown(parts, labels, conjunction)</code> also accepts a
+      translated conjunction (English: “and”).
+    </p>
 
     <h2 id="deprecations">Deprecations and 1.0</h2>
     <p>

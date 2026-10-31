@@ -4,7 +4,7 @@ export const navRailDoc: ComponentDoc = {
   id: "nav-rail",
   title: "Nav Rail",
   description:
-    "The standing navigation of a console page, where every entry carries how many things are behind it — the count is what tells you whether a section is worth opening, so it keeps its own tri-state and never shows a zero for 'not loaded yet'. Entries that stay in the app are buttons; one that leaves is a real link.",
+    "The standing navigation of a console page, where every entry carries how many things are behind it — the count is what tells you whether a section is worth opening, so it keeps its own tri-state and never shows a zero for 'not loaded yet'. Entries that stay in the app are buttons; one that leaves is a real link. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiNavRail", "UiNavRailGroup", "UiNavRailItem", "UiTag"],
   api: [
     {
