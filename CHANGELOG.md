@@ -11,49 +11,53 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ## Unreleased
 
-### Tests
+## 0.14.0 — 2026-10-31
 
-- Run Chromium regression tests against the built docs demos in a separate PR CI job:
-  select stacking, selection and dismissal inside a dialog, and checkbox size and
-  first-line alignment with wrapping labels at 390 px. Run locally with `npm run test:browser`.
 ### Added
 
-- Tag pushes matching `v*.*.*` now build and attach an `onyx-vue-X.Y.Z.tgz` to
-  the GitHub Release, using that version's CHANGELOG section as release notes.
-  The workflow checks the tag against `package.json` before installing dependencies,
-  then runs typecheck, tests and build before packing. Reruns update the release
-  notes and replace the package asset.
+- Development warnings, once per deprecated tone or event name per page load, naming the
+  replacement and the removal in 1.0 (`ok` → `success`, `@change` → `@changed`, …). Event
+  warnings fire only when a consumer listens to the old name. Whether it is development is
+  decided by the consuming app's bundler (`process.env.NODE_ENV`), so tgz consumers get them
+  in `vite dev` and production builds drop them; a UMD build loaded without a bundler stays
+  silent. All aliases and dual emissions still work. The installation guide has a generated
+  "Deprecations and 1.0" table.
+- Tag pushes matching `v*.*.*` build the package and attach `onyx-vue-X.Y.Z.tgz` to the GitHub
+  Release, with that version's CHANGELOG section as the notes. The workflow refuses a tag that
+  does not match `package.json`. See "Consuming a tagged version".
+
+### Changed
+
+- `UiRadioGroup` and `UiSegmented` forward attributes to the control (the fieldset / the
+  radiogroup) instead of the root wrapper, like the other form controls: `class` and `style`
+  stay on the root, everything else (`id`, `data-*`, `aria-*`) moves to the control.
+
 ### Fixed
 
-- `UiSelect` uses its `UiFormField` label as its accessible name instead of the
-  placeholder. Bare selects keep the placeholder fallback; explicit `ariaLabel`
-  and `ariaLabelledby` retain their precedence. `UiFieldRow` labels continue to
-  work through its `labelId` slot binding.
-- `UiRadioGroup` and `UiSegmented` now inherit the visible label and field metadata
-  from `UiFormField`, with a shared accessible-name contract covering all nine controls.
-### Fixed
-
-- `UiDrawer` now uses `--ui-drawer-z` (1150), above dialogs (1100) and below menus,
-  selects and popovers (1200). A drawer opened from a dialog stays above it.
-- Source-derived layer tests cover every component that teleports to `body`, including
-  each independent surface and inline style bindings. Inline `z-index` is forbidden;
-  surfaces must use a layer token above the dialog, except its own backdrop.
+- `UiSelect` inside `UiFormField` is named by the field's label instead of its placeholder
+  ("Select…" hid the visible label from screen readers). A bare select keeps the placeholder
+  fallback; explicit `ariaLabel` / `ariaLabelledby` still win. `UiRadioGroup` and `UiSegmented`
+  now take the field's label, hint, error and required state too. A contract test checks the
+  accessible name of every control inside `UiFormField`.
+- `UiRadioGroup`, `UiSwitch` and `UiCheckRow` keep their control size beside a wrapped label
+  and sit on the label's first line, like `UiCheckbox` since 0.13.1 (the radio shrank to 13 ×
+  20 px at 390 px). The alignment is a shared mixin.
+- `UiDrawer` has its own layer, `--ui-drawer-z` (1150): above dialogs (1100), below menus,
+  selects and popovers (1200). It shared the dialog's layer, so a drawer opened from a dialog
+  could end up underneath it.
 
 ### Removed
 
-- Removed the unused `--ui-overlay-z` token. No component or docs stylesheet reads it;
-  teleported surfaces use their component layer tokens instead.
-### Fixed
+- The `--ui-overlay-z` token. Nothing read it since 0.13.1.
 
-- Radio, Switch and CheckRow keep their control size and align with the first line of wrapped labels. Share Checkbox's first-line alignment mixin and add narrow-column demos.
-### Added
+### Tests
 
-- Development warnings once per deprecated tone or event name per page load,
-  naming its replacement and planned removal in 1.0. Event warnings only fire
-  when a consumer subscribes to the old name. Production builds omit warnings;
-  all aliases and dual event emissions remain supported.
-- Generated tone and event migration tables in the installation guide's
-  "Deprecations and 1.0" section.
+- Browser regression tests (`npm run test:browser`, Playwright over the built docs) run as their
+  own CI job: select stacking and dismissal inside a dialog, checkbox size and alignment at
+  390 px.
+- A layer contract derived from the sources: every component that teleports to `body` must
+  stack above the dialog with a layer token; inline `z-index` is forbidden.
+- New devDependency `dom-accessibility-api` for the accessible-name contract.
 
 ## 0.13.1 — 2026-10-31
 
