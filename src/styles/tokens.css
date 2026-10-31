@@ -691,6 +691,10 @@
   /* A rule one step above --ui-color-border, for the edge of something that
      sits over the page. Presets with their own strong rule re-map it. */
   --ui-color-border-strong: var(--ui-color-text-muted);
+  /* Scrollbars (scrollbar.css): thumb in the strong border colour, brighter under the pointer. */
+  --ui-scrollbar-thumb: var(--ui-color-border-strong);
+  --ui-scrollbar-thumb-hover: var(--ui-color-text);
+  --ui-scrollbar-track: transparent;
   --ui-drawer-width: 55rem;
   --ui-drawer-padding-x: var(--ui-space-5);
   --ui-drawer-bg: var(--ui-color-surface);

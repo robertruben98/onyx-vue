@@ -1,0 +1,21 @@
+/* Scrollbars that belong to the theme.
+ *
+ * Without this the browser draws its default: a light track and a grey thumb,
+ * the same on every preset. On a dark one (console, matrix, dark) that light
+ * track is the brightest thing on the page, beside a job log or a sidebar. A
+ * thin thumb in the theme's strong border colour on a transparent track reads
+ * as part of the surface; it brightens under the pointer so it is still found.
+ *
+ * Only the standard properties (`scrollbar-width`, `scrollbar-color`): every
+ * current engine reads them, and they inherit, so one rule on the root covers
+ * every scroll container. A component that hides its bar (`scrollbar-width:
+ * none`, tabs and chip rows) keeps doing so.
+ */
+:root {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-scrollbar-thumb) var(--ui-scrollbar-track);
+}
+
+:root :hover {
+  scrollbar-color: var(--ui-scrollbar-thumb-hover) var(--ui-scrollbar-track);
+}

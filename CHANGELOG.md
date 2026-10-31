@@ -9,6 +9,17 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.11.3 — 2026-10-31
+
+### Fixed
+
+- Scrollbars follow the theme (`styles/scrollbar.css`, loaded by `base.css`): thin, transparent
+  track, thumb `--ui-scrollbar-thumb` (the strong border colour), brighter under the pointer
+  (`--ui-scrollbar-thumb-hover`). The browser default light track glared on the dark presets beside
+  a log or a sidebar.
+- `UiButton` keeps its label on one line (`white-space: nowrap`) unless `wrap` is set: in a narrow
+  table cell "Dismiss" broke into "Dismi / ss" inside the fixed-height button.
+
 ## 0.11.2 — 2026-10-27
 
 ### Fixed

@@ -13,3 +13,4 @@
  *   import "@onyx/vue/styles/console.css";
  */
 @import "./tokens.css";
+@import "./scrollbar.css";
