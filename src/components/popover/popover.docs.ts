@@ -4,7 +4,7 @@ export const popoverDoc: ComponentDoc = {
   id: "popover",
   title: "Popover",
   description:
-    "Floating panel anchored to a trigger, with focus trapped inside while it is open and restored to the trigger on close. Unlike a Tooltip it holds interactive content. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
+    "Escape closes only the most recently opened overlay, and focus returns to its trigger; a containing dialog remains open until the next Escape. Floating panel anchored to a trigger, with focus trapped inside while it is open and restored to the trigger on close. Unlike a Tooltip it holds interactive content. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
   imports: ["UiPopover"],
   api: [
     {

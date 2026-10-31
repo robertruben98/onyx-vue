@@ -4,7 +4,7 @@ export const selectDoc: ComponentDoc = {
   id: "select",
   title: "Select",
   description:
-    "Single-choice combobox with a listbox that teleports to `body`, so it escapes any ancestor's `overflow: hidden`. That teleport is also why a theme preset has to be applied on the root element and not on a wrapper. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
+    "Escape closes only the most recently opened overlay; a containing dialog remains open until the next Escape. The open list follows its trigger on scroll and resize. Single-choice combobox with a listbox that teleports to `body`, so it escapes any ancestor's `overflow: hidden`. That teleport is also why a theme preset has to be applied on the root element and not on a wrapper. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
   imports: ["UiSelect", "UiDialog", "UiButton", "UiFormField"],
   api: [
     {
