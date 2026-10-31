@@ -24,3 +24,32 @@ The measuring code lives here: `introspect.score.ts` and `forwarding.score.ts`
 run under vitest (they need the compiled components), `browser.mjs` drives
 Chromium over the built docs, `score.mjs` turns the measurements into scores
 and `run.mjs` runs everything.
+
+## Browser regression tests
+
+The separate `browser` CI job runs the docs interaction tests on every pull
+request in headless Chromium. To run the same gate locally (Node 22):
+
+```sh
+npm ci
+npm ci --prefix docs
+npx playwright install --with-deps chromium
+npm run test:browser
+```
+
+The command builds the docs from current library source, starts a private Vite
+preview server on `127.0.0.1:4173`, and stops it when the tests finish. Keep that
+port free. No prebuilt docs or manually started server is needed.
+
+`browser/demos.browser.mjs` exercises the Select “Inside a dialog” demo
+(option centre hit-testing and selection, outside click, two-stage Escape) and
+the Checkbox “Long labels in a narrow column” demo at 390 px (token dimensions
+and first-line alignment within 1 px). These checks need a real browser:
+jsdom cannot calculate stacking, hit targets or layout. Add further demo
+regressions in `browser/*.browser.mjs`; they run separately from Vitest.
+
+The suite has a four-minute global timeout, no retries, and a five-minute CI
+job limit. To focus on a component, run `npm run test:browser -- --grep Select`.
+Failures save screenshots and Playwright traces to `test-results/`; CI uploads
+that directory as `browser-failures` for seven days. Inspect a trace with
+`npx playwright show-trace test-results/<test-directory>/trace.zip`.
