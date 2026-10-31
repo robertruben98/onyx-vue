@@ -16,7 +16,7 @@ export const formFieldDoc: ComponentDoc = {
       type: "slot { id, describedBy, invalid, required }",
       default: "—",
       description:
-        "The control. UiInput, UiTextarea, UiSelect, UiDateInput, UiCheckbox, UiSwitch and UiSlider wire themselves; for any other control bind the slot values. Only the first control in a field takes its id, and what you bind explicitly wins.",
+        "The control. UiInput, UiTextarea, UiSelect, UiDateInput, UiCheckbox, UiSwitch, UiSlider, UiRadioGroup and UiSegmented wire themselves; for any other control bind the slot values. The visible label names the control, including Select and radio groups. Only the first control in a field takes its id, and what you bind explicitly wins.",
     },
   ],
   demos: [

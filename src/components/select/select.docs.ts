@@ -5,7 +5,7 @@ export const selectDoc: ComponentDoc = {
   title: "Select",
   description:
     "Single-choice combobox with a listbox that teleports to `body`, so it escapes any ancestor's `overflow: hidden`. That teleport is also why a theme preset has to be applied on the root element and not on a wrapper.",
-  imports: ["UiSelect", "UiDialog", "UiButton"],
+  imports: ["UiSelect", "UiDialog", "UiButton", "UiFormField"],
   api: [
     {
       name: "v-model",
@@ -23,9 +23,9 @@ export const selectDoc: ComponentDoc = {
       name: "placeholder",
       type: "string",
       default: "'Select…'",
-      description: "Shown when nothing is selected. Also the fallback accessible name.",
+      description: "Shown when nothing is selected. Used as the accessible name only without a UiFormField label, ariaLabel or ariaLabelledby.",
     },
-    { name: "ariaLabel", type: "string", default: "''", description: "Accessible name." },
+    { name: "ariaLabel", type: "string", default: "''", description: "Explicit accessible name; overrides the placeholder and UiFormField label. ariaLabelledby takes precedence." },
     {
       name: "ariaLabelledby",
       type: "string",
@@ -41,6 +41,13 @@ export const selectDoc: ComponentDoc = {
     },
   ],
   demos: [
+    {
+      title: "Labelled by a form field",
+      description: "The visible field label names the combobox automatically; the placeholder only describes the empty selection. In UiFieldRow, bind its slot labelId to aria-labelledby.",
+      code: `<UiFormField label="Estado">
+  <UiSelect placeholder="Select…" :options="[{ value: 'open', label: 'Open' }, { value: 'closed', label: 'Closed' }]" />
+</UiFormField>`,
+    },
     {
       title: "Basic",
       code: `<UiSelect v-model="tool" :options="options" aria-label="Tool" />

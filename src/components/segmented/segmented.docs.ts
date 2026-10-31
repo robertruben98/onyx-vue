@@ -4,7 +4,7 @@ export const segmentedDoc: ComponentDoc = {
   id: "segmented",
   title: "Segmented",
   description:
-    "One of two to five options, side by side: a view switch (calendar / list), a period, a mode. Built on native radios, so arrow keys and form submission work as the browser does them.",
+    "One of two to five options, side by side: a view switch (calendar / list), a period, a mode. Built on native radios, so arrow keys and form submission work as the browser does them. Inside UiFormField, the group automatically inherits the field label, hint, error and required state. An explicit group label or accessible name takes precedence.",
   imports: ["UiSegmented"],
   api: [
     { name: "v-model", type: "string", default: "''", description: "The selected value." },
