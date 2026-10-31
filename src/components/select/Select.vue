@@ -15,7 +15,7 @@ const props = withDefaults(
     options?: SelectOption[];
     /** Placeholder shown when nothing is selected. */
     placeholder?: string;
-    /** Accessible name for the combobox (falls back to the placeholder). */
+    /** Accessible name for the combobox (placeholder fallback only without a field label). */
     ariaLabel?: string;
     /**
      * Id of an element that names the combobox, e.g. the label of a
@@ -49,7 +49,7 @@ const uid = useId();
 // Los atributos del consumidor van al elemento nativo, no a la envoltura
 // (ver internal/forward-attrs.ts).
 defineOptions({ inheritAttrs: false });
-const { rootAttrs, controlAttrs, controlId } = useForwardedAttrs(undefined, { field: true });
+const { rootAttrs, controlAttrs, controlId, fieldLabelId } = useForwardedAttrs(undefined, { field: true });
 const listboxId = `ui-select-listbox-${uid}`;
 
 const open = ref(false);
@@ -217,7 +217,7 @@ onBeforeUnmount(() => {
       :aria-expanded="open ? 'true' : 'false'"
       :aria-controls="open ? listboxId : undefined"
       :aria-labelledby="ariaLabelledby || undefined"
-      :aria-label="ariaLabelledby ? undefined : ariaLabel || placeholder"
+      :aria-label="ariaLabelledby ? undefined : ariaLabel || (fieldLabelId() ? undefined : placeholder)"
       :disabled="isDisabled"
       @click="toggle"
       @keydown="onTriggerKeydown"

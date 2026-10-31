@@ -12,6 +12,8 @@ import { getCurrentInstance, inject, onBeforeUnmount, provide, type InjectionKey
  */
 export interface FieldContext {
   id: string;
+  /** Visible label for controls that cannot use native label-for semantics. */
+  labelId?: string;
   describedBy: Ref<string | undefined>;
   invalid: Ref<boolean>;
   required: Ref<boolean>;
