@@ -58,6 +58,8 @@ const focusable: [file: string, selector: string][] = [
   ["stat-card/stat-card.scss", ".ui-stat-card--interactive:focus-visible"],
   // New in 0.11.0: the title link of a media card.
   ["media-card/media-card.scss", ".ui-media-card__title a:focus-visible"],
+  // New in 0.12.0: the fold button of a diff file.
+  ["diff-view/diff-view.scss", ".ui-diff-view__toggle:focus-visible"],
 ];
 
 /** Files whose every :focus-visible rule must draw with an outline, never a box-shadow. */
