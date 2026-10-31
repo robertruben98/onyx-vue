@@ -10,8 +10,10 @@ for (const theme of ['light', 'dark']) {
     const list = page.getByRole('listbox');
     await expect(list).toHaveClass(/--more-below/);
     await expect(list).not.toHaveClass(/--more-above/);
-    await list.screenshot({ path: `browser/screenshots/select-${theme}-top.png` });
-    await testInfo.attach(`select-${theme}-top`, { path: `browser/screenshots/select-${theme}-top.png`, contentType: 'image/png' });
+    // Evidence for review, written under test-results/ (ignored), never into the tree.
+    const top = testInfo.outputPath(`select-${theme}-top.png`);
+    await list.screenshot({ path: top });
+    await testInfo.attach(`select-${theme}-top`, { path: top, contentType: 'image/png' });
     const visibleActive = () => list.evaluate(el => {
       const option = document.getElementById(el.getAttribute('aria-activedescendant'));
       const r = option.getBoundingClientRect();
@@ -24,7 +26,9 @@ for (const theme of ['light', 'dark']) {
     await expect.poll(visibleActive).toBe(true);
     await expect(list).toHaveClass(/--more-above/);
     await expect(list).not.toHaveClass(/--more-below/);
-    await list.screenshot({ path: `browser/screenshots/select-${theme}-bottom.png` });
+    const bottom = testInfo.outputPath(`select-${theme}-bottom.png`);
+    await list.screenshot({ path: bottom });
+    await testInfo.attach(`select-${theme}-bottom`, { path: bottom, contentType: 'image/png' });
     await page.keyboard.press('Home');
     await page.keyboard.type('un');
     await expect(list.locator('.ui-select__option--active')).toHaveText('Única');
