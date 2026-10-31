@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
 import { computed } from "vue";
 import { UiButton } from "../button";
 import "./load-more-row.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -34,7 +37,7 @@ const emit = defineEmits<{
  */
 const visible = computed(() => props.remaining > 0);
 
-const text = computed(() => props.label || `show the remaining ${props.remaining}`);
+const text = computed(() => props.label || messages.loadMoreRowLabel.replace("{n}", String(props.remaining)));
 
 if (isDev()) useDeprecatedEvents();
 </script>

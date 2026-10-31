@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import "./nav-rail.scss";
 
 withDefaults(
@@ -7,7 +8,7 @@ withDefaults(
     label?: string;
   }>(),
   {
-    label: "Sections",
+    label: () => useOnyxLocale().navRailLabel,
   },
 );
 </script>

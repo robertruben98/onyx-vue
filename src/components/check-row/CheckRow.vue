@@ -11,10 +11,13 @@ export type CheckState = "pending" | "running" | "done" | "failed";
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import { UiSpinner } from "../spinner";
 import { UiStatusDot, type StatusDotState } from "../status-dot";
 import "./check-row.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -66,8 +69,8 @@ const rootClasses = computed(() => ({
 <template>
   <div :class="rootClasses">
     <span class="ui-check-row__state">
-      <UiSpinner v-if="spinning" size="sm" :label="`${name}: running`" />
-      <UiStatusDot v-else :state="dotState" :label="`${name}: ${state}`" />
+      <UiSpinner v-if="spinning" size="sm" :label="`${name}: ${messages.checkRowStates.running}`" />
+      <UiStatusDot v-else :state="dotState" :label="`${name}: ${messages.checkRowStates[state]}`" />
     </span>
     <span class="ui-check-row__name">{{ name }}</span>
     <span class="ui-check-row__detail" :title="detail">{{ detail }}</span>

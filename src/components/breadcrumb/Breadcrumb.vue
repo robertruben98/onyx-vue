@@ -9,6 +9,7 @@ export interface BreadcrumbItem {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./breadcrumb.scss";
 
@@ -29,7 +30,7 @@ const props = withDefaults(
     /** Separator glyph between levels. */
     separator?: string;
   }>(),
-  { label: "Breadcrumb", separator: "/" },
+  { label: () => useOnyxLocale().breadcrumbLabel, separator: "/" },
 );
 
 const emit = defineEmits<{

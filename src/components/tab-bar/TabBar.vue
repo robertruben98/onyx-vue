@@ -17,6 +17,7 @@ export interface TabBarItem {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
 import "./tab-bar.scss";
 
@@ -57,11 +58,11 @@ const props = withDefaults(
   {
     activeId: "",
     visible: 4,
-    moreLabel: "More",
+    moreLabel: () => useOnyxLocale().tabBarMoreLabel,
     moreIcon: "☰",
-    label: "Main",
+    label: () => useOnyxLocale().tabBarLabel,
     hideAbove: 640,
-    liveLabel: "running",
+    liveLabel: () => useOnyxLocale().tabBarLiveLabel,
   },
 );
 

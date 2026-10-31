@@ -12,6 +12,7 @@ const armedOwner = ref<symbol | null>(null);
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, onBeforeUnmount, watch } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import { UiButton, type ButtonSize, type ButtonVariant } from "../button";
@@ -52,8 +53,8 @@ const props = withDefaults(
     loading?: boolean;
   }>(),
   {
-    confirmLabel: "confirm?",
-    armedHint: "press again to confirm",
+    confirmLabel: () => useOnyxLocale().confirmButtonConfirmLabel,
+    armedHint: () => useOnyxLocale().confirmButtonArmedHint,
     timeout: 6000,
     variant: "secondary",
     armedVariant: "danger",

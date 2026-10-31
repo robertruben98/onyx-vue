@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import { UiButton } from "../button";
 import "./pagination.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -12,7 +15,7 @@ const props = withDefaults(
     /** Accessible name of the navigation. */
     label?: string;
   }>(),
-  { siblings: 1, label: "Pagination" },
+  { siblings: 1, label: () => useOnyxLocale().paginationLabel },
 );
 
 /** The current page, from 1 (v-model:page). */
@@ -59,7 +62,7 @@ function go(target: number): void {
         <UiButton
           variant="text"
           size="sm"
-          aria-label="Previous page"
+          :aria-label="messages.previousPage"
           :disabled="current <= 1"
           @clicked="go(current - 1)"
           >‹</UiButton
@@ -71,7 +74,7 @@ function go(target: number): void {
           v-else
           :variant="item === current ? 'primary' : 'text'"
           size="sm"
-          :aria-label="`Page ${item}`"
+          :aria-label="messages.page.replace('{page}', String(item))"
           :aria-current="item === current ? 'page' : undefined"
           @clicked="go(item)"
           >{{ item }}</UiButton
@@ -81,7 +84,7 @@ function go(target: number): void {
         <UiButton
           variant="text"
           size="sm"
-          aria-label="Next page"
+          :aria-label="messages.nextPage"
           :disabled="current >= count"
           @clicked="go(current + 1)"
           >›</UiButton

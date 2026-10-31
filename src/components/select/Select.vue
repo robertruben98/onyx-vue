@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useOverlay } from "../../internal/useOverlay";
+import { useOnyxLocale } from "../../locale";
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
@@ -31,7 +32,7 @@ const props = withDefaults(
   }>(),
   {
     options: () => [],
-    placeholder: "Select…",
+    placeholder: () => useOnyxLocale().selectPlaceholder,
     ariaLabel: "",
     ariaLabelledby: "",
     disabled: false,

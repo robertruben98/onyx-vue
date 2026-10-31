@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { ref } from "vue";
 import { UiInput } from "../input";
 import "./filter-bar.scss";
@@ -26,10 +27,10 @@ withDefaults(
     label?: string;
   }>(),
   {
-    searchPlaceholder: "filter",
-    searchLabel: "Filter",
+    searchPlaceholder: () => useOnyxLocale().filterBarSearchPlaceholder,
+    searchLabel: () => useOnyxLocale().filterBarSearchLabel,
     showSearch: true,
-    label: "Filters",
+    label: () => useOnyxLocale().filterBarLabel,
   },
 );
 

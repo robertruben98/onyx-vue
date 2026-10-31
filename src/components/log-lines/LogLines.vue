@@ -16,6 +16,7 @@ export interface LogLine {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import "./log-lines.scss";
 
 withDefaults(
@@ -28,8 +29,8 @@ withDefaults(
     label?: string;
   }>(),
   {
-    emptyText: "(no activity recorded)",
-    label: "Activity",
+    emptyText: () => useOnyxLocale().logLinesEmptyText,
+    label: () => useOnyxLocale().logLinesLabel,
   },
 );
 </script>

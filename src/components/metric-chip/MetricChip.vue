@@ -1,4 +1,5 @@
 <script lang="ts">
+import { DEFAULT_MESSAGES } from "../../locale";
 import { canonicalTone, type LegacyTone } from "../../internal/tone";
 /** Semantic tone of a known value. */
 export type MetricChipTone = "neutral" | "info" | "success" | "warning" | "danger" | LegacyTone;
@@ -25,19 +26,18 @@ export interface MetricChipDeltaLabels {
   same: string;
 }
 
-export const DEFAULT_DELTA_LABELS: MetricChipDeltaLabels = {
-  up: "up {n}",
-  down: "down {n}",
-  same: "unchanged",
-};
+export const DEFAULT_DELTA_LABELS: MetricChipDeltaLabels = DEFAULT_MESSAGES.metricChipDeltaLabels;
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { isDev } from "../../internal/dev";
 import { watchEffect } from "vue";
 import { computed } from "vue";
 import { UiTriStateCount, type TriState } from "../tri-state-count";
 import "./metric-chip.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -77,7 +77,7 @@ const props = withDefaults(
     errorGlyph: "!",
     previous: null,
     deltaPolarity: "higher-is-better",
-    deltaLabels: () => DEFAULT_DELTA_LABELS,
+    deltaLabels: () => useOnyxLocale().metricChipDeltaLabels,
   },
 );
 
@@ -157,7 +157,7 @@ const rootClasses = computed(() => ({
       v-if="failed"
       class="ui-metric-chip__value"
       role="img"
-      :aria-label="`${label}: failed`"
+      :aria-label="messages.metricChipFailed.replace('{label}', label)"
       ><span aria-hidden="true">{{ errorGlyph }}</span></span
     >
     <UiTriStateCount

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, ref } from "vue";
 import "./alert.scss";
 
@@ -35,7 +36,7 @@ const props = withDefaults(
     appearance: "boxed",
     title: "",
     dismissible: false,
-    dismissLabel: "Dismiss",
+    dismissLabel: () => useOnyxLocale().alertDismissLabel,
     live: undefined,
   },
 );

@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T">
+import { useOnyxLocale } from "../../locale";
 import { computed, ref, watch, nextTick, onBeforeUnmount, onMounted, useSlots } from "vue";
 import UiCheckbox from "../checkbox/Checkbox.vue";
 import "./data-table.scss";
@@ -67,6 +68,8 @@ export interface DataTableColumn<T> {
   hideBelow?: number;
 }
 
+const messages = useOnyxLocale();
+
 const props = withDefaults(
   defineProps<{
     /** Column definitions. */
@@ -132,7 +135,7 @@ const props = withDefaults(
     rows: () => [],
     rowKey: undefined,
     loading: false,
-    emptyText: "No data",
+    emptyText: () => useOnyxLocale().dataTableEmptyText,
     caption: "",
     multiSort: false,
     mode: "paginated",
@@ -643,7 +646,7 @@ function onGridKeydown(event: KeyboardEvent): void {
         >
           <UiCheckbox
             v-if="selectable === 'multiple'"
-            aria-label="Select all rows"
+            :aria-label="messages.selectAllRows"
             :tabindex="-1"
             :model-value="allSelected"
             :indeterminate="someSelected"
@@ -692,7 +695,7 @@ function onGridKeydown(event: KeyboardEvent): void {
              un `status` para que se anuncie. -->
         <div v-if="loading" class="ui-dt__status-row" role="row">
           <div class="ui-dt__status" role="gridcell" :aria-colspan="colCount">
-            <span role="status">Loading…</span>
+            <span role="status">{{ messages.loadingEllipsis }}</span>
           </div>
         </div>
 
@@ -709,7 +712,7 @@ function onGridKeydown(event: KeyboardEvent): void {
           class="ui-dt__viewport"
           role="rowgroup"
           tabindex="0"
-          :aria-label="caption ? `${caption}, rows` : 'Rows'"
+          :aria-label="caption ? messages.captionRows.replace('{caption}', caption) : messages.rows"
           :style="{ height: viewportHeight }"
           @scroll="onViewportScroll"
         >
@@ -747,7 +750,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                   :tabindex="isActiveCell(item.index + 1, 0) ? 0 : -1"
                 >
                   <UiCheckbox
-                    aria-label="Select row"
+                    :aria-label="messages.selectRow"
                     :tabindex="-1"
                     :model-value="isSelected(item.row)"
                     @update:model-value="toggleRow(item.row, $event)"
@@ -808,7 +811,7 @@ function onGridKeydown(event: KeyboardEvent): void {
               :tabindex="isActiveCell(i + 1, 0) ? 0 : -1"
             >
               <UiCheckbox
-                aria-label="Select row"
+                :aria-label="messages.selectRow"
                 :tabindex="-1"
                 :model-value="isSelected(row)"
                 @update:model-value="toggleRow(row, $event)"
@@ -857,7 +860,7 @@ function onGridKeydown(event: KeyboardEvent): void {
     <!-- Footer (pagination) -->
     <div v-if="showFooter" class="ui-dt__footer">
       <label class="ui-dt__page-size">
-        <span>Rows per page</span>
+        <span>{{ messages.rowsPerPage }}</span>
         <select
           class="ui-dt__select"
           :value="pageSize"
@@ -877,7 +880,7 @@ function onGridKeydown(event: KeyboardEvent): void {
         <button
           type="button"
           class="ui-dt__page-btn"
-          aria-label="Previous page"
+          :aria-label="messages.previousPage"
           :disabled="currentPage === 0"
           @click="prevPage"
         >
@@ -889,7 +892,7 @@ function onGridKeydown(event: KeyboardEvent): void {
         <button
           type="button"
           class="ui-dt__page-btn"
-          aria-label="Next page"
+          :aria-label="messages.nextPage"
           :disabled="currentPage >= pageCount - 1"
           @click="nextPage"
         >

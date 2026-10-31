@@ -3,6 +3,7 @@ export type ProfileHeaderVariant = "plain" | "card";
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, useId } from "vue";
 import { UiAvatar, type AvatarRingTone, type AvatarSize } from "../avatar";
 import "./profile-header.scss";
@@ -58,7 +59,7 @@ const props = withDefaults(
     ringGradient: false,
     ringLabel: "",
     variant: "plain",
-    statsLabel: "Stats",
+    statsLabel: () => useOnyxLocale().profileHeaderStatsLabel,
   },
 );
 

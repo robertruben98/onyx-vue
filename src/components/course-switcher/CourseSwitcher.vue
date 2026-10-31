@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
 import UiChipRow from "../chip-row/ChipRow.vue";
 import "./course-switcher.scss";
@@ -54,7 +55,7 @@ const props = withDefaults(
   {
     badge: undefined,
     panelLabel: "",
-    tilesLabel: "Courses",
+    tilesLabel: () => useOnyxLocale().courseSwitcherTilesLabel,
     sheetBelow: 600,
     closeOnSelect: true,
     busy: false,

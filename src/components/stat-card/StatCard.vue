@@ -6,11 +6,12 @@ export type StatCardVariant = "card" | "plain";
 /** The element the card renders as. `button` and `a` make the whole card one control. */
 export type StatCardElement = "div" | "button" | "a";
 
-const TREND_WORD: Record<StatCardTrend, string> = { up: "Up", down: "Down", flat: "No change" };
+
 const TREND_GLYPH: Record<StatCardTrend, string> = { up: "↑", down: "↓", flat: "→" };
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./stat-card.scss";
 
@@ -29,6 +30,8 @@ import "./stat-card.scss";
  * outline focus ring, pressed state), like UiCard. `loading` swaps the value
  * for a skeleton and marks the card `aria-busy`.
  */
+const messages = useOnyxLocale();
+
 const props = withDefaults(
   defineProps<{
     /** The figure, already formatted ("12", "56%", "3 d"). */
@@ -99,7 +102,7 @@ const rootAttrs = computed(() => {
   return busy;
 });
 
-const trendWord = computed(() => (props.trend ? props.trendText || TREND_WORD[props.trend] : ""));
+const trendWord = computed(() => (props.trend ? props.trendText || messages.statCardTrends[props.trend] : ""));
 </script>
 
 <template>

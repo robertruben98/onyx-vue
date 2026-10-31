@@ -20,6 +20,7 @@ export function formatRanges(numbers: Iterable<number>): string {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./sequence-grid.scss";
 
@@ -31,6 +32,8 @@ import "./sequence-grid.scss";
  * answered by reading, and the state is also in words for a screen reader and
  * in the cell's outline for a reader who cannot tell the two colours apart.
  */
+const messages = useOnyxLocale();
+
 const props = withDefaults(
   defineProps<{
     /** The last number of the run. Defaults to the highest of `present`. */
@@ -59,9 +62,9 @@ const props = withDefaults(
     present: null,
     start: 1,
     label: "",
-    itemLabel: "Item",
-    presentLabel: "present",
-    missingLabel: "missing",
+    itemLabel: () => useOnyxLocale().sequenceGridItemLabel,
+    presentLabel: () => useOnyxLocale().sequenceGridPresentLabel,
+    missingLabel: () => useOnyxLocale().sequenceGridMissingLabel,
   },
 );
 
@@ -85,7 +88,7 @@ const summary = computed(() => {
   const total = cells.value.length;
   const lacking = cells.value.filter((c) => c.missing).map((c) => c.n);
   const what = props.label ? `${props.label}: ` : "";
-  const head = `${what}${total - lacking.length} of ${total} ${props.presentLabel}`;
+  const head = messages.sequenceGridSummary.replace("{label}", what).replace("{present}", String(total - lacking.length)).replace("{total}", String(total)).replace("{state}", props.presentLabel);
   return lacking.length ? `${head}, ${props.missingLabel} ${formatRanges(lacking)}` : head;
 });
 </script>

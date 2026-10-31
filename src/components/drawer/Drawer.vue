@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, nextTick, ref, useId, watch } from "vue";
 import "./drawer.scss";
 
@@ -45,7 +46,7 @@ const props = withDefaults(
     heading: "",
     subheading: "",
     ariaLabel: "",
-    closeLabel: "Close",
+    closeLabel: () => useOnyxLocale().drawerCloseLabel,
     closeOnEsc: true,
     closeOnBackdrop: true,
     side: "right",

@@ -5,10 +5,13 @@ export type BlockMeterTone = "neutral" | "info" | "success" | "warning" | "dange
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { isDev } from "../../internal/dev";
 import { watchEffect } from "vue";
 import { computed } from "vue";
 import "./block-meter.scss";
+
+const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -67,7 +70,7 @@ const empty = computed(() => props.blocks - filled.value);
  * out eight black squares tells nobody how full the meter is.
  */
 const ariaLabel = computed(() => {
-  const measure = `${props.value} of ${props.max}`;
+  const measure = messages.blockMeterValue.replace("{value}", String(props.value)).replace("{max}", String(props.max));
   return props.label ? `${props.label}: ${measure}` : measure;
 });
 

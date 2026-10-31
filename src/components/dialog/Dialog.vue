@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, nextTick, ref, useId, watch } from "vue";
 import "./dialog.scss";
 
@@ -22,7 +23,7 @@ const props = withDefaults(
   {
     heading: "",
     ariaLabel: "",
-    closeLabel: "Close",
+    closeLabel: () => useOnyxLocale().dialogCloseLabel,
     closeOnEsc: true,
     closeOnBackdrop: true,
     size: "md",

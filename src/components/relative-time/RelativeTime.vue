@@ -1,4 +1,5 @@
 <script lang="ts">
+import { DEFAULT_MESSAGES } from "../../locale";
 const MINUTE = 60_000;
 
 /**
@@ -16,12 +17,7 @@ export interface RelativeUnits {
   month: string;
 }
 
-export const DEFAULT_UNITS: RelativeUnits = {
-  minute: "m",
-  hour: "h",
-  day: "d",
-  month: "mo",
-};
+export const DEFAULT_UNITS: RelativeUnits = DEFAULT_MESSAGES.relativeTimeUnits;
 
 /**
  * Compact age: `0m`, `5m`, `3h`, `2d`, `4mo`.
@@ -49,6 +45,7 @@ export function formatRelative(
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import "./relative-time.scss";
 
@@ -70,7 +67,7 @@ const props = withDefaults(
   {
     staleAfterDays: 3,
     now: () => new Date(),
-    units: () => DEFAULT_UNITS,
+    units: () => useOnyxLocale().relativeTimeUnits,
   },
 );
 

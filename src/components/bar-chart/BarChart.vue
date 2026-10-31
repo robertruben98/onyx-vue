@@ -20,6 +20,7 @@ export interface BarPoint {
 </script>
 
 <script setup lang="ts">
+import { useOnyxLocale } from "../../locale";
 import { computed, ref } from "vue";
 import { barPath, useChartTip, useChartWidth, type ChartTable } from "./chart-kit";
 import ChartParts from "./ChartParts.vue";
@@ -64,8 +65,8 @@ const props = withDefaults(
     valueFormat: (n: number) => n.toLocaleString(),
     showLegend: true,
     table: undefined,
-    tableSummary: "data",
-    categoryHeader: "category",
+    tableSummary: () => useOnyxLocale().barChartTableSummary,
+    categoryHeader: () => useOnyxLocale().barChartCategoryHeader,
   },
 );
 
