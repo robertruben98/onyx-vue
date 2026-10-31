@@ -1,0 +1,203 @@
+// Diff view — a unified diff, one folding block per file. References ONLY
+// semantic / component tokens.
+//
+// An added or removed line says so three times: the sign in front of it, its
+// colour, and its background. The sign is the one that survives a colour-blind
+// reader and a copy-paste; the colours are for scanning.
+
+.ui-diff-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-diff-view-gap);
+  box-sizing: border-box;
+  // A diff is as wide as its column: inside a flex row it otherwise shrinks to
+  // its longest line and every file ends at a different edge.
+  width: 100%;
+  min-width: 0;
+}
+
+.ui-diff-view__file {
+  min-width: 0;
+  border: var(--ui-border-width) solid var(--ui-diff-view-border);
+  border-radius: var(--ui-diff-view-radius);
+  background: var(--ui-diff-view-bg);
+  overflow: hidden;
+}
+
+.ui-diff-view__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1) var(--ui-space-3);
+  padding: var(--ui-space-1) var(--ui-space-2);
+  background: var(--ui-diff-view-header-bg);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-diff-view__file:not(.ui-diff-view__file--folded) .ui-diff-view__header {
+  border-bottom: var(--ui-border-width) solid var(--ui-diff-view-border);
+}
+
+.ui-diff-view__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  padding: var(--ui-space-1);
+  border: 0;
+  border-radius: var(--ui-radii-sm);
+  background: transparent;
+  font: inherit;
+  color: var(--ui-color-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.ui-diff-view__toggle:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+// A chevron drawn from two borders, so it takes the text colour of any preset.
+.ui-diff-view__chevron {
+  flex: none;
+  width: 0.4em;
+  height: 0.4em;
+  border-right: var(--ui-border-width-thick) solid currentColor;
+  border-bottom: var(--ui-border-width-thick) solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--ui-diff-view-chevron-duration) ease;
+}
+.ui-diff-view__file--folded .ui-diff-view__chevron {
+  transform: rotate(-45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-diff-view__chevron {
+    transition: none;
+  }
+}
+
+.ui-diff-view__path {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--ui-font-family-mono, ui-monospace, monospace);
+}
+
+.ui-diff-view__stats {
+  flex: none;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ui-diff-view__stat--add {
+  color: var(--ui-diff-view-add-color);
+}
+.ui-diff-view__stat--del {
+  color: var(--ui-diff-view-del-color);
+}
+
+.ui-diff-view__subject {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ui-color-text-muted);
+}
+
+.ui-diff-view__file-actions {
+  display: inline-flex;
+  gap: var(--ui-space-2);
+  margin-left: auto;
+}
+
+// Long lines scroll sideways inside their file, never the page.
+.ui-diff-view__body {
+  overflow-x: auto;
+  font-family: var(--ui-font-family-mono, ui-monospace, monospace);
+  font-size: var(--ui-diff-view-font-size);
+  line-height: var(--ui-diff-view-line-height);
+}
+
+// Off-screen hunks are not laid out until they scroll near: what keeps a
+// 2000-line diff from costing 2000 lines of layout on open.
+.ui-diff-view__hunk {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 20em;
+  min-width: max-content;
+}
+
+.ui-diff-view__line {
+  display: flex;
+  min-width: max-content;
+  white-space: pre;
+  color: var(--ui-color-text);
+}
+
+.ui-diff-view__line--add {
+  background: var(--ui-diff-view-add-bg);
+}
+.ui-diff-view__line--add .ui-diff-view__sign {
+  color: var(--ui-diff-view-add-color);
+}
+.ui-diff-view__line--del {
+  background: var(--ui-diff-view-del-bg);
+}
+.ui-diff-view__line--del .ui-diff-view__sign {
+  color: var(--ui-diff-view-del-color);
+}
+.ui-diff-view__line--hunk {
+  background: var(--ui-diff-view-hunk-bg);
+  color: var(--ui-diff-view-hunk-color);
+}
+
+.ui-diff-view__num {
+  flex: none;
+  box-sizing: content-box;
+  min-width: var(--ui-diff-view-number-width);
+  padding: 0 var(--ui-space-1);
+  text-align: right;
+  color: var(--ui-diff-view-number-color);
+  user-select: none;
+}
+
+.ui-diff-view__text {
+  flex: 1 0 auto;
+  padding: 0 var(--ui-space-2);
+}
+
+.ui-diff-view__sign {
+  display: inline-block;
+  width: 1.5ch;
+  user-select: none;
+}
+
+// The actions stay out of sight until the line is pointed at or reached by
+// keyboard, so a column of "comment" buttons does not drown the code.
+.ui-diff-view__actions {
+  position: sticky;
+  right: 0;
+  display: inline-flex;
+  gap: var(--ui-space-1);
+  padding: 0 var(--ui-space-1);
+  font-family: var(--ui-font-family, inherit);
+  opacity: 0;
+}
+.ui-diff-view__line:hover .ui-diff-view__actions,
+.ui-diff-view__actions:focus-within {
+  opacity: 1;
+}
+@media (hover: none) {
+  .ui-diff-view__actions {
+    opacity: 1;
+  }
+}
+
+.ui-diff-view__note,
+.ui-diff-view__empty {
+  margin: 0;
+  padding: var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text-muted);
+}
+.ui-diff-view__empty {
+  padding: 0;
+}

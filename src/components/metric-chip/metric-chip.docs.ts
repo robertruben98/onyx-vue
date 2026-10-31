@@ -52,6 +52,25 @@ export const metricChipDoc: ComponentDoc = {
       description: "Glyph shown when the measurement failed.",
     },
     {
+      name: "previous",
+      type: "number | null",
+      default: "null",
+      description:
+        "The value before this one. Shows the change after the value — `74 (+16)`, `40 (−18)`, `58 (±0)` — only when both numbers are known.",
+    },
+    {
+      name: "deltaPolarity",
+      type: "'higher-is-better' | 'lower-is-better'",
+      default: "'higher-is-better'",
+      description: "Which direction is good news: it sets the tone (success / danger), never the sign. No change is muted.",
+    },
+    {
+      name: "deltaLabels",
+      type: "{ up: string; down: string; same: string }",
+      default: "{ up: 'up {n}', down: 'down {n}', same: 'unchanged' }",
+      description: "What a screen reader hears for the change; `{n}` is its size. `DEFAULT_DELTA_LABELS` is exported.",
+    },
+    {
       name: "@activated",
       type: "() => void",
       default: "—",
@@ -72,6 +91,15 @@ export const metricChipDoc: ComponentDoc = {
       title: "Stale, and clickable",
       code: `<UiMetricChip label="commits hoy" :value="23" tone="success" stale />
 <UiMetricChip label="commits hoy" :value="23" tone="success" interactive />`,
+    },
+    {
+      title: "Against the previous value",
+      description: "The sign says which way it moved; the tone says whether that is good news.",
+      code: `<UiMetricChip label="confianza" :value="74" :previous="58" :delta-labels="es" />
+<UiMetricChip label="confianza" :value="40" :previous="58" :delta-labels="es" />
+<UiMetricChip label="confianza" :value="58" :previous="58" :delta-labels="es" />
+<UiMetricChip label="errores" :value="3" :previous="5" delta-polarity="lower-is-better" />`,
+      setup: () => ({ es: { up: "sube {n}", down: "baja {n}", same: "sin cambios" } }),
     },
   ],
 };

@@ -11,6 +11,25 @@ export type MetricChipTone = "neutral" | "info" | "success" | "warning" | "dange
  * both is the reason this component does not take a bare number.
  */
 export type MetricChipState = "known" | "pending" | "unrequested" | "error";
+
+/** Which way of moving is good news: it decides the delta's tone, not its sign. */
+export type MetricChipDeltaPolarity = "higher-is-better" | "lower-is-better";
+
+/**
+ * Words for a screen reader, `{n}` being the size of the change. The visible
+ * `(+16)` is a sign and a number; read aloud it is "open paren plus sixteen".
+ */
+export interface MetricChipDeltaLabels {
+  up: string;
+  down: string;
+  same: string;
+}
+
+export const DEFAULT_DELTA_LABELS: MetricChipDeltaLabels = {
+  up: "up {n}",
+  down: "down {n}",
+  same: "unchanged",
+};
 </script>
 
 <script setup lang="ts">
@@ -37,6 +56,15 @@ const props = withDefaults(
     interactive?: boolean;
     /** Glyph shown when the measurement failed. */
     errorGlyph?: string;
+    /**
+     * The value before this one. Shows the change after the value — `74 (+16)`
+     * — toned by `deltaPolarity`. Only when both numbers are known.
+     */
+    previous?: number | null;
+    /** Whether going up is good (success) or bad (danger). No change is muted. */
+    deltaPolarity?: MetricChipDeltaPolarity;
+    /** What a screen reader hears for the change, `{n}` being its size. */
+    deltaLabels?: MetricChipDeltaLabels;
   }>(),
   {
     value: null,
@@ -45,6 +73,9 @@ const props = withDefaults(
     stale: false,
     interactive: false,
     errorGlyph: "!",
+    previous: null,
+    deltaPolarity: "higher-is-better",
+    deltaLabels: () => DEFAULT_DELTA_LABELS,
   },
 );
 
@@ -60,6 +91,43 @@ const failed = computed(() => props.state === "error");
 const countState = computed<TriState>(() =>
   failed.value ? "pending" : (props.state as TriState),
 );
+
+/**
+ * El cambio respecto a `previous`, o `null` si no hay dos numeros que restar.
+ * Redondeado a 6 decimales: 0.3 - 0.1 no debe pintarse como +0.19999999999999998.
+ */
+const delta = computed<number | null>(() => {
+  if (failed.value || props.state !== "known") return null;
+  if (props.value == null || props.previous == null) return null;
+  return Math.round((props.value - props.previous) * 1e6) / 1e6;
+});
+
+const direction = computed(() =>
+  delta.value === null ? null : delta.value > 0 ? "up" : delta.value < 0 ? "down" : "same",
+);
+
+const deltaClasses = computed(() => {
+  const d = direction.value;
+  const good = d === "same" ? null : (d === "up") === (props.deltaPolarity === "higher-is-better");
+  return {
+    "ui-metric-chip__delta": true,
+    [`ui-metric-chip__delta--${d}`]: true,
+    "ui-metric-chip__delta--good": good === true,
+    "ui-metric-chip__delta--bad": good === false,
+  };
+});
+
+/** `+16`, `−3` (signo menos de verdad, U+2212), `±0`. */
+const deltaText = computed(() => {
+  const d = delta.value ?? 0;
+  if (d === 0) return "±0";
+  return d > 0 ? `+${d}` : `\u2212${Math.abs(d)}`;
+});
+
+const deltaSpoken = computed(() => {
+  const d = direction.value ?? "same";
+  return props.deltaLabels[d].replace("{n}", String(Math.abs(delta.value ?? 0)));
+});
 
 const rootClasses = computed(() => ({
   "ui-metric-chip": true,
@@ -95,5 +163,9 @@ const rootClasses = computed(() => ({
       :tone="tone === 'info' || tone === 'muted' ? 'neutral' : tone"
       :label="label"
     />
+    <span v-if="direction" :class="deltaClasses"
+      ><span aria-hidden="true">({{ deltaText }})</span
+      ><span class="ui-metric-chip__sr">{{ deltaSpoken }}</span></span
+    >
   </component>
 </template>

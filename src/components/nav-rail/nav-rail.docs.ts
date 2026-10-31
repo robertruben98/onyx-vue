@@ -5,7 +5,7 @@ export const navRailDoc: ComponentDoc = {
   title: "Nav Rail",
   description:
     "The standing navigation of a console page, where every entry carries how many things are behind it — the count is what tells you whether a section is worth opening, so it keeps its own tri-state and never shows a zero for 'not loaded yet'. Entries that stay in the app are buttons; one that leaves is a real link.",
-  imports: ["UiNavRail", "UiNavRailGroup", "UiNavRailItem"],
+  imports: ["UiNavRail", "UiNavRailGroup", "UiNavRailItem", "UiTag"],
   api: [
     {
       name: "NavRail label",
@@ -68,6 +68,14 @@ export const navRailDoc: ComponentDoc = {
     { name: "NavRail #default", type: "slot", default: "—", description: "The entries: NavRailItem and NavRailGroup." },
     { name: "NavRailGroup #default", type: "slot", default: "—", description: "The group's entries." },
     { name: "NavRailItem title", type: "string", default: "''", description: "Tooltip: the full name, or the shortcut that also gets here." },
+    {
+      name: "NavRailItem meta",
+      type: "string | string[]",
+      default: "undefined",
+      description:
+        "Secondary lines under the label, quieter and smaller: one per array item, each truncated on its own. Without it the entry is exactly the one-line entry it always was.",
+    },
+    { name: "NavRailItem #meta", type: "slot", default: "meta", description: "Replaces `meta`. Put one element per line so each one truncates." },
   ],
   demos: [
     {
@@ -81,6 +89,18 @@ export const navRailDoc: ComponentDoc = {
     <UiNavRailItem label="oidc" :count="6" />
   </UiNavRailGroup>
   <UiNavRailItem label="Dashboard" href="/" />
+</UiNavRail>`,
+    },
+    {
+      title: "Entries with meta",
+      description: "A watched repo says how much is waiting and when it is next looked at, without opening it.",
+      code: `<UiNavRail label="Watched repos" style="max-width: 18rem">
+  <UiNavRailItem label="Todos" :count="9" />
+  <UiNavRailItem label="shannon" :count="37" active :meta="['37 commits pendientes', 'último 31-10 · próx. 07-11']">
+    <template #marks><UiTag variant="info" appearance="outline">analizando</UiTag></template>
+  </UiNavRailItem>
+  <UiNavRailItem label="gstack" :count="4" meta="próx. 07-11" />
+  <UiNavRailItem label="LibreChat" :count="0" meta="al día" />
 </UiNavRail>`,
     },
   ],
