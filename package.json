@@ -40,7 +40,8 @@
     "build": "vite build && vue-tsc -p tsconfig.build.json",
     "test": "vitest run",
     "typecheck": "vue-tsc --noEmit",
-    "score": "node scorecard/run.mjs"
+    "score": "node scorecard/run.mjs",
+    "test:browser": "playwright test --config browser/playwright.config.mjs"
   },
   "peerDependencies": {
     "vue": "^3.4.0"
