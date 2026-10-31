@@ -92,3 +92,27 @@ it("shows fades only at clipped edges and removes them when the list fits", asyn
   await fireEvent.scroll(list);
   expect(list.className).not.toMatch(/--more-/);
 });
+
+it("matches accented input against an unaccented label", async () => {
+  const { list } = await opened("6");
+  await type(list, "Ún");
+  expect(active(list)).toBe("Unida");
+});
+
+it("keeps a continued prefix on its current match and supports spaces in labels", async () => {
+  render(Select, { props: { options: [
+    { value: "a", label: "In progress" }, { value: "b", label: "In review" },
+  ] } });
+  const trigger = screen.getByRole("combobox");
+  await type(trigger, "in p");
+  expect(trigger.textContent).toContain("In progress");
+  expect(screen.queryByRole("listbox")).toBeNull();
+});
+
+it("does not select missing or disabled matches", async () => {
+  const { emitted } = render(Select, { props: {
+    options: [{ value: "c", label: "Cancelada", disabled: true }],
+  } });
+  await type(screen.getByRole("combobox"), "c");
+  expect(emitted().changed).toBeUndefined();
+});

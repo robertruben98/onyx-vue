@@ -18,7 +18,9 @@ for (const theme of ['light', 'dark']) {
       const box = el.getBoundingClientRect();
       return r.top >= box.top && r.bottom <= box.bottom;
     });
+    await expect(list).toBeFocused();
     await page.keyboard.press('End');
+    await expect(list.locator('.ui-select__option--active')).toHaveText('Waiting');
     await expect.poll(visibleActive).toBe(true);
     await expect(list).toHaveClass(/--more-above/);
     await expect(list).not.toHaveClass(/--more-below/);
