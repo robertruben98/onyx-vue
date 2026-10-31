@@ -4,7 +4,7 @@ import { useOnyxLocale } from "../../locale";
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
-import { computed, nextTick, ref, useId, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
 import "./select.scss";
 
@@ -64,8 +64,94 @@ const triggerEl = ref<HTMLButtonElement | null>(null);
 const listboxEl = ref<HTMLUListElement | null>(null);
 const { style: paneStyle, close, onBackdrop } = useOverlay({
   kind: "select", open, trigger: triggerEl, panel: listboxEl,
-  onOpened: () => listboxEl.value?.focus(),
+  onOpened: () => {
+    // The overlay opens synchronously; wait for the teleported list to mount.
+    void nextTick(() => {
+      listboxEl.value?.focus();
+      scrollActiveIntoView();
+    });
+  },
 });
+
+const moreAbove = ref(false);
+const moreBelow = ref(false);
+let resizeObserver: ResizeObserver | undefined;
+
+function updateScrollHints(): void {
+  const list = listboxEl.value;
+  moreAbove.value = !!list && list.scrollTop > 1;
+  moreBelow.value = !!list && list.scrollHeight - list.clientHeight - list.scrollTop > 1;
+}
+
+// Scroll only the list, not the dialog or page containing the trigger. Offsets
+// and not rects: the list is the options' offsetParent (it is positioned), and
+// measuring rects is the overlay's job (src/internal/useOverlay.ts).
+function scrollActiveIntoView(): void {
+  const list = listboxEl.value;
+  const option = list?.children[activeIndex.value] as HTMLElement | undefined;
+  if (list && option) {
+    // The list's own padding is part of the scroll range: an option at an end
+    // scrolls with it, so the first and last options reach the very edge.
+    const style = getComputedStyle(list);
+    const padTop = parseFloat(style.paddingTop) || 0;
+    const padBottom = parseFloat(style.paddingBottom) || 0;
+    const index = activeIndex.value;
+    const top = index === 0 ? 0 : option.offsetTop - padTop;
+    const bottom = index === list.children.length - 1
+      ? list.scrollHeight
+      : option.offsetTop + option.offsetHeight + padBottom;
+    if (top < list.scrollTop) list.scrollTop = top;
+    else if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight;
+  }
+  updateScrollHints();
+}
+
+watch(listboxEl, (list) => {
+  resizeObserver?.disconnect();
+  if (list && typeof ResizeObserver !== "undefined") {
+    resizeObserver = new ResizeObserver(updateScrollHints);
+    resizeObserver.observe(list);
+    for (const option of list.children) resizeObserver.observe(option);
+  }
+  updateScrollHints();
+}, { flush: "post" });
+watch(() => props.options, async () => {
+  await nextTick();
+  if (open.value) scrollActiveIntoView();
+}, { deep: true });
+onBeforeUnmount(() => resizeObserver?.disconnect());
+
+let search = "";
+let lastTypedAt = 0;
+const normalize = (text: string) => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+function resetSearch(): void { search = ""; }
+
+function typeAhead(event: KeyboardEvent): boolean {
+  const now = Date.now();
+  if (now - lastTypedAt > 500) resetSearch();
+  if (event.ctrlKey || event.metaKey || event.altKey || event.isComposing ||
+      Array.from(event.key).length !== 1 || (event.key === " " && !search)) return false;
+  event.preventDefault();
+  const key = normalize(event.key);
+  const repeated = search === key;
+  search = repeated ? key : search + key;
+  lastTypedAt = now;
+  const current = open.value ? activeIndex.value
+    : props.options.findIndex((option) => option.value === model.value);
+  // A continued prefix includes the current match; a new letter starts after it.
+  const start = search.length > key.length ? current : current + 1;
+  for (let offset = 0; offset < props.options.length; offset++) {
+    const index = ((start + offset) % props.options.length + props.options.length) % props.options.length;
+    const option = props.options[index];
+    if (!option.disabled && normalize(option.label).startsWith(search)) {
+      activeIndex.value = index;
+      if (open.value) void nextTick(scrollActiveIntoView);
+      else selectOption(index);
+      break;
+    }
+  }
+  return true;
+}
 
 const isDisabled = computed(() => props.disabled);
 
@@ -94,6 +180,7 @@ function nextEnabled(from: number, step: number): number {
 }
 
 function openPanel(): void {
+  resetSearch();
   const selected = props.options.findIndex((o) => o.value === model.value);
   activeIndex.value = selected >= 0 ? selected : nextEnabled(-1, 1);
   open.value = true;
@@ -110,6 +197,7 @@ function toggle(): void {
 
 function onTriggerKeydown(event: KeyboardEvent): void {
   if (isDisabled.value) return;
+  if (typeAhead(event)) return;
   if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
     event.preventDefault();
     if (!open.value) openPanel();
@@ -117,6 +205,8 @@ function onTriggerKeydown(event: KeyboardEvent): void {
 }
 
 function onListboxKeydown(event: KeyboardEvent): void {
+  if (typeAhead(event)) return;
+  resetSearch();
   switch (event.key) {
     case "ArrowDown":
       event.preventDefault();
@@ -142,6 +232,9 @@ function onListboxKeydown(event: KeyboardEvent): void {
     case "Tab":
       close();
       break;
+  }
+  if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+    void nextTick(scrollActiveIntoView);
   }
 }
 
@@ -178,6 +271,7 @@ const valueClasses = computed(() => ({
 }));
 
 // Close if disabled becomes true while open.
+watch(open, resetSearch);
 watch(isDisabled, (d) => {
   if (d && open.value) close();
 });
@@ -202,6 +296,7 @@ if (isDev()) useDeprecatedEvents();
       :disabled="isDisabled"
       @click="toggle"
       @keydown="onTriggerKeydown"
+      @blur="resetSearch"
     >
       <span :class="valueClasses">
         {{ selectedLabel || placeholder }}
@@ -218,6 +313,11 @@ if (isDev()) useDeprecatedEvents();
           role="listbox"
           :id="listboxId"
           class="ui-select__listbox ui-select__pane"
+          :class="{
+            'ui-select__listbox--more-above': moreAbove,
+            'ui-select__listbox--more-below': moreBelow,
+          }"
+          @scroll="updateScrollHints"
           tabindex="-1"
           :aria-activedescendant="activeId ?? undefined"
           :style="paneStyle"

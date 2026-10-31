@@ -37,6 +37,9 @@ Consumers that build from source (the control-panel dashboard aliases
   is positioned again once its own size is known.
 - `UiTooltip` sets `aria-describedby` on the focusable control it wraps instead of on the
   wrapper, so screen readers announce the tooltip text with the button.
+- `UiSelect` supports case- and accent-insensitive type-ahead on its open list
+  and closed trigger, keeps keyboard-active options visible, and fades clipped
+  list edges using theme tokens. The Select docs include a long-list demo.
 
 ## 0.14.0 — 2026-10-31
 

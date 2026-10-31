@@ -100,3 +100,25 @@
   position: absolute;
   z-index: var(--ui-select-z);
 }
+
+// Alpha fades expose the clipped edge without adding focusable listbox content.
+.ui-select__listbox--more-above,
+.ui-select__listbox--more-below {
+  --ui-select-fade-top: 0px;
+  --ui-select-fade-bottom: 0px;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    var(--ui-select-listbox-bg) var(--ui-select-fade-top),
+    var(--ui-select-listbox-bg) calc(100% - var(--ui-select-fade-bottom)),
+    transparent
+  );
+}
+
+.ui-select__listbox--more-above {
+  --ui-select-fade-top: var(--ui-select-scroll-fade-size);
+}
+
+.ui-select__listbox--more-below {
+  --ui-select-fade-bottom: var(--ui-select-scroll-fade-size);
+}

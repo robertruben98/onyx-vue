@@ -10,6 +10,7 @@
   --ui-data-table-select-col-width: 3rem;
   --ui-menu-min-width: 12rem;
   --ui-menu-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.22), 0 4px 10px -6px rgba(15, 23, 42, 0.16);
+  --ui-select-scroll-fade-size: var(--ui-space-4);
   --ui-select-listbox-max-height: 15rem;
   --ui-select-listbox-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.22), 0 4px 10px -6px rgba(15, 23, 42, 0.16);
   --ui-popover-max-width: 20rem;
