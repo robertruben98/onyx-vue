@@ -46,6 +46,14 @@ Consumers that build from source (the control-panel dashboard aliases
 ### Fixed
 
 - Radio, Switch and CheckRow keep their control size and align with the first line of wrapped labels. Share Checkbox's first-line alignment mixin and add narrow-column demos.
+### Added
+
+- Development warnings once per deprecated tone or event name per page load,
+  naming its replacement and planned removal in 1.0. Event warnings only fire
+  when a consumer subscribes to the old name. Production builds omit warnings;
+  all aliases and dual event emissions remain supported.
+- Generated tone and event migration tables in the installation guide's
+  "Deprecations and 1.0" section.
 
 ## 0.13.1 — 2026-10-31
 

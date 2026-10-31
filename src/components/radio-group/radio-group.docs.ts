@@ -4,7 +4,7 @@ export const radioGroupDoc: ComponentDoc = {
   id: "radio-group",
   title: "Radio Group",
   description:
-    "Single choice from a list of options, rendered as a `<fieldset>` with a `<legend>`. Options are data, not markup, so the group cannot end up with two radios sharing a name. Inside UiFormField, the group automatically inherits the field label, hint, error and required state. An explicit group label or accessible name takes precedence.",
+    "Single choice from a list of options, rendered as a `<fieldset>` with a `<legend>`. Options are data, not markup, so the group cannot end up with two radios sharing a name. Inside UiFormField, the group automatically inherits the field label, hint, error and required state. An explicit group label or accessible name takes precedence. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
   imports: ["UiRadioGroup"],
   api: [
     { name: "v-model", type: "string", default: "''", description: "Selected value." },

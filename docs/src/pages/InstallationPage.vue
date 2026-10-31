@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { DEPRECATED_EVENTS } from "../../../src/deprecations";
+import { LEGACY_TONES } from "../../../src/internal/tone";
 // Installation guide page.
 const install = `npm install @onyx/vue`;
 
@@ -10,6 +12,8 @@ import '@onyx/vue/styles.css'; // token stylesheet (CSS variables)
 createApp(App).mount('#app');`;
 
 const usage = `<script setup lang="ts">
+import { DEPRECATED_EVENTS } from "../../../src/deprecations";
+import { LEGACY_TONES } from "../../../src/internal/tone";
 import { UiButton, UiInput } from '@onyx/vue';
 <\/script>
 
@@ -47,6 +51,32 @@ document.documentElement.classList.toggle('app-dark');`;
       components never branch on theme.
     </p>
     <pre class="code"><code>{{ dark }}</code></pre>
+
+    <h2 id="deprecations">Deprecations and 1.0</h2>
+    <p>
+      Legacy tones and event names remain supported until 1.0. In development,
+      each deprecated tone or event name warns once per page load. Event warnings
+      only appear when you listen to the old name, including a once listener.
+      Production builds do not run these warnings. Replace old names now to
+      prepare for their removal in 1.0.
+    </p>
+    <p>Renamed events still emit the new name first, then the old name.</p>
+    <table aria-label="Deprecated tones">
+      <thead><tr><th>Old tone</th><th>Use instead</th></tr></thead>
+      <tbody>
+        <tr v-for="(replacement, name) in LEGACY_TONES" :key="name">
+          <td><code>{{ name }}</code></td><td><code>{{ replacement }}</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <table aria-label="Deprecated events">
+      <thead><tr><th>Old event</th><th>Use instead</th></tr></thead>
+      <tbody>
+        <tr v-for="(replacement, name) in DEPRECATED_EVENTS" :key="name">
+          <td><code>{{ name }}</code></td><td><code>{{ replacement }}</code></td>
+        </tr>
+      </tbody>
+    </table>
 
     <div class="guide__next">
       <RouterLink class="guide__link" to="/theming"

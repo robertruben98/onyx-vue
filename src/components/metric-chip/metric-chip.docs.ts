@@ -4,7 +4,7 @@ export const metricChipDoc: ComponentDoc = {
   id: "metric-chip",
   title: "Metric Chip",
   description:
-    "One number and its caption, sized for a top bar. It takes four states, not a bare number: a failed measurement shows as failed and never as a zero, and a value being recomputed fades instead of disappearing. Optionally a button, for a chip that opens the screen behind the number.",
+    "One number and its caption, sized for a top bar. It takes four states, not a bare number: a failed measurement shows as failed and never as a zero, and a value being recomputed fades instead of disappearing. Optionally a button, for a chip that opens the screen behind the number. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",
   imports: ["UiMetricChip"],
   api: [
     {

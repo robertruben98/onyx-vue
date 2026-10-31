@@ -4,7 +4,7 @@ export const switchDoc: ComponentDoc = {
   id: "switch",
   title: "Switch",
   description:
-    "On/off control for a setting that applies immediately. Use a Checkbox instead when the value is submitted with a form.",
+    "On/off control for a setting that applies immediately. Use a Checkbox instead when the value is submitted with a form. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
   imports: ["UiSwitch"],
   api: [
     { name: "v-model", type: "boolean", default: "false", description: "Two-way checked state." },
