@@ -231,11 +231,7 @@ onBeforeUnmount(() => {
     <Teleport to="body">
       <template v-if="open">
         <!-- Backdrop: click-outside closes the panel. -->
-        <div
-          class="ui-select__backdrop"
-          style="position: fixed; inset: 0; z-index: var(--ui-overlay-z, 1000)"
-          @mousedown="close"
-        ></div>
+        <div class="ui-select__backdrop" @mousedown="close"></div>
         <ul
           ref="listboxEl"
           role="listbox"

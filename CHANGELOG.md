@@ -9,6 +9,22 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.13.1 — 2026-10-31
+
+### Fixed
+
+- `UiSelect` inside `UiDialog`: the list opens over the dialog. Both teleport to `body`, and the
+  select's list and its click-outside backdrop sat at `--ui-overlay-z` (1000), below
+  `--ui-dialog-z` (1100) — so the list opened behind the modal, and the next field took the click
+  on an option painted over it. They now use `--ui-select-z` (1200, the menu's level). A click
+  outside the list closes the list and leaves the dialog open; Esc closes the list first and the
+  dialog on a second press. `UiMenu`, `UiPopover` and `UiTooltip` already sat above the dialog.
+  `--ui-overlay-z` is still defined.
+- `UiCheckbox` keeps its size when its label wraps: the box is `flex: none`. In a narrow column the
+  boxes beside long labels shrank. A labelled checkbox now sits on its label's first line, centred
+  on it (`--ui-checkbox-label-line-height`, 1.5), instead of the middle of a multi-line label; a
+  one-line label looks as before.
+
 ## 0.13.0 — 2026-10-31
 
 ### Added

@@ -122,6 +122,7 @@
   --ui-checkbox-border-width: var(--ui-border-width);
   --ui-checkbox-label-gap: var(--ui-space-2);
   --ui-checkbox-label-font-size: var(--ui-font-size-md);
+  --ui-checkbox-label-line-height: 1.5;
   --ui-textarea-padding-x: var(--ui-space-3);
   --ui-textarea-padding-y: var(--ui-space-2);
   --ui-textarea-font-size: var(--ui-font-size-md);
@@ -514,6 +515,11 @@
      todo porque puede salir de cualquiera de los anteriores. */
   --ui-overlay-z: 1000;
   --ui-dialog-z: 1100;
+  /* El select tenia su propia capa en `--ui-overlay-z`, por DEBAJO del
+     dialogo: dentro de un modal la lista se abria detras y el campo siguiente
+     se llevaba el clic de la opcion pintada encima (0.13.1). Ahora va al nivel
+     del menu, que es lo que es: una lista que se abre desde un control. */
+  --ui-select-z: 1200;
   --ui-menu-z: 1200;
   --ui-popover-z: 1200;
   --ui-tooltip-z: 1300;
