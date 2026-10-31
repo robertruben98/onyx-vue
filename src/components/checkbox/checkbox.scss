@@ -1,3 +1,5 @@
+@use "../../internal/control-label";
+
 // Checkbox styles — ported from the Angular lib. References ONLY semantic /
 // component tokens (no raw colors / sizes / radii). Angular `:host` selectors
 // are mapped to the root class `.ui-checkbox` and its modifier classes; the
@@ -15,13 +17,6 @@
   align-items: center;
   gap: var(--ui-checkbox-label-gap);
   cursor: pointer;
-}
-
-// Labelled: the box sits on the label's first line, not in the middle of a
-// label that wrapped onto three. Centred on that line, so a one-line label
-// looks exactly as it did with `align-items: center`.
-.ui-checkbox__wrap--labelled {
-  align-items: flex-start;
 }
 
 .ui-checkbox__el {
@@ -42,11 +37,8 @@
   outline-offset: var(--ui-focus-ring-offset);
 }
 
-.ui-checkbox__wrap--labelled .ui-checkbox__el {
-  margin-top: calc(
-    (var(--ui-checkbox-label-font-size) * var(--ui-checkbox-label-line-height) - var(--_ui-checkbox-box)) / 2
-  );
-}
+@include control-label.first-line(".ui-checkbox__wrap--labelled", ".ui-checkbox__el",
+  var(--ui-checkbox-label-font-size), var(--ui-checkbox-label-line-height), var(--_ui-checkbox-box));
 
 .ui-checkbox__label {
   min-width: 0;

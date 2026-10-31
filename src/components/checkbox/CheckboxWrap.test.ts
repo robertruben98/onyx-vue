@@ -1,3 +1,4 @@
+import { compile } from "sass";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { render } from "@testing-library/vue";
@@ -11,7 +12,7 @@ import Checkbox from "./Checkbox.vue";
 // shrinks when the label needs the room, so in a narrow list the boxes with
 // long labels came out smaller than their neighbours.
 
-const scss = readFileSync(join(process.cwd(), "src", "components", "checkbox", "checkbox.scss"), "utf8")
+const scss = compile("src/components/checkbox/checkbox.scss").css
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .replace(/^\s*\/\/.*$/gm, "");
 

@@ -1,3 +1,5 @@
+@use "../../internal/control-label";
+
 // Radio group styles — ported from the Angular lib. References ONLY semantic /
 // component tokens (CLAUDE.md §3). Native radios share a name so the browser
 // provides roving focus + arrow-key navigation and full a11y. accent-color
@@ -15,6 +17,7 @@
   margin: 0;
   padding: 0;
   border: none;
+  min-width: 0;
 }
 
 .ui-radio-group__legend {
@@ -32,6 +35,7 @@
 }
 
 .ui-radio__el {
+  flex: none;
   width: var(--ui-radio-size);
   height: var(--ui-radio-size);
   margin: 0;
@@ -49,12 +53,15 @@
 }
 
 .ui-radio__label {
+  min-width: 0;
+  line-height: var(--ui-radio-label-line-height);
   font-size: var(--ui-radio-label-font-size);
   color: var(--ui-color-text);
 }
 
 // --- Invalid --------------------------------------------------------------
 .ui-radio-group--invalid .ui-radio__el {
+  flex: none;
   accent-color: var(--ui-radio-border-invalid);
 }
 
@@ -65,3 +72,6 @@
 .ui-radio-group--disabled .ui-radio__label {
   color: var(--ui-radio-disabled-text);
 }
+
+@include control-label.first-line(".ui-radio--labelled", ".ui-radio__el",
+  var(--ui-radio-label-font-size), var(--ui-radio-label-line-height), var(--ui-radio-size));

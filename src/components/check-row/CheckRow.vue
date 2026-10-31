@@ -55,6 +55,7 @@ const spinning = computed(() => props.state === "running");
 
 const rootClasses = computed(() => ({
   "ui-check-row": true,
+  "ui-check-row--labelled": !!props.name,
   "ui-check-row--done": props.state === "done",
   "ui-check-row--failed": props.state === "failed",
   "ui-check-row--running": spinning.value,
