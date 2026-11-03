@@ -45,12 +45,12 @@
   border: 0;
   border-radius: 999px;
   background: var(--ui-color-primary);
-  color: var(--ui-color-on-primary, #fff);
+  color: var(--ui-color-on-primary);
   font: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+  box-shadow: var(--ui-tooltip-shadow);
 
   &:focus-visible {
     outline: 2px solid var(--ui-color-text);

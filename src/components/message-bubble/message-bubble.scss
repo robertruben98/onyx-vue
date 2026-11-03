@@ -27,14 +27,14 @@
 }
 
 .ui-message-bubble--context {
-  opacity: 0.7;
+  opacity: 0.85;
   font-size: 0.8125rem;
 }
 
 .ui-message-bubble__author {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+  color: var(--ui-chat-meta, var(--ui-color-text));
 }
 
 .ui-message-bubble__media {
@@ -57,7 +57,7 @@
   gap: 0.125rem;
   font-size: 0.8125rem;
   overflow-wrap: anywhere;
-  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+  color: var(--ui-chat-meta, var(--ui-color-text));
 }
 
 .ui-message-bubble__footer {
@@ -74,7 +74,7 @@
 
 .ui-message-bubble__time {
   font-size: 0.6875rem;
-  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+  color: var(--ui-chat-meta, var(--ui-color-text));
 }
 
 .ui-message-bubble__copy {

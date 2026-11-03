@@ -17,7 +17,7 @@ export const chatListItemDoc: ComponentDoc = {
     { name: "selected", type: "boolean", default: "false", description: "The chat open in the conversation pane. Sets aria-current=\"true\"." },
     { name: "avatarText", type: "string", default: "''", description: "Initials in the avatar. Defaults to the ones of the title." },
     { name: "avatarSeed", type: "string", default: "''", description: "Text the avatar colour is picked from; the same seed is always the same colour. Defaults to the title." },
-    { name: "select", type: "event", default: "—", description: "Emitted when the row is activated (click, Enter or Space)." },
+    { name: "@select", type: "event", default: "—", description: "Emitted when the row is activated (click, Enter or Space)." },
   ],
   demos: [
     {

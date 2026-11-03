@@ -13,11 +13,11 @@ export const messageBubbleDoc: ComponentDoc = {
     { name: "variant", type: "'message' | 'draft' | 'context'", default: "'message'", description: "`draft` is an unsent suggestion; `context` is dimmed and smaller." },
     { name: "copyText", type: "string", default: "''", description: "Only for `draft`: renders a copy button that copies this text." },
     { name: "copyLabel", type: "string", default: "locale catalog", description: "Label of the copy button: \"Copy\", or \"Copiar\" under the Spanish catalog (`provideOnyxLocale(ES_MESSAGES)`)." },
-    { name: "default slot", type: "slot", default: "—", description: "The text. Line breaks are kept; long words and URLs wrap. Not rendered when empty." },
-    { name: "media slot", type: "slot", default: "—", description: "Image or file, above the text." },
-    { name: "meta slot", type: "slot", default: "—", description: "Lines under the text, e.g. an order lookup." },
-    { name: "footer slot", type: "slot", default: "—", description: "e.g. an \"abrir en Rocket.Chat\" link." },
-    { name: "copied", type: "event", default: "—", description: "Emitted after the clipboard write succeeded." },
+    { name: "#default", type: "slot", default: "—", description: "The text. Line breaks are kept; long words and URLs wrap. Not rendered when empty." },
+    { name: "#media", type: "slot", default: "—", description: "Image or file, above the text." },
+    { name: "#meta", type: "slot", default: "—", description: "Lines under the text, e.g. an order lookup." },
+    { name: "#footer", type: "slot", default: "—", description: "e.g. an \"abrir en Rocket.Chat\" link." },
+    { name: "@copied", type: "event", default: "—", description: "Emitted after the clipboard write succeeded." },
   ],
   demos: [
     {

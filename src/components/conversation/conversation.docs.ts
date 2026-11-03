@@ -10,8 +10,8 @@ export const conversationDoc: ComponentDoc = {
     { name: "items", type: "Array<{ key: string; day: string }>", default: "—", description: "Items in chronological order. `day` is the label of the day the item belongs to." },
     { name: "hasOlder", type: "boolean", default: "false", description: "There are older items to load; enables `load-older`." },
     { name: "loadingOlder", type: "boolean", default: "false", description: "Older items are being fetched; suppresses `load-older`." },
-    { name: "item slot", type: "slot ({ item, index })", default: "—", description: "Renders one item, usually a UiMessageBubble." },
-    { name: "load-older", type: "event", default: "—", description: "Emitted when scrolled within 200 px of the top and `hasOlder && !loadingOlder`. Once per load." },
+    { name: "#item", type: "slot ({ item, index })", default: "—", description: "Renders one item, usually a UiMessageBubble." },
+    { name: "@load-older", type: "event", default: "—", description: "Emitted when scrolled within 200 px of the top and `hasOlder && !loadingOlder`. Once per load." },
   ],
   demos: [
     {
