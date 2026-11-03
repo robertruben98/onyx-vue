@@ -9,7 +9,13 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
-## Unreleased
+## 0.18.0 — 2026-11-03
+
+### Breaking
+
+- **`ui-theme-chat` preset rebuilt.** Consumers of the chat preset get a light WhatsApp-like palette by default
+  (dark only under `.app-dark`), Roboto Variable instead of the previous font, new/renamed `--ui-chat-*` tokens,
+  and different radii, spacing and shadows on every chat component. Review chat-preset screens after upgrading.
 
 ### Added
 
