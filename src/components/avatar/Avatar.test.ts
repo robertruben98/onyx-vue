@@ -132,7 +132,7 @@ describe("Avatar (Vue) — 0.8: xl, alt, gradient, ring", () => {
       for (const s of ["", "a", "bb", "Baby Sm23", "x".repeat(50)]) expect(AVATAR_TINTS).toContain(avatarTintName(s));
     });
 
-    it("default tone and an image carry no tint", () => {
+    it("neutral tone and an image carry no tint", () => {
       const d = render(Avatar, { props: { name: "Ada" } });
       expect(d.container.querySelector(".ui-avatar--tinted")).toBeNull();
       const i = render(Avatar, { props: { name: "Ada", src: "a.png", tone: "tinted" } });

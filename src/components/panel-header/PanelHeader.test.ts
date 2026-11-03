@@ -38,3 +38,15 @@ describe("PanelHeader (Vue)", () => {
     expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
   });
 });
+
+describe("PanelHeader branches", () => {
+  it("renders no title element without a title or slot", () => {
+    const { container } = render(PanelHeader);
+    expect(container.querySelector(".ui-panel-header__title")).toBeNull();
+  });
+
+  it.each([1, 3] as const)("renders an h%i for headingLevel %i", (level) => {
+    const { getByRole } = render(PanelHeader, { props: { title: "Chats", headingLevel: level } });
+    expect(getByRole("heading", { level }).textContent).toBe("Chats");
+  });
+});

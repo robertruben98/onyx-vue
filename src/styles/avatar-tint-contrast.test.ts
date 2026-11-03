@@ -1,10 +1,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-// Tinted avatar initials: coloured ink on its soft surface. Light pairs are the
-// reference palette kept verbatim (3.6-5.1:1; decorative initials, aria-hidden, so a 3:1 floor, not AA text).
-// Dark pairs are derived and must reach 4.5:1.
-const scss = readFileSync(join(process.cwd(), "src", "components", "avatar", "avatar.scss"), "utf8");
+// Tinted avatar initials: coloured ink on its soft surface. The initials are normal-size text (not large
+// text), so every pair, light and dark, must reach 4.5:1 (axe color-contrast).
+const scss = readFileSync(join(process.cwd(), "src", "styles", "avatar-tints.css"), "utf8");
 const block = (sel: string) => scss.slice(scss.indexOf(`${sel} {`), scss.indexOf("\n}", scss.indexOf(`${sel} {`)));
 const pairs = (css: string) => {
   const v = Object.fromEntries([...css.matchAll(/--ui-avatar-tint-(\w+)-(ink|surface):\s*(#[0-9a-f]{6})/g)].map((m) => [`${m[1]}-${m[2]}`, m[3]]));
@@ -25,8 +24,8 @@ describe("tinted avatar contrast", () => {
     expect(pairs(block(":root"))).toHaveLength(11);
     expect(pairs(block(".app-dark"))).toHaveLength(11);
   });
-  it("light initials reach the 3:1 floor (decorative, reference values) on their surface", () => {
-    const fails = pairs(block(":root")).filter(([, i, s]) => ratio(i, s) < 3).map(([n]) => n);
+  it("light initials reach 4.5:1 on their surface", () => {
+    const fails = pairs(block(":root")).filter(([, i, s]) => ratio(i, s) < 4.5).map(([n]) => n);
     expect(fails).toEqual([]);
   });
   it("dark initials reach 4.5:1 on their surface", () => {

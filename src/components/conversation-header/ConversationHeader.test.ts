@@ -53,3 +53,47 @@ describe("ConversationHeader (Vue)", () => {
     expect(await axe(container, { rules: { region: { enabled: false } } })).toHaveNoViolations();
   });
 });
+
+import { render as renderBranches } from "@testing-library/vue";
+import ConversationHeaderBranches from "./ConversationHeader.vue";
+
+describe("ConversationHeader branches", () => {
+  it("renders no name or subtitle element without text", () => {
+    const { container } = renderBranches(ConversationHeaderBranches);
+    expect(container.querySelector(".ui-conversation-header__name")).toBeNull();
+    expect(container.querySelector(".ui-conversation-header__subtitle")).toBeNull();
+    expect(container.querySelector(".ui-conversation-header__leading")).toBeNull();
+    expect(container.querySelector(".ui-conversation-header__actions")).toBeNull();
+  });
+
+  it("renders plain text for headingLevel 0 and a heading otherwise", () => {
+    const plain = renderBranches(ConversationHeaderBranches, { props: { name: "Ada", headingLevel: 0 } });
+    expect(plain.queryByRole("heading")).toBeNull();
+    expect(plain.container.querySelector("span.ui-conversation-header__name")?.textContent).toBe("Ada");
+    const h3 = renderBranches(ConversationHeaderBranches, { props: { name: "Ada", headingLevel: 3 } });
+    expect(h3.getByRole("heading", { level: 3 }).textContent).toBe("Ada");
+  });
+
+  it("leading, actions, avatar, title and subtitle slots replace the defaults", () => {
+    const { container, getByText } = renderBranches(ConversationHeaderBranches, {
+      props: { name: "Ada", subtitle: "online" },
+      slots: {
+        leading: "<i>back</i>",
+        actions: "<i>more</i>",
+        avatar: "<i>pic</i>",
+        title: "<i>Custom name</i>",
+        subtitle: "<i>Custom sub</i>",
+      },
+    });
+    for (const t of ["back", "more", "pic", "Custom name", "Custom sub"]) expect(getByText(t)).toBeTruthy();
+    expect(container.querySelector(".ui-conversation-header__name")).toBeNull();
+    expect(container.querySelector(".ui-avatar")).toBeNull();
+  });
+
+  it("shows the avatar image or initials, with or without the gradient", () => {
+    const img = renderBranches(ConversationHeaderBranches, { props: { name: "Ada", avatarSrc: "a.png" } });
+    expect(img.container.querySelector("img")?.getAttribute("src")).toBe("a.png");
+    const flat = renderBranches(ConversationHeaderBranches, { props: { name: "Ada", avatarGradient: false } });
+    expect(flat.container.querySelector(".ui-avatar--gradient")).toBeNull();
+  });
+});

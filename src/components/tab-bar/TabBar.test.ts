@@ -160,3 +160,16 @@ describe("TabBar chat height and badge ink (Vue)", () => {
     }
   });
 });
+
+describe("TabBar landmark name", () => {
+  it("names the chat variant Sections and the default Main, overridable by label", async () => {
+    const { render: r } = await import("@testing-library/vue");
+    const items = [{ id: "a", label: "A", href: "#a" }, { id: "b", label: "B", href: "#b" }];
+    const chat = r(TabBar, { props: { items, hideAbove: 0, variant: "chat" } });
+    expect(chat.getByRole("navigation").getAttribute("aria-label")).toBe("Sections");
+    const plain = r(TabBar, { props: { items, hideAbove: 0 } });
+    expect(plain.getAllByRole("navigation").pop()?.getAttribute("aria-label")).toBe("Main");
+    const named = r(TabBar, { props: { items, hideAbove: 0, variant: "chat", label: "Tabs" } });
+    expect(named.getAllByRole("navigation").pop()?.getAttribute("aria-label")).toBe("Tabs");
+  });
+});
