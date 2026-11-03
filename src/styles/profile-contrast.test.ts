@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 // 0.8 profile components: every text they paint reaches 4.5:1 and every ring or
-// bar fill 3:1 (WCAG 1.4.11), in the default light and dark themes and in
-// pocket day and night. Tokens are resolved through their var() chains, layered
+// bar fill 3:1 (WCAG 1.4.11), in the default light and dark themes, in
+// pocket day and night and in chat night and day. Tokens are resolved through their var() chains, layered
 // the way the classes stack, and translucent fills are composited over what
 // they sit on — the same method as severity-contrast.test.ts.
 const dir = join(process.cwd(), "src", "styles");
@@ -23,12 +23,17 @@ const dark = vars(block(read("dark.css"), ".app-dark"));
 const pocket = read("pocket.css");
 const pocketDay = vars(block(pocket, ".ui-theme-pocket"));
 const pocketNight = vars(block(pocket, ".ui-theme-pocket.app-dark"));
+const chat = read("chat.css");
+const chatNight = vars(block(chat, ".ui-theme-chat"));
+const chatDay = vars(block(chat, ".ui-theme-chat.app-light"));
 
 const themes: [string, Record<string, string>[]][] = [
   ["light", [tokens]],
   ["dark", [tokens, dark]],
   ["pocket day", [tokens, pocketDay]],
   ["pocket night", [tokens, dark, pocketDay, pocketNight]],
+  ["chat night", [tokens, chatNight]],
+  ["chat day", [tokens, chatNight, chatDay]],
 ];
 
 function resolve(layers: Record<string, string>[], name: string): string {
@@ -105,6 +110,7 @@ describe("0.8 profile components: contrast", () => {
     const surface = parse(resolve(layers, "--ui-color-surface")).rgb;
     const grounds: [string, Rgb][] = [["surface", surface]];
     if (name.startsWith("pocket")) grounds.push(["floor", parse(resolve(layers, "--ui-pocket-floor")).rgb]);
+    if (name.startsWith("chat")) grounds.push(["chat background", parse(resolve(layers, "--ui-chat-bg")).rgb]);
     const fails: string[] = [];
     for (const [ground, bg] of grounds) {
       for (const t of TEXT) {
