@@ -22,6 +22,37 @@ describe("WeekBlocks (Vue)", () => {
     expect(container.querySelectorAll(".ui-week-blocks__column")).toHaveLength(5);
   });
 
+  it("binds the column count to the number of days", () => {
+    const { container } = render(WeekBlocks, { props: { ...base, days: days.slice(0, 3), layout: "columns" } });
+    const root = container.querySelector<HTMLElement>(".ui-week-blocks")!;
+    expect(root.style.getPropertyValue("--ui-week-blocks-days")).toBe("3");
+    expect(root.querySelectorAll(".ui-week-blocks__column")).toHaveLength(3);
+    const scss = readFileSync(join(__dirname, "week-blocks.scss"), "utf8");
+    expect(scss).toContain("repeat(var(--ui-week-blocks-days, 5), minmax(0, 1fr))");
+    expect(scss).not.toContain("auto-fit");
+  });
+
+  it("drops blocks wholly outside the range or empty, in both layouts", () => {
+    const outside = [
+      { ...block, start: 100, end: 200 },
+      { ...block, start: 1300, end: 1400 },
+      { ...block, start: 600, end: 600 },
+    ];
+    for (const layout of ["columns", "list"] as const) {
+      const { container } = render(WeekBlocks, {
+        props: { ...base, days: [{ key: "mon", label: "Lun", blocks: outside }], layout },
+      });
+      expect(container.querySelector(".ui-week-blocks__block, .ui-week-blocks__row")).toBeNull();
+    }
+  });
+
+  it("gives each block a tooltip with range, title and detail", () => {
+    const { container } = render(WeekBlocks, { props: { ...base, layout: "columns" } });
+    expect(container.querySelector(".ui-week-blocks__block")?.getAttribute("title")).toBe(
+      "09:00–10:30 · Foco · libre ≥ 82 % · 21 días",
+    );
+  });
+
   it("positions a block by time within the range", () => {
     const { container } = render(WeekBlocks, { props: { ...base, layout: "columns" } });
     const el = container.querySelector<HTMLElement>(".ui-week-blocks__block")!;
@@ -62,12 +93,28 @@ describe("WeekBlocks (Vue)", () => {
     expect(container.querySelector(".ui-week-blocks__column")).toBeNull();
     expect(getByText("09:00–10:30 · Foco · libre ≥ 82 % · 21 días")).toBeTruthy();
     expect(getByText("Sin huecos fiables")).toBeTruthy();
-    expect(container.querySelector("[aria-current=date]")?.getAttribute("aria-label")).toBe("Mar");
+    expect(container.querySelector("[aria-current=date] .ui-week-blocks__day-label")?.textContent).toBe("Mar");
   });
 
   it("uses columns in auto layout when the width cannot be measured", () => {
     const { container } = render(WeekBlocks, { props: base });
     expect(container.querySelector(".ui-week-blocks--columns")).not.toBeNull();
+  });
+
+  it("does not observe the container when the layout is forced", () => {
+    const original = globalThis.ResizeObserver;
+    const observe = vi.fn();
+    globalThis.ResizeObserver = class {
+      observe = observe;
+      disconnect() {}
+      unobserve() {}
+    } as unknown as typeof ResizeObserver;
+    try {
+      render(WeekBlocks, { props: { ...base, layout: "columns" } });
+      expect(observe).not.toHaveBeenCalled();
+    } finally {
+      globalThis.ResizeObserver = original;
+    }
   });
 
   describe("auto layout with ResizeObserver", () => {
