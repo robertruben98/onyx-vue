@@ -22,6 +22,9 @@ Consumers that build from source (the control-panel dashboard aliases
   list per day below 640 px; `layout="auto|columns|list"`). New tokens
   `--ui-week-block-column-bg|success-bg|neutral-bg|text`; new locale key `weekBlocksLabel`.
 
+- `UiTaskRow`: a to-do row (checkbox labelled with the task text, optional meta line, `busy` spinner,
+  `toggle(next)` event; done is struck through and dimmed). New token `--ui-task-row-done-text`.
+
 ## 0.16.0 — 2026-11-03
 
 ### Added
