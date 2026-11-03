@@ -1,0 +1,100 @@
+// Message bubble. Colours come from the chat preset tokens, with the generic
+// --ui-* tokens as fallback so it also works outside `.ui-theme-chat`.
+
+.ui-message-bubble {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: min(32rem, 85%);
+  padding: var(--ui-space-2, 0.5rem) var(--ui-space-3, 0.75rem);
+  border-radius: var(--ui-chat-bubble-radius, 10px);
+  color: var(--ui-color-text);
+  min-width: 0;
+}
+
+.ui-message-bubble--in {
+  align-self: flex-start;
+  background: var(--ui-chat-bubble-in, var(--ui-color-surface-hover));
+}
+
+.ui-message-bubble--out {
+  align-self: flex-end;
+  background: var(--ui-chat-bubble-out, var(--ui-color-primary-soft, var(--ui-color-surface-hover)));
+}
+
+.ui-message-bubble--draft {
+  border: 1px dashed var(--ui-chat-bubble-draft-border, var(--ui-color-border));
+}
+
+.ui-message-bubble--context {
+  opacity: 0.7;
+  font-size: 0.8125rem;
+}
+
+.ui-message-bubble__author {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+}
+
+.ui-message-bubble__media {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: calc(var(--ui-chat-bubble-radius, 10px) - 2px);
+}
+
+.ui-message-bubble__text {
+  white-space: pre-wrap; // keeps the line breaks of the text
+  overflow-wrap: anywhere; // long words and URLs wrap instead of overflowing
+  min-width: 0;
+}
+
+.ui-message-bubble__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+}
+
+.ui-message-bubble__footer {
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.ui-message-bubble__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-2, 0.5rem);
+}
+
+.ui-message-bubble__time {
+  font-size: 0.6875rem;
+  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+}
+
+.ui-message-bubble__copy {
+  min-height: 2.75rem; // 44px touch target
+  padding: 0 var(--ui-space-3, 0.75rem);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ui-color-primary);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ui-color-surface-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ui-color-primary);
+    outline-offset: 2px;
+  }
+}
