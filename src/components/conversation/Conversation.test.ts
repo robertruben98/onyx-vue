@@ -76,11 +76,11 @@ describe("Conversation (Vue)", () => {
   });
 
   it("emits load-older again after a load finished", async () => {
-    const { container, emitted, rerender } = mount(mk("c:A", "d:A"), { hasOlder: true });
+    const { container, emitted, rerender } = mount(mk("c:A", "d:A", "e:A", "f:A", "g:A", "h:A"), { hasOlder: true });
     const s = mockScroller(container, 0);
     await fireEvent.scroll(s.el);
     await rerender({ loadingOlder: true });
-    await rerender({ loadingOlder: false, items: mk("a:A", "b:A", "c:A", "d:A") });
+    await rerender({ loadingOlder: false, items: mk("a:A", "b:A", "c:A", "d:A", "e:A", "f:A", "g:A", "h:A") });
     s.setTop(0);
     await fireEvent.scroll(s.el);
     expect(emitted()["load-older"]).toHaveLength(2);
@@ -154,5 +154,74 @@ describe("Conversation (Vue)", () => {
   it("has no a11y violations", async () => {
     const { container } = mount(mk("a:A", "b:B"));
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  describe("mount, swap and short content", () => {
+    const proto = HTMLElement.prototype;
+    const saved: Record<string, PropertyDescriptor | undefined> = {};
+    function layoutAll(scrollHeight: number, clientHeight: number) {
+      let top = 0;
+      for (const [k, d] of Object.entries({
+        scrollHeight: { get: () => scrollHeight },
+        clientHeight: { get: () => clientHeight },
+        scrollTop: { get: () => top, set: (v: number) => (top = v) },
+      })) {
+        saved[k] = Object.getOwnPropertyDescriptor(proto, k);
+        Object.defineProperty(proto, k, { configurable: true, ...d });
+      }
+      return () => top;
+    }
+    afterEach(() => {
+      for (const [k, d] of Object.entries(saved)) {
+        if (d) Object.defineProperty(proto, k, d);
+        else delete (proto as unknown as Record<string, unknown>)[k];
+      }
+    });
+
+    it("mounted with items it lands at the bottom and emits no load-older", async () => {
+      const top = layoutAll(1000, VIEWPORT);
+      const { emitted } = mount(mk("a:A", "b:A", "c:A", "d:A", "e:A"), { hasOlder: true });
+      await nextTick();
+      expect(top()).toBe(1000);
+      expect(emitted()["load-older"]).toBeUndefined();
+    });
+
+    it("content shorter than the viewport emits load-older once after render", async () => {
+      layoutAll(200, VIEWPORT);
+      const { emitted, rerender } = mount(mk("a:A", "b:A"), { hasOlder: true });
+      await nextTick();
+      expect(emitted()["load-older"]).toHaveLength(1);
+      await rerender({ items: mk("a:A", "b:A", "c:A") }); // appended, still short, load not finished
+      await nextTick();
+      expect(emitted()["load-older"]).toHaveLength(2); // items changed: the load answered, ask again
+    });
+
+    it("short content without hasOlder emits nothing", async () => {
+      layoutAll(200, VIEWPORT);
+      const { emitted } = mount(mk("a:A"), { hasOlder: false });
+      await nextTick();
+      expect(emitted()["load-older"]).toBeUndefined();
+    });
+
+    it("empty -> filled scrolls to the bottom", async () => {
+      const { container, rerender } = mount([]);
+      const s = mockScroller(container, 0);
+      await rerender({ items: mk("a:A", "b:A", "c:A", "d:A", "e:A") });
+      await nextTick();
+      expect(s.top()).toBe(5 * ITEM_HEIGHT);
+    });
+
+    it("swapping to a list with no shared keys resets the pill and scrolls to the bottom", async () => {
+      const { container, rerender } = mount(mk("a:A", "b:A", "c:A", "d:A", "e:A"));
+      const s = mockScroller(container, 0);
+      await rerender({ items: mk("a:A", "b:A", "c:A", "d:A", "e:A", "f:A") });
+      await nextTick();
+      expect(container.querySelector(".ui-conversation__pill")).not.toBeNull();
+      s.setTop(40);
+      await rerender({ items: mk("x:A", "y:A", "z:A", "w:A", "v:A", "u:A", "t:A", "s:A") });
+      await nextTick();
+      expect(container.querySelector(".ui-conversation__pill")).toBeNull();
+      expect(s.top()).toBe(8 * ITEM_HEIGHT);
+    });
   });
 });
