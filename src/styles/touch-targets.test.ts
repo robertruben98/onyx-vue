@@ -143,4 +143,19 @@ describe("readonly fields", () => {
   ])("%s keeps the normal text colour when readonly", (file, el, token) => {
     expect(sheet(file)).toMatch(new RegExp(`\\${el}\\[readonly\\]:not\\(:disabled\\) \\{[^}]*color: var\\(${token}\\)`));
   });
+
+  it("the pill search field keeps its 40px look and gets a 44px hit area from its wrapper", () => {
+    const css = sheet("input/input.scss");
+    const body = ruleBody(coarse(css), ".ui-input--pill .ui-input__field");
+    expect(body).toContain("padding-block: 2px");
+    // 40px control + 2 * 2px = 44px; nothing in the coarse block touches the control height.
+    expect(coarse(css)).not.toContain("height");
+    expect(css).toContain("height: var(--ui-input-pill-height)");
+  });
+
+  it("the chat filter pill gets a 44px ::after hit area under a coarse pointer", () => {
+    const body = ruleBody(coarse(sheet("filter-chip/filter-chip.scss")), ".ui-theme-chat .ui-filter-chip::after");
+    expect(body).toContain("width: max(100%, 44px)");
+    expect(body).toContain("height: max(100%, 44px)");
+  });
 });

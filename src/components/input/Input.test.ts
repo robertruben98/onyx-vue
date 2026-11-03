@@ -176,4 +176,10 @@ describe("Input (Vue)", () => {
     expect(container.querySelector(".ui-input--pill")).toBeNull();
     expect(container.querySelector(".ui-input__glyph")).toBeNull();
   });
+
+  it("pill: clicking the field wrapper outside the input focuses it", async () => {
+    const { container } = render(Input, { props: { variant: "pill", ariaLabel: "Search" } });
+    await fireEvent.click(container.querySelector(".ui-input__field")!);
+    expect(document.activeElement).toBe(container.querySelector("input"));
+  });
 });
