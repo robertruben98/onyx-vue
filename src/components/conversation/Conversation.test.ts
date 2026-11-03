@@ -11,7 +11,7 @@ const scss = readFileSync(join(__dirname, "conversation.scss"), "utf8");
 const ITEM_HEIGHT = 100;
 const VIEWPORT = 400;
 
-type Item = { key: string; day: string };
+type Item = { key: string; day: string; group?: string };
 const mk = (...pairs: string[]): Item[] => pairs.map((p) => ({ key: p.split(":")[0], day: p.split(":")[1] }));
 
 const itemSlot = ({ item }: { item: Item }) => h("p", { class: "probe" }, item.key);
@@ -91,6 +91,18 @@ describe("Conversation (Vue)", () => {
     const s = mockScroller(container, 30); // near the top, 4 items = 400px
     await rerender({ items: mk("a:A", "b:A", "c:A", "d:A", "e:A", "f:A") }); // 600px
     await nextTick();
+    expect(s.top()).toBe(30 + 2 * ITEM_HEIGHT);
+  });
+
+  it("prepending items of the same day keeps the existing section and item nodes (no remount) and the position", async () => {
+    const { container, rerender } = mount(mk("c:A", "d:A", "e:B"), { hasOlder: true });
+    const s = mockScroller(container, 30);
+    const section = container.querySelector(".ui-conversation__section")!;
+    const probe = container.querySelector(".probe")!;
+    await rerender({ items: mk("a:A", "b:A", "c:A", "d:A", "e:B") });
+    await nextTick();
+    expect(container.querySelector(".ui-conversation__section")).toBe(section);
+    expect([...container.querySelectorAll(".probe")].find((n) => n.textContent === "c")).toBe(probe);
     expect(s.top()).toBe(30 + 2 * ITEM_HEIGHT);
   });
 
@@ -222,6 +234,84 @@ describe("Conversation (Vue)", () => {
       await nextTick();
       expect(container.querySelector(".ui-conversation__pill")).toBeNull();
       expect(s.top()).toBe(8 * ITEM_HEIGHT);
+    });
+  });
+
+  describe("WhatsApp-parity layout", () => {
+    const grouped = (): Item[] => [
+      { key: "a", day: "D", group: "A" },
+      { key: "b", day: "D", group: "A" },
+      { key: "c", day: "D", group: "B" },
+    ];
+    const firstSlot = ({ item, first }: { item: Item; first: boolean }) =>
+      h("p", { class: "probe", "data-first": String(first) }, item.key);
+
+    it("groups A,A,B give first = true,false,true and the matching gap classes", () => {
+      const { container } = render(Conversation, { props: { items: grouped() }, slots: { item: firstSlot } });
+      expect([...container.querySelectorAll(".probe")].map((n) => n.getAttribute("data-first"))).toEqual([
+        "true",
+        "false",
+        "true",
+      ]);
+      const items = [...container.querySelectorAll(".ui-conversation__item")];
+      expect(items.map((n) => n.classList.contains("ui-conversation__item--first"))).toEqual([true, false, true]);
+    });
+
+    it("a day change starts a run even when the group is the same", () => {
+      const items: Item[] = [
+        { key: "a", day: "D1", group: "A" },
+        { key: "b", day: "D2", group: "A" },
+      ];
+      const { container } = render(Conversation, { props: { items }, slots: { item: firstSlot } });
+      expect([...container.querySelectorAll(".probe")].map((n) => n.getAttribute("data-first"))).toEqual(["true", "true"]);
+    });
+
+    it("items without a group are all run starts (backward compatible)", () => {
+      const { container } = render(Conversation, { props: { items: mk("a:A", "b:A") }, slots: { item: firstSlot } });
+      expect([...container.querySelectorAll(".probe")].map((n) => n.getAttribute("data-first"))).toEqual(["true", "true"]);
+    });
+
+    it("each day is a section holding a chip with the day text", () => {
+      const { container } = mount(mk("a:Hoy", "b:Hoy", "c:Ayer"));
+      const sections = [...container.querySelectorAll(".ui-conversation__section")];
+      expect(sections).toHaveLength(2);
+      expect(sections[0].querySelector(".ui-conversation__day > .ui-conversation__day-chip")?.textContent).toBe("Hoy");
+      expect(sections[0].querySelectorAll(".ui-conversation__item")).toHaveLength(2);
+    });
+
+    it("renders the aria-hidden wallpaper layer", () => {
+      const { container } = mount(mk("a:A"));
+      expect(container.querySelector(".ui-conversation__wallpaper")?.getAttribute("aria-hidden")).toBe("true");
+    });
+
+    it("composerText renders a read-only pill; no pill without text or slot", () => {
+      const { container } = mount(mk("a:A"), { composerText: "Solo lectura" });
+      const pill = container.querySelector(".ui-conversation__composer");
+      expect(pill?.textContent?.trim()).toBe("Solo lectura");
+      expect(pill?.classList.contains("ui-conversation__composer--readonly")).toBe(true);
+      expect(mount(mk("a:A")).container.querySelector(".ui-conversation__composer")).toBeNull();
+    });
+
+    it("the footer slot replaces composerText", () => {
+      const { container } = render(Conversation, {
+        props: { items: mk("a:A"), composerText: "ignored" },
+        slots: { item: itemSlot, footer: () => h("input", { class: "own" }) },
+      });
+      expect(container.querySelector(".ui-conversation__composer .own")).not.toBeNull();
+      expect(container.textContent).not.toContain("ignored");
+    });
+
+    it("scss: wallpaper masked with the ink token at .6, 63px rows, sticky 24px chip radius 6, 52px pill", () => {
+      expect(scss).toMatch(/--ui-chat-wallpaper-ink/);
+      expect(scss).toMatch(/opacity:\s*0\.6/);
+      expect(scss).toMatch(/mask-image:\s*\$conversation-wallpaper/);
+      expect(scss).toMatch(/padding:\s*0\.75rem 63px/);
+      expect(scss).toMatch(/padding-inline:\s*25px 19px/);
+      expect(scss).toMatch(/position:\s*sticky/);
+      expect(scss).toMatch(/height:\s*24px/);
+      expect(scss).toMatch(/border-radius:\s*6px/);
+      expect(scss).toMatch(/min-height:\s*52px/);
+      expect(scss).toMatch(/border-radius:\s*26px/);
     });
   });
 });
