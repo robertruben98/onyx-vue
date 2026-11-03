@@ -52,7 +52,12 @@
  * sobre #1DAA61 = 3.0:1 en claro) sigue a WhatsApp; ver chat.test.ts.
  *
  * Controles: 32px (pildora) / 40px (boton) / 52px (compositor) como WhatsApp;
- * con puntero tosco suben a 44px.
+ * con puntero tosco solo se ensancha la zona de toque (44px), no el dibujo.
+ *
+ * Quien pinta que: los RELLENOS de marca (boton redondo de chat nuevo, contador
+ * de no leidos) salen de --ui-chat-accent / --ui-chat-unread; --ui-color-primary,
+ * -info y el anillo de foco usan --ui-chat-accent-ink (mas oscuro, para texto y
+ * botones con etiqueta).
  */
 @import "@fontsource-variable/roboto/wght.css";
 
@@ -247,12 +252,21 @@
   --ui-color-neutral-surface: rgba(255, 255, 255, 0.1);
 }
 
-/* Puntero tosco (dedo): los controles suben a 44px; los botones de icono y las
-   pildoras ya ensanchan su zona de toque con ::after en su propia hoja. */
+/* Puntero tosco (dedo): el tamano VISUAL no cambia (32 / 40 / 52, como WhatsApp);
+   solo crece la zona de toque, a 44px, con un ::after centrado. Los botones de
+   icono y las pildoras (chip) ya lo hacen en su propia hoja; aqui los botones. */
 @media (pointer: coarse) {
-  .ui-theme-chat {
-    --ui-size-control-sm: 2.75rem;
-    --ui-size-control-md: 2.75rem;
+  .ui-theme-chat .ui-button__el {
+    position: relative;
+  }
+  .ui-theme-chat .ui-button__el::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
   }
 }
 
