@@ -68,5 +68,8 @@
   "sideEffects": [
     "**/*.css",
     "**/*.scss"
-  ]
+  ],
+  "dependencies": {
+    "@fontsource-variable/roboto": "5.3.0"
+  }
 }
