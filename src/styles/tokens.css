@@ -291,6 +291,8 @@
   --ui-week-block-success-bg: var(--ui-color-success);
   --ui-week-block-neutral-bg: var(--ui-color-neutral);
   --ui-week-block-text: var(--ui-color-on-primary);
+  /* Task row: done text is dimmed but keeps 4.5:1 on the surface. */
+  --ui-task-row-done-text: var(--ui-color-text-muted);
   --ui-focus-ring-width: var(--ui-border-width-thick);
   --ui-focus-ring-offset: var(--ui-border-width-thick);
   --ui-radius: var(--ui-radii-md);

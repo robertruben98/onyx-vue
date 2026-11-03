@@ -34,6 +34,7 @@ export * from "./components/chat-list-item";
 export * from "./components/message-bubble";
 export * from "./components/day-timeline";
 export * from "./components/week-blocks";
+export * from "./components/task-row";
 export * from "./components/conversation";
 export * from "./components/checkbox";
 export * from "./components/code-block";
