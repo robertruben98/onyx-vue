@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fireEvent, render } from "@testing-library/vue";
+import { nextTick } from "vue";
 import { axe } from "jest-axe";
 import TaskRow from "./TaskRow.vue";
 
@@ -64,7 +65,7 @@ describe("TaskRow (Vue)", () => {
     expect(getByRole("checkbox").getAttribute("aria-describedby")).toBeNull();
   });
 
-  it("long text wraps instead of overflowing, and the row is at least 44px", () => {
+  it("source declares wrapping and the 44px minimum (layout itself is checked in a browser at 360px)", () => {
     const long = "x".repeat(300);
     const { getByText } = render(TaskRow, { props: { text: long, meta: long } });
     expect(getByText(long, { selector: ".ui-checkbox__label" })).toBeTruthy();
@@ -80,5 +81,30 @@ describe("TaskRow (Vue)", () => {
       expect(await axe(container)).toHaveNoViolations();
       unmount();
     }
+  });
+
+  it("stays controlled by done: a toggle the parent ignores leaves the box unticked", async () => {
+    const { getByRole, emitted, rerender } = render(TaskRow, { props: { text, done: false } });
+    const box = getByRole("checkbox") as HTMLInputElement;
+    await fireEvent.click(box);
+    await nextTick();
+    await nextTick();
+    expect(emitted().toggle).toEqual([[true]]);
+    expect(box.checked).toBe(false);
+    expect(box.getAttribute("aria-checked")).not.toBe("true");
+    await rerender({ done: true });
+    expect(box.checked).toBe(true);
+    await rerender({ done: false });
+    expect(box.checked).toBe(false);
+  });
+
+  it("a done row whose untick is ignored stays ticked", async () => {
+    const { getByRole, emitted } = render(TaskRow, { props: { text, done: true } });
+    const box = getByRole("checkbox") as HTMLInputElement;
+    await fireEvent.click(box);
+    await nextTick();
+    await nextTick();
+    expect(emitted().toggle).toEqual([[false]]);
+    expect(box.checked).toBe(true);
   });
 });
