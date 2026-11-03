@@ -68,12 +68,36 @@ describe("ChatListItem (Vue)", () => {
     expect(container.querySelector(".ui-badge--danger")).toBeTruthy();
   });
 
-  it("same avatarSeed gives the same gradient class", () => {
+  it("same avatarSeed gives the same tint class, a tinted avatar", () => {
     const a = render(ChatListItem, { props: { ...base, avatarSeed: "chat-1" } });
     const b = render(ChatListItem, { props: { ...base, title: "Other", avatarSeed: "chat-1" } });
-    const cls = (c: Element) => [...c.querySelector(".ui-avatar")!.classList].find((x) => /gradient-\d/.test(x));
+    const cls = (c: Element) => [...c.querySelector(".ui-avatar")!.classList].find((x) => /tint-/.test(x));
     expect(cls(a.container)).toBeTruthy();
     expect(cls(a.container)).toBe(cls(b.container));
+    expect(a.container.querySelector(".ui-avatar--tinted")).toBeTruthy();
+  });
+
+  it("unread rows carry the unread class (green time) and a badge; read rows neither", () => {
+    const u = render(ChatListItem, { props: { ...base, unread: 2 } });
+    expect(u.container.querySelector(".ui-chat-list-item--unread .ui-chat-list-item__time")).toBeTruthy();
+    expect(u.container.querySelector(".ui-chat-list-item__unread")).toBeTruthy();
+    const r = render(ChatListItem, { props: base });
+    expect(r.container.querySelector(".ui-chat-list-item--unread")).toBeNull();
+  });
+
+  it("selected adds the selected class; the CSS gives hover and selected the same surface", () => {
+    const { container } = render(ChatListItem, { props: { ...base, selected: true } });
+    expect(container.querySelector(".ui-chat-list-item--selected")).toBeTruthy();
+    const scss = readFileSync(join(__dirname, "chat-list-item.scss"), "utf8");
+    expect(scss).toMatch(/&:hover,\s*&:focus-visible\s*\{\s*background:\s*var\(--ui-chat-surface-hover/);
+    expect(scss).toMatch(/--selected\s*\{\s*background:\s*var\(--ui-chat-surface-hover/);
+  });
+
+  it("is a 72 px card with radius 12 and 0 10px margin in the CSS", () => {
+    const scss = readFileSync(join(__dirname, "chat-list-item.scss"), "utf8");
+    expect(scss).toMatch(/min-height:\s*4\.5rem/);
+    expect(scss).toMatch(/border-radius:\s*12px/);
+    expect(scss).toMatch(/margin:\s*2px 10px/);
   });
 
   it("avatarText shows as the initials", () => {
