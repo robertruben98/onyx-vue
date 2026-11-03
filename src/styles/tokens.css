@@ -282,8 +282,10 @@
   --ui-band-free: var(--ui-color-success);
   --ui-band-likely: var(--ui-color-warning);
   --ui-band-busy: var(--ui-color-danger);
-  --ui-band-past: var(--ui-color-border);
-  --ui-band-nodata: var(--ui-color-surface-hover);
+  /* past and nodata share one readable grey (3:1 against the surface); nodata
+     is told apart from past by a hatch in day-timeline.scss. */
+  --ui-band-past: var(--ui-color-text-muted);
+  --ui-band-nodata: var(--ui-color-text-muted);
   --ui-focus-ring-width: var(--ui-border-width-thick);
   --ui-focus-ring-offset: var(--ui-border-width-thick);
   --ui-radius: var(--ui-radii-md);

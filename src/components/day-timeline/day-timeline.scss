@@ -12,7 +12,9 @@
   position: relative;
   height: 1.5rem;
   border-radius: var(--ui-radii-sm, 6px);
-  background: var(--ui-band-nodata);
+  background: var(--ui-color-surface-hover);
+  outline: 1px solid var(--ui-band-nodata);
+  outline-offset: -1px;
 }
 
 .ui-day-timeline__segment {
@@ -25,7 +27,13 @@
 .ui-day-timeline__segment--likely { background: var(--ui-band-likely); }
 .ui-day-timeline__segment--busy { background: var(--ui-band-busy); }
 .ui-day-timeline__segment--past { background: var(--ui-band-past); }
-.ui-day-timeline__segment--nodata { background: var(--ui-band-nodata); }
+.ui-day-timeline__segment--nodata {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--ui-band-nodata) 0 2px,
+    transparent 2px 6px
+  );
+}
 
 .ui-day-timeline__now {
   position: absolute;
