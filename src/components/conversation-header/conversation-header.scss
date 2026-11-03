@@ -1,0 +1,66 @@
+// Conversation header — 64px, avatar 40, name 16/21 over subtitle 13/20.
+// Tokens only; the chat preset feeds them through `--ui-chat-*` fallbacks.
+
+.ui-conversation-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  gap: var(--ui-space-4);
+  min-height: var(--ui-conversation-header-height);
+  padding: 0.625rem var(--ui-conversation-header-padding-x);
+  background: var(--ui-conversation-header-bg);
+  color: var(--ui-conversation-header-text);
+  box-shadow: var(--ui-conversation-header-elevation);
+}
+
+.ui-conversation-header__leading {
+  display: flex;
+  flex: none;
+  align-items: center;
+  // Pulls the back button's 40px circle toward the edge, as the avatar follows.
+  margin-inline-end: calc(var(--ui-space-2) * -1);
+}
+
+.ui-conversation-header__avatar {
+  display: flex;
+  // The reference avatar is 40px even where the preset makes controls 44px.
+  --ui-avatar-size: 2.5rem;
+  flex: none;
+}
+
+.ui-conversation-header__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  // The 15px gap of the reference is gap(16) - 1.
+  margin-inline-start: -1px;
+}
+
+.ui-conversation-header__name {
+  margin: -1px 0 0;
+  overflow: hidden;
+  font-size: var(--ui-font-size-md);
+  font-weight: 400;
+  line-height: 1.3125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-conversation-header__subtitle {
+  overflow: hidden;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  color: var(--ui-conversation-header-subtitle);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-conversation-header__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-2);
+}

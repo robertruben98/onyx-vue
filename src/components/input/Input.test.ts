@@ -162,4 +162,24 @@ describe("Input (Vue)", () => {
     render(Input, { props: { ariaLabel: "Notes" } });
     expect(screen.getByRole("textbox").hasAttribute("readonly")).toBe(false);
   });
+
+  it("variant pill adds the class and a decorative search glyph", () => {
+    const { container } = render(Input, { props: { variant: "pill", type: "search", ariaLabel: "Search" } });
+    expect(container.querySelector(".ui-input--pill")).not.toBeNull();
+    const glyph = container.querySelector(".ui-input__glyph");
+    expect(glyph?.getAttribute("aria-hidden")).toBe("true");
+    expect(container.querySelector("input")?.getAttribute("aria-label")).toBe("Search");
+  });
+
+  it("the default variant has no glyph and no pill class", () => {
+    const { container } = render(Input, { props: { ariaLabel: "Name" } });
+    expect(container.querySelector(".ui-input--pill")).toBeNull();
+    expect(container.querySelector(".ui-input__glyph")).toBeNull();
+  });
+
+  it("pill: clicking the field wrapper outside the input focuses it", async () => {
+    const { container } = render(Input, { props: { variant: "pill", ariaLabel: "Search" } });
+    await fireEvent.click(container.querySelector(".ui-input__field")!);
+    expect(document.activeElement).toBe(container.querySelector("input"));
+  });
 });

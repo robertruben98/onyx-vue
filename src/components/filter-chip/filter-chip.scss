@@ -90,3 +90,48 @@
 .ui-filter-chip--dashed.ui-filter-chip--empty {
   opacity: 1;
 }
+
+// --- Chat preset: outlined pills -------------------------------------------
+// 32 high, fully round, 1px outline; the applied filter takes the soft accent.
+// Visual size stays 32; a coarse pointer gets a 44px hit area via ::after.
+.ui-theme-chat .ui-filter-chip {
+  position: relative;
+  box-sizing: border-box;
+  height: var(--ui-filter-chip-pill-height);
+  padding: 0 var(--ui-space-3);
+  border-color: var(--ui-filter-chip-pill-border);
+  border-radius: var(--ui-radii-full);
+  font-size: var(--ui-font-size-sm);
+  font-weight: 600;
+  line-height: 1.25rem;
+  letter-spacing: 0.01rem;
+}
+.ui-theme-chat .ui-filter-chip--counted {
+  gap: var(--ui-space-1);
+  padding-right: var(--ui-space-2);
+}
+.ui-theme-chat .ui-filter-chip .ui-tri-state-count {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+}
+.ui-theme-chat .ui-filter-chip--pressed {
+  background: var(--ui-filter-chip-pill-pressed-bg);
+  color: var(--ui-filter-chip-pill-pressed-text);
+  --ui-tri-state-count-neutral: var(--ui-filter-chip-pill-pressed-text);
+}
+.ui-theme-chat .ui-filter-chip--dashed {
+  border-color: currentColor;
+}
+
+@media (pointer: coarse) {
+  .ui-theme-chat .ui-filter-chip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

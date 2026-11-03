@@ -22,12 +22,19 @@ Consumers that build from source (the control-panel dashboard aliases
   read-only `composerText` prop. API backward compatible; spacing (12 px between ungrouped items) and
   side padding change.
 - `UiNavRail` `variant="icons"` (64 px strip of round icon buttons, `#footer` slot) with `UiNavRailItem` `icon`/`#icon`, `badge`, `dot`; `UiTabBar` `variant="chat"` (80 px, icon in a 64x32 pill, badge) and component icons.
+- `UiConversationHeader` (64 px bar: `leading` slot, 40 px avatar, name 16/21 over subtitle 13/20, `actions` slot, header shadow) and `UiPanelHeader` (64 px list-panel header, title 22/28, `actions` slot). New tokens `--ui-conversation-header-*`, `--ui-panel-header-*`.
+- `UiInput` `variant="pill"`: 40 px round search field with a leading search glyph. New tokens `--ui-input-pill-*`.
+- `UiFilterChip` under `ui-theme-chat`: 32 px outlined pills with soft-accent active state. New tokens `--ui-filter-chip-pill-*`.
 
 ### Changed
 
 - `UiChatListItem`: a 72 px card (radius 12, margin 0 10) with a 48 px tinted avatar, name 400 16/24,
   preview 14/20, green time and a 600 badge when unread, hover/selected on `--ui-chat-surface-hover`,
   source mark 12/400 and a small-pill tag. Props and events unchanged.
+
+### Fixed
+
+- `UiFilterChip` without a `count` no longer renders a trailing "·" (onyx-vue#133).
 
 ## 0.17.0 — 2026-11-03
 

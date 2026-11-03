@@ -71,3 +71,50 @@
 .ui-input--invalid .ui-input__el:focus-visible {
   outline-color: var(--ui-input-border-invalid);
 }
+
+// The field wrapper only exists to anchor the pill's glyph; it adds no box.
+.ui-input__field {
+  display: contents;
+}
+
+// --- Pill (search field) ---------------------------------------------------
+// 40 high, fully round, filled, borderless, glyph 20px at 16px from the edge.
+// Under a coarse pointer the control grows to 44px so the target stays usable.
+.ui-input--pill .ui-input__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.ui-input--pill .ui-input__el {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: var(--ui-input-pill-height);
+  padding: 0 var(--ui-space-2) 0 3rem;
+  border-color: transparent;
+  border-radius: var(--ui-radii-full);
+  background-color: var(--ui-input-pill-bg);
+  color: var(--ui-input-pill-text);
+  font-size: var(--ui-font-size-sm);
+  line-height: 1.25rem;
+  letter-spacing: 0.01rem;
+}
+.ui-input--pill .ui-input__el::placeholder {
+  color: var(--ui-input-pill-placeholder);
+}
+.ui-input__glyph {
+  position: absolute;
+  left: var(--ui-space-4);
+  width: var(--ui-input-pill-glyph-size);
+  height: var(--ui-input-pill-glyph-size);
+  fill: var(--ui-input-pill-placeholder);
+  pointer-events: none;
+}
+// The field stays 40px; a coarse pointer gets a 44px hit area from 2px of
+// padding on the wrapper (a click on it focuses the input, see Input.vue).
+@media (pointer: coarse) {
+  .ui-input--pill .ui-input__field {
+    padding-block: 2px;
+  }
+}
