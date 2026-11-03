@@ -47,6 +47,8 @@ export interface OnyxMessages {
   stateBarLabel: string;
   keyHintsLabel: string;
   ansiTerminalLabel: string;
+  messageBubbleCopyLabel: string;
+  conversationNewMessages: { "one": string; "other": string };
   relativeTimeUnits: { "minute": string; "hour": string; "day": string; "month": string };
   metricChipDeltaLabels: { "up": string; "down": string; "same": string };
   countdownUnitLabels: { "days": { "short": string; "one": string; "other": string }; "hours": { "short": string; "one": string; "other": string }; "minutes": { "short": string; "one": string; "other": string }; "seconds": { "short": string; "one": string; "other": string } };
@@ -129,6 +131,11 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "stateBarLabel": "Run progress",
   "keyHintsLabel": "Keyboard shortcuts",
   "ansiTerminalLabel": "Terminal output",
+  "messageBubbleCopyLabel": "Copy",
+  "conversationNewMessages": {
+    "one": "↓ {n} new",
+    "other": "↓ {n} new"
+  },
   "relativeTimeUnits": {
     "minute": "m",
     "hour": "h",
@@ -280,6 +287,11 @@ export const ES_MESSAGES: OnyxMessages = {
   "stateBarLabel": "Progreso de la ejecución",
   "keyHintsLabel": "Atajos de teclado",
   "ansiTerminalLabel": "Salida del terminal",
+  "messageBubbleCopyLabel": "Copiar",
+  "conversationNewMessages": {
+    "one": "↓ {n} nuevo",
+    "other": "↓ {n} nuevos"
+  },
   "relativeTimeUnits": {
     "minute": "min",
     "hour": "h",

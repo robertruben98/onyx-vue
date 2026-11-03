@@ -1,0 +1,162 @@
+/*
+ * Preset "chat".
+ *
+ * Para apps de mensajeria web (conversaciones, burbujas, contadores de no
+ * leidos): la SENSACION de una app de chat, sin la marca de ninguna. Oscuro por
+ * defecto -son apps que se miran de noche y en el movil-, con variante clara.
+ * Superficies casi negras de azul verdoso, un verde sereno para actuar y para
+ * el contador de no leidos, burbuja saliente en verde oscuro y entrante en
+ * pizarra, esquinas de 10px y letra del sistema (sin ficheros que servir).
+ *
+ * Como los demas presets, sobre todo re-mapea tokens. Ademas define los tokens
+ * propios que consumen los componentes de chat: --ui-chat-bg (fondo de la
+ * conversacion), --ui-chat-bubble-in / -out, --ui-chat-bubble-draft-border
+ * (borde del borrador), --ui-chat-meta (horas) y --ui-chat-unread (contador).
+ *
+ * Uso: la clase va en la RAIZ (<html>), por los componentes que hacen
+ * `<Teleport to="body">`:
+ *
+ *   <html class="ui-theme-chat">                oscuro (por defecto)
+ *   <html class="ui-theme-chat app-light">      claro
+ */
+.ui-theme-chat {
+  /* --- tipografia ------------------------------------------------------- */
+  --ui-font-family: system-ui, -apple-system, "SF Pro Text", "Segoe UI Variable Text",
+    "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --ui-font-family-display: var(--ui-font-family);
+
+  font-family: var(--ui-font-family);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Controles de 44px: el dedo, no el raton. */
+  --ui-size-control-sm: 2.5rem;
+  --ui-size-control-md: 2.75rem;
+  --ui-size-control-lg: 3.25rem;
+
+  /* --- geometria -------------------------------------------------------- */
+  --ui-chat-bubble-radius: 10px;
+  --ui-radii-sm: 8px;
+  --ui-radii-md: 10px;
+  --ui-radii-lg: 14px;
+  --ui-radius: var(--ui-radii-md);
+  --ui-button-radius: var(--ui-radii-full);
+  --ui-border-width: 1px;
+  --ui-border-width-thick: 2px;
+
+  --ui-card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --ui-card-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 12px 28px -12px rgba(0, 0, 0, 0.75);
+
+  /* --- primitivos del tema (noche) -------------------------------------- */
+  --ui-chat-bg: #0b141a;              /* fondo de la conversacion */
+  --ui-chat-surface: #111b21;         /* paneles: lista de chats, barras */
+  --ui-chat-surface-hover: #1a262d;
+  --ui-chat-line: #25343c;
+  --ui-chat-ink: #e6edf0;
+  --ui-chat-ink-soft: #9fb2bb;
+  --ui-chat-ink-faint: #70838c;       /* deshabilitado */
+  --ui-chat-accent: #34d27b;          /* verde: actuar */
+  --ui-chat-accent-hover: #5be096;
+  --ui-chat-accent-active: #86eab2;
+  --ui-chat-on-accent: #06130c;
+  --ui-chat-bubble-in: #1f2c34;       /* entrante: pizarra */
+  --ui-chat-bubble-out: #005c4b;      /* saliente: verde oscuro */
+  --ui-chat-bubble-draft-border: #e0b23f;
+  --ui-chat-meta: #b3c7c1;            /* horas: 4.5:1 sobre ambas burbujas */
+  --ui-chat-unread: #34d27b;          /* contador de no leidos */
+  --ui-chat-right: #4ade80;
+  --ui-chat-wrong: #fb7185;
+  --ui-chat-careful: #fbbf24;
+
+  /* --- semanticos ------------------------------------------------------- */
+  --ui-terminal-magenta: #e0a3f5;
+  --ui-terminal-cyan: #67e0ea;
+  --ui-color-primary: var(--ui-chat-accent);
+  --ui-color-primary-hover: var(--ui-chat-accent-hover);
+  --ui-color-primary-active: var(--ui-chat-accent-active);
+  --ui-color-on-primary: var(--ui-chat-on-accent);
+  --ui-color-surface: var(--ui-chat-surface);
+  --ui-color-surface-hover: var(--ui-chat-surface-hover);
+  --ui-color-text: var(--ui-chat-ink);
+  --ui-color-text-muted: var(--ui-chat-ink-soft);
+  --ui-color-border: var(--ui-chat-line);
+  --ui-color-success: var(--ui-chat-right);
+  --ui-color-success-surface: rgba(74, 222, 128, 0.12);
+  --ui-color-warning: var(--ui-chat-careful);
+  --ui-color-warning-surface: rgba(251, 191, 36, 0.12);
+  --ui-color-danger: var(--ui-chat-wrong);
+  --ui-color-danger-surface: rgba(251, 113, 133, 0.12);
+  --ui-color-info: var(--ui-chat-accent);
+  --ui-color-info-surface: rgba(52, 210, 123, 0.12);
+  --ui-color-neutral: var(--ui-chat-ink-soft);
+  --ui-color-neutral-surface: rgba(159, 178, 187, 0.12);
+  --ui-color-disabled-bg: var(--ui-chat-surface-hover);
+  --ui-color-disabled-text: var(--ui-chat-ink-faint);
+  --ui-focus-ring: var(--ui-chat-accent);
+
+  /* --- fondo ------------------------------------------------------------ */
+  background-color: var(--ui-chat-bg);
+  color: var(--ui-color-text);
+}
+
+/* De dia: fondo gris azulado, paneles blancos, burbuja saliente en verde claro. */
+.ui-theme-chat.app-light {
+  --ui-chat-bg: #e9eef1;
+  --ui-chat-surface: #ffffff;
+  --ui-chat-surface-hover: #f0f3f5;
+  --ui-chat-line: #d6dee3;
+  --ui-chat-ink: #111b21;
+  --ui-chat-ink-soft: #4d5f69;
+  --ui-chat-ink-faint: #70838c;
+  --ui-chat-accent: #07694a;
+  --ui-chat-accent-hover: #065a3f;
+  --ui-chat-accent-active: #054a34;
+  --ui-chat-on-accent: #ffffff;
+  --ui-chat-bubble-in: #ffffff;
+  --ui-chat-bubble-out: #d4f4df;
+  --ui-chat-bubble-draft-border: #9a6a00;
+  --ui-chat-meta: #4d5f69;
+  --ui-chat-unread: #07694a;
+  --ui-chat-right: #0a7340;
+  --ui-chat-wrong: #c01f3f;
+  --ui-chat-careful: #9a4708;
+
+  --ui-card-shadow: 0 1px 2px rgba(17, 27, 33, 0.05), 0 6px 20px -8px rgba(17, 27, 33, 0.12);
+  --ui-card-shadow-hover: 0 2px 4px rgba(17, 27, 33, 0.07), 0 10px 26px -8px rgba(17, 27, 33, 0.2);
+
+  --ui-terminal-magenta: #a33fbf;
+  --ui-terminal-cyan: #0e7f8c;
+  --ui-color-success-surface: #e4f6ec;
+  --ui-color-warning-surface: #fdf0dc;
+  --ui-color-danger-surface: #fde7ec;
+  --ui-color-info-surface: #dff3ea;
+  --ui-color-neutral-surface: #e6ecef;
+}
+
+/* --- lo que no es token --------------------------------------------------- */
+
+/* Titulos de app: sin versalitas, de peso medio. */
+.ui-theme-chat .ui-app-bar__title,
+.ui-theme-chat .ui-section-header__title,
+.ui-theme-chat .ui-dialog__title,
+.ui-theme-chat .ui-empty-state__title {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+/* Al pulsar, el boton cede un poco. */
+.ui-theme-chat .ui-button__el {
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease,
+    transform 120ms ease;
+}
+.ui-theme-chat .ui-button__el:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-theme-chat .ui-button__el:active:not(:disabled) {
+    transform: none;
+  }
+}

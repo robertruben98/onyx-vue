@@ -23,12 +23,17 @@ const dark = vars(block(read("dark.css"), ".app-dark"));
 const pocket = read("pocket.css");
 const pocketDay = vars(block(pocket, ".ui-theme-pocket"));
 const pocketNight = vars(block(pocket, ".ui-theme-pocket.app-dark"));
+const chat = read("chat.css");
+const chatNight = vars(block(chat, ".ui-theme-chat"));
+const chatDay = vars(block(chat, ".ui-theme-chat.app-light"));
 
 const themes: [string, Record<string, string>[]][] = [
   ["light", [tokens]],
   ["dark", [tokens, dark]],
   ["pocket", [tokens, pocketDay]],
   ["pocket night", [tokens, dark, pocketDay, pocketNight]],
+  ["chat night", [tokens, chatNight]],
+  ["chat day", [tokens, chatNight, chatDay]],
 ];
 
 function resolve(layers: Record<string, string>[], name: string): string {
