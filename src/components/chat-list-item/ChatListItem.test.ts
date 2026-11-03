@@ -97,7 +97,7 @@ describe("ChatListItem (Vue)", () => {
     const scss = readFileSync(join(__dirname, "chat-list-item.scss"), "utf8");
     expect(scss).toMatch(/min-height:\s*4\.5rem/);
     expect(scss).toMatch(/border-radius:\s*12px/);
-    expect(scss).toMatch(/margin:\s*2px 10px/);
+    expect(scss).toMatch(/margin:\s*0 10px 4px/);
   });
 
   it("avatarText shows as the initials", () => {
