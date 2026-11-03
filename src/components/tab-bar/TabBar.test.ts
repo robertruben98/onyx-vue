@@ -1,6 +1,8 @@
 import { fireEvent, render } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import { h } from "vue";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import TabBar, { type TabBarItem } from "./TabBar.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -132,5 +134,29 @@ describe("TabBar chat variant (Vue)", () => {
   it("has no a11y violations", async () => {
     const { container } = render(TabBar, { props: { items: ITEMS.slice(0, 4), variant: "chat", activeId: "home" } });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+});
+
+describe("TabBar chat height and badge ink (Vue)", () => {
+  it("gives the spacer the chat class so it holds the 80 px bar height", () => {
+    const { container } = render(TabBar, { props: { items: ITEMS.slice(0, 3), variant: "chat" } });
+    expect(container.querySelector(".ui-tab-bar__spacer")?.classList.contains("ui-tab-bar__spacer--chat")).toBe(true);
+    const scss = readFileSync(join(__dirname, "tab-bar.scss"), "utf8");
+    // Same height var on spacer and bar.
+    expect(scss).toMatch(/\.ui-tab-bar__spacer--chat,\s*\.ui-theme-chat \.ui-tab-bar__spacer\s*\{\s*--ui-tab-bar-height:\s*5rem/);
+    expect(scss).toMatch(/\.ui-tab-bar--chat,\s*\.ui-theme-chat \.ui-tab-bar\s*\{\s*--ui-tab-bar-height:\s*5rem/);
+  });
+
+  it("keeps the default spacer unclassed", () => {
+    const { container } = render(TabBar, { props: { items: ITEMS.slice(0, 3) } });
+    expect(container.querySelector(".ui-tab-bar__spacer--chat")).toBeNull();
+  });
+
+  it("inks badge numerals with --ui-chat-on-accent, never a literal", () => {
+    for (const f of ["tab-bar/tab-bar.scss", "nav-rail/nav-rail.scss"]) {
+      const scss = readFileSync(join(__dirname, "..", f), "utf8");
+      expect(scss).toContain("var(--ui-chat-on-accent");
+      expect(scss).not.toMatch(/color:\s*#fff/i);
+    }
   });
 });
