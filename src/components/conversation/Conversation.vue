@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useOnyxLocale } from "../../locale";
 import "./conversation.scss";
 
@@ -62,6 +62,22 @@ function onScroll() {
   }
 }
 
+// Content that fits the viewport never scrolls, so no scroll event would ask for older items.
+// clientHeight 0 means "not laid out yet": nothing can be said about the fit.
+function loadIfShort() {
+  const el = scroller.value;
+  if (!el || loadRequested || !props.hasOlder || props.loadingOlder) return;
+  if (el.clientHeight > 0 && el.scrollHeight <= el.clientHeight) {
+    loadRequested = true;
+    emit("load-older");
+  }
+}
+
+onMounted(() => {
+  scrollToBottom(); // a conversation opens at the newest message
+  loadIfShort();
+});
+
 watch(
   () => props.loadingOlder,
   (loading) => {
@@ -74,8 +90,16 @@ watch(
   () => props.items,
   (next, prev) => {
     const el = scroller.value;
-    if (!el || !prev.length || !next.length) {
-      if (el && next.length && !prev.length) nextTick(scrollToBottom);
+    if (!el || !next.length) return;
+    const prevKeys = new Set(prev.map((i) => i.key));
+    if (!prev.length || !next.some((i) => prevKeys.has(i.key))) {
+      // empty -> filled, or a whole new list (another chat): start over at the newest message
+      unseen.value = 0;
+      loadRequested = false;
+      nextTick(() => {
+        scrollToBottom();
+        loadIfShort();
+      });
       return;
     }
     const oldFirst = prev[0].key;
@@ -92,6 +116,7 @@ watch(
       if (prepended) el.scrollTop = topBefore + (el.scrollHeight - heightBefore);
       if (appended && wasAtBottom) scrollToBottom();
       loadRequested = false;
+      loadIfShort();
     });
   },
   { flush: "pre" },
