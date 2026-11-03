@@ -9,6 +9,20 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiAvatar`: `tone="tinted"` (+ `seed`) paints coloured initials on a soft surface, one of eleven
+  pairs picked from a stable hash (tokens `--ui-avatar-tint-<name>-ink|surface`, light and `.app-dark`).
+  New exports `avatarTintName`, `AVATAR_TINTS`.
+
+### Changed
+
+- `UiChatListItem`: a 72 px card (radius 12, margin 0 10) with a 48 px tinted avatar, name 400 16/24,
+  preview 14/20, green time and a 600 badge when unread, hover/selected on `--ui-chat-surface-hover`,
+  source mark 12/400 and a small-pill tag. Props and events unchanged.
+
 ## 0.17.0 — 2026-11-03
 
 ### Added
