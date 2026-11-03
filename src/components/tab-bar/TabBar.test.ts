@@ -1,5 +1,6 @@
 import { fireEvent, render } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { h } from "vue";
 import TabBar, { type TabBarItem } from "./TabBar.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -102,6 +103,34 @@ describe("TabBar (Vue)", () => {
     const { container, getByRole } = render(TabBar, { props: { items: ITEMS, activeId: "home" } });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
     await fireEvent.click(getByRole("button", { name: /More/ }));
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+});
+
+describe("TabBar chat variant (Vue)", () => {
+  it("adds the chat class only for variant=chat", () => {
+    const a = render(TabBar, { props: { items: ITEMS.slice(0, 3), variant: "chat" } });
+    expect(a.container.querySelector("nav")?.classList.contains("ui-tab-bar--chat")).toBe(true);
+    const b = render(TabBar, { props: { items: ITEMS.slice(0, 3) } });
+    expect(b.container.querySelector("nav")?.classList.contains("ui-tab-bar--chat")).toBe(false);
+  });
+
+  it("renders a component icon in the pill and keeps strings working", () => {
+    const Glyph = { render: () => h("svg", { class: "g" }) };
+    const items: TabBarItem[] = [
+      { id: "a", label: "Chats", href: "#/a", icon: Glyph, count: 4 },
+      { id: "b", label: "Calls", href: "#/b", icon: "C" },
+    ];
+    const { container } = render(TabBar, { props: { items, activeId: "a", variant: "chat" } });
+    const icons = container.querySelectorAll(".ui-tab-bar__icon");
+    expect(icons[0].querySelector("svg.g")).toBeTruthy();
+    expect(icons[1].textContent?.trim()).toBe("C");
+    expect(container.querySelector(".ui-tab-bar__item--active")?.getAttribute("aria-current")).toBe("page");
+    expect(container.querySelector(".ui-tab-bar__count")?.textContent).toBe("4");
+  });
+
+  it("has no a11y violations", async () => {
+    const { container } = render(TabBar, { props: { items: ITEMS.slice(0, 4), variant: "chat", activeId: "home" } });
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
