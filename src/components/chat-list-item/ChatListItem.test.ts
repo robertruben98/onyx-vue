@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import ChatListItem from "./ChatListItem.vue";
@@ -21,16 +23,21 @@ describe("ChatListItem (Vue)", () => {
     });
   });
 
-  it("emits select on click and on Enter", async () => {
+  it("emits select on click", async () => {
     const { emitted } = render(ChatListItem, { props: base });
-    const btn = screen.getByRole("button");
-    await fireEvent.click(btn);
+    await fireEvent.click(screen.getByRole("button"));
     expect(emitted().select).toHaveLength(1);
-    btn.focus();
-    await fireEvent.keyDown(btn, { key: "Enter" });
-    // A native button turns Enter into click in browsers; jsdom does not, so
-    // the component must not rely on it being silent either way.
-    expect(emitted().select.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("is a native type=button, so Enter and Space activate it with no key handler of its own", () => {
+    // jsdom does not turn Enter into click; a keydown handler here would
+    // double-fire in browsers. The native button is the keyboard support.
+    const { container } = render(ChatListItem, { props: base });
+    const root = container.firstElementChild!;
+    expect(root.tagName).toBe("BUTTON");
+    expect(root.getAttribute("type")).toBe("button");
+    expect(root.hasAttribute("disabled")).toBe(false);
+    expect(root.getAttribute("tabindex")).toBeNull();
   });
 
   it("selected sets aria-current", () => {
@@ -43,11 +50,15 @@ describe("ChatListItem (Vue)", () => {
     expect(screen.getByRole("button").getAttribute("aria-current")).toBeNull();
   });
 
-  it("truncates a long preview to one line with an ellipsis class", () => {
+  it("keeps a long preview whole in the DOM and the CSS cuts it to one line with an ellipsis", () => {
     const { container } = render(ChatListItem, { props: { ...base, preview: "x".repeat(200) } });
-    const el = container.querySelector(".ui-chat-list-item__preview")!;
-    expect(el.textContent).toHaveLength(200);
-    expect(el.classList.contains("ui-chat-list-item__preview")).toBe(true);
+    expect(container.querySelector(".ui-chat-list-item__preview")!.textContent).toHaveLength(200);
+    const scss = readFileSync(join(__dirname, "chat-list-item.scss"), "utf8");
+    const rule = scss.match(/\.ui-chat-list-item__preview\s*\{([^}]*)\}/)?.[1] ?? "";
+    expect(rule).toMatch(/white-space:\s*nowrap/);
+    expect(rule).toMatch(/overflow:\s*hidden/);
+    expect(rule).toMatch(/text-overflow:\s*ellipsis/);
+    expect(rule).toMatch(/min-width:\s*0/);
   });
 
   it("renders source mark and tag with tone", () => {
