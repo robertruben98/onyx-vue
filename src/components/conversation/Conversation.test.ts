@@ -94,6 +94,18 @@ describe("Conversation (Vue)", () => {
     expect(s.top()).toBe(30 + 2 * ITEM_HEIGHT);
   });
 
+  it("prepending items of the same day keeps the existing section and item nodes (no remount) and the position", async () => {
+    const { container, rerender } = mount(mk("c:A", "d:A", "e:B"), { hasOlder: true });
+    const s = mockScroller(container, 30);
+    const section = container.querySelector(".ui-conversation__section")!;
+    const probe = container.querySelector(".probe")!;
+    await rerender({ items: mk("a:A", "b:A", "c:A", "d:A", "e:B") });
+    await nextTick();
+    expect(container.querySelector(".ui-conversation__section")).toBe(section);
+    expect([...container.querySelectorAll(".probe")].find((n) => n.textContent === "c")).toBe(probe);
+    expect(s.top()).toBe(30 + 2 * ITEM_HEIGHT);
+  });
+
   it("appending while within 80px of the bottom scrolls to the bottom, with no pill", async () => {
     const { container, rerender } = mount(mk("a:A", "b:A", "c:A", "d:A", "e:A"));
     const s = mockScroller(container, 500 - VIEWPORT - 80); // exactly 80px from the bottom
