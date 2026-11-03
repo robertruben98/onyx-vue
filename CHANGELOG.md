@@ -11,6 +11,20 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ## Unreleased
 
+## 0.16.0 — 2026-11-03
+
+### Added
+
+- `ui-theme-chat` preset for messaging clients: dark by default, light with `.app-light`.
+  It brings the chat tokens (`--ui-chat-bg`, `--ui-chat-bubble-in` / `-out`,
+  `--ui-chat-bubble-draft-border`, `--ui-chat-meta`, `--ui-chat-unread`).
+- `UiChatListItem`: a conversation row with avatar, title, last message, time and unread count.
+- `UiMessageBubble`: an incoming, outgoing or draft message bubble with a copy action. New
+  locale key `messageBubbleCopyLabel` (EN "Copy", ES "Copiar").
+- `UiConversation`: a message scroller that lands at the bottom on mount and on swap, loads
+  older messages at the top (also when the content is short) and shows a "new messages" pill.
+  New locale key `conversationNewMessages` (EN "↓ {n} new", ES "↓ {n} nuevo/s").
+
 ## 0.15.0 — 2026-10-31
 
 ### Added
