@@ -31,6 +31,7 @@ Consumers that build from source (the control-panel dashboard aliases
 - `UiChatListItem`: a 72 px card (radius 12, margin 0 10) with a 48 px tinted avatar, name 400 16/24,
   preview 14/20, green time and a 600 badge when unread, hover/selected on `--ui-chat-surface-hover`,
   source mark 12/400 and a small-pill tag. Props and events unchanged.
+- `UiMessageBubble`: WhatsApp geometry (7.5px radius, 6/7/8/9px padding, 14.2px text, inline time, 65/75/85/95% max width) and a new `tail` prop.
 
 ### Fixed
 
