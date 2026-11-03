@@ -132,7 +132,7 @@ if (isDev()) useDeprecatedEvents();
     <label v-if="label" class="ui-input__label" :for="controlId()">{{
       label
     }}</label>
-    <span class="ui-input__field">
+    <span class="ui-input__field" @click="focus()">
       <svg
         v-if="variant === 'pill'"
         class="ui-input__glyph"

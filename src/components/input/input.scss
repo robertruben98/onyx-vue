@@ -111,8 +111,10 @@
   fill: var(--ui-input-pill-placeholder);
   pointer-events: none;
 }
+// The field stays 40px; a coarse pointer gets a 44px hit area from 2px of
+// padding on the wrapper (a click on it focuses the input, see Input.vue).
 @media (pointer: coarse) {
-  .ui-input--pill .ui-input__el {
-    height: max(var(--ui-input-pill-height), 44px);
+  .ui-input--pill .ui-input__field {
+    padding-block: 2px;
   }
 }
