@@ -7,6 +7,8 @@ export interface ConversationItem {
   key: string;
   /** Day label of the item ("Hoy", "lunes 2 nov"). A separator is drawn whenever it changes. */
   day: string;
+  /** Run key (e.g. the sender). Consecutive items with the same group form a run; the slot gets `first` on its start. */
+  group?: string;
 }
 
 const TOP_THRESHOLD = 200; // px from the top that asks for older items
@@ -19,8 +21,10 @@ const props = withDefaults(
     loadingOlder?: boolean;
     /** There are older items to fetch. */
     hasOlder?: boolean;
+    /** Text of the read-only composer pill. The `footer` slot replaces it. */
+    composerText?: string;
   }>(),
-  { loadingOlder: false, hasOlder: false },
+  { loadingOlder: false, hasOlder: false, composerText: undefined },
 );
 const emit = defineEmits<{ "load-older": [] }>();
 
@@ -29,13 +33,19 @@ const scroller = ref<HTMLElement | null>(null);
 const unseen = ref(0);
 let loadRequested = false; // latch: one load-older per load, until the parent reacts
 
-const rows = computed(() =>
-  props.items.map((item, index) => ({
-    item,
-    index,
-    separator: index === 0 || props.items[index - 1].day !== item.day,
-  })),
-);
+// One section per day, so the day chip sticks only while its own day is on screen.
+const days = computed(() => {
+  const out: { day: string; key: string; rows: { item: ConversationItem; index: number; first: boolean }[] }[] = [];
+  props.items.forEach((item, index) => {
+    const prev = index > 0 ? props.items[index - 1] : undefined;
+    const newDay = !prev || prev.day !== item.day;
+    // Without a group nothing is known about runs: every item counts as the start of one.
+    const first = newDay || item.group === undefined || prev?.group !== item.group;
+    if (newDay) out.push({ day: item.day, key: item.key, rows: [] });
+    out[out.length - 1].rows.push({ item, index, first });
+  });
+  return out;
+});
 
 const pillText = computed(() => {
   const template = unseen.value === 1 ? locale.conversationNewMessages.one : locale.conversationNewMessages.other;
@@ -125,16 +135,31 @@ watch(
 
 <template>
   <div class="ui-conversation">
-    <div ref="scroller" class="ui-conversation__scroll" role="log" tabindex="0" @scroll="onScroll">
-      <template v-for="row in rows" :key="row.item.key">
-        <div v-if="row.separator" class="ui-conversation__day">{{ row.item.day }}</div>
-        <div class="ui-conversation__item">
-          <slot name="item" :item="row.item" :index="row.index" />
-        </div>
-      </template>
+    <div class="ui-conversation__wallpaper" aria-hidden="true" />
+    <div class="ui-conversation__body">
+      <div ref="scroller" class="ui-conversation__scroll" role="log" tabindex="0" @scroll="onScroll">
+        <section v-for="d in days" :key="d.key" class="ui-conversation__section">
+          <div class="ui-conversation__day">
+            <span class="ui-conversation__day-chip">{{ d.day }}</span>
+          </div>
+          <div
+            v-for="row in d.rows"
+            :key="row.item.key"
+            class="ui-conversation__item"
+            :class="{ 'ui-conversation__item--first': row.first }"
+          >
+            <slot name="item" :item="row.item" :index="row.index" :first="row.first" />
+          </div>
+        </section>
+      </div>
+      <button v-if="unseen > 0" type="button" class="ui-conversation__pill" @click="scrollToBottom">
+        {{ pillText }}
+      </button>
     </div>
-    <button v-if="unseen > 0" type="button" class="ui-conversation__pill" @click="scrollToBottom">
-      {{ pillText }}
-    </button>
+    <div v-if="$slots.footer || composerText" class="ui-conversation__composer" :class="{ 'ui-conversation__composer--readonly': !$slots.footer }">
+      <slot name="footer">
+        <span class="ui-conversation__composer-text">{{ composerText }}</span>
+      </slot>
+    </div>
   </div>
 </template>
