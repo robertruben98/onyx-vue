@@ -21,6 +21,7 @@ Consumers that build from source (the control-panel dashboard aliases
   sticky day chip (radius 6, 24 px, 600 12/16), and a floating composer pill via the `footer` slot or the
   read-only `composerText` prop. API backward compatible; spacing (12 px between ungrouped items) and
   side padding change.
+- `UiNavRail` `variant="icons"` (64 px strip of round icon buttons, `#footer` slot) with `UiNavRailItem` `icon`/`#icon`, `badge`, `dot`; `UiTabBar` `variant="chat"` (80 px, icon in a 64x32 pill, badge) and component icons.
 
 ### Changed
 

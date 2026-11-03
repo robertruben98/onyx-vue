@@ -75,9 +75,26 @@ export const navRailDoc: ComponentDoc = {
       description:
         "Secondary lines under the label, quieter and smaller: one per array item, each truncated on its own. Without it the entry is exactly the one-line entry it always was.",
     },
+    { name: "NavRail variant", type: "'default' | 'icons'", default: "'default'", description: "`icons` is the 64 px icon strip of a messaging app." },
+    { name: "NavRail #footer", type: "slot", default: "—", description: "Entries pinned to the bottom of the rail (settings, profile)." },
+    { name: "NavRailItem icon / #icon", type: "Component / slot", default: "—", description: "Makes the entry a round icon button; `label` becomes its accessible name and tooltip." },
+    { name: "NavRailItem badge", type: "number | null", default: "null", description: "Count pill on the icon's corner, 99+ above 99, hidden at 0; spoken as part of the name." },
+    { name: "NavRailItem dot", type: "boolean", default: "false", description: "A dot on the icon's corner for 'something new' without a number." },
     { name: "NavRailItem #meta", type: "slot", default: "meta", description: "Replaces `meta`. Put one element per line so each one truncates." },
   ],
   demos: [
+    {
+      title: "Icon rail (chat apps)",
+      description: "variant=\"icons\": a 64 px strip of round 40 px buttons. The label is the accessible name and tooltip; badge/dot sit on the corner; the footer slot pins entries to the bottom.",
+      code: `<UiNavRail variant="icons" label="Apps" style="height: 22rem">
+  <UiNavRailItem label="Chats" :icon="ChatIcon" :badge="5" active />
+  <UiNavRailItem label="Calls" :icon="CallIcon" />
+  <UiNavRailItem label="Status" :icon="StatusIcon" dot />
+  <template #footer>
+    <UiNavRailItem label="Settings" :icon="GearIcon" />
+  </template>
+</UiNavRail>`,
+    },
     {
       title: "Views and repositories",
       code: `<UiNavRail label="PR dashboard">
