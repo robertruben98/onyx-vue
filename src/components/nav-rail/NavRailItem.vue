@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
+import { computed, useSlots, type Component } from "vue";
 import { UiTriStateCount, type TriState, type TriStateTone } from "../tri-state-count";
 import "./nav-rail.scss";
 
@@ -25,6 +25,16 @@ const props = withDefaults(
      * `#meta` slot replaces it.
      */
     meta?: string | string[];
+    /**
+     * Glyph of an icon-rail entry (a component, e.g. an SVG wrapper). Giving an
+     * `icon` prop or `#icon` slot turns the entry into a round icon button: the
+     * `label` becomes its accessible name and tooltip instead of visible text.
+     */
+    icon?: Component;
+    /** Count shown as a pill over the icon's corner (icon entries); 99+ above 99. */
+    badge?: number | null;
+    /** A plain dot over the icon's corner, for "something new" without a number. */
+    dot?: boolean;
   }>(),
   {
     active: false,
@@ -34,6 +44,9 @@ const props = withDefaults(
     href: "",
     title: "",
     meta: undefined,
+    icon: undefined,
+    badge: null,
+    dot: false,
   },
 );
 
@@ -72,8 +85,17 @@ const metaLines = computed(() =>
  */
 const hasMeta = computed(() => metaLines.value.length > 0 || !!slots.meta);
 
+const isIcon = computed(() => !!props.icon || !!slots.icon);
+const badgeText = computed(() =>
+  props.badge && props.badge > 0 ? (props.badge > 99 ? "99+" : String(props.badge)) : "",
+);
+const spokenLabel = computed(() =>
+  badgeText.value ? `${props.label}, ${badgeText.value}` : props.label,
+);
+
 const rootClasses = computed(() => ({
   "ui-nav-rail__item": true,
+  "ui-nav-rail__item--icon": isIcon.value,
   "ui-nav-rail__item--active": props.active,
   "ui-nav-rail__item--meta": hasMeta.value,
 }));
@@ -85,11 +107,19 @@ const rootClasses = computed(() => ({
     :class="rootClasses"
     :type="isLink ? undefined : 'button'"
     :href="isLink ? href : undefined"
-    :title="title || undefined"
+    :title="title || (isIcon ? label : undefined)"
+    :aria-label="isIcon ? spokenLabel : undefined"
     :aria-current="active ? 'page' : undefined"
     @click="!isLink && emit('selected')"
   >
-    <span v-if="hasMeta" class="ui-nav-rail__text">
+    <template v-if="isIcon">
+      <span class="ui-nav-rail__glyph" aria-hidden="true">
+        <slot name="icon"><component :is="icon" /></slot>
+      </span>
+      <span v-if="badgeText" class="ui-nav-rail__badge" aria-hidden="true">{{ badgeText }}</span>
+      <span v-else-if="dot" class="ui-nav-rail__dot" aria-hidden="true" />
+    </template>
+    <span v-else-if="hasMeta" class="ui-nav-rail__text">
       <span class="ui-nav-rail__name">{{ label }}</span>
       <span class="ui-nav-rail__meta">
         <slot name="meta">
@@ -98,7 +128,7 @@ const rootClasses = computed(() => ({
       </span>
     </span>
     <span v-else class="ui-nav-rail__name">{{ label }}</span>
-    <span class="ui-nav-rail__marks">
+    <span v-if="!isIcon" class="ui-nav-rail__marks">
       <!-- Los avisos van ANTES del contador: son lo que hace mirar la fila. -->
       <slot name="marks" />
       <UiTriStateCount

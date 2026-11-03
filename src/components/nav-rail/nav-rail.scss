@@ -130,3 +130,126 @@
 .ui-nav-rail__item--meta .ui-nav-rail__marks {
   min-height: calc(var(--ui-nav-rail-item-font-size) * 1.5);
 }
+
+// ---------------------------------------------------------------------------
+// Icons variant — the 64 px strip of a messaging app. Chat tokens carry a
+// fallback to the generic ones so it renders before the chat preset is loaded.
+// Hit areas are 40 px visually (the reference) and grow to 44 px on touch.
+// ---------------------------------------------------------------------------
+.ui-nav-rail--icons {
+  --ui-nav-rail-icons-size: 2.5rem;
+  --ui-nav-rail-icons-bg: var(--ui-chat-app-bg, var(--ui-color-surface));
+  --ui-nav-rail-icons-hover: var(--ui-chat-surface-hover, var(--ui-color-surface-hover));
+  --ui-nav-rail-icons-badge: var(--ui-chat-unread, var(--ui-color-primary));
+  box-sizing: border-box;
+  width: 4rem;
+  height: 100%;
+  align-items: center;
+  gap: var(--ui-space-1);
+  padding: 0.625rem 0.75rem;
+  background: var(--ui-nav-rail-icons-bg);
+}
+
+.ui-nav-rail--icons .ui-nav-rail__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-1);
+  margin-top: auto;
+}
+
+.ui-nav-rail__item--icon {
+  position: relative;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-nav-rail-icons-size, 2.5rem);
+  height: var(--ui-nav-rail-icons-size, 2.5rem);
+  min-height: 0;
+  padding: 0;
+  border-left: 0;
+  border-radius: var(--ui-radii-full);
+  color: var(--ui-chat-ink-soft, var(--ui-color-text-muted));
+}
+
+.ui-nav-rail__item--icon:hover {
+  background: var(--ui-nav-rail-icons-hover, var(--ui-color-surface-hover));
+  color: var(--ui-color-text);
+}
+
+// Active is a filled circle and a stronger glyph; no edge bar.
+.ui-nav-rail__item--icon.ui-nav-rail__item--active {
+  background: var(--ui-nav-rail-icons-hover, var(--ui-color-surface-hover));
+  color: var(--ui-color-text);
+}
+
+.ui-nav-rail__glyph {
+  display: inline-flex;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ui-nav-rail__glyph > :is(svg, img) {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+// Badge: 16 px pill plus a 2 px border in the rail colour (the cut-out), so
+// the outer box is 24 px, overlapping the button's top-right corner.
+.ui-nav-rail__badge {
+  position: absolute;
+  top: -0.375rem;
+  left: 1.375rem;
+  box-sizing: content-box;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 2px;
+  border: 2px solid var(--ui-nav-rail-icons-bg, var(--ui-color-surface));
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-nav-rail-icons-badge, var(--ui-color-primary));
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.ui-nav-rail__dot {
+  position: absolute;
+  top: 0.0625rem;
+  left: 1.75rem;
+  box-sizing: content-box;
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 2px solid var(--ui-nav-rail-icons-bg, var(--ui-color-surface));
+  border-radius: var(--ui-radii-full);
+  background: var(--ui-nav-rail-icons-badge, var(--ui-color-primary));
+  pointer-events: none;
+}
+
+// Touch: keep the 40 px look, reach 44 px with an invisible halo.
+@media (pointer: coarse) {
+  .ui-nav-rail__item--icon::before {
+    content: "";
+    position: absolute;
+    inset: -0.125rem;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-nav-rail__item--icon.ui-nav-rail__item--active {
+    outline: 2px solid Highlight;
+  }
+  .ui-nav-rail__badge,
+  .ui-nav-rail__dot {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+}
