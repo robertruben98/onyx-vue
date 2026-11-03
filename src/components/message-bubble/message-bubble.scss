@@ -47,14 +47,12 @@
   --_bg: var(--ui-chat-bubble-in, var(--ui-color-surface-hover));
 
   align-self: flex-start;
-  background: var(--ui-chat-bubble-in, var(--ui-color-surface-hover));
 }
 
 .ui-message-bubble--out {
   --_bg: var(--ui-chat-bubble-out, var(--ui-color-primary-soft, var(--ui-color-surface-hover)));
 
   align-self: flex-end;
-  background: var(--ui-chat-bubble-out, var(--ui-color-primary-soft, var(--ui-color-surface-hover)));
 }
 
 // The corner holding the tail is square.
@@ -114,12 +112,14 @@
 }
 
 .ui-message-bubble__text {
+  position: relative; // anchors the inline time
   white-space: pre-wrap; // keeps the line breaks of the text
   overflow-wrap: anywhere; // long words and URLs wrap instead of overflowing
   min-width: 0;
 }
 
-// Reserves the width of the time at the end of the text; the real time floats up into it.
+// Reserves the width of the time (plus a 4px gap) at the end of the text, so the time stays on the
+// last line while it fits and only drops to a new line when it does not.
 .ui-message-bubble__spacer {
   display: inline-block;
   margin-inline-start: 4px;
@@ -128,15 +128,17 @@
   white-space: nowrap;
 }
 
+// The real time is pinned to the bottom end of the text block, over the room the spacer keeps free.
 .ui-message-bubble__time--inline {
-  float: inline-end;
-  margin: 3px 0 -3px 4px; // the float starts at the top of its line: +3px puts the 16px time on the 19px baseline row
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 0;
 }
 
 .ui-message-bubble__time {
   font-size: 0.75rem;
   line-height: 16px;
-  color: var(--ui-chat-meta, var(--ui-color-text));
+  color: var(--ui-chat-meta, var(--ui-color-text-muted, var(--ui-color-text)));
   white-space: nowrap;
 }
 
