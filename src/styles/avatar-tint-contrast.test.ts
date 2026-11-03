@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 // Tinted avatar initials: coloured ink on its soft surface. Light pairs are the
-// reference palette (3.6-5.1:1; initials are 20 px medium, "large text", 3:1).
+// reference palette kept verbatim (3.6-5.1:1; decorative initials, aria-hidden, so a 3:1 floor, not AA text).
 // Dark pairs are derived and must reach 4.5:1.
 const scss = readFileSync(join(process.cwd(), "src", "components", "avatar", "avatar.scss"), "utf8");
 const block = (sel: string) => scss.slice(scss.indexOf(`${sel} {`), scss.indexOf("\n}", scss.indexOf(`${sel} {`)));
@@ -25,7 +25,7 @@ describe("tinted avatar contrast", () => {
     expect(pairs(block(":root"))).toHaveLength(11);
     expect(pairs(block(".app-dark"))).toHaveLength(11);
   });
-  it("light initials reach 3:1 (large text) on their surface", () => {
+  it("light initials reach the 3:1 floor (decorative, reference values) on their surface", () => {
     const fails = pairs(block(":root")).filter(([, i, s]) => ratio(i, s) < 3).map(([n]) => n);
     expect(fails).toEqual([]);
   });

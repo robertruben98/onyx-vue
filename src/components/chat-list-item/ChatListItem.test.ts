@@ -17,7 +17,7 @@ describe("ChatListItem (Vue)", () => {
 
   it("shows the unread count as a badge, and none for 0", () => {
     const { container, rerender } = render(ChatListItem, { props: { ...base, unread: 3 } });
-    expect(container.querySelector(".ui-chat-list-item__unread")?.textContent?.trim()).toBe("3");
+    expect(container.querySelector(".ui-chat-list-item__unread [aria-hidden='true']")?.textContent?.trim()).toBe("3");
     return rerender({ ...base, unread: 0 }).then(() => {
       expect(container.querySelector(".ui-chat-list-item__unread")).toBeNull();
     });
@@ -83,6 +83,18 @@ describe("ChatListItem (Vue)", () => {
     expect(u.container.querySelector(".ui-chat-list-item__unread")).toBeTruthy();
     const r = render(ChatListItem, { props: base });
     expect(r.container.querySelector(".ui-chat-list-item--unread")).toBeNull();
+  });
+
+  it("the accessible name carries the localized unread phrase, and none at 0", () => {
+    const u = render(ChatListItem, { props: { ...base, unread: 3 } });
+    expect(screen.getByRole("button", { name: /3 unread messages/ })).toBeTruthy();
+    expect(u.container.querySelector(".ui-chat-list-item__unread [aria-hidden='true']")?.textContent).toBe("3");
+    const big = render(ChatListItem, { props: { ...base, unread: 120 } });
+    expect(big.container.querySelector(".ui-chat-list-item__unread")?.textContent).toContain("99+");
+    expect(big.container.querySelector(".ui-chat-list-item__sr")?.textContent).toBe("120 unread messages");
+    const z = render(ChatListItem, { props: { ...base, title: "Zero", unread: 0 } });
+    expect(screen.getByRole("button", { name: /Zero/ }).getAttribute("aria-label")).toBeNull();
+    expect(z.container.textContent).not.toMatch(/unread/);
   });
 
   it("selected adds the selected class; the CSS gives hover and selected the same surface", () => {
