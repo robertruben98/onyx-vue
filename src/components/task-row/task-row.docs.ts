@@ -12,7 +12,7 @@ export const taskRowDoc: ComponentDoc = {
     { name: "meta", type: "string", default: "—", description: "Secondary line under the text, linked to the checkbox with aria-describedby." },
     { name: "busy", type: "boolean", default: "false", description: "Request in flight: checkbox disabled, spinner shown, aria-busy set." },
     { name: "disabled", type: "boolean", default: "false", description: "Disables the checkbox." },
-    { name: "toggle", type: "(next: boolean) => void", default: "—", description: "Event: the checkbox was ticked (true) or unticked (false). Never emitted while busy or disabled." },
+    { name: "@toggle", type: "event: boolean", default: "—", description: "Event: the checkbox was ticked (true) or unticked (false). Never emitted while busy or disabled." },
   ],
   demos: [
     {
