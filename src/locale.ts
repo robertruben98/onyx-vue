@@ -48,6 +48,7 @@ export interface OnyxMessages {
   keyHintsLabel: string;
   ansiTerminalLabel: string;
   messageBubbleCopyLabel: string;
+  weekBlocksLabel: string;
   dayTimelineLabel: string;
   dayTimelineNow: string;
   dayTimelineBands: { "free": string; "likely": string; "busy": string; "past": string; "nodata": string };
@@ -135,6 +136,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "keyHintsLabel": "Keyboard shortcuts",
   "ansiTerminalLabel": "Terminal output",
   "messageBubbleCopyLabel": "Copy",
+  "weekBlocksLabel": "Week focus blocks",
   "dayTimelineLabel": "Day timeline",
   "dayTimelineNow": "now",
   "dayTimelineBands": {
@@ -300,6 +302,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "keyHintsLabel": "Atajos de teclado",
   "ansiTerminalLabel": "Salida del terminal",
   "messageBubbleCopyLabel": "Copiar",
+  "weekBlocksLabel": "Bloques de foco de la semana",
   "dayTimelineLabel": "Línea del día",
   "dayTimelineNow": "ahora",
   "dayTimelineBands": {

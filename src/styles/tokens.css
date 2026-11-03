@@ -286,6 +286,11 @@
      is told apart from past by a hatch in day-timeline.scss. */
   --ui-band-past: var(--ui-color-text-muted);
   --ui-band-nodata: var(--ui-color-text-muted);
+  /* Week blocks: solid fills that reach 3:1 against the column background. */
+  --ui-week-block-column-bg: var(--ui-color-surface-hover);
+  --ui-week-block-success-bg: var(--ui-color-success);
+  --ui-week-block-neutral-bg: var(--ui-color-neutral);
+  --ui-week-block-text: var(--ui-color-on-primary);
   --ui-focus-ring-width: var(--ui-border-width-thick);
   --ui-focus-ring-offset: var(--ui-border-width-thick);
   --ui-radius: var(--ui-radii-md);
