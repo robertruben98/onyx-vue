@@ -211,7 +211,7 @@
   border: 2px solid var(--ui-nav-rail-icons-bg, var(--ui-color-surface));
   border-radius: var(--ui-radii-full);
   background: var(--ui-nav-rail-icons-badge, var(--ui-color-primary));
-  color: #fff;
+  color: var(--ui-chat-on-accent, var(--ui-color-on-primary));
   font-size: 0.75rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;

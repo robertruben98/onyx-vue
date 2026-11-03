@@ -88,6 +88,13 @@
   line-height: 1;
 }
 
+// A component icon (svg) has no intrinsic size: follow the glyph size.
+.ui-tab-bar__icon > svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
 .ui-tab-bar__label {
   max-width: 100%;
   overflow: hidden;
@@ -173,6 +180,12 @@
 // the generic ones. The icon sits in a 64x32 pill (filled when active), the
 // label is 12/16 under it, the count is a badge on the pill's corner.
 // ---------------------------------------------------------------------------
+// The spacer is a sibling of the bar, so it needs the chat height itself.
+.ui-tab-bar__spacer--chat,
+.ui-theme-chat .ui-tab-bar__spacer {
+  --ui-tab-bar-height: 5rem;
+}
+
 .ui-tab-bar--chat,
 .ui-theme-chat .ui-tab-bar {
   --ui-tab-bar-height: 5rem;
@@ -235,7 +248,7 @@
     height: 1rem;
     padding: 0 var(--ui-space-1);
     background: var(--ui-chat-unread, var(--ui-tab-bar-count-bg));
-    color: #fff;
+    color: var(--ui-chat-on-accent, var(--ui-tab-bar-count-text));
     font-size: 0.75rem;
     font-weight: 600;
     line-height: 1rem;

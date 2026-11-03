@@ -159,7 +159,11 @@ const countText = (n: number | null | undefined): string =>
 <template>
   <template v-if="shown">
     <!-- Holds the bar's height in the flow, so the end of the page is not under it. -->
-    <div class="ui-tab-bar__spacer" aria-hidden="true" />
+    <div
+      class="ui-tab-bar__spacer"
+      :class="{ 'ui-tab-bar__spacer--chat': variant === 'chat' }"
+      aria-hidden="true"
+    />
     <nav
       ref="root"
       class="ui-tab-bar"
