@@ -9,7 +9,21 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
-## Unreleased
+## 0.17.0 — 2026-11-03
+
+### Added
+
+- `UiDayTimeline`: a horizontal day bar of probability bands (free, likely, busy, past, no
+  data) with a "now" marker, hour ticks, a legend and a screen-reader list of segments. New
+  tokens `--ui-band-free|likely|busy|past|nodata`; new locale keys `dayTimelineLabel`,
+  `dayTimelineNow`, `dayTimelineBands` (ES "ahora", "libre casi seguro"...).
+
+- `UiWeekBlocks`: a Monday-to-Friday grid of time blocks (columns over an hour grid, or one
+  list per day below 640 px; `layout="auto|columns|list"`). New tokens
+  `--ui-week-block-column-bg|success-bg|neutral-bg|text`; new locale key `weekBlocksLabel`.
+
+- `UiTaskRow`: a to-do row (checkbox labelled with the task text, optional meta line, `busy` spinner,
+  `toggle(next)` event; done is struck through and dimmed). New token `--ui-task-row-done-text`.
 
 ## 0.16.0 — 2026-11-03
 

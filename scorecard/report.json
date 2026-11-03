@@ -4,33 +4,33 @@
   "aspects": {
     "Accessibility": {
       "score": 99.9,
-      "summary": "460/470 component×theme runs with no axe violation",
+      "summary": "475/485 component×theme runs with no axe violation",
       "findings": 10
     },
     "Test coverage": {
-      "score": 95.1,
-      "summary": "statements 96.38%, branches 91.22%, functions 97.65%",
-      "findings": 33
+      "score": 95.2,
+      "summary": "statements 96.49%, branches 91.31%, functions 97.75%",
+      "findings": 34
     },
     "Documentation": {
       "score": 100,
-      "summary": "731/731 props, events and slots documented; 99/99 exports on a docs page",
+      "summary": "748/748 props, events and slots documented; 102/102 exports on a docs page",
       "findings": 0
     },
     "Theming & tokens": {
-      "score": 98.4,
-      "summary": "189/192 token checks pass",
+      "score": 98.5,
+      "summary": "195/198 token checks pass",
       "findings": 3
     },
     "Responsive": {
       "score": 100,
-      "summary": "294/294 page×width runs with nothing spilling",
+      "summary": "303/303 page×width runs with nothing spilling",
       "findings": 0
     },
     "API consistency": {
-      "score": 95.8,
-      "summary": "115/120 API convention checks pass",
-      "findings": 5
+      "score": 95,
+      "summary": "115/121 API convention checks pass",
+      "findings": 6
     },
     "Component catalogue": {
       "score": 94,
