@@ -4,12 +4,12 @@ Measured 2026-11-03 by `npm run score`. Every aspect must score above 90. How ea
 
 | Aspect | Score | Measured |
 |---|---|---|
-| Accessibility | ✅ 99.9 | 460/470 component×theme runs with no axe violation |
-| Test coverage | ✅ 95.1 | statements 96.38%, branches 91.22%, functions 97.65% |
-| Documentation | ✅ 100 | 731/731 props, events and slots documented; 99/99 exports on a docs page |
-| Theming & tokens | ✅ 98.4 | 189/192 token checks pass |
-| Responsive | ✅ 100 | 294/294 page×width runs with nothing spilling |
-| API consistency | ✅ 95.8 | 115/120 API convention checks pass |
+| Accessibility | ✅ 99.9 | 475/485 component×theme runs with no axe violation |
+| Test coverage | ✅ 95.2 | statements 96.49%, branches 91.31%, functions 97.75% |
+| Documentation | ✅ 100 | 748/748 props, events and slots documented; 102/102 exports on a docs page |
+| Theming & tokens | ✅ 98.5 | 195/198 token checks pass |
+| Responsive | ✅ 100 | 303/303 page×width runs with nothing spilling |
+| API consistency | ✅ 95 | 115/121 API convention checks pass |
 | Component catalogue | ✅ 94 | 47/50 catalogue entries present, tested and documented |
 | Packaging & DX | ✅ 91.7 | 11/12 packaging checks pass |
 
@@ -47,6 +47,7 @@ Measured 2026-11-03 by `npm run score`. Every aspect must score above 90. How ea
 - components/confirm-button/ConfirmButton.vue: statements 88.63%, branches 82.85%, functions 90%
 - components/filter-chip/FilterChip.vue: statements 96.15%, branches 83.33%, functions 100%
 - components/level-meter/LevelMeter.vue: statements 100%, branches 83.33%, functions 100%
+- components/task-row/TaskRow.vue: statements 100%, branches 83.33%, functions 100%
 - components/timeline/Timeline.vue: statements 95.83%, branches 83.33%, functions 100%
 - components/tabs/Tabs.vue: statements 92.3%, branches 84.81%, functions 95.45%
 - components/app-bar/AppBar.vue: statements 97.87%, branches 85.71%, functions 100%
@@ -72,6 +73,7 @@ Measured 2026-11-03 by `npm run score`. Every aspect must score above 90. How ea
 
 - UiAvatar: size accepts sm | md | lg | xl; expected sm | md | lg
 - UiChatListItem: event `select` is not past tense (selected, toggled…) nor update:*
+- UiTaskRow: event `toggle` is not past tense (selected, toggled…) nor update:*
 - UiConversation: event `load-older` is not past tense (selected, toggled…) nor update:*
 - UiProgressRing: size accepts sm | md | lg | xl; expected sm | md | lg
 - UiProgressRing: tone uses primary | success | warning | danger | neutral (default "primary"); expected neutral | info | success | warning | danger | muted
