@@ -18,6 +18,8 @@ export type InputType =
   | "time"
   | "datetime-local";
 export type InputSize = "sm" | "md" | "lg";
+/** `pill` is the rounded search field: full radius, filled, no border, search glyph. */
+export type InputVariant = "default" | "pill";
 
 const props = withDefaults(
   defineProps<{
@@ -25,6 +27,8 @@ const props = withDefaults(
     type?: InputType;
     /** Control size. */
     size?: InputSize;
+    /** Look. `pill`: 40 px search field (rounded, filled, borderless) with a leading search glyph. */
+    variant?: InputVariant;
     /** Placeholder text. */
     placeholder?: string;
     /** Visible label — when set, renders a <label> linked to the input. */
@@ -50,6 +54,7 @@ const props = withDefaults(
   {
     type: "text",
     size: "md",
+    variant: "default",
     placeholder: "",
     label: "",
     ariaLabel: "",
@@ -84,6 +89,7 @@ const rootClasses = computed(() => ({
   "ui-input": true,
   "ui-input--sm": props.size === "sm",
   "ui-input--lg": props.size === "lg",
+  "ui-input--pill": props.variant === "pill",
   "ui-input--invalid": isInvalid(),
   "ui-input--disabled": props.disabled,
   "ui-input--fluid": props.fluid,
@@ -126,19 +132,30 @@ if (isDev()) useDeprecatedEvents();
     <label v-if="label" class="ui-input__label" :for="controlId()">{{
       label
     }}</label>
-    <input
-      v-bind="controlAttrs()"
-      ref="elemento"
-      class="ui-input__el"
-      :id="controlId()"
-      :type="type"
-      :value="value"
-      :disabled="disabled"
-      :readonly="readonly || undefined"
-      :placeholder="placeholder || undefined"
-      :aria-label="!label && ariaLabel ? ariaLabel : undefined"
-      :aria-invalid="isInvalid() ? 'true' : undefined"
-      @input="handleInput"
-    />
+    <span class="ui-input__field">
+      <svg
+        v-if="variant === 'pill'"
+        class="ui-input__glyph"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M9.5 16a6.27 6.27 0 0 1-4.61-1.89A6.27 6.27 0 0 1 3 9.5c0-1.82.63-3.35 1.89-4.61A6.27 6.27 0 0 1 9.5 3c1.82 0 3.35.63 4.61 1.89A6.27 6.27 0 0 1 16 9.5a6.1 6.1 0 0 1-1.3 3.8l5.6 5.6c.18.18.27.42.27.7 0 .28-.09.52-.27.7a.95.95 0 0 1-.7.27.95.95 0 0 1-.7-.27l-5.6-5.6A5.96 5.96 0 0 1 9.5 16Zm0-2c1.25 0 2.31-.44 3.19-1.31A4.34 4.34 0 0 0 14 9.5c0-1.25-.44-2.31-1.31-3.19A4.34 4.34 0 0 0 9.5 5c-1.25 0-2.31.44-3.19 1.31A4.34 4.34 0 0 0 5 9.5c0 1.25.44 2.31 1.31 3.19A4.34 4.34 0 0 0 9.5 14Z" />
+      </svg>
+      <input
+        v-bind="controlAttrs()"
+        ref="elemento"
+        class="ui-input__el"
+        :id="controlId()"
+        :type="type"
+        :value="value"
+        :disabled="disabled"
+        :readonly="readonly || undefined"
+        :placeholder="placeholder || undefined"
+        :aria-label="!label && ariaLabel ? ariaLabel : undefined"
+        :aria-invalid="isInvalid() ? 'true' : undefined"
+        @input="handleInput"
+      />
+    </span>
   </span>
 </template>
