@@ -20,6 +20,7 @@ export const inputDoc: ComponentDoc = {
       description: "Native input type.",
     },
     { name: "size", type: "'sm' | 'md' | 'lg'", default: "'md'", description: "Control height." },
+    { name: "variant", type: "'default' | 'pill'", default: "'default'", description: "`pill` is the search field: 40 px, fully round, filled (`--ui-input-pill-bg`), no border, with a leading search glyph. Pair it with `type=\"search\"` and an `ariaLabel`." },
     { name: "placeholder", type: "string", default: "''", description: "Placeholder text." },
     {
       name: "label",

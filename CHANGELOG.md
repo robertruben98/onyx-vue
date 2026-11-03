@@ -9,6 +9,18 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiConversationHeader` (64 px bar: `leading` slot, 40 px avatar, name 16/21 over subtitle 13/20, `actions` slot, header shadow) and `UiPanelHeader` (64 px list-panel header, title 22/28, `actions` slot). New tokens `--ui-conversation-header-*`, `--ui-panel-header-*`.
+- `UiInput` `variant="pill"`: 40 px round search field with a leading search glyph. New tokens `--ui-input-pill-*`.
+- `UiFilterChip` under `ui-theme-chat`: 32 px outlined pills with soft-accent active state. New tokens `--ui-filter-chip-pill-*`.
+
+### Fixed
+
+- `UiFilterChip` without a `count` no longer renders a trailing "·" (onyx-vue#133).
+
 ## 0.17.0 — 2026-11-03
 
 ### Added
