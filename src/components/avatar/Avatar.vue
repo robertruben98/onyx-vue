@@ -22,7 +22,7 @@ export const AVATAR_TINTS = [
   "green", "cobalt", "purple", "pink", "orange", "teal", "sky", "yellow", "red", "brown", "gray",
 ] as const;
 export type AvatarTint = (typeof AVATAR_TINTS)[number];
-export type AvatarTone = "default" | "tinted";
+export type AvatarTone = "neutral" | "tinted";
 
 /** The tint a seed always gets: same hash as the gradient, over the tint palette. */
 export function avatarTintName(seed: string): AvatarTint {
@@ -57,7 +57,7 @@ const props = withDefaults(
     gradient?: boolean;
     /**
      * `tinted`: coloured initials on a soft surface of the same hue, picked from `seed`
-     * (tokens `--ui-avatar-tint-<name>-ink|surface`). `default` keeps the flat avatar.
+     * (tokens `--ui-avatar-tint-<name>-ink|surface`). `neutral` keeps the flat avatar.
      */
     tone?: AvatarTone;
     /** Text the tint is picked from; the same seed is always the same tint. Defaults to `name`. */
@@ -83,7 +83,7 @@ const props = withDefaults(
     size: "md",
     shape: "circle",
     gradient: false,
-    tone: "default",
+    tone: "neutral",
     seed: "",
     ringValue: null,
     ringMax: 100,

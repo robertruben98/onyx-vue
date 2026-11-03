@@ -13,4 +13,6 @@
  *   import "@onyx/vue/styles/console.css";
  */
 @import "./tokens.css";
+@import "./avatar-tints.css";
+@import "./messaging-defaults.css";
 @import "./scrollbar.css";

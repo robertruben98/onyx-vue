@@ -66,61 +66,7 @@
   }
 }
 
-// --- tinted initials ---------------------------------------------------------
-// Coloured initials on a soft surface of the same hue. Light pairs are the
-// WhatsApp Web placeholder palette (reference §1); the dark pairs are derived
-// (same hue, surface L 24 %, ink L 82 %) and NOT measured against the app.
-// Dark is `.app-dark`; the surface is the page's, so a chat preset that is
-// dark by default must set `.app-dark` too.
-:root {
-  --ui-avatar-tint-green-ink: #1b8755;
-  --ui-avatar-tint-green-surface: #d9fdd3;
-  --ui-avatar-tint-cobalt-ink: #0063cb;
-  --ui-avatar-tint-cobalt-surface: #d2e8fe;
-  --ui-avatar-tint-purple-ink: #5e47de;
-  --ui-avatar-tint-purple-surface: #e8e0ff;
-  --ui-avatar-tint-pink-ink: #d42a66;
-  --ui-avatar-tint-pink-surface: #ffdae7;
-  --ui-avatar-tint-orange-ink: #c4532d;
-  --ui-avatar-tint-orange-surface: #fee2d8;
-  --ui-avatar-tint-teal-ink: #028377;
-  --ui-avatar-tint-teal-surface: #cbf2ee;
-  --ui-avatar-tint-sky-ink: #027eb5;
-  --ui-avatar-tint-sky-surface: #caecfa;
-  --ui-avatar-tint-yellow-ink: #9d6c2c;
-  --ui-avatar-tint-yellow-surface: #fff0d4;
-  --ui-avatar-tint-red-ink: #b80531;
-  --ui-avatar-tint-red-surface: #fbd8dc;
-  --ui-avatar-tint-brown-ink: #855538;
-  --ui-avatar-tint-brown-surface: #f4ded1;
-  --ui-avatar-tint-gray-ink: #757778;
-  --ui-avatar-tint-gray-surface: #eeeeee;
-}
-
-.app-dark {
-  --ui-avatar-tint-green-ink: #b2f0d3;
-  --ui-avatar-tint-green-surface: #22593f;
-  --ui-avatar-tint-cobalt-ink: #a8d0fa;
-  --ui-avatar-tint-cobalt-surface: #223d59;
-  --ui-avatar-tint-purple-ink: #bbb1f1;
-  --ui-avatar-tint-purple-surface: #2a2259;
-  --ui-avatar-tint-pink-ink: #f0b2c8;
-  --ui-avatar-tint-pink-surface: #592235;
-  --ui-avatar-tint-orange-ink: #eec3b4;
-  --ui-avatar-tint-orange-surface: #593022;
-  --ui-avatar-tint-teal-ink: #a8faf3;
-  --ui-avatar-tint-teal-surface: #225954;
-  --ui-avatar-tint-sky-ink: #a8e1fa;
-  --ui-avatar-tint-sky-surface: #224859;
-  --ui-avatar-tint-yellow-ink: #ebd5b7;
-  --ui-avatar-tint-yellow-surface: #594122;
-  --ui-avatar-tint-red-ink: #faa8bc;
-  --ui-avatar-tint-red-surface: #59222f;
-  --ui-avatar-tint-brown-ink: #e8cbba;
-  --ui-avatar-tint-brown-surface: #563724;
-  --ui-avatar-tint-gray-ink: #d1d1d1;
-  --ui-avatar-tint-gray-surface: #3c3d3e;
-}
+// Tint tokens (`--ui-avatar-tint-<name>-ink|surface`) live in styles/avatar-tints.css.
 
 .ui-avatar--tinted {
   font-weight: var(--ui-font-weight-medium, 500);

@@ -1,0 +1,9 @@
+/* Defaults for the tokens the messaging components read, so they work outside `.ui-theme-chat`.
+ * The chat preset overrides them. `:where()` keeps the specificity at zero so any preset wins. */
+:where(:root) {
+  --ui-chat-shadow-bubble: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+  --ui-chat-shadow-chip: 0 0 1px 1px rgba(0, 0, 0, 0.06), 0 1px 0 0 rgba(0, 0, 0, 0.05);
+  --ui-chat-shadow-composer: 0 1px 6px rgba(0, 0, 0, 0.12);
+  --ui-chat-outline: rgba(0, 0, 0, 0.2);
+  --ui-chat-tail-shadow: #000000;
+}

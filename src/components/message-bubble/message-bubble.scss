@@ -13,7 +13,7 @@
   padding: 6px 7px 8px 9px;
   border-radius: var(--ui-message-bubble-radius);
   background: var(--_bg);
-  box-shadow: var(--ui-chat-shadow-bubble, 0 1px 0.5px rgba(11, 20, 26, 0.13));
+  box-shadow: var(--ui-chat-shadow-bubble);
   color: var(--ui-color-text);
   font-size: 0.8875rem; // 14.2px
   line-height: 19px;
@@ -82,7 +82,7 @@
 }
 
 .ui-message-bubble__tail-shadow {
-  fill: #000;
+  fill: var(--ui-chat-tail-shadow);
   opacity: 0.13;
 }
 
@@ -138,7 +138,9 @@
 .ui-message-bubble__time {
   font-size: 0.75rem;
   line-height: 16px;
-  color: var(--ui-chat-meta, var(--ui-color-text-muted, var(--ui-color-text)));
+  // Outside `.ui-theme-chat` the muted text token misses 4.5:1 on the bubble surfaces of several presets, so the time
+  // falls back to the body text colour (it stays secondary by size).
+  color: var(--ui-chat-meta, var(--ui-color-text));
   white-space: nowrap;
 }
 

@@ -50,7 +50,7 @@ const props = withDefaults(
     moreLabel?: string;
     /** Glyph of the overflow button. */
     moreIcon?: string;
-    /** Accessible name of the navigation landmark. */
+    /** Accessible name of the navigation landmark. Defaults to "Main" ("Sections" for `chat`, so it differs from a side rail). */
     label?: string;
     /**
      * Viewport width (px) from which the bar is not rendered at all: on a wide
@@ -71,7 +71,7 @@ const props = withDefaults(
     visible: 4,
     moreLabel: () => useOnyxLocale().tabBarMoreLabel,
     moreIcon: "☰",
-    label: () => useOnyxLocale().tabBarLabel,
+    label: undefined,
     hideAbove: 640,
     liveLabel: () => useOnyxLocale().tabBarLiveLabel,
     variant: "default",
@@ -87,6 +87,14 @@ const sheetId = `ui-tab-bar-sheet-${useId()}`;
 const root = ref<HTMLElement | null>(null);
 const moreButton = ref<HTMLButtonElement | null>(null);
 const open = ref(false);
+/** The landmark's name: the `label` prop, else the locale's ("Sections" for `chat`, which sits beside a rail named "Main"). */
+const locale = useOnyxLocale();
+const navLabel = computed(() => {
+  if (props.label) return props.label;
+  const l = locale;
+  return props.variant === "chat" ? l.tabBarChatLabel : l.tabBarLabel;
+});
+
 const shown = ref(props.hideAbove <= 0);
 let query: MediaQueryList | null = null;
 
@@ -168,7 +176,7 @@ const countText = (n: number | null | undefined): string =>
       ref="root"
       class="ui-tab-bar"
       :class="{ 'ui-tab-bar--chat': variant === 'chat' }"
-      :aria-label="label"
+      :aria-label="navLabel"
     >
       <ul v-if="open" :id="sheetId" class="ui-tab-bar__sheet">
         <li v-for="item in inSheet" :key="item.id">

@@ -28,6 +28,7 @@ export interface OnyxMessages {
   logLinesLabel: string;
   tabBarMoreLabel: string;
   tabBarLabel: string;
+  tabBarChatLabel: string;
   tabBarLiveLabel: string;
   toastHostDismissLabel: string;
   panelEmptyText: string;
@@ -117,6 +118,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "logLinesLabel": "Activity",
   "tabBarMoreLabel": "More",
   "tabBarLabel": "Main",
+  "tabBarChatLabel": "Sections",
   "tabBarLiveLabel": "running",
   "toastHostDismissLabel": "Dismiss",
   "panelEmptyText": "Nothing here.",
@@ -284,6 +286,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "logLinesLabel": "Actividad",
   "tabBarMoreLabel": "Más",
   "tabBarLabel": "Principal",
+  "tabBarChatLabel": "Secciones",
   "tabBarLiveLabel": "en curso",
   "toastHostDismissLabel": "Descartar",
   "panelEmptyText": "No hay nada aquí.",
