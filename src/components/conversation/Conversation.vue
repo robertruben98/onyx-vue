@@ -24,7 +24,7 @@ const props = withDefaults(
     /** Text of the read-only composer pill. The `footer` slot replaces it. */
     composerText?: string;
   }>(),
-  { loadingOlder: false, hasOlder: false, composerText: undefined },
+  { loadingOlder: false, hasOlder: false },
 );
 const emit = defineEmits<{ "load-older": [] }>();
 
@@ -35,13 +35,20 @@ let loadRequested = false; // latch: one load-older per load, until the parent r
 
 // One section per day, so the day chip sticks only while its own day is on screen.
 const days = computed(() => {
+  const seen = new Map<string, number>();
   const out: { day: string; key: string; rows: { item: ConversationItem; index: number; first: boolean }[] }[] = [];
   props.items.forEach((item, index) => {
     const prev = index > 0 ? props.items[index - 1] : undefined;
     const newDay = !prev || prev.day !== item.day;
     // Without a group nothing is known about runs: every item counts as the start of one.
     const first = newDay || item.group === undefined || prev?.group !== item.group;
-    if (newDay) out.push({ day: item.day, key: item.key, rows: [] });
+    if (newDay) {
+      // Keyed by the day label (+ occurrence for repeated labels), not by the first item: a same-day
+      // prepend must not change the key and remount the whole oldest day.
+      const n = seen.get(item.day) ?? 0;
+      seen.set(item.day, n + 1);
+      out.push({ day: item.day, key: `${item.day}#${n}`, rows: [] });
+    }
     out[out.length - 1].rows.push({ item, index, first });
   });
   return out;
@@ -156,7 +163,11 @@ watch(
         {{ pillText }}
       </button>
     </div>
-    <div v-if="$slots.footer || composerText" class="ui-conversation__composer" :class="{ 'ui-conversation__composer--readonly': !$slots.footer }">
+    <div
+      v-if="$slots.footer || composerText"
+      class="ui-conversation__composer"
+      :class="{ 'ui-conversation__composer--readonly': !$slots.footer }"
+    >
       <slot name="footer">
         <span class="ui-conversation__composer-text">{{ composerText }}</span>
       </slot>

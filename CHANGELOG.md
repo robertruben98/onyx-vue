@@ -16,7 +16,8 @@ Consumers that build from source (the control-panel dashboard aliases
 - `UiConversation`: original doodle wallpaper (mask coloured by `--ui-chat-wallpaper-ink`), 63 px row padding,
   optional `group` on items and `first` in the `item` slot scope (2 px inside a run, 12 px between runs),
   sticky day chip (radius 6, 24 px, 600 12/16), and a floating composer pill via the `footer` slot or the
-  read-only `composerText` prop. Backward compatible.
+  read-only `composerText` prop. API backward compatible; spacing (12 px between ungrouped items) and
+  side padding change.
 
 ## 0.17.0 — 2026-11-03
 
