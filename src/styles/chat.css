@@ -2,27 +2,68 @@
  * Preset "chat".
  *
  * Para apps de mensajeria web (conversaciones, burbujas, contadores de no
- * leidos): la SENSACION de una app de chat, sin la marca de ninguna. Oscuro por
- * defecto -son apps que se miran de noche y en el movil-, con variante clara.
- * Superficies casi negras de azul verdoso, un verde sereno para actuar y para
- * el contador de no leidos, burbuja saliente en verde oscuro y entrante en
- * pizarra, esquinas de 10px y letra del sistema (sin ficheros que servir).
+ * leidos): la paleta y el ritmo de WhatsApp Web, sin su marca ni su fondo de
+ * garabatos. Claro por defecto -como las apps de mensajeria de dia- y con su
+ * variante oscura (grafito neutro) bajo `.app-dark`, igual que pocket y
+ * classroom. Valores medidos en WhatsApp Web (superficies calidas, tinta casi
+ * negra, verde de marca #1DAA61 / #21C063), esquinas de 4-28px, burbujas de
+ * 7.5px, sombras de una sola capa y letra Roboto Variable (se sirve con
+ * @fontsource-variable/roboto, solo desde este preset: los demas no la cargan).
  *
  * Como los demas presets, sobre todo re-mapea tokens. Ademas define los tokens
- * propios que consumen los componentes de chat: --ui-chat-bg (fondo de la
- * conversacion), --ui-chat-bubble-in / -out, --ui-chat-bubble-draft-border
- * (borde del borrador), --ui-chat-meta (horas) y --ui-chat-unread (contador).
+ * propios que consumen los componentes de chat:
+ *
+ *   superficies   --ui-chat-app-bg (marco, railes), --ui-chat-outer-bg (cuerpo
+ *                 tras la app), --ui-chat-surface (lista, cabeceras),
+ *                 --ui-chat-surface-hover, --ui-chat-line, --ui-chat-outline
+ *   texto         --ui-chat-ink, --ui-chat-ink-soft (60% de la tinta, no un gris
+ *                 aparte: vale sobre blanco y sobre las dos burbujas),
+ *                 --ui-chat-ink-faint (deshabilitado), --ui-chat-meta (horas)
+ *   marca         --ui-chat-accent (rellenos: contador, boton nuevo chat),
+ *                 --ui-chat-accent-strong (enlaces y acciones sobre blanco:
+ *                 4.5:1), --ui-chat-accent-ink (la misma idea oscurecida para
+ *                 botones y texto sobre cualquier fondo, el calido incluido),
+ *                 --ui-chat-accent-soft / --ui-chat-on-accent-soft (pildora
+ *                 activa), --ui-chat-on-accent, --ui-chat-unread,
+ *                 --ui-chat-status-ring
+ *   conversacion  --ui-chat-bg (+ --ui-chat-wallpaper-ink, la tinta del patron
+ *                 de garabatos propio de onyx), --ui-chat-bubble-in / -out /
+ *                 -system / -draft-border, --ui-chat-composer, --ui-chat-read,
+ *                 --ui-chat-link
+ *   estado        --ui-chat-danger / --ui-chat-warning (rellenos e iconos, los
+ *                 valores de WhatsApp) y --ui-chat-wrong / -careful / -right
+ *                 (las mismas ideas oscurecidas para TEXTO, 4.5:1)
+ *   avatares      --ui-chat-avatar-<color> (tinta) y -bg (fondo tintado)
+ *   forma         --ui-chat-bubble-radius, --ui-chat-radius-4..28,
+ *                 --ui-chat-space-1..6 (ritmo de 4px)
+ *   sombras       --ui-chat-shadow-header | bubble | composer | chip
  *
  * Uso: la clase va en la RAIZ (<html>), por los componentes que hacen
  * `<Teleport to="body">`:
  *
- *   <html class="ui-theme-chat">                oscuro (por defecto)
- *   <html class="ui-theme-chat app-light">      claro
+ *   <html class="ui-theme-chat">             claro (por defecto)
+ *   <html class="ui-theme-chat app-dark">    oscuro
+ *
+ * La app decide: para seguir al sistema, alterna `app-dark` en la raiz segun
+ * `matchMedia("(prefers-color-scheme: dark)")`.
+ *
+ * Contraste: el texto llega a 4.5:1 sobre todo lo que se pinta debajo. Una
+ * excepcion deliberada: el numero del contador de no leidos (600 12px, blanco
+ * sobre #1DAA61 = 3.0:1 en claro) sigue a WhatsApp; ver chat.test.ts.
+ *
+ * Controles: 32px (pildora) / 40px (boton) / 52px (compositor) como WhatsApp;
+ * con puntero tosco solo se ensancha la zona de toque (44px), no el dibujo.
+ *
+ * Quien pinta que: los RELLENOS de marca (boton redondo de chat nuevo, contador
+ * de no leidos) salen de --ui-chat-accent / --ui-chat-unread; --ui-color-primary,
+ * -info y el anillo de foco usan --ui-chat-accent-ink (mas oscuro, para texto y
+ * botones con etiqueta).
  */
+@import "@fontsource-variable/roboto/wght.css";
+
 .ui-theme-chat {
   /* --- tipografia ------------------------------------------------------- */
-  --ui-font-family: system-ui, -apple-system, "SF Pro Text", "Segoe UI Variable Text",
-    "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --ui-font-family: "Roboto Variable", Roboto, "Helvetica Neue", Helvetica, sans-serif;
   --ui-font-family-display: var(--ui-font-family);
 
   font-family: var(--ui-font-family);
@@ -30,49 +71,111 @@
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 
-  /* Controles de 44px: el dedo, no el raton. */
-  --ui-size-control-sm: 2.5rem;
-  --ui-size-control-md: 2.75rem;
+  /* Controles: pildora 32, boton 40, compositor 52 (ver el puntero tosco abajo). */
+  --ui-size-control-sm: 2rem;
+  --ui-size-control-md: 2.5rem;
   --ui-size-control-lg: 3.25rem;
 
   /* --- geometria -------------------------------------------------------- */
-  --ui-chat-bubble-radius: 10px;
-  --ui-radii-sm: 8px;
-  --ui-radii-md: 10px;
-  --ui-radii-lg: 14px;
+  /* Escala de WhatsApp: 4, 6, 8, 12, 16, 20, 24, 28 y 9999 (pildoras y circulos). */
+  --ui-chat-radius-4: 4px;
+  --ui-chat-radius-6: 6px;
+  --ui-chat-radius-8: 8px;
+  --ui-chat-radius-12: 12px;
+  --ui-chat-radius-16: 16px;
+  --ui-chat-radius-20: 20px;
+  --ui-chat-radius-24: 24px;
+  --ui-chat-radius-28: 28px;
+  --ui-chat-bubble-radius: 7.5px;
+  --ui-radii-sm: var(--ui-chat-radius-6);
+  --ui-radii-md: var(--ui-chat-radius-8);
+  --ui-radii-lg: var(--ui-chat-radius-12);
+  --ui-radii-xl: var(--ui-chat-radius-16);
   --ui-radius: var(--ui-radii-md);
   --ui-button-radius: var(--ui-radii-full);
   --ui-border-width: 1px;
   --ui-border-width-thick: 2px;
 
-  --ui-card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
-  --ui-card-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 12px 28px -12px rgba(0, 0, 0, 0.75);
+  /* Ritmo de 4px. */
+  --ui-chat-space-1: 4px;
+  --ui-chat-space-2: 8px;
+  --ui-chat-space-3: 12px;
+  --ui-chat-space-4: 16px;
+  --ui-chat-space-5: 20px;
+  --ui-chat-space-6: 24px;
 
-  /* --- primitivos del tema (noche) -------------------------------------- */
-  --ui-chat-bg: #0b141a;              /* fondo de la conversacion */
-  --ui-chat-surface: #111b21;         /* paneles: lista de chats, barras */
-  --ui-chat-surface-hover: #1a262d;
-  --ui-chat-line: #25343c;
-  --ui-chat-ink: #e6edf0;
-  --ui-chat-ink-soft: #9fb2bb;
-  --ui-chat-ink-faint: #70838c;       /* deshabilitado */
-  --ui-chat-accent: #34d27b;          /* verde: actuar */
-  --ui-chat-accent-hover: #5be096;
-  --ui-chat-accent-active: #86eab2;
-  --ui-chat-on-accent: #06130c;
-  --ui-chat-bubble-in: #1f2c34;       /* entrante: pizarra */
-  --ui-chat-bubble-out: #005c4b;      /* saliente: verde oscuro */
-  --ui-chat-bubble-draft-border: #e0b23f;
-  --ui-chat-meta: #b3c7c1;            /* horas: 4.5:1 sobre ambas burbujas */
-  --ui-chat-unread: #34d27b;          /* contador de no leidos */
-  --ui-chat-right: #4ade80;
-  --ui-chat-wrong: #fb7185;
-  --ui-chat-careful: #fbbf24;
+  /* --- sombras (una capa, como WhatsApp; no se ven en oscuro y no hace falta cambiarlas) --- */
+  --ui-chat-shadow-header: 0 1px 4px rgba(10, 10, 10, 0.12);
+  --ui-chat-shadow-bubble: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+  --ui-chat-shadow-composer: 0 1px 6px rgba(0, 0, 0, 0.12);
+  --ui-chat-shadow-chip: 0 0 1px 1px rgba(0, 0, 0, 0.06), 0 1px 0 0 rgba(0, 0, 0, 0.05);
+  --ui-card-shadow: 0 1px 2px rgba(10, 10, 10, 0.05), 0 6px 20px -8px rgba(10, 10, 10, 0.12);
+  --ui-card-shadow-hover: 0 2px 4px rgba(10, 10, 10, 0.07), 0 10px 26px -8px rgba(10, 10, 10, 0.2);
+
+  /* --- primitivos del tema (dia) ---------------------------------------- */
+  --ui-chat-app-bg: #f7f5f3;          /* marco de la app, railes, panel vacio */
+  --ui-chat-outer-bg: #dbd8d4;        /* cuerpo tras la app */
+  --ui-chat-surface: #ffffff;         /* paneles: lista de chats, cabeceras */
+  --ui-chat-surface-hover: rgba(194, 189, 184, 0.15);
+  --ui-chat-line: rgba(0, 0, 0, 0.1);
+  --ui-chat-outline: rgba(0, 0, 0, 0.2);
+  --ui-chat-ink: #0a0a0a;
+  --ui-chat-ink-soft: rgba(0, 0, 0, 0.6);
+  --ui-chat-ink-faint: #bdbdbd;       /* deshabilitado (exento de contraste) */
+  --ui-chat-accent: #1daa61;          /* relleno de marca; NO para texto sobre blanco (3.0:1) */
+  --ui-chat-accent-strong: #1b8755;   /* texto, enlaces y botones: 4.5:1 sobre blanco */
+  --ui-chat-accent-ink: #17724a;      /* no medido: texto y botones de accion sobre TODO (fondo calido incluido): 4.5:1 */
+  --ui-chat-accent-hover: #15603e;
+  --ui-chat-accent-active: #124f33;
+  --ui-chat-accent-soft: #d9fdd3;     /* pildora activa, avisos */
+  --ui-chat-on-accent-soft: #15603e;
+  --ui-chat-on-accent: #ffffff;
+  --ui-chat-unread: #1daa61;          /* contador de no leidos */
+  --ui-chat-status-ring: #25d366;
+  --ui-chat-bg: #f5f1eb;              /* base de la conversacion */
+  --ui-chat-wallpaper-ink: #eae0d3;   /* tinta del patron de garabatos (opacidad .6) */
+  --ui-chat-bubble-in: #ffffff;
+  --ui-chat-bubble-out: #d9fdd3;
+  --ui-chat-bubble-system: rgba(255, 255, 255, 0.9);  /* chip del dia */
+  --ui-chat-bubble-draft-border: #9a6a00;
+  --ui-chat-meta: rgba(0, 0, 0, 0.6); /* horas: igual que ink-soft */
+  --ui-chat-composer: #ffffff;
+  --ui-chat-read: #007bfc;
+  --ui-chat-link: #02749f;            /* enlaces en la burbuja; WhatsApp no se midio (#027EB5 da 4.07:1 sobre la saliente): oscurecido lo justo */
+  --ui-chat-danger: #ea0038;          /* relleno / icono */
+  --ui-chat-warning: #ffb938;         /* relleno / icono (no es texto) */
+  --ui-chat-right: #0a7340;           /* bien / mal / cuidado como TEXTO */
+  --ui-chat-wrong: #c01f3f;
+  --ui-chat-careful: #9a4708;
+
+  /* Avatares: tinta y fondo tintado (de WhatsApp; los mismos pares en oscuro, no medidos alli). */
+  --ui-chat-avatar-green: #1b8755;
+  --ui-chat-avatar-green-bg: #d9fdd3;
+  --ui-chat-avatar-cobalt: #0063cb;
+  --ui-chat-avatar-cobalt-bg: #d2e8fe;
+  --ui-chat-avatar-purple: #5e47de;
+  --ui-chat-avatar-purple-bg: #e8e0ff;
+  --ui-chat-avatar-pink: #d42a66;
+  --ui-chat-avatar-pink-bg: #ffdae7;
+  --ui-chat-avatar-orange: #c4532d;
+  --ui-chat-avatar-orange-bg: #fee2d8;
+  --ui-chat-avatar-teal: #028377;
+  --ui-chat-avatar-teal-bg: #cbf2ee;
+  --ui-chat-avatar-sky: #027eb5;
+  --ui-chat-avatar-sky-bg: #caecfa;
+  --ui-chat-avatar-yellow: #9d6c2c;
+  --ui-chat-avatar-yellow-bg: #fff0d4;
+  --ui-chat-avatar-red: #b80531;
+  --ui-chat-avatar-red-bg: #fbd8dc;
+  --ui-chat-avatar-brown: #855538;
+  --ui-chat-avatar-brown-bg: #f4ded1;
+  --ui-chat-avatar-gray: #757778;
+  --ui-chat-avatar-gray-bg: #eeeeee;
 
   /* --- semanticos ------------------------------------------------------- */
-  --ui-terminal-magenta: #e0a3f5;
-  --ui-terminal-cyan: #67e0ea;
-  --ui-color-primary: var(--ui-chat-accent);
+  --ui-terminal-magenta: #a33fbf;
+  --ui-terminal-cyan: #0e7f8c;
+  --ui-color-primary: var(--ui-chat-accent-ink);
   --ui-color-primary-hover: var(--ui-chat-accent-hover);
   --ui-color-primary-active: var(--ui-chat-accent-active);
   --ui-color-on-primary: var(--ui-chat-on-accent);
@@ -82,56 +185,89 @@
   --ui-color-text-muted: var(--ui-chat-ink-soft);
   --ui-color-border: var(--ui-chat-line);
   --ui-color-success: var(--ui-chat-right);
-  --ui-color-success-surface: rgba(74, 222, 128, 0.12);
+  --ui-color-success-surface: #e4f6ec;
   --ui-color-warning: var(--ui-chat-careful);
-  --ui-color-warning-surface: rgba(251, 191, 36, 0.12);
+  --ui-color-warning-surface: #fdf0dc;
   --ui-color-danger: var(--ui-chat-wrong);
-  --ui-color-danger-surface: rgba(251, 113, 133, 0.12);
-  --ui-color-info: var(--ui-chat-accent);
-  --ui-color-info-surface: rgba(52, 210, 123, 0.12);
+  --ui-color-danger-surface: #fde7ec;
+  --ui-color-info: var(--ui-chat-accent-ink);
+  --ui-color-info-surface: #dff3ea;
   --ui-color-neutral: var(--ui-chat-ink-soft);
-  --ui-color-neutral-surface: rgba(159, 178, 187, 0.12);
+  --ui-color-neutral-surface: #eeeeee;
   --ui-color-disabled-bg: var(--ui-chat-surface-hover);
   --ui-color-disabled-text: var(--ui-chat-ink-faint);
-  --ui-focus-ring: var(--ui-chat-accent);
+  --ui-focus-ring: var(--ui-chat-accent-ink);
 
   /* --- fondo ------------------------------------------------------------ */
-  background-color: var(--ui-chat-bg);
+  background-color: var(--ui-chat-app-bg);
   color: var(--ui-color-text);
 }
 
-/* De dia: fondo gris azulado, paneles blancos, burbuja saliente en verde claro. */
-.ui-theme-chat.app-light {
-  --ui-chat-bg: #e9eef1;
-  --ui-chat-surface: #ffffff;
-  --ui-chat-surface-hover: #f0f3f5;
-  --ui-chat-line: #d6dee3;
-  --ui-chat-ink: #111b21;
-  --ui-chat-ink-soft: #4d5f69;
-  --ui-chat-ink-faint: #70838c;
-  --ui-chat-accent: #07694a;
-  --ui-chat-accent-hover: #065a3f;
-  --ui-chat-accent-active: #054a34;
-  --ui-chat-on-accent: #ffffff;
-  --ui-chat-bubble-in: #ffffff;
-  --ui-chat-bubble-out: #d4f4df;
-  --ui-chat-bubble-draft-border: #9a6a00;
-  --ui-chat-meta: #4d5f69;
-  --ui-chat-unread: #07694a;
-  --ui-chat-right: #0a7340;
-  --ui-chat-wrong: #c01f3f;
-  --ui-chat-careful: #9a4708;
+/* De noche: grafito neutro (no azul), verde mas vivo y la tinta al reves. */
+.ui-theme-chat.app-dark {
+  --ui-card-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --ui-card-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 12px 28px -12px rgba(0, 0, 0, 0.75);
 
-  --ui-card-shadow: 0 1px 2px rgba(17, 27, 33, 0.05), 0 6px 20px -8px rgba(17, 27, 33, 0.12);
-  --ui-card-shadow-hover: 0 2px 4px rgba(17, 27, 33, 0.07), 0 10px 26px -8px rgba(17, 27, 33, 0.2);
+  --ui-chat-app-bg: #1d1f1f;
+  --ui-chat-outer-bg: #262524;
+  --ui-chat-surface: #161717;
+  --ui-chat-surface-hover: rgba(255, 255, 255, 0.1);
+  --ui-chat-line: rgba(255, 255, 255, 0.1);
+  --ui-chat-outline: rgba(255, 255, 255, 0.1);
+  --ui-chat-ink: #fafafa;
+  --ui-chat-ink-soft: rgba(255, 255, 255, 0.6);
+  --ui-chat-ink-faint: #424445;
+  --ui-chat-accent: #21c063;
+  --ui-chat-accent-strong: #21c063;
+  --ui-chat-accent-ink: #21c063;
+  --ui-chat-accent-hover: #3fd07c;    /* no medido: derivado */
+  --ui-chat-accent-active: #6add9b;
+  --ui-chat-accent-soft: #103529;
+  --ui-chat-on-accent-soft: #d9fdd3;
+  --ui-chat-on-accent: #0a0a0a;
+  --ui-chat-unread: #21c063;
+  --ui-chat-status-ring: #25d366;
+  --ui-chat-bg: #161717;
+  --ui-chat-wallpaper-ink: rgba(255, 255, 255, 0.1);
+  --ui-chat-bubble-in: #242626;
+  --ui-chat-bubble-out: #144d37;
+  --ui-chat-bubble-system: #1d1f1f;
+  --ui-chat-bubble-draft-border: #e0b23f;
+  --ui-chat-meta: rgba(255, 255, 255, 0.6);
+  --ui-chat-composer: #242626;
+  --ui-chat-read: #53bdeb;
+  --ui-chat-link: #53bdeb;
+  --ui-chat-danger: #fb5061;
+  --ui-chat-warning: #ffd279;
+  --ui-chat-right: #4ade80;
+  --ui-chat-wrong: #fb7185;
+  --ui-chat-careful: #fbbf24;
 
-  --ui-terminal-magenta: #a33fbf;
-  --ui-terminal-cyan: #0e7f8c;
-  --ui-color-success-surface: #e4f6ec;
-  --ui-color-warning-surface: #fdf0dc;
-  --ui-color-danger-surface: #fde7ec;
-  --ui-color-info-surface: #dff3ea;
-  --ui-color-neutral-surface: #e6ecef;
+  --ui-terminal-magenta: #e0a3f5;
+  --ui-terminal-cyan: #67e0ea;
+  --ui-color-success-surface: rgba(74, 222, 128, 0.12);
+  --ui-color-warning-surface: rgba(251, 191, 36, 0.12);
+  --ui-color-danger-surface: rgba(251, 113, 133, 0.12);
+  --ui-color-info-surface: rgba(33, 192, 99, 0.12);
+  --ui-color-neutral-surface: rgba(255, 255, 255, 0.1);
+}
+
+/* Puntero tosco (dedo): el tamano VISUAL no cambia (32 / 40 / 52, como WhatsApp);
+   solo crece la zona de toque, a 44px, con un ::after centrado. Los botones de
+   icono y las pildoras (chip) ya lo hacen en su propia hoja; aqui los botones. */
+@media (pointer: coarse) {
+  .ui-theme-chat .ui-button__el {
+    position: relative;
+  }
+  .ui-theme-chat .ui-button__el::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
 }
 
 /* --- lo que no es token --------------------------------------------------- */

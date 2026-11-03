@@ -36,7 +36,8 @@ export const tabBarDoc: ComponentDoc = {
     },
     { name: "moreLabel", type: "string", default: "'More'", description: "Name of the overflow button." },
     { name: "moreIcon", type: "string", default: "'☰'", description: "Glyph of the overflow button." },
-    { name: "label", type: "string", default: "'Main'", description: "Accessible name of the navigation landmark." },
+    { name: "label", type: "string", default: "'Main' ('Sections' for `chat`)", description: "Accessible name of the navigation landmark. The `chat` variant defaults to 'Sections' so it differs from a side rail." },
+    { name: "variant", type: "'default' | 'chat'", default: "'default'", description: "`chat`: messaging-app bottom nav — 80 px tall, icon in a 64x32 pill filled when active, 12/16 label, count badge. Applied automatically under `.ui-theme-chat`. Item `icon` may be a string or a component." },
     { name: "liveLabel", type: "string", default: "'running'", description: "Spoken name of the `live` dot." },
     {
       name: "@itemClicked",
@@ -47,6 +48,16 @@ export const tabBarDoc: ComponentDoc = {
     },
   ],
   demos: [
+    {
+      title: "Chat variant",
+      description: "Icon in a pill, filled when active; the count is a badge.",
+      code: `<UiTabBar variant="chat" :hide-above="0" active-id="chats"
+  :items="[
+    { id: 'chats', label: 'Chats', href: '#/chats', icon: '💬', count: 5 },
+    { id: 'updates', label: 'Updates', href: '#/updates', icon: '◎' },
+    { id: 'calls', label: 'Calls', href: '#/calls', icon: '✆' },
+  ]" />`,
+    },
     {
       title: "Four in the bar, the rest behind More",
       description:

@@ -555,6 +555,27 @@
   --ui-filter-chip-pressed-bg: var(--ui-color-surface-hover);
   --ui-filter-chip-pressed-text: var(--ui-color-text);
   --ui-filter-chip-empty-opacity: 1;
+  --ui-filter-chip-pill-height: 2rem;
+  --ui-filter-chip-pill-border: var(--ui-chat-outline, var(--ui-color-border));
+  --ui-filter-chip-pill-pressed-bg: var(--ui-chat-accent-soft, var(--ui-color-surface-hover));
+  --ui-filter-chip-pill-pressed-text: var(--ui-chat-on-accent-soft, var(--ui-color-text));
+  --ui-input-pill-height: 2.5rem;
+  --ui-input-pill-bg: var(--ui-chat-surface-hover, var(--ui-color-surface-hover));
+  --ui-input-pill-text: var(--ui-chat-ink, var(--ui-color-text));
+  --ui-input-pill-placeholder: var(--ui-chat-ink-soft, var(--ui-color-text-muted));
+  --ui-input-pill-glyph-size: 1.25rem;
+  --ui-panel-header-height: 4rem;
+  --ui-panel-header-padding-x: var(--ui-space-5);
+  --ui-panel-header-bg: var(--ui-chat-surface, var(--ui-color-surface));
+  --ui-panel-header-text: var(--ui-chat-ink, var(--ui-color-text));
+  --ui-panel-header-title-size: 1.375rem;
+  --ui-panel-header-title-line: 1.75rem;
+  --ui-conversation-header-height: 4rem;
+  --ui-conversation-header-padding-x: var(--ui-space-4);
+  --ui-conversation-header-bg: var(--ui-chat-surface, var(--ui-color-surface));
+  --ui-conversation-header-text: var(--ui-chat-ink, var(--ui-color-text));
+  --ui-conversation-header-subtitle: var(--ui-chat-ink-soft, var(--ui-color-text-muted));
+  --ui-conversation-header-elevation: var(--ui-chat-shadow-header, 0 1px 4px rgba(10, 10, 10, 0.12));
   --ui-block-meter-gap: var(--ui-space-2);
   --ui-block-meter-font-size: var(--ui-font-size-sm);
   /* The block glyphs carry side bearings meant for prose; at eight in a row

@@ -1,4 +1,6 @@
 <script lang="ts">
+import type { Component } from "vue";
+
 /** One destination of the bar. */
 export interface TabBarItem {
   /** Stable identity; `activeId` names one of these. */
@@ -7,8 +9,11 @@ export interface TabBarItem {
   label: string;
   /** Where it goes. Rendered as a real link, so it opens in a new tab like any other. */
   href: string;
-  /** A short glyph above the label (an emoji, a single character). Decorative. */
-  icon?: string;
+  /**
+   * A glyph above the label: a short string (an emoji, a character) or a
+   * component (an SVG wrapper). Decorative — the label names the entry.
+   */
+  icon?: string | Component;
   /** How many things are waiting behind it: queued jobs, unread items. Hidden at 0. */
   count?: number | null;
   /** Something is running behind it right now. Takes precedence over `count`. */
@@ -45,7 +50,7 @@ const props = withDefaults(
     moreLabel?: string;
     /** Glyph of the overflow button. */
     moreIcon?: string;
-    /** Accessible name of the navigation landmark. */
+    /** Accessible name of the navigation landmark. Defaults to "Main" ("Sections" for `chat`, so it differs from a side rail). */
     label?: string;
     /**
      * Viewport width (px) from which the bar is not rendered at all: on a wide
@@ -54,15 +59,22 @@ const props = withDefaults(
     hideAbove?: number;
     /** Spoken name of the `live` marker. */
     liveLabel?: string;
+    /**
+     * `chat` is the messaging-app bottom nav: 80 px tall, the icon in a 64x32
+     * pill that is filled when active, the count as a badge on the pill. Also
+     * applied automatically under `.ui-theme-chat`.
+     */
+    variant?: "default" | "chat";
   }>(),
   {
     activeId: "",
     visible: 4,
     moreLabel: () => useOnyxLocale().tabBarMoreLabel,
     moreIcon: "☰",
-    label: () => useOnyxLocale().tabBarLabel,
+    label: undefined,
     hideAbove: 640,
     liveLabel: () => useOnyxLocale().tabBarLiveLabel,
+    variant: "default",
   },
 );
 
@@ -75,6 +87,14 @@ const sheetId = `ui-tab-bar-sheet-${useId()}`;
 const root = ref<HTMLElement | null>(null);
 const moreButton = ref<HTMLButtonElement | null>(null);
 const open = ref(false);
+/** The landmark's name: the `label` prop, else the locale's ("Sections" for `chat`, which sits beside a rail named "Main"). */
+const locale = useOnyxLocale();
+const navLabel = computed(() => {
+  if (props.label) return props.label;
+  const l = locale;
+  return props.variant === "chat" ? l.tabBarChatLabel : l.tabBarLabel;
+});
+
 const shown = ref(props.hideAbove <= 0);
 let query: MediaQueryList | null = null;
 
@@ -147,8 +167,17 @@ const countText = (n: number | null | undefined): string =>
 <template>
   <template v-if="shown">
     <!-- Holds the bar's height in the flow, so the end of the page is not under it. -->
-    <div class="ui-tab-bar__spacer" aria-hidden="true" />
-    <nav ref="root" class="ui-tab-bar" :aria-label="label">
+    <div
+      class="ui-tab-bar__spacer"
+      :class="{ 'ui-tab-bar__spacer--chat': variant === 'chat' }"
+      aria-hidden="true"
+    />
+    <nav
+      ref="root"
+      class="ui-tab-bar"
+      :class="{ 'ui-tab-bar--chat': variant === 'chat' }"
+      :aria-label="navLabel"
+    >
       <ul v-if="open" :id="sheetId" class="ui-tab-bar__sheet">
         <li v-for="item in inSheet" :key="item.id">
           <a
@@ -176,7 +205,10 @@ const countText = (n: number | null | undefined): string =>
             :aria-current="item.id === activeId ? 'page' : undefined"
             @click="onClick(item, $event)"
           >
-            <span v-if="item.icon" class="ui-tab-bar__icon" aria-hidden="true">{{ item.icon }}</span>
+            <span v-if="item.icon" class="ui-tab-bar__icon" aria-hidden="true">
+              <component :is="item.icon" v-if="typeof item.icon !== 'string'" />
+              <template v-else>{{ item.icon }}</template>
+            </span>
             <span class="ui-tab-bar__label">{{ item.label }}</span>
             <span v-if="item.live" class="ui-tab-bar__live" role="img" :aria-label="liveLabel" />
             <span v-else-if="countText(item.count)" class="ui-tab-bar__count">{{

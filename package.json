@@ -1,7 +1,7 @@
 {
   "name": "onyx-vue",
-  "version": "0.17.0",
-  "description": "Vue 3 port of Onyx UI — accessible, token-themed components (styled mode).",
+  "version": "0.18.0",
+  "description": "Vue 3 port of Onyx UI \u2014 accessible, token-themed components (styled mode).",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -45,6 +45,9 @@
   },
   "peerDependencies": {
     "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/roboto": "5.3.0"
   },
   "devDependencies": {
     "@testing-library/user-event": "^14.6.8",

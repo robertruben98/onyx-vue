@@ -88,6 +88,13 @@
   line-height: 1;
 }
 
+// A component icon (svg) has no intrinsic size: follow the glyph size.
+.ui-tab-bar__icon > svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
 .ui-tab-bar__label {
   max-width: 100%;
   overflow: hidden;
@@ -165,5 +172,85 @@
     forced-color-adjust: none;
     background: Highlight;
     color: HighlightText;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Chat variant — WhatsApp-Android-style bottom nav. Chat tokens fall back to
+// the generic ones. The icon sits in a 64x32 pill (filled when active), the
+// label is 12/16 under it, the count is a badge on the pill's corner.
+// ---------------------------------------------------------------------------
+// The spacer is a sibling of the bar, so it needs the chat height itself.
+.ui-tab-bar__spacer--chat,
+.ui-theme-chat .ui-tab-bar__spacer {
+  --ui-tab-bar-height: 5rem;
+}
+
+.ui-tab-bar--chat,
+.ui-theme-chat .ui-tab-bar {
+  --ui-tab-bar-height: 5rem;
+  --ui-tab-bar-bg: var(--ui-chat-app-bg, var(--ui-color-surface));
+  --ui-tab-bar-text: var(--ui-chat-ink-soft, var(--ui-color-text-muted));
+  --ui-tab-bar-active: var(--ui-color-text);
+  --ui-tab-bar-font-size: 0.75rem;
+  --ui-tab-bar-item-gap: var(--ui-space-1);
+  --ui-tab-bar-pill-bg: var(--ui-chat-accent-soft, var(--ui-color-surface-hover));
+  --ui-tab-bar-pill-ink: var(--ui-chat-on-accent-soft, var(--ui-color-text));
+  border-top: 0;
+}
+
+:is(.ui-tab-bar--chat, .ui-theme-chat .ui-tab-bar) {
+  .ui-tab-bar__item {
+    justify-content: flex-start;
+    padding-top: 0.75rem;
+    line-height: 1rem;
+  }
+
+  // No bar across the top: the pill says where you are.
+  .ui-tab-bar__item--active::before {
+    content: none;
+  }
+
+  .ui-tab-bar__item--active {
+    color: var(--ui-tab-bar-active);
+  }
+
+  .ui-tab-bar__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 2rem;
+    border-radius: var(--ui-radii-full);
+    font-size: 1.5rem;
+  }
+
+  .ui-tab-bar__icon > svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+  }
+
+  .ui-tab-bar__item--active .ui-tab-bar__icon {
+    background: var(--ui-tab-bar-pill-bg);
+    color: var(--ui-tab-bar-pill-ink);
+  }
+
+  // Badge over the pill's top-right area, not beside the label.
+  .ui-tab-bar__item > .ui-tab-bar__count,
+  .ui-tab-bar__item > .ui-tab-bar__live {
+    top: 0.5rem;
+    left: calc(50% + 0.5rem);
+  }
+
+  .ui-tab-bar__count {
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 var(--ui-space-1);
+    background: var(--ui-chat-unread, var(--ui-tab-bar-count-bg));
+    color: var(--ui-chat-on-accent, var(--ui-tab-bar-count-text));
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1rem;
   }
 }

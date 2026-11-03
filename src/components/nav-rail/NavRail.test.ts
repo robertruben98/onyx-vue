@@ -178,3 +178,64 @@ describe("NavRailItem meta", () => {
     }
   });
 });
+
+const Glyph = { render: () => h("svg", { viewBox: "0 0 24 24" }) };
+
+describe("NavRail icons variant (Vue)", () => {
+  it("adds the icons class only for variant=icons", () => {
+    const a = render(NavRail, { props: { variant: "icons" } });
+    expect(a.container.querySelector("nav")?.classList.contains("ui-nav-rail--icons")).toBe(true);
+    const b = render(NavRail);
+    expect(b.container.querySelector("nav")?.classList.contains("ui-nav-rail--icons")).toBe(false);
+  });
+
+  it("renders a footer slot only when given", () => {
+    const a = render(NavRail, { props: { variant: "icons" }, slots: { footer: () => h("button", "Me") } });
+    expect(a.container.querySelector(".ui-nav-rail__footer")).toBeTruthy();
+    const b = render(NavRail, { props: { variant: "icons" } });
+    expect(b.container.querySelector(".ui-nav-rail__footer")).toBeNull();
+  });
+
+  it("an icon entry is a labelled button without visible text", () => {
+    render(NavRailItem, { props: { label: "Chats", icon: Glyph } });
+    const btn = screen.getByRole("button", { name: "Chats" });
+    expect(btn.classList.contains("ui-nav-rail__item--icon")).toBe(true);
+    expect(btn.getAttribute("title")).toBe("Chats");
+    expect(btn.querySelector("svg")).toBeTruthy();
+    expect(btn.querySelector(".ui-nav-rail__name")).toBeNull();
+  });
+
+  it("takes the glyph from the icon slot too", () => {
+    const { container } = render(NavRailItem, {
+      props: { label: "Calls" },
+      slots: { icon: () => h("svg") },
+    });
+    expect(container.querySelector(".ui-nav-rail__glyph svg")).toBeTruthy();
+  });
+
+  it("shows a badge, speaks it in the name, and caps at 99+", () => {
+    const { container, rerender } = render(NavRailItem, { props: { label: "Chats", icon: Glyph, badge: 5 } });
+    expect(container.querySelector(".ui-nav-rail__badge")?.textContent).toBe("5");
+    expect(container.querySelector("button")?.getAttribute("aria-label")).toBe("Chats, 5");
+    return rerender({ badge: 120 }).then(() => {
+      expect(container.querySelector(".ui-nav-rail__badge")?.textContent).toBe("99+");
+    });
+  });
+
+  it("renders no badge for 0 and a dot when asked", () => {
+    const { container } = render(NavRailItem, { props: { label: "Status", icon: Glyph, badge: 0, dot: true } });
+    expect(container.querySelector(".ui-nav-rail__badge")).toBeNull();
+    expect(container.querySelector(".ui-nav-rail__dot")).toBeTruthy();
+  });
+
+  it("marks the active icon entry and has no a11y violations", async () => {
+    const { container } = render(NavRail, {
+      props: { variant: "icons", label: "Apps" },
+      slots: { default: () => [h(NavRailItem, { label: "Chats", icon: Glyph, active: true, badge: 3 }), h(NavRailItem, { label: "Calls", icon: Glyph })] },
+    });
+    const items = container.querySelectorAll(".ui-nav-rail__item--icon");
+    expect(items[0].getAttribute("aria-current")).toBe("page");
+    expect(items[1].hasAttribute("aria-current")).toBe(false);
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+});

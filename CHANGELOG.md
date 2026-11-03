@@ -9,6 +9,48 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## 0.18.0 — 2026-11-03
+
+### Breaking
+
+- **`ui-theme-chat` preset rebuilt.** Consumers of the chat preset get a light WhatsApp-like palette by default
+  (dark only under `.app-dark`), Roboto Variable instead of the previous font, new/renamed `--ui-chat-*` tokens,
+  and different radii, spacing and shadows on every chat component. Review chat-preset screens after upgrading.
+
+### Added
+
+- `UiAvatar`: `tone="tinted"` (default `neutral`, + `seed`) paints coloured initials on a soft surface, one of eleven
+  pairs picked from a stable hash (tokens `--ui-avatar-tint-<name>-ink|surface`, light and `.app-dark`, in `styles/avatar-tints.css`; every light ink reaches 4.5:1).
+  New exports `avatarTintName`, `AVATAR_TINTS`.
+- `UiConversation`: original doodle wallpaper (mask coloured by `--ui-chat-wallpaper-ink`), 63 px row padding,
+  optional `group` on items and `first` in the `item` slot scope (2 px inside a run, 12 px between runs),
+  sticky day chip (radius 6, 24 px, 600 12/16), and a floating composer pill via the `footer` slot or the
+  read-only `composerText` prop. API backward compatible; spacing (12 px between ungrouped items) and
+  side padding change.
+- `UiNavRail` `variant="icons"` (64 px strip of round icon buttons, `#footer` slot) with `UiNavRailItem` `icon`/`#icon`, `badge`, `dot`; `UiTabBar` `variant="chat"` (80 px, icon in a 64x32 pill, badge) and component icons.
+- `UiConversationHeader` (64 px bar: `leading` slot, 40 px avatar, name 16/21 over subtitle 13/20, `actions` slot, header shadow) and `UiPanelHeader` (64 px list-panel header, title 22/28, `actions` slot). New tokens `--ui-conversation-header-*`, `--ui-panel-header-*`.
+- `UiInput` `variant="pill"`: 40 px round search field with a leading search glyph. New tokens `--ui-input-pill-*`.
+- `UiFilterChip` under `ui-theme-chat`: 32 px outlined pills with soft-accent active state. New tokens `--ui-filter-chip-pill-*`.
+
+### Changed
+
+- `ui-theme-chat` preset rebuilt on the WhatsApp Web palette: light by default, dark night mode under `.app-dark`
+  (graphite neutrals), Roboto Variable (`@fontsource-variable/roboto`, loaded by this preset only), single-layer
+  shadow tokens (`--ui-chat-shadow-*`), radius/space scales (`--ui-chat-radius-*`, `--ui-chat-space-*`), tinted
+  avatar tokens and new surface/ink/accent tokens (`--ui-chat-app-bg`, `--ui-chat-ink-soft`,
+  `--ui-chat-accent-strong|ink|soft`, `--ui-chat-wallpaper-ink`...). Chat controls keep 32/40/52 px on coarse
+  pointers and only widen the hit area to 44 px.
+- `UiChatListItem`: a 72 px card (radius 12, margin 0 10) with a 48 px tinted avatar, name 400 16/24,
+  preview 14/20, green time and a 600 badge when unread, hover/selected on `--ui-chat-surface-hover`,
+  source mark 12/400 and a small-pill tag. Props and events unchanged.
+- `UiMessageBubble`: WhatsApp geometry (7.5px radius, 6/7/8/9px padding, 14.2px text, inline time, 65/75/85/95% max width) and a new `tail` prop.
+
+### Fixed
+
+- `UiTabBar` `variant="chat"` names its landmark "Sections" (ES "Secciones", locale key `tabBarChatLabel`) so it differs from a rail named "Main"; `label` still overrides.
+- `UiMessageBubble` time outside `.ui-theme-chat` falls back to the body text colour (the muted token missed 4.5:1 on several presets).
+- `UiFilterChip` without a `count` no longer renders a trailing "·" (onyx-vue#133).
+
 ## 0.17.0 — 2026-11-03
 
 ### Added

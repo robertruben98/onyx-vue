@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 // UiWeekBlocks: a block fill is a graphical object (WCAG 1.4.11) and must reach 3:1
 // against the column it sits on; the block text must reach 4.5:1 against the fill.
-// Checked in the default light and dark themes and in the chat preset, day and night.
+// Checked in the default light and dark themes and in the chat preset, day (the default) and night (`.app-dark`).
 const dir = join(process.cwd(), "src", "styles");
 const read = (f: string) => readFileSync(join(dir, f), "utf8");
 function block(css: string, selector: string): string {
@@ -17,21 +17,27 @@ const vars = (css: string): Record<string, string> =>
 const tokens = vars(read("tokens.css"));
 const dark = vars(block(read("dark.css"), ".app-dark"));
 const chat = read("chat.css");
-const chatNight = vars(block(chat, ".ui-theme-chat"));
-const chatDay = vars(block(chat, ".ui-theme-chat.app-light"));
+const chatDay = vars(block(chat, ".ui-theme-chat"));
+const chatNight = vars(block(chat, ".ui-theme-chat.app-dark"));
 
 const themes: [string, Record<string, string>[]][] = [
   ["light", [tokens]],
   ["dark", [tokens, dark]],
-  ["chat night", [tokens, chatNight]],
-  ["chat day", [tokens, chatNight, chatDay]],
+  ["chat day", [tokens, chatDay]],
+  ["chat night", [tokens, dark, chatDay, chatNight]],
 ];
 
 function resolve(layers: Record<string, string>[], name: string): string {
   const value = [...layers].reverse().find((l) => name in l)?.[name];
   if (value === undefined) throw new Error(`${name} is not defined`);
   const ref = /^var\((--[\w-]+)\)$/.exec(value);
-  return ref ? resolve(layers, ref[1]) : value;
+  const out = ref ? resolve(layers, ref[1]) : value;
+  // A translucent token (the chat preset's 60 % ink, its hover wash) is flattened over the surface it sits on.
+  const rgba = /^rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/.exec(out);
+  if (!rgba || name === "--ui-color-surface") return out;
+  const under = resolve(layers, "--ui-color-surface");
+  const mix = [1, 2, 3].map((i, k) => Math.round(Number(rgba[i]) * Number(rgba[4]) + parseInt(under.slice(1 + 2 * k, 3 + 2 * k), 16) * (1 - Number(rgba[4]))));
+  return `#${mix.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
 }
 type Rgb = [number, number, number];
 function hex(c: string): Rgb {

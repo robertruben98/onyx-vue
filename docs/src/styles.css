@@ -46,10 +46,10 @@
   --docs-page-bg: var(--ui-pocket-floor);
 }
 
-/* `chat` trae su noche por defecto y `.app-light`: el suelo sigue a su token. */
+/* `chat` es claro por defecto y trae su noche bajo `.app-dark`: el suelo sigue a su token. */
 .ui-theme-chat {
   --docs-font: var(--ui-font-family);
-  --docs-page-bg: var(--ui-chat-bg);
+  --docs-page-bg: var(--ui-chat-app-bg);
 }
 
 /* Igual para `matrix`. El fondo sale de su propio primitivo y no de un gris

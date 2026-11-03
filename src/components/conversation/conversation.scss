@@ -1,4 +1,6 @@
 // Conversation pane. Background from the chat preset (--ui-chat-bg), generic fallback outside it.
+// Doodle wallpaper, 63 px row padding, run spacing, sticky day chip and floating composer pill follow WhatsApp Web.
+@use "wallpaper" as *;
 
 .ui-conversation {
   position: relative;
@@ -9,31 +11,114 @@
   background: var(--ui-chat-bg, var(--ui-color-surface));
 }
 
+// The wallpaper is a mask layer (original doodle tile), coloured by the ink token.
+.ui-conversation__wallpaper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--ui-chat-wallpaper-ink, var(--ui-color-border));
+  opacity: 0.6;
+  -webkit-mask-image: $conversation-wallpaper;
+  mask-image: $conversation-wallpaper;
+  -webkit-mask-size: 400px 400px;
+  mask-size: 400px 400px;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+
+.ui-conversation__body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .ui-conversation__scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  padding: 0.75rem 63px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-chat-outline) transparent;
+  overflow-anchor: none; // the component restores the position itself on prepend
+
+  @media (max-width: 968px) {
+    padding-inline: 25px 19px;
+  }
+}
+
+.ui-conversation__section {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: var(--ui-space-3, 0.75rem);
-  overflow-anchor: none; // the component restores the position itself on prepend
+}
+
+// Sticky within its day section: the next day's chip replaces it.
+.ui-conversation__day {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 9% 12px;
+  pointer-events: none;
+}
+
+.ui-conversation__day-chip {
+  box-sizing: border-box;
+  height: 24px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--ui-chat-bubble-system, var(--ui-color-surface-hover));
+  box-shadow: var(--ui-chat-shadow-chip);
+  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
 }
 
 .ui-conversation__item {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  margin-top: 2px; // inside a run
+
+  &--first {
+    margin-top: 12px; // between runs
+  }
+
+  .ui-conversation__day + & {
+    margin-top: 0; // the chip's own 12 px already separates it
+  }
 }
 
-.ui-conversation__day {
-  align-self: center;
-  margin: var(--ui-space-2, 0.5rem) 0;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  background: var(--ui-chat-bubble-in, var(--ui-color-surface-hover));
+// Floating composer pill (read-only unless the footer slot brings its own controls).
+.ui-conversation__composer {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  margin: 0 12px 12px;
+  padding: 5px;
+  border: 1px solid transparent;
+  border-radius: 26px;
+  background: var(--ui-chat-composer, var(--ui-color-surface));
+  box-shadow: var(--ui-chat-shadow-composer);
+
+  &--readonly {
+    padding-inline: 20px;
+  }
+}
+
+.ui-conversation__composer-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--ui-chat-meta, var(--ui-color-text-muted));
-  font-size: 0.75rem;
+  font-size: 15px;
+  line-height: 1.47em;
 }
 
 .ui-conversation__pill {

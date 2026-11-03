@@ -1,29 +1,94 @@
-// Message bubble. Colours come from the chat preset tokens, with the generic
+// Message bubble, WhatsApp geometry. Colours come from the chat preset tokens, with the generic
 // --ui-* tokens as fallback so it also works outside `.ui-theme-chat`.
 
 .ui-message-bubble {
+  --ui-message-bubble-radius: 7.5px;
+  --_bg: var(--ui-color-surface-hover);
+
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  max-width: min(32rem, 85%);
-  padding: var(--ui-space-2, 0.5rem) var(--ui-space-3, 0.75rem);
-  border-radius: var(--ui-chat-bubble-radius, 10px);
+  max-width: 65%;
+  padding: 6px 7px 8px 9px;
+  border-radius: var(--ui-message-bubble-radius);
+  background: var(--_bg);
+  box-shadow: var(--ui-chat-shadow-bubble);
   color: var(--ui-color-text);
+  font-size: 0.8875rem; // 14.2px
+  line-height: 19px;
   min-width: 0;
+
+  a {
+    color: var(--ui-chat-link, var(--ui-color-primary));
+  }
+}
+
+// Max width steps by viewport (reference 3.7): 65 / 75 / 85 / 95 %.
+@media (max-width: 1300px) {
+  .ui-message-bubble {
+    max-width: 75%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ui-message-bubble {
+    max-width: 85%;
+  }
+}
+
+@media (max-width: 900px) {
+  .ui-message-bubble {
+    max-width: 95%;
+  }
 }
 
 .ui-message-bubble--in {
+  --_bg: var(--ui-chat-bubble-in, var(--ui-color-surface-hover));
+
   align-self: flex-start;
-  background: var(--ui-chat-bubble-in, var(--ui-color-surface-hover));
 }
 
 .ui-message-bubble--out {
+  --_bg: var(--ui-chat-bubble-out, var(--ui-color-primary-soft, var(--ui-color-surface-hover)));
+
   align-self: flex-end;
-  background: var(--ui-chat-bubble-out, var(--ui-color-primary-soft, var(--ui-color-surface-hover)));
+}
+
+// The corner holding the tail is square.
+.ui-message-bubble--tail.ui-message-bubble--out {
+  border-start-end-radius: 0;
+}
+
+.ui-message-bubble--tail.ui-message-bubble--in {
+  border-start-start-radius: 0;
+}
+
+.ui-message-bubble__tail {
+  position: absolute;
+  top: 0;
+  color: var(--_bg);
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ui-message-bubble--out > .ui-message-bubble__tail {
+  inset-inline-end: -8px;
+}
+
+.ui-message-bubble--in > .ui-message-bubble__tail {
+  inset-inline-start: -8px;
+  transform: scaleX(-1);
+}
+
+.ui-message-bubble__tail-shadow {
+  fill: var(--ui-chat-tail-shadow);
+  opacity: 0.13;
 }
 
 .ui-message-bubble--draft {
-  border: 1px dashed var(--ui-chat-bubble-draft-border, var(--ui-color-border));
+  border: 1px dashed var(--ui-chat-accent, var(--ui-chat-bubble-draft-border, var(--ui-color-border)));
+  box-shadow: none;
 }
 
 .ui-message-bubble--context {
@@ -32,9 +97,10 @@
 }
 
 .ui-message-bubble__author {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ui-chat-meta, var(--ui-color-text));
+  font-size: 0.8rem;
+  line-height: 22px;
+  font-weight: 500;
+  color: var(--ui-chat-link, var(--ui-chat-meta, var(--ui-color-text)));
 }
 
 .ui-message-bubble__media {
@@ -42,26 +108,56 @@
   flex-direction: column;
   max-width: 100%;
   overflow: hidden;
-  border-radius: calc(var(--ui-chat-bubble-radius, 10px) - 2px);
+  border-radius: calc(var(--ui-message-bubble-radius) - 2px);
 }
 
 .ui-message-bubble__text {
+  position: relative; // anchors the inline time
   white-space: pre-wrap; // keeps the line breaks of the text
   overflow-wrap: anywhere; // long words and URLs wrap instead of overflowing
   min-width: 0;
 }
 
+// Reserves the width of the time (plus a 4px gap) at the end of the text, so the time stays on the
+// last line while it fits and only drops to a new line when it does not.
+.ui-message-bubble__spacer {
+  display: inline-block;
+  margin-inline-start: 4px;
+  visibility: hidden;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+// The real time is pinned to the bottom end of the text block, over the room the spacer keeps free.
+.ui-message-bubble__time--inline {
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 0;
+}
+
+.ui-message-bubble__time {
+  font-size: 0.75rem;
+  line-height: 16px;
+  // Outside `.ui-theme-chat` the muted text token misses 4.5:1 on the bubble surfaces of several presets, so the time
+  // falls back to the body text colour (it stays secondary by size).
+  color: var(--ui-chat-meta, var(--ui-color-text));
+  white-space: nowrap;
+}
+
+// Lookup lines (e.g. orders) sit under the text, inside the bubble.
 .ui-message-bubble__meta {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+  line-height: 16px;
   overflow-wrap: anywhere;
-  color: var(--ui-chat-meta, var(--ui-color-text));
+  color: var(--ui-chat-ink-soft, var(--ui-chat-meta, var(--ui-color-text)));
 }
 
 .ui-message-bubble__footer {
   font-size: 0.75rem;
+  line-height: 16px;
   overflow-wrap: anywhere;
 }
 
@@ -72,25 +168,30 @@
   gap: var(--ui-space-2, 0.5rem);
 }
 
-.ui-message-bubble__time {
-  font-size: 0.6875rem;
-  color: var(--ui-chat-meta, var(--ui-color-text));
-}
-
 .ui-message-bubble__copy {
-  min-height: 2.75rem; // 44px touch target
+  position: relative;
+  min-height: 28px;
   padding: 0 var(--ui-space-3, 0.75rem);
-  border: 0;
+  border: 1px solid var(--ui-chat-accent, var(--ui-color-primary));
   border-radius: 999px;
   background: transparent;
-  color: var(--ui-color-primary);
+  color: var(--ui-chat-accent, var(--ui-color-primary));
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
 
+  // Visual size stays 28px; the hit area grows to 44px on touch screens.
+  @media (pointer: coarse) {
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -8px 0;
+    }
+  }
+
   &:hover {
-    background: var(--ui-color-surface-hover);
+    background: var(--ui-chat-accent-soft, var(--ui-color-surface-hover));
   }
 
   &:focus-visible {

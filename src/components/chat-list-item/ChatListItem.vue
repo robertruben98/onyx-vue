@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import UiAvatar, { avatarGradientIndex } from "../avatar/Avatar.vue";
+import UiAvatar from "../avatar/Avatar.vue";
 import UiBadge from "../badge/Badge.vue";
+import { useOnyxLocale } from "../../locale";
 import "./chat-list-item.scss";
 
 export type ChatListItemTagTone = "neutral" | "danger" | "success";
@@ -52,22 +53,26 @@ const avatarName = computed(() =>
   props.avatarText ? [...props.avatarText.trim()].slice(0, 2).join(" ") : props.title,
 );
 
-const avatarClass = computed(() => [
-  "ui-avatar--gradient",
-  `ui-avatar--gradient-${avatarGradientIndex(props.avatarSeed || props.title)}`,
-]);
-
+const messages = useOnyxLocale();
+const unreadLabel = computed(() => messages.chatListItemUnread.replace("{n}", String(props.unread)));
 const unreadText = computed(() => (props.unread > 99 ? "99+" : String(props.unread)));
 </script>
 
 <template>
   <button
     type="button"
-    :class="['ui-chat-list-item', { 'ui-chat-list-item--selected': selected }]"
+    :class="['ui-chat-list-item', { 'ui-chat-list-item--selected': selected, 'ui-chat-list-item--unread': unread > 0 }]"
     :aria-current="selected ? 'true' : undefined"
     @click="emit('select')"
   >
-    <UiAvatar :name="avatarName" :alt="''" :class="avatarClass" class="ui-chat-list-item__avatar" />
+    <UiAvatar
+      :name="avatarName"
+      :alt="''"
+      tone="tinted"
+      size="lg"
+      :seed="avatarSeed || title"
+      class="ui-chat-list-item__avatar"
+    />
     <span class="ui-chat-list-item__body">
       <span class="ui-chat-list-item__row">
         <span class="ui-chat-list-item__title">{{ title }}</span>
@@ -76,9 +81,12 @@ const unreadText = computed(() => (props.unread > 99 ? "99+" : String(props.unre
       </span>
       <span class="ui-chat-list-item__row">
         <span class="ui-chat-list-item__preview">{{ preview }}</span>
-        <span v-if="unread > 0" class="ui-chat-list-item__unread">{{ unreadText }}</span>
+        <span v-if="unread > 0" class="ui-chat-list-item__unread">
+          <span aria-hidden="true">{{ unreadText }}</span>
+          <span class="ui-chat-list-item__sr">{{ unreadLabel }}</span>
+        </span>
       </span>
-      <span v-if="tag" class="ui-chat-list-item__tag"><UiBadge :variant="badgeVariant">{{ tag }}</UiBadge></span>
+      <span v-if="tag" class="ui-chat-list-item__tag"><UiBadge :variant="badgeVariant" class="ui-chat-list-item__tag-chip">{{ tag }}</UiBadge></span>
     </span>
   </button>
 </template>

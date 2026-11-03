@@ -17,6 +17,21 @@ export function avatarGradientIndex(name: string): number {
   return (h % AVATAR_GRADIENTS) + 1;
 }
 
+/** Names of the `tone="tinted"` palette (tokens `--ui-avatar-tint-<name>-ink|surface`). */
+export const AVATAR_TINTS = [
+  "green", "cobalt", "purple", "pink", "orange", "teal", "sky", "yellow", "red", "brown", "gray",
+] as const;
+export type AvatarTint = (typeof AVATAR_TINTS)[number];
+export type AvatarTone = "neutral" | "tinted";
+
+/** The tint a seed always gets: same hash as the gradient, over the tint palette. */
+export function avatarTintName(seed: string): AvatarTint {
+  const key = seed.trim().toLowerCase();
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return AVATAR_TINTS[h % AVATAR_TINTS.length];
+}
+
 // Rendered sizes in px at a 16px root, for the ring's stroke ratio only.
 const SIZE_PX: Record<AvatarSize, number> = { sm: 32, md: 40, lg: 48, xl: 72 };
 </script>
@@ -40,6 +55,13 @@ const props = withDefaults(
     shape?: AvatarShape;
     /** Initials on a colour gradient picked from the name (always the same one for a name). */
     gradient?: boolean;
+    /**
+     * `tinted`: coloured initials on a soft surface of the same hue, picked from `seed`
+     * (tokens `--ui-avatar-tint-<name>-ink|surface`). `neutral` keeps the flat avatar.
+     */
+    tone?: AvatarTone;
+    /** Text the tint is picked from; the same seed is always the same tint. Defaults to `name`. */
+    seed?: string;
     /** Draws a progress ring around the avatar with this value. `null` draws none. */
     ringValue?: number | null;
     /** Value of a full ring. */
@@ -61,6 +83,8 @@ const props = withDefaults(
     size: "md",
     shape: "circle",
     gradient: false,
+    tone: "neutral",
+    seed: "",
     ringValue: null,
     ringMax: 100,
     ringTone: "primary",
@@ -91,7 +115,12 @@ const altText = computed(() => props.alt ?? props.name);
 
 const gradientIndex = computed(() => avatarGradientIndex(props.name));
 
+const tinted = computed(() => props.tone === "tinted" && !props.gradient && showInitials.value);
+const tintName = computed(() => avatarTintName(props.seed || props.name));
+
 const rootClasses = computed(() => ({
+  "ui-avatar--tinted": tinted.value,
+  [`ui-avatar--tint-${tintName.value}`]: tinted.value,
   "ui-avatar": true,
   "ui-avatar--sm": props.size === "sm",
   "ui-avatar--lg": props.size === "lg",

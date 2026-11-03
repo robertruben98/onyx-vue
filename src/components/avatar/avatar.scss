@@ -66,6 +66,73 @@
   }
 }
 
+// Tint tokens (`--ui-avatar-tint-<name>-ink|surface`) live in styles/avatar-tints.css.
+
+.ui-avatar--tinted {
+  font-weight: var(--ui-font-weight-medium, 500);
+}
+
+.ui-avatar--tint-green {
+  background-color: var(--ui-avatar-tint-green-surface);
+  color: var(--ui-avatar-tint-green-ink);
+}
+
+.ui-avatar--tint-cobalt {
+  background-color: var(--ui-avatar-tint-cobalt-surface);
+  color: var(--ui-avatar-tint-cobalt-ink);
+}
+
+.ui-avatar--tint-purple {
+  background-color: var(--ui-avatar-tint-purple-surface);
+  color: var(--ui-avatar-tint-purple-ink);
+}
+
+.ui-avatar--tint-pink {
+  background-color: var(--ui-avatar-tint-pink-surface);
+  color: var(--ui-avatar-tint-pink-ink);
+}
+
+.ui-avatar--tint-orange {
+  background-color: var(--ui-avatar-tint-orange-surface);
+  color: var(--ui-avatar-tint-orange-ink);
+}
+
+.ui-avatar--tint-teal {
+  background-color: var(--ui-avatar-tint-teal-surface);
+  color: var(--ui-avatar-tint-teal-ink);
+}
+
+.ui-avatar--tint-sky {
+  background-color: var(--ui-avatar-tint-sky-surface);
+  color: var(--ui-avatar-tint-sky-ink);
+}
+
+.ui-avatar--tint-yellow {
+  background-color: var(--ui-avatar-tint-yellow-surface);
+  color: var(--ui-avatar-tint-yellow-ink);
+}
+
+.ui-avatar--tint-red {
+  background-color: var(--ui-avatar-tint-red-surface);
+  color: var(--ui-avatar-tint-red-ink);
+}
+
+.ui-avatar--tint-brown {
+  background-color: var(--ui-avatar-tint-brown-surface);
+  color: var(--ui-avatar-tint-brown-ink);
+}
+
+.ui-avatar--tint-gray {
+  background-color: var(--ui-avatar-tint-gray-surface);
+  color: var(--ui-avatar-tint-gray-ink);
+}
+
+@media (forced-colors: active) {
+  .ui-avatar--tinted {
+    forced-color-adjust: none;
+  }
+}
+
 // --- 0.8: progress ring around the avatar -----------------------------------
 // The ring is the same drawing as UiProgressRing (src/internal/RingSvg.vue),
 // in a box that is the avatar plus (gap + width) on each side.

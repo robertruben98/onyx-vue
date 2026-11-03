@@ -28,6 +28,7 @@ export interface OnyxMessages {
   logLinesLabel: string;
   tabBarMoreLabel: string;
   tabBarLabel: string;
+  tabBarChatLabel: string;
   tabBarLiveLabel: string;
   toastHostDismissLabel: string;
   panelEmptyText: string;
@@ -51,6 +52,7 @@ export interface OnyxMessages {
   weekBlocksLabel: string;
   dayTimelineLabel: string;
   dayTimelineNow: string;
+  chatListItemUnread: string;
   dayTimelineBands: { "free": string; "likely": string; "busy": string; "past": string; "nodata": string };
   conversationNewMessages: { "one": string; "other": string };
   relativeTimeUnits: { "minute": string; "hour": string; "day": string; "month": string };
@@ -116,6 +118,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "logLinesLabel": "Activity",
   "tabBarMoreLabel": "More",
   "tabBarLabel": "Main",
+  "tabBarChatLabel": "Sections",
   "tabBarLiveLabel": "running",
   "toastHostDismissLabel": "Dismiss",
   "panelEmptyText": "Nothing here.",
@@ -139,6 +142,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "weekBlocksLabel": "Week focus blocks",
   "dayTimelineLabel": "Day timeline",
   "dayTimelineNow": "now",
+  "chatListItemUnread": "{n} unread messages",
   "dayTimelineBands": {
     "free": "almost surely free",
     "likely": "probably free",
@@ -282,6 +286,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "logLinesLabel": "Actividad",
   "tabBarMoreLabel": "Más",
   "tabBarLabel": "Principal",
+  "tabBarChatLabel": "Secciones",
   "tabBarLiveLabel": "en curso",
   "toastHostDismissLabel": "Descartar",
   "panelEmptyText": "No hay nada aquí.",
@@ -305,6 +310,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "weekBlocksLabel": "Bloques de foco de la semana",
   "dayTimelineLabel": "Línea del día",
   "dayTimelineNow": "ahora",
+  "chatListItemUnread": "{n} mensajes no leídos",
   "dayTimelineBands": {
     "free": "libre casi seguro",
     "likely": "probablemente libre",

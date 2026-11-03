@@ -1,5 +1,8 @@
 import { fireEvent, render } from "@testing-library/vue";
 import { axe } from "jest-axe";
+import { h } from "vue";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import TabBar, { type TabBarItem } from "./TabBar.vue";
 
 const axeOptions = { rules: { region: { enabled: false } } };
@@ -103,5 +106,70 @@ describe("TabBar (Vue)", () => {
     expect(await axe(container, axeOptions)).toHaveNoViolations();
     await fireEvent.click(getByRole("button", { name: /More/ }));
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+});
+
+describe("TabBar chat variant (Vue)", () => {
+  it("adds the chat class only for variant=chat", () => {
+    const a = render(TabBar, { props: { items: ITEMS.slice(0, 3), variant: "chat" } });
+    expect(a.container.querySelector("nav")?.classList.contains("ui-tab-bar--chat")).toBe(true);
+    const b = render(TabBar, { props: { items: ITEMS.slice(0, 3) } });
+    expect(b.container.querySelector("nav")?.classList.contains("ui-tab-bar--chat")).toBe(false);
+  });
+
+  it("renders a component icon in the pill and keeps strings working", () => {
+    const Glyph = { render: () => h("svg", { class: "g" }) };
+    const items: TabBarItem[] = [
+      { id: "a", label: "Chats", href: "#/a", icon: Glyph, count: 4 },
+      { id: "b", label: "Calls", href: "#/b", icon: "C" },
+    ];
+    const { container } = render(TabBar, { props: { items, activeId: "a", variant: "chat" } });
+    const icons = container.querySelectorAll(".ui-tab-bar__icon");
+    expect(icons[0].querySelector("svg.g")).toBeTruthy();
+    expect(icons[1].textContent?.trim()).toBe("C");
+    expect(container.querySelector(".ui-tab-bar__item--active")?.getAttribute("aria-current")).toBe("page");
+    expect(container.querySelector(".ui-tab-bar__count")?.textContent).toBe("4");
+  });
+
+  it("has no a11y violations", async () => {
+    const { container } = render(TabBar, { props: { items: ITEMS.slice(0, 4), variant: "chat", activeId: "home" } });
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+});
+
+describe("TabBar chat height and badge ink (Vue)", () => {
+  it("gives the spacer the chat class so it holds the 80 px bar height", () => {
+    const { container } = render(TabBar, { props: { items: ITEMS.slice(0, 3), variant: "chat" } });
+    expect(container.querySelector(".ui-tab-bar__spacer")?.classList.contains("ui-tab-bar__spacer--chat")).toBe(true);
+    const scss = readFileSync(join(__dirname, "tab-bar.scss"), "utf8");
+    // Same height var on spacer and bar.
+    expect(scss).toMatch(/\.ui-tab-bar__spacer--chat,\s*\.ui-theme-chat \.ui-tab-bar__spacer\s*\{\s*--ui-tab-bar-height:\s*5rem/);
+    expect(scss).toMatch(/\.ui-tab-bar--chat,\s*\.ui-theme-chat \.ui-tab-bar\s*\{\s*--ui-tab-bar-height:\s*5rem/);
+  });
+
+  it("keeps the default spacer unclassed", () => {
+    const { container } = render(TabBar, { props: { items: ITEMS.slice(0, 3) } });
+    expect(container.querySelector(".ui-tab-bar__spacer--chat")).toBeNull();
+  });
+
+  it("inks badge numerals with --ui-chat-on-accent, never a literal", () => {
+    for (const f of ["tab-bar/tab-bar.scss", "nav-rail/nav-rail.scss"]) {
+      const scss = readFileSync(join(__dirname, "..", f), "utf8");
+      expect(scss).toContain("var(--ui-chat-on-accent");
+      expect(scss).not.toMatch(/color:\s*#fff/i);
+    }
+  });
+});
+
+describe("TabBar landmark name", () => {
+  it("names the chat variant Sections and the default Main, overridable by label", async () => {
+    const { render: r } = await import("@testing-library/vue");
+    const items = [{ id: "a", label: "A", href: "#a" }, { id: "b", label: "B", href: "#b" }];
+    const chat = r(TabBar, { props: { items, hideAbove: 0, variant: "chat" } });
+    expect(chat.getByRole("navigation").getAttribute("aria-label")).toBe("Sections");
+    const plain = r(TabBar, { props: { items, hideAbove: 0 } });
+    expect(plain.getAllByRole("navigation").pop()?.getAttribute("aria-label")).toBe("Main");
+    const named = r(TabBar, { props: { items, hideAbove: 0, variant: "chat", label: "Tabs" } });
+    expect(named.getAllByRole("navigation").pop()?.getAttribute("aria-label")).toBe("Tabs");
   });
 });

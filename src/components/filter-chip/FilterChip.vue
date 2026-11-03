@@ -86,6 +86,12 @@ const countTone = computed(() => {
   return "neutral" as const;
 });
 
+/**
+ * A chip with no count at all (`count` unset, state `known`) shows no count.
+ * Before, it drew the "pending" glyph, a stray trailing "·" (onyx-vue#133).
+ */
+const showCount = computed(() => props.state !== "known" || props.count !== null);
+
 const rootClasses = computed(() => ({
   "ui-filter-chip": true,
   "ui-filter-chip--ok": tone.value === "success",
@@ -93,6 +99,7 @@ const rootClasses = computed(() => ({
   "ui-filter-chip--danger": tone.value === "danger",
   "ui-filter-chip--info": tone.value === "info",
   "ui-filter-chip--muted": tone.value === "muted",
+  "ui-filter-chip--counted": showCount.value,
   "ui-filter-chip--pressed": props.pressed,
   "ui-filter-chip--dashed": props.dashed,
   "ui-filter-chip--empty": empty.value && !props.pressed,
@@ -114,6 +121,7 @@ function activate(): void {
   >
     <span class="ui-filter-chip__label">{{ label }}</span>
     <UiTriStateCount
+      v-if="showCount"
       :state="state"
       :value="count"
       :tone="countTone"
