@@ -51,6 +51,7 @@ export interface OnyxMessages {
   weekBlocksLabel: string;
   dayTimelineLabel: string;
   dayTimelineNow: string;
+  chatListItemUnread: string;
   dayTimelineBands: { "free": string; "likely": string; "busy": string; "past": string; "nodata": string };
   conversationNewMessages: { "one": string; "other": string };
   relativeTimeUnits: { "minute": string; "hour": string; "day": string; "month": string };
@@ -139,6 +140,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "weekBlocksLabel": "Week focus blocks",
   "dayTimelineLabel": "Day timeline",
   "dayTimelineNow": "now",
+  "chatListItemUnread": "{n} unread messages",
   "dayTimelineBands": {
     "free": "almost surely free",
     "likely": "probably free",
@@ -305,6 +307,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "weekBlocksLabel": "Bloques de foco de la semana",
   "dayTimelineLabel": "Línea del día",
   "dayTimelineNow": "ahora",
+  "chatListItemUnread": "{n} mensajes no leídos",
   "dayTimelineBands": {
     "free": "libre casi seguro",
     "likely": "probablemente libre",
