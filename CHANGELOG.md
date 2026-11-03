@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiNavRail` `variant="icons"` (64 px strip of round icon buttons, `#footer` slot) with `UiNavRailItem` `icon`/`#icon`, `badge`, `dot`; `UiTabBar` `variant="chat"` (80 px, icon in a 64x32 pill, badge) and component icons.
+
 ## 0.17.0 — 2026-11-03
 
 ### Added
