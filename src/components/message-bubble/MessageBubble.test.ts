@@ -109,7 +109,7 @@ describe("MessageBubble (Vue)", () => {
   it("keeps line breaks and the CSS wraps long unbroken strings", () => {
     const long = "x".repeat(300);
     const { container } = render(MessageBubble, { props: base, slots: { default: long } });
-    expect(container.querySelector(".ui-message-bubble__text")!.textContent).toBe(long);
+    expect(container.querySelector(".ui-message-bubble__content")!.textContent).toBe(long);
     const r = rule(".ui-message-bubble__text");
     expect(r).toMatch(/overflow-wrap:\s*anywhere/);
     expect(r).toMatch(/white-space:\s*pre-wrap/);
@@ -128,7 +128,49 @@ describe("MessageBubble (Vue)", () => {
   it("draft has a dashed border from the draft token", () => {
     const r = rule(".ui-message-bubble--draft");
     expect(r).toMatch(/dashed/);
-    expect(r).toMatch(/--ui-chat-bubble-draft-border/);
+    expect(r).toMatch(/--ui-chat-accent/);
+  });
+
+  it("renders the tail only with `tail`, on the outer top corner of each direction", () => {
+    const none = render(MessageBubble, { props: base, slots: { default: "a" } });
+    expect(none.container.querySelector(".ui-message-bubble__tail")).toBeNull();
+    const out = render(MessageBubble, { props: { ...base, direction: "out", tail: true }, slots: { default: "a" } });
+    const inn = render(MessageBubble, { props: { ...base, tail: true }, slots: { default: "a" } });
+    const tOut = out.container.querySelector(".ui-message-bubble__tail")!;
+    expect(tOut.getAttribute("viewBox")).toBe("0 0 8 13");
+    expect(tOut.getAttribute("aria-hidden")).toBe("true");
+    expect(tOut.querySelectorAll("path")).toHaveLength(2);
+    expect(inn.container.querySelector(".ui-message-bubble__tail")).not.toBeNull();
+    expect(rule(".ui-message-bubble--out > .ui-message-bubble__tail")).toMatch(/inset-inline-end:\s*-8px/);
+    expect(rule(".ui-message-bubble--in > .ui-message-bubble__tail")).toMatch(/inset-inline-start:\s*-8px/);
+    expect(rule(".ui-message-bubble--tail.ui-message-bubble--out")).toMatch(/border-start-end-radius:\s*0/);
+    expect(rule(".ui-message-bubble--tail.ui-message-bubble--in")).toMatch(/border-start-start-radius:\s*0/);
+    expect(rule(".ui-message-bubble__tail")).toMatch(/top:\s*0/);
+  });
+
+  it("puts the time inside the text block after a spacer, and in a bottom row when there are meta lines", () => {
+    const plain = render(MessageBubble, { props: base, slots: { default: "hola" } });
+    const text = plain.container.querySelector(".ui-message-bubble__text")!;
+    const kids = [...text.children].map((c) => c.className.split(" ")[0]);
+    expect(kids).toEqual(["ui-message-bubble__content", "ui-message-bubble__spacer", "ui-message-bubble__time"]);
+    expect(text.querySelector(".ui-message-bubble__spacer")!.getAttribute("aria-hidden")).toBe("true");
+    expect(plain.container.querySelector(".ui-message-bubble__bottom")).toBeNull();
+    const withMeta = render(MessageBubble, { props: base, slots: { default: "hola", meta: "Pedido 1" } });
+    expect(withMeta.container.querySelector(".ui-message-bubble__text .ui-message-bubble__time")).toBeNull();
+    expect(withMeta.container.querySelector(".ui-message-bubble__bottom .ui-message-bubble__time")).not.toBeNull();
+  });
+
+  it("encodes the WhatsApp geometry in the scss", () => {
+    const b = rule(".ui-message-bubble");
+    expect(b).toMatch(/--ui-message-bubble-radius:\s*7\.5px/);
+    expect(b).toMatch(/padding:\s*6px 7px 8px 9px/);
+    expect(b).toMatch(/--ui-chat-shadow-bubble/);
+    expect(b).toMatch(/font-size:\s*0\.8875rem/);
+    expect(b).toMatch(/line-height:\s*19px/);
+    expect(rule(".ui-message-bubble__time--inline")).toMatch(/margin:\s*3px 0 -3px 4px/);
+    expect(rule(".ui-message-bubble__time")).toMatch(/font-size:\s*0\.75rem/);
+    expect(rule(".ui-message-bubble__meta")).toMatch(/--ui-chat-ink-soft/);
+    for (const w of ["65%", "75%", "85%", "95%"]) expect(scss).toContain(`max-width: ${w}`);
   });
 
   it("has no axe violations", async () => {
