@@ -28,6 +28,12 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ### Changed
 
+- `ui-theme-chat` preset rebuilt on the WhatsApp Web palette: light by default, dark night mode under `.app-dark`
+  (graphite neutrals), Roboto Variable (`@fontsource-variable/roboto`, loaded by this preset only), single-layer
+  shadow tokens (`--ui-chat-shadow-*`), radius/space scales (`--ui-chat-radius-*`, `--ui-chat-space-*`), tinted
+  avatar tokens and new surface/ink/accent tokens (`--ui-chat-app-bg`, `--ui-chat-ink-soft`,
+  `--ui-chat-accent-strong|ink|soft`, `--ui-chat-wallpaper-ink`...). Chat controls keep 32/40/52 px on coarse
+  pointers and only widen the hit area to 44 px.
 - `UiChatListItem`: a 72 px card (radius 12, margin 0 10) with a 48 px tinted avatar, name 400 16/24,
   preview 14/20, green time and a 600 badge when unread, hover/selected on `--ui-chat-surface-hover`,
   source mark 12/400 and a small-pill tag. Props and events unchanged.
