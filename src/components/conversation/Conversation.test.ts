@@ -17,7 +17,7 @@ const mk = (...pairs: string[]): Item[] => pairs.map((p) => ({ key: p.split(":")
 const itemSlot = ({ item }: { item: Item }) => h("p", { class: "probe" }, item.key);
 
 /** jsdom has no layout: scrollHeight is derived from the rendered items, scrollTop is a plain number. */
-function mockScroller(container: HTMLElement, scrollTop: number) {
+function mockScroller(container: Element, scrollTop: number) {
   const el = container.querySelector<HTMLElement>(".ui-conversation__scroll")!;
   let top = scrollTop;
   Object.defineProperty(el, "scrollHeight", {
