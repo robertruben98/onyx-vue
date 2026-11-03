@@ -167,7 +167,10 @@ describe("MessageBubble (Vue)", () => {
     expect(b).toMatch(/--ui-chat-shadow-bubble/);
     expect(b).toMatch(/font-size:\s*0\.8875rem/);
     expect(b).toMatch(/line-height:\s*19px/);
-    expect(rule(".ui-message-bubble__time--inline")).toMatch(/margin:\s*3px 0 -3px 4px/);
+    expect(rule(".ui-message-bubble__time--inline")).toMatch(/position:\s*absolute/);
+    expect(rule(".ui-message-bubble__time--inline")).not.toMatch(/float/);
+    expect(rule(".ui-message-bubble__text")).toMatch(/position:\s*relative/);
+    expect(rule(".ui-message-bubble__spacer")).toMatch(/display:\s*inline-block/);
     expect(rule(".ui-message-bubble__time")).toMatch(/font-size:\s*0\.75rem/);
     expect(rule(".ui-message-bubble__meta")).toMatch(/--ui-chat-ink-soft/);
     for (const w of ["65%", "75%", "85%", "95%"]) expect(scss).toContain(`max-width: ${w}`);
