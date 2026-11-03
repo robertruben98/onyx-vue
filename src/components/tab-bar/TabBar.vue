@@ -1,4 +1,6 @@
 <script lang="ts">
+import type { Component } from "vue";
+
 /** One destination of the bar. */
 export interface TabBarItem {
   /** Stable identity; `activeId` names one of these. */
@@ -7,8 +9,11 @@ export interface TabBarItem {
   label: string;
   /** Where it goes. Rendered as a real link, so it opens in a new tab like any other. */
   href: string;
-  /** A short glyph above the label (an emoji, a single character). Decorative. */
-  icon?: string;
+  /**
+   * A glyph above the label: a short string (an emoji, a character) or a
+   * component (an SVG wrapper). Decorative — the label names the entry.
+   */
+  icon?: string | Component;
   /** How many things are waiting behind it: queued jobs, unread items. Hidden at 0. */
   count?: number | null;
   /** Something is running behind it right now. Takes precedence over `count`. */
@@ -54,6 +59,12 @@ const props = withDefaults(
     hideAbove?: number;
     /** Spoken name of the `live` marker. */
     liveLabel?: string;
+    /**
+     * `chat` is the messaging-app bottom nav: 80 px tall, the icon in a 64x32
+     * pill that is filled when active, the count as a badge on the pill. Also
+     * applied automatically under `.ui-theme-chat`.
+     */
+    variant?: "default" | "chat";
   }>(),
   {
     activeId: "",
@@ -63,6 +74,7 @@ const props = withDefaults(
     label: () => useOnyxLocale().tabBarLabel,
     hideAbove: 640,
     liveLabel: () => useOnyxLocale().tabBarLiveLabel,
+    variant: "default",
   },
 );
 
@@ -148,7 +160,12 @@ const countText = (n: number | null | undefined): string =>
   <template v-if="shown">
     <!-- Holds the bar's height in the flow, so the end of the page is not under it. -->
     <div class="ui-tab-bar__spacer" aria-hidden="true" />
-    <nav ref="root" class="ui-tab-bar" :aria-label="label">
+    <nav
+      ref="root"
+      class="ui-tab-bar"
+      :class="{ 'ui-tab-bar--chat': variant === 'chat' }"
+      :aria-label="label"
+    >
       <ul v-if="open" :id="sheetId" class="ui-tab-bar__sheet">
         <li v-for="item in inSheet" :key="item.id">
           <a
@@ -176,7 +193,10 @@ const countText = (n: number | null | undefined): string =>
             :aria-current="item.id === activeId ? 'page' : undefined"
             @click="onClick(item, $event)"
           >
-            <span v-if="item.icon" class="ui-tab-bar__icon" aria-hidden="true">{{ item.icon }}</span>
+            <span v-if="item.icon" class="ui-tab-bar__icon" aria-hidden="true">
+              <component :is="item.icon" v-if="typeof item.icon !== 'string'" />
+              <template v-else>{{ item.icon }}</template>
+            </span>
             <span class="ui-tab-bar__label">{{ item.label }}</span>
             <span v-if="item.live" class="ui-tab-bar__live" role="img" :aria-label="liveLabel" />
             <span v-else-if="countText(item.count)" class="ui-tab-bar__count">{{
