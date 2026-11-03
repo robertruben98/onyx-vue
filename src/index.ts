@@ -32,6 +32,7 @@ export * from "./components/chip-row";
 export * from "./components/check-tree";
 export * from "./components/chat-list-item";
 export * from "./components/message-bubble";
+export * from "./components/conversation";
 export * from "./components/checkbox";
 export * from "./components/code-block";
 export * from "./components/confirm-button";

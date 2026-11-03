@@ -1,0 +1,59 @@
+// Conversation pane. Background from the chat preset (--ui-chat-bg), generic fallback outside it.
+
+.ui-conversation {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--ui-chat-bg, var(--ui-color-surface));
+}
+
+.ui-conversation__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: var(--ui-space-3, 0.75rem);
+  overflow-anchor: none; // the component restores the position itself on prepend
+}
+
+.ui-conversation__item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-conversation__day {
+  align-self: center;
+  margin: var(--ui-space-2, 0.5rem) 0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--ui-chat-bubble-in, var(--ui-color-surface-hover));
+  color: var(--ui-chat-meta, var(--ui-color-text-muted));
+  font-size: 0.75rem;
+}
+
+.ui-conversation__pill {
+  position: absolute;
+  right: var(--ui-space-4, 1rem);
+  bottom: var(--ui-space-4, 1rem);
+  min-height: 2.75rem; // 44px touch target
+  padding: 0 var(--ui-space-4, 1rem);
+  border: 0;
+  border-radius: 999px;
+  background: var(--ui-color-primary);
+  color: var(--ui-color-on-primary, #fff);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+
+  &:focus-visible {
+    outline: 2px solid var(--ui-color-text);
+    outline-offset: 2px;
+  }
+}
