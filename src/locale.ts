@@ -48,6 +48,9 @@ export interface OnyxMessages {
   keyHintsLabel: string;
   ansiTerminalLabel: string;
   messageBubbleCopyLabel: string;
+  dayTimelineLabel: string;
+  dayTimelineNow: string;
+  dayTimelineBands: { "free": string; "likely": string; "busy": string; "past": string; "nodata": string };
   conversationNewMessages: { "one": string; "other": string };
   relativeTimeUnits: { "minute": string; "hour": string; "day": string; "month": string };
   metricChipDeltaLabels: { "up": string; "down": string; "same": string };
@@ -132,6 +135,15 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "keyHintsLabel": "Keyboard shortcuts",
   "ansiTerminalLabel": "Terminal output",
   "messageBubbleCopyLabel": "Copy",
+  "dayTimelineLabel": "Day timeline",
+  "dayTimelineNow": "now",
+  "dayTimelineBands": {
+    "free": "almost surely free",
+    "likely": "probably free",
+    "busy": "usually writes",
+    "past": "already past",
+    "nodata": "no data"
+  },
   "conversationNewMessages": {
     "one": "↓ {n} new",
     "other": "↓ {n} new"
@@ -288,6 +300,15 @@ export const ES_MESSAGES: OnyxMessages = {
   "keyHintsLabel": "Atajos de teclado",
   "ansiTerminalLabel": "Salida del terminal",
   "messageBubbleCopyLabel": "Copiar",
+  "dayTimelineLabel": "Línea del día",
+  "dayTimelineNow": "ahora",
+  "dayTimelineBands": {
+    "free": "libre casi seguro",
+    "likely": "probablemente libre",
+    "busy": "suele escribir",
+    "past": "ya pasado",
+    "nodata": "sin datos"
+  },
   "conversationNewMessages": {
     "one": "↓ {n} nuevo",
     "other": "↓ {n} nuevos"

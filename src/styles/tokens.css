@@ -277,6 +277,13 @@
   --ui-color-neutral-surface: var(--ui-slate-100);
   --ui-color-disabled-bg: var(--ui-slate-100);
   --ui-color-disabled-text: var(--ui-slate-400);
+  /* Day timeline probability bands. They follow the semantic colours, so every
+     preset (chat included) recolours them without redefining them. */
+  --ui-band-free: var(--ui-color-success);
+  --ui-band-likely: var(--ui-color-warning);
+  --ui-band-busy: var(--ui-color-danger);
+  --ui-band-past: var(--ui-color-border);
+  --ui-band-nodata: var(--ui-color-surface-hover);
   --ui-focus-ring-width: var(--ui-border-width-thick);
   --ui-focus-ring-offset: var(--ui-border-width-thick);
   --ui-radius: var(--ui-radii-md);
