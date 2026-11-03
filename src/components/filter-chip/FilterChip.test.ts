@@ -36,6 +36,12 @@ describe("FilterChip (Vue)", () => {
     expect(emitted().toggled).toBeUndefined();
   });
 
+  it("renders no count at all when none was given (no trailing dot)", () => {
+    const { container } = render(FilterChip, { props: { label: "All" } });
+    expect(container.querySelector(".ui-tri-state-count")).toBeNull();
+    expect(screen.queryByText("·")).toBeNull();
+  });
+
   it("shows a dot instead of a zero while the count is in flight", () => {
     render(FilterChip, { props: { label: "hilos", state: "pending" } });
     expect(screen.getByText("·")).toBeTruthy();
