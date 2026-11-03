@@ -1,0 +1,35 @@
+// Panel header — 64px bar of a list panel. Tokens only; the chat preset feeds
+// them through `--ui-chat-*` fallbacks in tokens.css.
+
+.ui-panel-header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-panel-header-height);
+  padding: var(--ui-space-2) var(--ui-panel-header-padding-x);
+  background: var(--ui-panel-header-bg);
+  color: var(--ui-panel-header-text);
+}
+
+.ui-panel-header__title-slot {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ui-panel-header__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--ui-panel-header-title-size);
+  font-weight: 400;
+  line-height: var(--ui-panel-header-title-line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-panel-header__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
