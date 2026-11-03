@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Changed
+
+- `UiMessageBubble`: WhatsApp geometry (7.5px radius, 6/7/8/9px padding, 14.2px text, inline time, 65/75/85/95% max width) and a new `tail` prop.
+
 ## 0.17.0 — 2026-11-03
 
 ### Added
