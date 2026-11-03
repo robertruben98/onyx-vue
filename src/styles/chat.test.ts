@@ -120,13 +120,13 @@ describe("chat preset", () => {
   });
 
   it("nothing stays teal-blue: no leftover of the old palette", () => {
-    for (const old of ["#0b141a", "#111b21", "#1f2c34", "#005c4b", "#34d27b", "#e9eef1", "#07694a"]) {
+    for (const old of ["#0b141a", "#111b21", "#1f2c34", "#005c4b", "#34d27b", "#e9eef1", "#07694a", "#25343c", "#b3c7c1", "#4d5f69", "#70838c", "#9fb2bb", "#e6edf0"]) {
       expect(chat.toLowerCase()).not.toContain(old);
     }
   });
 
   it("shadows are tokens with the reference values", () => {
-    expect(value(light, "--ui-chat-shadow-header")).toBe("01px4pxrgba(10,10,10,0.12)".replace(/^0/, "0"));
+    expect(value(light, "--ui-chat-shadow-header")).toBe("01px4pxrgba(10,10,10,0.12)");
     expect(value(light, "--ui-chat-shadow-bubble")).toBe("01px0.5pxrgba(11,20,26,0.13)");
     expect(value(light, "--ui-chat-shadow-composer")).toBe("01px6pxrgba(0,0,0,0.12)");
     expect(value(light, "--ui-chat-shadow-chip")).toBe("001px1pxrgba(0,0,0,0.06),01px00rgba(0,0,0,0.05)");
@@ -141,21 +141,31 @@ describe("chat preset", () => {
   it("the font is Roboto Variable, served by the preset only", () => {
     expect(value(light, "--ui-font-family")).toBe('"robotovariable",roboto,"helveticaneue",helvetica,sans-serif');
     expect(chat).toContain('@import "@fontsource-variable/roboto/wght.css"');
-    for (const other of ["acme", "classroom", "console", "matrix", "pocket", "base", "dark", "tokens", "index"]) {
-      if (other === "index") continue; // the bundle imports chat.css, which brings the font along
+    // (index.css imports chat.css, which brings the font along: not listed.)
+    for (const other of ["acme", "classroom", "console", "matrix", "pocket", "base", "dark", "tokens"]) {
       expect(read(`${other}.css`)).not.toContain("fontsource");
     }
     const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf8"));
     expect(pkg.dependencies["@fontsource-variable/roboto"]).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
-  it("controls are 32 / 40 / 52px, and 44px for a coarse pointer", () => {
+  it("controls are 32 / 40 / 52px and stay so under a coarse pointer, which only widens the hit area to 44px", () => {
     expect(value(light, "--ui-size-control-sm")).toBe("2rem");
     expect(value(light, "--ui-size-control-md")).toBe("2.5rem");
     expect(value(light, "--ui-size-control-lg")).toBe("3.25rem");
-    const coarse = chat.slice(chat.indexOf("@media (pointer: coarse)"));
-    expect(coarse).toMatch(/--ui-size-control-sm:\s*2\.75rem/);
-    expect(coarse).toMatch(/--ui-size-control-md:\s*2\.75rem/);
+    const start = chat.indexOf("@media (pointer: coarse)");
+    expect(start).toBeGreaterThan(0);
+    const coarse = chat.slice(start, chat.indexOf("\n}\n", chat.indexOf("::after", start)) + 3);
+    // Visual size untouched: no size token and no height/min-height/padding on the button itself.
+    expect(coarse).not.toMatch(/--ui-size-control/);
+    expect(coarse.replace(/::after\s*\{[^}]*\}/, "")).not.toMatch(/(?:min-)?height:|padding/);
+    // Hit area: a centred ::after of at least 44px that grows beyond the button, on a positioned button.
+    const after = /\.ui-theme-chat \.ui-button__el::after\s*\{([^}]*)\}/.exec(coarse)?.[1] ?? "";
+    expect(after).toContain("width: max(100%, 44px)");
+    expect(after).toContain("height: max(100%, 44px)");
+    expect(after).toContain("position: absolute");
+    expect(after).toMatch(/translate\(-50%, -50%\)/);
+    expect(coarse).toMatch(/\.ui-theme-chat \.ui-button__el\s*\{[^}]*position:\s*relative/);
   });
 
   it("covers every semantic token that the dark preset remaps", () => {
@@ -203,9 +213,10 @@ describe("chat preset", () => {
     };
 
     const TEXT_ON: [string, string[]][] = [
-      ["--ui-chat-ink", ["--ui-chat-bg", "--ui-chat-app-bg", "--ui-chat-surface", "--ui-chat-bubble-in", "--ui-chat-bubble-out", "--ui-chat-composer", "--ui-chat-bubble-system", "--ui-chat-accent-soft"]],
-      ["--ui-chat-ink-soft", ["--ui-chat-bg", "--ui-chat-app-bg", "--ui-chat-surface", "--ui-chat-bubble-in", "--ui-chat-bubble-out", "--ui-chat-composer", "--ui-chat-bubble-system"]],
-      ["--ui-chat-meta", ["--ui-chat-bubble-in", "--ui-chat-bubble-out", "--ui-chat-bg"]],
+      // Hover / selected rows and the active rail item paint ink on the translucent surface-hover wash (over the surface).
+      ["--ui-chat-ink", ["--ui-chat-surface-hover", "--ui-chat-bg", "--ui-chat-app-bg", "--ui-chat-surface", "--ui-chat-bubble-in", "--ui-chat-bubble-out", "--ui-chat-composer", "--ui-chat-bubble-system", "--ui-chat-accent-soft"]],
+      ["--ui-chat-ink-soft", ["--ui-chat-surface-hover", "--ui-chat-bg", "--ui-chat-app-bg", "--ui-chat-surface", "--ui-chat-bubble-in", "--ui-chat-bubble-out", "--ui-chat-composer", "--ui-chat-bubble-system"]],
+      ["--ui-chat-meta", ["--ui-chat-surface-hover", "--ui-chat-bubble-in", "--ui-chat-bubble-out", "--ui-chat-bg"]],
       ["--ui-chat-accent-ink", ["--ui-chat-bg", "--ui-chat-app-bg", "--ui-chat-surface", "--ui-chat-bubble-in"]],
       // strong is for white surfaces (4.52:1); on the warm app-bg / wallpaper the darker accent-ink takes over.
       ["--ui-chat-accent-strong", ["--ui-chat-surface", "--ui-chat-bubble-in"]],
