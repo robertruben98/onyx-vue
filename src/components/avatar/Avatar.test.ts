@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/vue";
 import { axe } from "jest-axe";
-import Avatar, { avatarGradientIndex } from "./Avatar.vue";
+import Avatar, { avatarGradientIndex, avatarTintName, AVATAR_TINTS } from "./Avatar.vue";
 
 describe("Avatar (Vue)", () => {
   it("renders an image with the name as alt text", () => {
@@ -114,5 +114,29 @@ describe("Avatar (Vue) — 0.8: xl, alt, gradient, ring", () => {
   ] as const)("has no axe violations (%o)", async (props) => {
     const { container } = render(Avatar, { props });
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  describe("tone tinted", () => {
+    it("paints a tint class picked from the seed, stable for the same seed", () => {
+      const a = render(Avatar, { props: { name: "Ada", tone: "tinted", seed: "chat-7" } });
+      const b = render(Avatar, { props: { name: "Zed", tone: "tinted", seed: "chat-7" } });
+      const cls = (c: Element) => [...c.querySelector(".ui-avatar")!.classList].find((x) => x.startsWith("ui-avatar--tint-"));
+      expect(cls(a.container)).toBe(`ui-avatar--tint-${avatarTintName("chat-7")}`);
+      expect(cls(b.container)).toBe(cls(a.container));
+      expect(a.container.querySelector(".ui-avatar--tinted")).toBeTruthy();
+    });
+
+    it("falls back to the name as the seed, and avatarTintName stays inside the palette", () => {
+      const { container } = render(Avatar, { props: { name: "Ada Lovelace", tone: "tinted" } });
+      expect(container.querySelector(`.ui-avatar--tint-${avatarTintName("Ada Lovelace")}`)).toBeTruthy();
+      for (const s of ["", "a", "bb", "Baby Sm23", "x".repeat(50)]) expect(AVATAR_TINTS).toContain(avatarTintName(s));
+    });
+
+    it("default tone and an image carry no tint", () => {
+      const d = render(Avatar, { props: { name: "Ada" } });
+      expect(d.container.querySelector(".ui-avatar--tinted")).toBeNull();
+      const i = render(Avatar, { props: { name: "Ada", src: "a.png", tone: "tinted" } });
+      expect(i.container.querySelector(".ui-avatar--tinted")).toBeNull();
+    });
   });
 });

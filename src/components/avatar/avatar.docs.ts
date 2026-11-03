@@ -46,6 +46,19 @@ export const avatarDoc: ComponentDoc = {
         "White initials on one of eight gradients (--ui-avatar-gradient-1…8), always the same one for a name. Every stop reaches 4.5:1 with the initials.",
     },
     {
+      name: "tone",
+      type: "'default' | 'tinted'",
+      default: "'default'",
+      description:
+        "`tinted`: coloured initials on a soft surface of the same hue, one of eleven pairs (--ui-avatar-tint-<name>-ink|surface) picked from `seed`. Dark pairs are derived, not measured.",
+    },
+    {
+      name: "seed",
+      type: "string",
+      default: "''",
+      description: "Text the tint is picked from; the same seed is always the same tint. Defaults to `name`.",
+    },
+    {
       name: "ringValue",
       type: "number | null",
       default: "null",
@@ -80,6 +93,13 @@ export const avatarDoc: ComponentDoc = {
 <UiAvatar name="Ada Lovelace" />
 <UiAvatar size="lg" name="Ada Lovelace" />
 <UiAvatar size="xl" name="Ada Lovelace" />`,
+    },
+    {
+      title: "Tinted",
+      description: "Soft surface, coloured initials; the same seed keeps its tint.",
+      code: `<UiAvatar tone="tinted" size="lg" name="Ada Lovelace" />
+<UiAvatar tone="tinted" size="lg" name="Grace Hopper" />
+<UiAvatar tone="tinted" size="lg" name="BS" seed="chat-1041" />`,
     },
     {
       title: "Gradient",

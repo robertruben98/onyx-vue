@@ -1,22 +1,29 @@
-// Chat list row. Colours come from the chat preset tokens, with the generic
-// --ui-* tokens as fallback so the row also works outside `.ui-theme-chat`.
+// Chat list row: a 72 px card (radius 12, margin 0 10, pitch 76 with the 2 px
+// vertical margins), 48 px tinted avatar, name 400 16/24, preview 14/20, time
+// 12/16. Colours come from the chat preset tokens (--ui-chat-*), with the
+// generic --ui-* tokens as fallback so the row also works outside
+// `.ui-theme-chat`.
 
 .ui-chat-list-item {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: var(--ui-space-3, 0.75rem);
-  width: 100%;
-  min-height: 2.75rem; // 44px touch target
-  padding: var(--ui-space-2, 0.5rem) var(--ui-space-3, 0.75rem);
+  gap: 15px;
+  width: calc(100% - 20px);
+  min-height: 4.5rem; // 72px card, also well over the 44px touch target
+  margin: 0 10px 4px; // 72 + 4 = pitch 76 (margins of stacked blocks collapse, so no top margin)
+  padding: 0 15px 0 13px;
   border: 0;
+  border-radius: 12px;
   background: transparent;
-  color: var(--ui-color-text);
+  color: var(--ui-chat-ink, var(--ui-color-text));
   font: inherit;
   text-align: start;
   cursor: pointer;
 
-  &:hover {
-    background: var(--ui-color-surface-hover);
+  &:hover,
+  &:focus-visible {
+    background: var(--ui-chat-surface-hover, var(--ui-color-surface-hover));
   }
 
   &:focus-visible {
@@ -26,17 +33,20 @@
 }
 
 .ui-chat-list-item--selected {
-  background: var(--ui-color-surface-hover);
+  background: var(--ui-chat-surface-hover, var(--ui-color-surface-hover));
 }
 
 .ui-chat-list-item__avatar {
   flex: none;
+  // WhatsApp's 48 px, whatever the preset does to --ui-size-control-lg.
+  width: 3rem;
+  height: 3rem;
 }
 
 .ui-chat-list-item__body {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 2px;
   flex: 1;
   min-width: 0; // lets the preview ellipsize inside a flex row
 }
@@ -54,21 +64,30 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  color: var(--ui-chat-ink, var(--ui-color-text));
 }
 
 .ui-chat-list-item__source {
   flex: none;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--ui-chat-meta, var(--ui-color-text));
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1rem;
+  color: var(--ui-chat-ink-soft, var(--ui-color-text));
 }
 
 .ui-chat-list-item__time {
   flex: none;
   font-size: 0.75rem;
-  color: var(--ui-chat-meta, var(--ui-color-text));
+  font-weight: 400;
+  line-height: 1rem;
+  color: var(--ui-chat-ink-soft, var(--ui-color-text));
+}
+
+.ui-chat-list-item--unread .ui-chat-list-item__time {
+  color: var(--ui-chat-accent, var(--ui-color-primary));
 }
 
 .ui-chat-list-item__preview {
@@ -78,22 +97,47 @@
   text-overflow: ellipsis;
   white-space: nowrap; // one line, never wraps
   font-size: 0.875rem;
-  color: var(--ui-chat-meta, var(--ui-color-text));
+  line-height: 1.25rem;
+  color: var(--ui-chat-ink-soft, var(--ui-color-text));
 }
 
 .ui-chat-list-item__unread {
+  position: relative; // anchors the screen-reader text
   flex: none;
+  box-sizing: border-box;
   min-width: 1.25rem;
   padding: 0 0.375rem;
   border-radius: 999px;
   background: var(--ui-chat-unread, var(--ui-color-primary));
-  color: var(--ui-color-on-primary);
+  color: var(--ui-chat-on-accent, var(--ui-color-on-primary));
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.25rem;
   text-align: center;
 }
 
 .ui-chat-list-item__tag {
   display: flex;
+}
+
+// Tag: a small pill (12/16) instead of the full badge.
+.ui-chat-list-item__tag .ui-chat-list-item__tag-chip .ui-badge__el {
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1rem;
+}
+
+// Read, not seen: "3 unread messages" for a screen reader; the digits are aria-hidden.
+.ui-chat-list-item__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
