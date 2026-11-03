@@ -11,6 +11,13 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ## Unreleased
 
+### Added
+
+- `UiDayTimeline`: a horizontal day bar of probability bands (free, likely, busy, past, no
+  data) with a "now" marker, hour ticks, a legend and a screen-reader list of segments. New
+  tokens `--ui-band-free|likely|busy|past|nodata`; new locale keys `dayTimelineLabel`,
+  `dayTimelineNow`, `dayTimelineBands` (ES "ahora", "libre casi seguro"...).
+
 ## 0.16.0 — 2026-11-03
 
 ### Added
