@@ -9,6 +9,15 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiConversation`: original doodle wallpaper (mask coloured by `--ui-chat-wallpaper-ink`), 63 px row padding,
+  optional `group` on items and `first` in the `item` slot scope (2 px inside a run, 12 px between runs),
+  sticky day chip (radius 6, 24 px, 600 12/16), and a floating composer pill via the `footer` slot or the
+  read-only `composerText` prop. Backward compatible.
+
 ## 0.17.0 — 2026-11-03
 
 ### Added
