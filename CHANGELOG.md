@@ -19,8 +19,8 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ### Added
 
-- `UiAvatar`: `tone="tinted"` (+ `seed`) paints coloured initials on a soft surface, one of eleven
-  pairs picked from a stable hash (tokens `--ui-avatar-tint-<name>-ink|surface`, light and `.app-dark`).
+- `UiAvatar`: `tone="tinted"` (default `neutral`, + `seed`) paints coloured initials on a soft surface, one of eleven
+  pairs picked from a stable hash (tokens `--ui-avatar-tint-<name>-ink|surface`, light and `.app-dark`, in `styles/avatar-tints.css`; every light ink reaches 4.5:1).
   New exports `avatarTintName`, `AVATAR_TINTS`.
 - `UiConversation`: original doodle wallpaper (mask coloured by `--ui-chat-wallpaper-ink`), 63 px row padding,
   optional `group` on items and `first` in the `item` slot scope (2 px inside a run, 12 px between runs),
@@ -47,6 +47,8 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ### Fixed
 
+- `UiTabBar` `variant="chat"` names its landmark "Sections" (ES "Secciones", locale key `tabBarChatLabel`) so it differs from a rail named "Main"; `label` still overrides.
+- `UiMessageBubble` time outside `.ui-theme-chat` falls back to the body text colour (the muted token missed 4.5:1 on several presets).
 - `UiFilterChip` without a `count` no longer renders a trailing "·" (onyx-vue#133).
 
 ## 0.17.0 — 2026-11-03

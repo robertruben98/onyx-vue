@@ -3,14 +3,14 @@
   "threshold": 90,
   "aspects": {
     "Accessibility": {
-      "score": 99.4,
-      "summary": "469/495 component×theme runs with no axe violation",
-      "findings": 26
+      "score": 99.9,
+      "summary": "485/495 component×theme runs with no axe violation",
+      "findings": 10
     },
     "Test coverage": {
-      "score": 95.3,
-      "summary": "statements 96.55%, branches 91.52%, functions 97.8%",
-      "findings": 35
+      "score": 95.4,
+      "summary": "statements 96.58%, branches 91.68%, functions 97.8%",
+      "findings": 32
     },
     "Documentation": {
       "score": 100,
@@ -18,9 +18,9 @@
       "findings": 0
     },
     "Theming & tokens": {
-      "score": 97.1,
-      "summary": "198/204 token checks pass",
-      "findings": 6
+      "score": 98.5,
+      "summary": "201/204 token checks pass",
+      "findings": 3
     },
     "Responsive": {
       "score": 100,
@@ -28,9 +28,9 @@
       "findings": 0
     },
     "API consistency": {
-      "score": 94.3,
-      "summary": "115/122 API convention checks pass",
-      "findings": 7
+      "score": 95.1,
+      "summary": "116/122 API convention checks pass",
+      "findings": 6
     },
     "Component catalogue": {
       "score": 94,

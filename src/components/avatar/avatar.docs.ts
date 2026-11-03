@@ -47,10 +47,10 @@ export const avatarDoc: ComponentDoc = {
     },
     {
       name: "tone",
-      type: "'default' | 'tinted'",
-      default: "'default'",
+      type: "'neutral' | 'tinted'",
+      default: "'neutral'",
       description:
-        "`tinted`: coloured initials on a soft surface of the same hue, one of eleven pairs (--ui-avatar-tint-<name>-ink|surface) picked from `seed`. Dark pairs are derived, not measured.",
+        "`neutral` is the flat avatar. `tinted`: coloured initials on a soft surface of the same hue, one of eleven pairs (--ui-avatar-tint-<name>-ink|surface, defined in styles/avatar-tints.css) picked from `seed`. Every light ink reaches 4.5:1 on its surface; dark pairs are derived, not measured.",
     },
     {
       name: "seed",

@@ -36,7 +36,7 @@ export const tabBarDoc: ComponentDoc = {
     },
     { name: "moreLabel", type: "string", default: "'More'", description: "Name of the overflow button." },
     { name: "moreIcon", type: "string", default: "'☰'", description: "Glyph of the overflow button." },
-    { name: "label", type: "string", default: "'Main'", description: "Accessible name of the navigation landmark." },
+    { name: "label", type: "string", default: "'Main' ('Sections' for `chat`)", description: "Accessible name of the navigation landmark. The `chat` variant defaults to 'Sections' so it differs from a side rail." },
     { name: "variant", type: "'default' | 'chat'", default: "'default'", description: "`chat`: messaging-app bottom nav — 80 px tall, icon in a 64x32 pill filled when active, 12/16 label, count badge. Applied automatically under `.ui-theme-chat`. Item `icon` may be a string or a component." },
     { name: "liveLabel", type: "string", default: "'running'", description: "Spoken name of the `live` dot." },
     {
