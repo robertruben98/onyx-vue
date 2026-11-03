@@ -47,7 +47,7 @@ let observer: ResizeObserver | undefined;
 
 onMounted(() => {
   const el = root.value;
-  if (!el || typeof ResizeObserver === "undefined") return;
+  if (props.layout !== "auto" || !el || typeof ResizeObserver === "undefined") return;
   width.value = el.getBoundingClientRect().width;
   observer = new ResizeObserver((entries) => {
     width.value = entries[0]?.contentRect.width ?? el.getBoundingClientRect().width;
@@ -80,12 +80,14 @@ const columns = computed(() =>
   props.days.map((d) => ({
     ...d,
     isToday: d.key === props.today,
-    placed: d.blocks.map((b) => {
+    // Blocks wholly outside start..end (or empty) are dropped; the rest are clipped.
+    placed: d.blocks.filter((b) => b.end > b.start && b.end > props.start && b.start < props.end).map((b) => {
       const from = Math.max(b.start, props.start);
       const to = Math.min(b.end, props.end);
       return {
         ...b,
         text: range(b),
+        tip: [range(b), b.title, b.detail].filter(Boolean).join(" · "),
         top: fmt(((from - props.start) / span.value) * 100),
         height: fmt((Math.max(to - from, 0) / span.value) * 100),
       };
@@ -95,7 +97,7 @@ const columns = computed(() =>
 </script>
 
 <template>
-  <div ref="root" :class="['ui-week-blocks', `ui-week-blocks--${mode}`]" :aria-label="messages.weekBlocksLabel" role="group">
+  <div ref="root" :style="{ '--ui-week-blocks-days': days.length }" :class="['ui-week-blocks', `ui-week-blocks--${mode}`]" :aria-label="messages.weekBlocksLabel" role="group">
     <template v-if="mode === 'columns'">
       <div class="ui-week-blocks__gutter" aria-hidden="true">
         <span class="ui-week-blocks__gutter-head" />
@@ -126,6 +128,7 @@ const columns = computed(() =>
               :key="i"
               :class="['ui-week-blocks__block', `ui-week-blocks__block--${b.tone ?? 'success'}`]"
               :style="{ top: b.top, height: b.height }"
+              :title="b.tip"
             >
               <span class="ui-week-blocks__sr">{{ b.text }} </span>
               <span class="ui-week-blocks__title">{{ b.title }}</span>
@@ -142,7 +145,6 @@ const columns = computed(() =>
         :key="c.key"
         :class="['ui-week-blocks__day', { 'ui-week-blocks__day--today': c.isToday }]"
         :aria-current="c.isToday ? 'date' : undefined"
-        :aria-label="c.label"
       >
         <h3 class="ui-week-blocks__day-label">{{ c.label }}</h3>
         <ul v-if="c.placed.length" class="ui-week-blocks__rows">

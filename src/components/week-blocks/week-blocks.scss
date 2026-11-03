@@ -8,8 +8,7 @@
 .ui-week-blocks--columns {
   --ui-week-blocks-height: 22rem;
   display: grid;
-  grid-template-columns: 2rem repeat(auto-fit, minmax(0, 1fr));
-  grid-auto-flow: column;
+  grid-template-columns: 2rem repeat(var(--ui-week-blocks-days, 5), minmax(0, 1fr));
   gap: var(--ui-space-1, 0.25rem);
 }
 
@@ -149,3 +148,5 @@
   height: 0.75rem;
   border-radius: 2px;
 }
+
+.ui-week-blocks__day .ui-week-blocks__note { padding: 0; }
