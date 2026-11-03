@@ -18,6 +18,10 @@ Consumers that build from source (the control-panel dashboard aliases
   tokens `--ui-band-free|likely|busy|past|nodata`; new locale keys `dayTimelineLabel`,
   `dayTimelineNow`, `dayTimelineBands` (ES "ahora", "libre casi seguro"...).
 
+- `UiWeekBlocks`: a Monday-to-Friday grid of time blocks (columns over an hour grid, or one
+  list per day below 640 px; `layout="auto|columns|list"`). New tokens
+  `--ui-week-block-column-bg|success-bg|neutral-bg|text`; new locale key `weekBlocksLabel`.
+
 ## 0.16.0 — 2026-11-03
 
 ### Added
