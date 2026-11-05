@@ -15,7 +15,7 @@ Consumers that build from source (the control-panel dashboard aliases
 
 - `UiNavRailItem`: an entry with `href` is a real link and, on a plain left click, emits `selected` with the `MouseEvent` so a single-page app can `preventDefault()` and route; Ctrl/Cmd/Shift/Alt and middle clicks are left to the browser and do not emit. Button entries still emit `selected` with no argument. (A link entry used to emit nothing.)
 - `UiNavRailGroup`: `collapsible`, `v-model:open` (default open), `storageKey` (open state in `localStorage`, used as given, tolerant of blocked storage), `count` / `countTone` shown on the heading while folded. The heading is a button with `aria-expanded` / `aria-controls`; a folded group holding the `active` entry opens by itself.
-- `UiNavRail` scrolls the active entry into view (`scrollIntoView({ block: "nearest" })`) on mount and when it changes; never smooth.
+- `UiNavRail` brings the active entry into view on mount and when it changes by moving its scrolling container's `scrollTop` (not `scrollIntoView`, which in Chromium moved the first Tab past a skip link); never smooth.
 - `UiTabBar`: `TabBarItem.group` renders consecutive hidden items under a heading in the More sheet; the More button shows the sum of the hidden counts or the live marker, with a spoken name ("More, 3 waiting"; new locale key `tabBarWaitingLabel`, ES "en espera"); the sheet is capped to the viewport minus the bar and scrolls inside itself.
 
 ## 0.18.0 — 2026-11-03
