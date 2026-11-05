@@ -17,3 +17,24 @@
   padding: 0 var(--ui-space-1);
   color: var(--ui-pagination-ellipsis);
 }
+
+// Con resumen de rango o selector de tamano, los tres van en una fila que se
+// parte en pantallas estrechas: "1–20 of 43   ‹ 1 2 3 ›   [20]".
+.ui-pagination--extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-pagination-gap) var(--ui-space-4);
+}
+
+.ui-pagination__range {
+  margin: 0;
+  font-size: var(--ui-font-size-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-color-text-muted);
+  white-space: nowrap;
+}
+
+.ui-pagination__size {
+  width: auto;
+}
