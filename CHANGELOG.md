@@ -9,11 +9,16 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
-## 0.19.0 — 2026-11-05
+## Unreleased
 
 ### Added
 
 - `UiTag`: stays on one line by default (`white-space: nowrap`, so "vieja" no longer wraps into "viej / a" in a narrow cell); `wrap` opts out. `maxWidth` caps the width and ends the label in an ellipsis, keeping the full text in the DOM and as the native tooltip (`title` overrides it). `showIcon` adds the variant's glyph (ℹ ✓ ⚠ ✕) so the state is not colour-only; the `icon` slot replaces it. (#144)
+
+## 0.19.0 — 2026-11-05
+
+### Added
+
 - `UiNavRailItem`: an entry with `href` is a real link and, on a plain left click, emits `selected` with the `MouseEvent` so a single-page app can `preventDefault()` and route; Ctrl/Cmd/Shift/Alt and middle clicks are left to the browser and do not emit. Button entries still emit `selected` with no argument. (A link entry used to emit nothing.)
 - `UiNavRailGroup`: `collapsible`, `v-model:open` (default open), `storageKey` (open state in `localStorage`, used as given, tolerant of blocked storage), `count` / `countTone` shown on the heading while folded. The heading is a button with `aria-expanded` / `aria-controls`; a folded group holding the `active` entry opens by itself.
 - `UiNavRail` brings the active entry into view on mount and when it changes by moving its scrolling container's `scrollTop` (not `scrollIntoView`, which in Chromium moved the first Tab past a skip link); never smooth.
