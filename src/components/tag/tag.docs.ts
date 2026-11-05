@@ -32,6 +32,32 @@ export const tagDoc: ComponentDoc = {
       description: "Accessible name for the remove button.",
     },
     {
+      name: "wrap",
+      type: "boolean",
+      default: "false",
+      description: "A tag stays on one line by default (`white-space: nowrap`); `wrap` lets a long label break.",
+    },
+    {
+      name: "maxWidth",
+      type: "string",
+      default: "''",
+      description:
+        "Caps the width (any CSS length, e.g. `12ch`). The label ends in an ellipsis, keeps its full text in the DOM for assistive tech and shows it as the native tooltip.",
+    },
+    {
+      name: "title",
+      type: "string",
+      default: "''",
+      description: "Tooltip text. Defaults to the label when `maxWidth` is set.",
+    },
+    {
+      name: "showIcon",
+      type: "boolean",
+      default: "false",
+      description:
+        "Shows the variant's glyph before the label (info ℹ, success ✓, warning ⚠, danger ✕) so the state is not told by colour alone. Neutral and muted have none.",
+    },
+    {
       name: "@removed",
       type: "() => void",
       default: "—",
@@ -39,6 +65,7 @@ export const tagDoc: ComponentDoc = {
         "Emitted when the remove button is activated. The tag does not remove itself — the owner of the list does.",
     },
     { name: "#default", type: "slot", default: "—", description: "Tag label." },
+    { name: "#icon", type: "slot", default: "—", description: "Replaces the status glyph (decorative, hidden from assistive tech)." },
   ],
   demos: [
     {
@@ -74,6 +101,23 @@ export const tagDoc: ComponentDoc = {
       code: `<UiTag appearance="outline">draft</UiTag>
 <UiTag appearance="outline" variant="warning">sin review</UiTag>
 <UiTag appearance="outline" variant="danger">3 checks rojos</UiTag>`,
+    },
+    {
+      title: "Status icon",
+      description: "With `show-icon` the state is readable without colour.",
+      code: `<UiTag variant="success" show-icon>ok</UiTag>
+<UiTag variant="warning" show-icon>dudas</UiTag>
+<UiTag variant="danger" show-icon>tests rojos</UiTag>
+<UiTag variant="info" show-icon>revisando</UiTag>`,
+    },
+    {
+      title: "Narrow cells: no wrap, truncation",
+      description:
+        "A tag never breaks mid-word. `max-width` ends a long label in an ellipsis; hover shows the full text.",
+      code: `<div style="width: 160px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px">
+  <UiTag variant="warning" appearance="outline">vieja</UiTag>
+  <UiTag max-width="14ch">capataz: sin juicio (treew-inc/supervision-api-payment)</UiTag>
+</div>`,
     },
   ],
 };
