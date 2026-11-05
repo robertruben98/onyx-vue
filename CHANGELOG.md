@@ -13,6 +13,7 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ### Added
 
+- `UiPagination`: `total` + `v-model:pageSize` render a range summary ("1–20 of 43", locale `paginationRange`) in a polite live region, and `pageCount` becomes optional (derived as `ceil(total / pageSize)`; an explicit `pageCount` still wins). `pageSizeOptions` adds a compact `UiSelect` (locale `paginationPageSizeLabel`, "Rows per page"); changing the size keeps the first shown item on screen. (#149)
 - `UiNavRailItem`: an entry with `href` is a real link and, on a plain left click, emits `selected` with the `MouseEvent` so a single-page app can `preventDefault()` and route; Ctrl/Cmd/Shift/Alt and middle clicks are left to the browser and do not emit. Button entries still emit `selected` with no argument. (A link entry used to emit nothing.)
 - `UiNavRailGroup`: `collapsible`, `v-model:open` (default open), `storageKey` (open state in `localStorage`, used as given, tolerant of blocked storage), `count` / `countTone` shown on the heading while folded. The heading is a button with `aria-expanded` / `aria-controls`; a folded group holding the `active` entry opens by itself.
 - `UiNavRail` scrolls the active entry into view (`scrollIntoView({ block: "nearest" })`) on mount and when it changes; never smooth.
