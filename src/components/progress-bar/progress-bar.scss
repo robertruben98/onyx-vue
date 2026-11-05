@@ -21,6 +21,30 @@
   transition: width 200ms ease;
 }
 
+// --- delta: a projected change after the current value ---------------------
+// Con delta, la pista pone los dos tramos uno tras otro.
+.ui-progress--delta .ui-progress__track {
+  display: flex;
+}
+
+.ui-progress--delta .ui-progress__fill {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.ui-progress__delta {
+  height: inherit;
+  background-color: var(--ui-progress-delta-bg);
+  border-top-right-radius: var(--ui-progress-radius);
+  border-bottom-right-radius: var(--ui-progress-radius);
+  transition: width 200ms ease;
+}
+
+// Lo que se pasaria del maximo: el tramo entero en peligro, recortado a la pista.
+.ui-progress--overflow .ui-progress__delta {
+  background-color: var(--ui-progress-overflow-bg);
+}
+
 .ui-progress--indeterminate .ui-progress__fill {
   width: var(--ui-progress-indeterminate-width);
   animation: ui-progress-indeterminate 1200ms ease-in-out infinite;
