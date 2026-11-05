@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, useSlots, type Component } from "vue";
+import { computed, inject, onBeforeUnmount, useSlots, watch, type Component } from "vue";
 import { UiTriStateCount, type TriState, type TriStateTone } from "../tri-state-count";
+import { NAV_RAIL_GROUP_KEY } from "./context";
 import "./nav-rail.scss";
 
 const props = withDefaults(
@@ -15,7 +16,11 @@ const props = withDefaults(
     countState?: TriState;
     /** Semantic tone of a known count. */
     countTone?: TriStateTone;
-    /** Renders a link instead of a button — for an entry that leaves the app. */
+    /**
+     * Renders a real link instead of a button, so middle-click, "open in new tab"
+     * and "copy link" work. In-app entries use it too: listen to `selected`,
+     * `preventDefault()` and push the route.
+     */
     href?: string;
     /** Tooltip: the full name, the shortcut that also gets here. */
     title?: string;
@@ -52,8 +57,28 @@ const props = withDefaults(
 
 const slots = useSlots();
 
-/** Emitted when a button entry is activated. Links navigate on their own. */
-const emit = defineEmits<{ selected: [] }>();
+/**
+ * Emitted when the entry is activated. A link entry (`href`) emits it on a plain
+ * left click, with the event, so a single-page app can `preventDefault()` and
+ * route; Ctrl/Cmd/Shift/Alt and middle clicks are left to the browser and do not
+ * emit. A button entry emits it without arguments.
+ */
+const emit = defineEmits<{ selected: [event?: MouseEvent] }>();
+
+function onClick(e: MouseEvent): void {
+  if (!isLink.value) {
+    emit("selected");
+    return;
+  }
+  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  emit("selected", e);
+}
+
+// A group that is folded opens by itself when it holds the active entry.
+const group = inject(NAV_RAIL_GROUP_KEY, null);
+const entryId = Symbol("ui-nav-rail-item");
+watch(() => props.active, (a) => group?.reportActive(entryId, a), { immediate: true });
+onBeforeUnmount(() => group?.reportActive(entryId, false));
 
 /**
  * An entry that goes somewhere else in the same app is a button, and one that
@@ -110,7 +135,7 @@ const rootClasses = computed(() => ({
     :title="title || (isIcon ? label : undefined)"
     :aria-label="isIcon ? spokenLabel : undefined"
     :aria-current="active ? 'page' : undefined"
-    @click="!isLink && emit('selected')"
+    @click="onClick"
   >
     <template v-if="isIcon">
       <span class="ui-nav-rail__glyph" aria-hidden="true">

@@ -27,6 +27,55 @@
   color: var(--ui-color-text-muted);
 }
 
+// Collapsible group: the label is a button (the trailing control stays beside it,
+// never inside it), with a chevron and, while folded, the count of what waits inside.
+.ui-nav-rail__group-toggle {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+
+  &:focus-visible {
+    outline: var(--ui-border-width-thick) solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.ui-nav-rail__group-chevron {
+  flex: none;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 2px solid var(--ui-color-text-muted);
+  border-bottom: 2px solid var(--ui-color-text-muted);
+  transform: rotate(45deg);
+  transition: transform 120ms ease;
+}
+
+.ui-nav-rail__group--folded .ui-nav-rail__group-chevron {
+  transform: rotate(-45deg);
+}
+
+.ui-nav-rail__group-count {
+  margin-left: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-nav-rail {
+    scroll-behavior: auto;
+  }
+  .ui-nav-rail__group-chevron {
+    transition: none;
+  }
+}
+
 .ui-nav-rail__item {
   display: flex;
   align-items: center;

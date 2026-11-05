@@ -50,7 +50,7 @@ export const navRailDoc: ComponentDoc = {
       type: "string",
       default: "''",
       description:
-        "Renders a real link instead of a button, for an entry that leaves the app — middle-click has to keep working.",
+        "Renders a real link instead of a button, so middle-click, Ctrl/Cmd+click, \"open in new tab\" and \"copy link\" work. Use it for in-app entries too: listen to `selected`, `preventDefault()` and push the route.",
     },
     {
       name: "NavRailItem #marks",
@@ -61,10 +61,16 @@ export const navRailDoc: ComponentDoc = {
     },
     {
       name: "NavRailItem @selected",
-      type: "() => void",
+      type: "(event?: MouseEvent) => void",
       default: "—",
-      description: "A button entry was activated. Links navigate on their own.",
+      description:
+        "The entry was activated. A link entry (`href`) emits it with the MouseEvent on a plain left click only (Ctrl, Cmd, Shift, Alt and middle clicks are left to the browser and do not emit): `preventDefault()` it to route in-app. A button entry emits it with no argument.",
     },
+    { name: "NavRailGroup collapsible", type: "boolean", default: "false", description: "The heading becomes a button (`aria-expanded`, `aria-controls`) that folds the group's entries. Not collapsible, the group renders exactly as before." },
+    { name: "NavRailGroup v-model:open", type: "boolean", default: "true", description: "Whether the entries are shown. A folded group that contains the `active` entry opens by itself." },
+    { name: "NavRailGroup storageKey", type: "string", default: "''", description: "Keeps the open state in `localStorage` under this exact key (prefix it if the origin is shared). Blocked or throwing storage is ignored: the group still renders and folds." },
+    { name: "NavRailGroup count / countTone", type: "number | null / TriStateTone", default: "null / 'neutral'", description: "What is waiting inside, shown on the heading only while the group is folded." },
+    { name: "NavRail active entry", type: "behaviour", default: "—", description: "On mount, and whenever the active entry (`aria-current=\"page\"`) changes or its folded group opens, the rail calls `scrollIntoView({ block: \"nearest\" })` on it: a no-op when it is already visible, never smooth (`prefers-reduced-motion` is respected)." },
     { name: "NavRail #default", type: "slot", default: "—", description: "The entries: NavRailItem and NavRailGroup." },
     { name: "NavRailGroup #default", type: "slot", default: "—", description: "The group's entries." },
     { name: "NavRailItem title", type: "string", default: "''", description: "Tooltip: the full name, or the shortcut that also gets here." },
@@ -106,6 +112,20 @@ export const navRailDoc: ComponentDoc = {
     <UiNavRailItem label="oidc" :count="6" />
   </UiNavRailGroup>
   <UiNavRailItem label="Dashboard" href="/" />
+</UiNavRail>`,
+    },
+    {
+      title: "Routable links and collapsible groups",
+      description: "Every entry is a real link; a plain click is handed to the app to route, a modified click opens a new tab. Groups fold, remember it, and show what waits inside while folded.",
+      code: `<UiNavRail label="Console">
+  <UiNavRailItem label="Home" href="/" :active="route === '/'"
+    @selected="(e) => { e.preventDefault(); go('/') }" />
+  <UiNavRailGroup label="System" collapsible storage-key="console:nav:system" :count="3" count-tone="warning">
+    <UiNavRailItem label="Jobs" href="/jobs" :active="route === '/jobs'"
+      @selected="(e) => { e.preventDefault(); go('/jobs') }" />
+    <UiNavRailItem label="Log" href="/log" :active="route === '/log'"
+      @selected="(e) => { e.preventDefault(); go('/log') }" />
+  </UiNavRailGroup>
 </UiNavRail>`,
     },
     {

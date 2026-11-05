@@ -18,6 +18,12 @@ export interface TabBarItem {
   count?: number | null;
   /** Something is running behind it right now. Takes precedence over `count`. */
   live?: boolean;
+  /**
+   * Heading of the group it belongs to in the "More" sheet. Consecutive hidden
+   * items with the same `group` are listed under one heading; items without one
+   * stay in the flat list. Ignored for items in the bar itself.
+   */
+  group?: string;
 }
 </script>
 
@@ -160,8 +166,33 @@ onBeforeUnmount(() => {
   document.removeEventListener("pointerdown", onPointer);
 });
 
-const countText = (n: number | null | undefined): string =>
-  n && n > 0 ? (n > 99 ? "99+" : String(n)) : "";
+/** The sheet as runs: consecutive items of one `group` form a run with a heading. */
+const sheetRuns = computed(() => {
+  const runs: { group: string; items: TabBarItem[] }[] = [];
+  for (const item of inSheet.value) {
+    const group = item.group ?? "";
+    const last = runs[runs.length - 1];
+    if (last && last.group === group) last.items.push(item);
+    else runs.push({ group, items: [item] });
+  }
+  return runs;
+});
+
+// What waits behind "More": the live marker wins, else the sum of the counts.
+const moreLive = computed(() => inSheet.value.some((i) => i.live));
+const moreCount = computed(() =>
+  inSheet.value.reduce((sum, i) => sum + (i.count && i.count > 0 ? i.count : 0), 0),
+);
+const moreName = computed(() => {
+  if (moreLive.value) return `${props.moreLabel}, ${props.liveLabel}`;
+  return moreCount.value > 0
+    ? `${props.moreLabel}, ${countText(moreCount.value)} ${locale.tabBarWaitingLabel}`
+    : props.moreLabel;
+});
+
+function countText(n: number | null | undefined): string {
+  return n && n > 0 ? (n > 99 ? "99+" : String(n)) : "";
+}
 </script>
 
 <template>
@@ -179,8 +210,11 @@ const countText = (n: number | null | undefined): string =>
       :aria-label="navLabel"
     >
       <ul v-if="open" :id="sheetId" class="ui-tab-bar__sheet">
-        <li v-for="item in inSheet" :key="item.id">
-          <a
+        <template v-for="(run, r) in sheetRuns" :key="r">
+          <!-- Ungrouped items keep the flat list they always had. -->
+          <template v-if="!run.group">
+            <li v-for="item in run.items" :key="item.id">
+              <a
             :href="item.href"
             class="ui-tab-bar__sheet-link"
             :class="{ 'ui-tab-bar__sheet-link--active': item.id === activeId }"
@@ -193,7 +227,29 @@ const countText = (n: number | null | undefined): string =>
               countText(item.count)
             }}</span>
           </a>
-        </li>
+            </li>
+          </template>
+          <li v-else role="presentation" class="ui-tab-bar__sheet-group">
+            <span :id="`${sheetId}-g${r}`" class="ui-tab-bar__sheet-heading">{{ run.group }}</span>
+            <ul class="ui-tab-bar__sheet-list" :aria-labelledby="`${sheetId}-g${r}`">
+              <li v-for="item in run.items" :key="item.id">
+                <a
+            :href="item.href"
+            class="ui-tab-bar__sheet-link"
+            :class="{ 'ui-tab-bar__sheet-link--active': item.id === activeId }"
+            :aria-current="item.id === activeId ? 'page' : undefined"
+            @click="onClick(item, $event)"
+          >
+            <span>{{ item.label }}</span>
+            <span v-if="item.live" class="ui-tab-bar__live" role="img" :aria-label="liveLabel" />
+            <span v-else-if="countText(item.count)" class="ui-tab-bar__count">{{
+              countText(item.count)
+            }}</span>
+          </a>
+              </li>
+            </ul>
+          </li>
+        </template>
       </ul>
 
       <ul class="ui-tab-bar__items">
@@ -224,10 +280,15 @@ const countText = (n: number | null | undefined): string =>
             :class="{ 'ui-tab-bar__item--active': open || moreActive }"
             :aria-expanded="open ? 'true' : 'false'"
             :aria-controls="sheetId"
+            :aria-label="moreName"
             @click="open = !open"
           >
             <span class="ui-tab-bar__icon" aria-hidden="true">{{ moreIcon }}</span>
             <span class="ui-tab-bar__label">{{ moreLabel }}</span>
+            <span v-if="moreLive" class="ui-tab-bar__live" role="img" :aria-label="liveLabel" />
+            <span v-else-if="countText(moreCount)" class="ui-tab-bar__count" aria-hidden="true">{{
+              countText(moreCount)
+            }}</span>
           </button>
         </li>
       </ul>

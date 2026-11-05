@@ -142,8 +142,31 @@
   list-style: none;
   background: var(--ui-tab-bar-bg);
   border-top: var(--ui-border-width) solid var(--ui-color-border);
-  max-height: 60vh;
+  // Never taller than the screen minus the bar: it scrolls inside itself.
+  max-height: min(60vh, calc(100vh - var(--ui-tab-bar-height) - env(safe-area-inset-bottom, 0px) - var(--ui-space-4)));
   overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+// A heading and its own list: the sheet reads as sections, not one long column.
+.ui-tab-bar__sheet-group {
+  list-style: none;
+}
+
+.ui-tab-bar__sheet-heading {
+  display: block;
+  padding: var(--ui-space-3) var(--ui-space-4) var(--ui-space-1);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-tab-bar-count-font-size);
+  font-weight: var(--ui-font-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ui-tab-bar__sheet-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .ui-tab-bar__sheet-link {

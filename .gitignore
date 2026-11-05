@@ -9,3 +9,6 @@ scorecard/.out
 
 # Playwright failure artifacts
 test-results/
+
+# Private TMPDIR of local test runs
+.tmp-tests/

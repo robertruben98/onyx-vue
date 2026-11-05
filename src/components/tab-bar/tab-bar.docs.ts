@@ -12,7 +12,7 @@ export const tabBarDoc: ComponentDoc = {
       type: "TabBarItem[]",
       default: "—",
       description:
-        "Every destination, in order: `{ id, label, href, icon?, count?, live? }`. `count` shows a number badge (hidden at 0); `live` a dot that says something is running, and wins over `count`.",
+        "Every destination, in order: `{ id, label, href, icon?, count?, live?, group? }`. `group` lists consecutive hidden items under one heading in the More sheet (ungrouped items stay in the flat list). `count` shows a number badge (hidden at 0); `live` a dot that says something is running, and wins over `count`.",
     },
     {
       name: "activeId",
@@ -34,6 +34,8 @@ export const tabBarDoc: ComponentDoc = {
       default: "640",
       description: "Viewport width (px) from which the bar is not rendered. `0` renders it at every width.",
     },
+    { name: "More button count", type: "behaviour", default: "—", description: "\"More\" shows the sum of the `count`s of the items in the sheet, or the live marker when any of them is `live` (live wins). Its accessible name says so: \"More, 3 waiting\" / \"More, running\" (locale key `tabBarWaitingLabel`)." },
+    { name: "Sheet height", type: "behaviour", default: "—", description: "The sheet never grows past the viewport minus the bar: it scrolls inside itself. The bar honours `env(safe-area-inset-bottom)`." },
     { name: "moreLabel", type: "string", default: "'More'", description: "Name of the overflow button." },
     { name: "moreIcon", type: "string", default: "'☰'", description: "Glyph of the overflow button." },
     { name: "label", type: "string", default: "'Main' ('Sections' for `chat`)", description: "Accessible name of the navigation landmark. The `chat` variant defaults to 'Sections' so it differs from a side rail." },
@@ -48,6 +50,18 @@ export const tabBarDoc: ComponentDoc = {
     },
   ],
   demos: [
+    {
+      title: "Grouped More sheet",
+      description: "Hidden items with a `group` sit under headings; More carries the sum of their counts.",
+      code: `<UiTabBar :hide-above="0" :visible="3" :items="[
+  { id: 'a', label: 'Home', href: '#a' },
+  { id: 'b', label: 'Get', href: '#b' },
+  { id: 'c', label: 'Library', href: '#c' },
+  { id: 'd', label: 'Jobs', href: '#d', group: 'System', count: 2 },
+  { id: 'e', label: 'Log', href: '#e', group: 'System', count: 1 },
+  { id: 'f', label: 'Rules', href: '#f', group: 'Library' },
+]" />`,
+    },
     {
       title: "Chat variant",
       description: "Icon in a pill, filled when active; the count is a badge.",

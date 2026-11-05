@@ -30,6 +30,7 @@ export interface OnyxMessages {
   tabBarLabel: string;
   tabBarChatLabel: string;
   tabBarLiveLabel: string;
+  tabBarWaitingLabel: string;
   toastHostDismissLabel: string;
   panelEmptyText: string;
   barChartTableSummary: string;
@@ -120,6 +121,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "tabBarLabel": "Main",
   "tabBarChatLabel": "Sections",
   "tabBarLiveLabel": "running",
+  "tabBarWaitingLabel": "waiting",
   "toastHostDismissLabel": "Dismiss",
   "panelEmptyText": "Nothing here.",
   "barChartTableSummary": "data",
@@ -288,6 +290,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "tabBarLabel": "Principal",
   "tabBarChatLabel": "Secciones",
   "tabBarLiveLabel": "en curso",
+  "tabBarWaitingLabel": "en espera",
   "toastHostDismissLabel": "Descartar",
   "panelEmptyText": "No hay nada aquí.",
   "barChartTableSummary": "datos",

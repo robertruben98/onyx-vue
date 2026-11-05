@@ -1,8 +1,8 @@
-import { render, screen } from "@testing-library/vue";
+import { fireEvent, render, screen } from "@testing-library/vue";
 import { axe } from "jest-axe";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { h } from "vue";
+import { h, nextTick, ref } from "vue";
 import NavRail from "./NavRail.vue";
 import NavRailGroup from "./NavRailGroup.vue";
 import NavRailItem from "./NavRailItem.vue";
@@ -62,15 +62,18 @@ describe("NavRailItem (Vue)", () => {
     expect(emitted().selected).toBeTruthy();
   });
 
-  it("is a real link when it leaves, and does not fake the navigation", async () => {
+  it("is a real link, and never cancels the navigation itself", async () => {
     // Un boton con handler rompe el clic central y el "abrir en pestana nueva".
     const { emitted } = render(NavRailItem, {
       props: { label: "Dashboard", href: "/" },
     });
     const link = screen.getByRole("link");
     expect(link.getAttribute("href")).toBe("/");
-    await link.click();
-    expect(emitted().selected).toBeUndefined();
+    const ev = new MouseEvent("click", { bubbles: true, cancelable: true });
+    link.dispatchEvent(ev);
+    // It tells the app (so it may route), but leaves the default alone.
+    expect(emitted().selected).toHaveLength(1);
+    expect(ev.defaultPrevented).toBe(false);
   });
 
   it("puts the warnings before the count", () => {
@@ -237,5 +240,175 @@ describe("NavRail icons variant (Vue)", () => {
     expect(items[0].getAttribute("aria-current")).toBe("page");
     expect(items[1].hasAttribute("aria-current")).toBe(false);
     expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+});
+
+describe("NavRailItem links (Vue)", () => {
+  it("emits selected with the MouseEvent on a plain click of a link entry", async () => {
+    const { getByRole, emitted } = render(NavRailItem, { props: { label: "Library", href: "/library" } });
+    await fireEvent.click(getByRole("link", { name: "Library" }));
+    const calls = emitted().selected as [MouseEvent][];
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0]).toBeInstanceOf(MouseEvent);
+  });
+
+  it("lets the app preventDefault the plain click to route it", async () => {
+    const { getByRole } = render(NavRailItem, {
+      props: { label: "Library", href: "/library", onSelected: (e?: MouseEvent) => e?.preventDefault() },
+    });
+    const ev = new MouseEvent("click", { bubbles: true, cancelable: true });
+    getByRole("link").dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(true);
+  });
+
+  it.each([
+    ["ctrl", { ctrlKey: true }],
+    ["meta", { metaKey: true }],
+    ["shift", { shiftKey: true }],
+    ["alt", { altKey: true }],
+    ["middle button", { button: 1 }],
+  ])("does not emit selected on a %s click of a link entry", async (_name, init) => {
+    const { getByRole, emitted } = render(NavRailItem, { props: { label: "Library", href: "/library" } });
+    await fireEvent.click(getByRole("link"), init);
+    expect(emitted().selected).toBeUndefined();
+  });
+
+  it("keeps the button entry emitting selected with no event", async () => {
+    const { getByRole, emitted } = render(NavRailItem, { props: { label: "Library" } });
+    await fireEvent.click(getByRole("button"));
+    expect(emitted().selected).toEqual([[]]);
+  });
+
+  it("marks an active entry aria-current=page, link or button", () => {
+    const a = render(NavRailItem, { props: { label: "A", href: "/a", active: true } });
+    expect(a.getByRole("link").getAttribute("aria-current")).toBe("page");
+    const b = render(NavRailItem, { props: { label: "B", active: true } });
+    expect(b.getByRole("button").getAttribute("aria-current")).toBe("page");
+  });
+});
+
+function groupWith(props: Record<string, unknown>, activeChild = false) {
+  return render(NavRailGroup, {
+    props: { label: "System", collapsible: true, ...props },
+    slots: { default: () => [h(NavRailItem, { label: "Logs" }), h(NavRailItem, { label: "Jobs", active: activeChild })] },
+  });
+}
+const bodyOf = (c: Element) => c.querySelector<HTMLElement>(".ui-nav-rail__group-body")!;
+
+describe("NavRailGroup collapsible (Vue)", () => {
+  beforeEach(() => window.localStorage.clear());
+
+  it("folds on a click of the heading and sets aria-expanded", async () => {
+    const { container, getByRole } = groupWith({});
+    const head = getByRole("button", { name: /System/ });
+    expect(head.getAttribute("aria-expanded")).toBe("true");
+    expect(head.getAttribute("aria-controls")).toBe(bodyOf(container).id);
+    await fireEvent.click(head);
+    expect(head.getAttribute("aria-expanded")).toBe("false");
+    expect(bodyOf(container).style.display).toBe("none");
+    await fireEvent.click(head);
+    expect(bodyOf(container).style.display).not.toBe("none");
+  });
+
+  it("stays a plain heading when not collapsible", () => {
+    const { container } = render(NavRailGroup, { props: { label: "Repos" } });
+    expect(container.querySelector(".ui-nav-rail__group-toggle")).toBeNull();
+    expect(container.querySelector(".ui-nav-rail__group-body")).toBeNull();
+  });
+
+  it("supports v-model:open", async () => {
+    const { getByRole, emitted } = groupWith({ open: false });
+    expect(getByRole("button", { name: /System/ }).getAttribute("aria-expanded")).toBe("false");
+    await fireEvent.click(getByRole("button", { name: /System/ }));
+    expect(emitted()["update:open"]).toEqual([[true]]);
+  });
+
+  it("remembers a fold across remounts with a storageKey", async () => {
+    const first = groupWith({ storageKey: "g1" });
+    await fireEvent.click(first.getByRole("button", { name: /System/ }));
+    first.unmount();
+    const second = groupWith({ storageKey: "g1" });
+    expect(second.getByRole("button", { name: /System/ }).getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("still renders and folds when localStorage throws", async () => {
+    const boom = () => { throw new Error("blocked"); };
+    const get = vi.spyOn(Storage.prototype, "getItem").mockImplementation(boom);
+    const set = vi.spyOn(Storage.prototype, "setItem").mockImplementation(boom);
+    try {
+      const { getByRole } = groupWith({ storageKey: "g1" });
+      const head = getByRole("button", { name: /System/ });
+      await fireEvent.click(head);
+      expect(head.getAttribute("aria-expanded")).toBe("false");
+    } finally {
+      get.mockRestore();
+      set.mockRestore();
+    }
+  });
+
+  it("opens a folded group that contains the active entry", async () => {
+    const { getByRole, container } = groupWith({ open: false }, true);
+    await nextTick();
+    expect(getByRole("button", { name: /System/ }).getAttribute("aria-expanded")).toBe("true");
+    expect(bodyOf(container).style.display).not.toBe("none");
+  });
+
+  it("shows the count on the heading only while folded", async () => {
+    const { container, getByRole } = groupWith({ count: 3 });
+    expect(container.querySelector(".ui-nav-rail__group-count")).toBeNull();
+    await fireEvent.click(getByRole("button", { name: /System/ }));
+    expect(container.querySelector(".ui-nav-rail__group-count")?.textContent).toContain("3");
+  });
+
+  it("has no axe violations, open and folded", async () => {
+    const { container, getByRole } = groupWith({ count: 2 });
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+    await fireEvent.click(getByRole("button", { name: /System/ }));
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+});
+
+describe("NavRail active entry in view (Vue)", () => {
+  const original = Element.prototype.scrollIntoView;
+  afterEach(() => { Element.prototype.scrollIntoView = original; });
+
+  it("scrolls the active entry into view, block nearest, on mount", () => {
+    const spy = vi.fn();
+    Element.prototype.scrollIntoView = spy;
+    render(NavRail, {
+      slots: { default: () => [h(NavRailItem, { label: "A" }), h(NavRailItem, { label: "Z", active: true })] },
+    });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith({ block: "nearest" });
+    expect((spy.mock.contexts[0] as HTMLElement).textContent).toContain("Z");
+  });
+
+  it("does not scroll when no entry is active", () => {
+    const spy = vi.fn();
+    Element.prototype.scrollIntoView = spy;
+    render(NavRail, { slots: { default: () => h(NavRailItem, { label: "A" }) } });
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("scrolls again when the active entry changes", async () => {
+    const spy = vi.fn();
+    Element.prototype.scrollIntoView = spy;
+    const active = ref("a");
+    render({
+      render: () =>
+        h(NavRail, null, { default: () => ["a", "b"].map((id) => h(NavRailItem, { label: id, active: active.value === id })) }),
+    });
+    spy.mockClear();
+    active.value = "b";
+    await nextTick();
+    await nextTick();
+    await new Promise((r) => setTimeout(r));
+    expect(spy).toHaveBeenCalled();
+    expect((spy.mock.contexts.at(-1) as HTMLElement).textContent).toContain("b");
+  });
+
+  it("never asks for a smooth scroll (prefers-reduced-motion)", () => {
+    const css = readFileSync(join(process.cwd(), "src/components/nav-rail/nav-rail.scss"), "utf8");
+    expect(css).toMatch(/prefers-reduced-motion:\s*reduce\)\s*\{[^@]*scroll-behavior:\s*auto/);
   });
 });
