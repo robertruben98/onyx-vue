@@ -413,6 +413,9 @@
   --ui-tabs-text-disabled: var(--ui-color-disabled-text);
   --ui-progress-track-bg: var(--ui-color-neutral-surface);
   --ui-progress-fill-bg: var(--ui-color-primary);
+  /* Delta: the fill colour, lighter, so it reads as "more of the same, not yet". */
+  --ui-progress-delta-bg: color-mix(in srgb, var(--ui-progress-fill-bg) 45%, var(--ui-progress-track-bg));
+  --ui-progress-overflow-bg: var(--ui-color-danger);
   --ui-tag-neutral-bg: var(--ui-color-neutral-surface);
   --ui-tag-neutral-text: var(--ui-color-neutral);
   --ui-tag-info-bg: var(--ui-color-info-surface);

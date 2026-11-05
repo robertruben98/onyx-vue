@@ -3,6 +3,7 @@ import { inject, provide, type App, type InjectionKey } from "vue";
 /** Default text catalog. Placeholder tokens (such as {n}) must be preserved. */
 export interface OnyxMessages {
   spinnerLabel: string;
+  progressBarDeltaValueText: string;
   diffViewLabel: string;
   diffViewEmptyText: string;
   diffViewBinaryText: string;
@@ -94,6 +95,7 @@ export interface OnyxMessages {
 
 export const DEFAULT_MESSAGES: OnyxMessages = {
   "spinnerLabel": "Loading",
+  "progressBarDeltaValueText": "{value} of {max}, {total} with the change",
   "diffViewLabel": "Diff",
   "diffViewEmptyText": "No changes",
   "diffViewBinaryText": "Binary file",
@@ -263,6 +265,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
 
 export const ES_MESSAGES: OnyxMessages = {
   "spinnerLabel": "Cargando",
+  "progressBarDeltaValueText": "{value} de {max}, {total} con el cambio",
   "diffViewLabel": "Diferencias",
   "diffViewEmptyText": "Sin cambios",
   "diffViewBinaryText": "Archivo binario",
