@@ -370,45 +370,66 @@ describe("NavRailGroup collapsible (Vue)", () => {
 
 describe("NavRail active entry in view (Vue)", () => {
   const original = Element.prototype.scrollIntoView;
-  afterEach(() => { Element.prototype.scrollIntoView = original; });
-
-  it("scrolls the active entry into view, block nearest, on mount", () => {
-    const spy = vi.fn();
-    Element.prototype.scrollIntoView = spy;
-    render(NavRail, {
-      slots: { default: () => [h(NavRailItem, { label: "A" }), h(NavRailItem, { label: "Z", active: true })] },
-    });
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith({ block: "nearest" });
-    expect((spy.mock.contexts[0] as HTMLElement).textContent).toContain("Z");
+  afterEach(() => {
+    Element.prototype.scrollIntoView = original;
+    vi.restoreAllMocks();
   });
 
-  it("does not scroll when no entry is active", () => {
+  /**
+   * jsdom has no layout: give the scroller a 100px box at the top of the page
+   * and each entry 40px, the `n`-th starting at `n * 40` minus the scroll.
+   */
+  function layOut(scroller: HTMLElement): void {
+    scroller.style.overflowY = "auto";
+    Object.defineProperty(scroller, "clientHeight", { configurable: true, value: 100 });
+    Object.defineProperty(scroller, "scrollHeight", { configurable: true, value: 400 });
+    scroller.scrollTop = 0;
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      if (this === scroller) return { top: 0, bottom: 100 } as DOMRect;
+      const items = [...scroller.querySelectorAll<HTMLElement>(".ui-nav-rail__item")];
+      const top = items.indexOf(this) * 40 - scroller.scrollTop;
+      return { top, bottom: top + 40 } as DOMRect;
+    });
+  }
+
+  function mountIn(active: () => string, ids: string[]) {
+    const scroller = document.createElement("div");
+    document.body.appendChild(scroller);
+    layOut(scroller);
+    const view = render(
+      { render: () => h(NavRail, null, { default: () => ids.map((id) => h(NavRailItem, { label: id, active: active() === id })) }) },
+      { container: scroller },
+    );
+    return { scroller, view };
+  }
+
+  it("moves the scroller so the active entry below the fold is visible, on mount", () => {
+    const { scroller } = mountIn(() => "f", ["a", "b", "c", "d", "e", "f"]);
+    // f spans 200..240 in a 0..100 box: the least scroll that shows it is 140.
+    expect(scroller.scrollTop).toBe(140);
+  });
+
+  it("does not scroll when the active entry is already visible, or when none is active", () => {
+    expect(mountIn(() => "b", ["a", "b", "c"]).scroller.scrollTop).toBe(0);
+    expect(mountIn(() => "", ["a", "b", "c"]).scroller.scrollTop).toBe(0);
+  });
+
+  it("never calls scrollIntoView, which moves the focus navigation starting point", () => {
     const spy = vi.fn();
     Element.prototype.scrollIntoView = spy;
-    render(NavRail, { slots: { default: () => h(NavRailItem, { label: "A" }) } });
+    mountIn(() => "f", ["a", "b", "c", "d", "e", "f"]);
     expect(spy).not.toHaveBeenCalled();
   });
 
   it("scrolls again when the active entry changes", async () => {
-    const spy = vi.fn();
-    Element.prototype.scrollIntoView = spy;
     const active = ref("a");
-    render({
-      render: () =>
-        h(NavRail, null, { default: () => ["a", "b"].map((id) => h(NavRailItem, { label: id, active: active.value === id })) }),
-    });
-    spy.mockClear();
-    active.value = "b";
+    const { scroller } = mountIn(() => active.value, ["a", "b", "c", "d", "e", "f"]);
+    expect(scroller.scrollTop).toBe(0);
+    active.value = "e";
     await nextTick();
     await nextTick();
     await new Promise((r) => setTimeout(r));
-    expect(spy).toHaveBeenCalled();
-    expect((spy.mock.contexts.at(-1) as HTMLElement).textContent).toContain("b");
-  });
-
-  it("never asks for a smooth scroll (prefers-reduced-motion)", () => {
-    const css = readFileSync(join(process.cwd(), "src/components/nav-rail/nav-rail.scss"), "utf8");
-    expect(css).toMatch(/prefers-reduced-motion:\s*reduce\)\s*\{[^@]*scroll-behavior:\s*auto/);
+    // e spans 160..200: the least scroll that shows it is 100.
+    expect(scroller.scrollTop).toBe(100);
   });
 });

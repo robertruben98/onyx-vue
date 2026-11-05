@@ -2,6 +2,7 @@
 import { nextTick, onBeforeUnmount, onMounted, provide, ref } from "vue";
 import { useOnyxLocale } from "../../locale";
 import { NAV_RAIL_KEY } from "./context";
+import { revealInScroller } from "./reveal";
 import "./nav-rail.scss";
 
 withDefaults(
@@ -26,12 +27,13 @@ let observer: MutationObserver | null = null;
 /**
  * Bring the active entry into view. The rail scrolls on its own (`height: 100vh`),
  * so on a short screen the entry the page loaded on can sit out of sight.
- * `nearest` makes it a no-op when the entry is already visible; the scroll is
- * never smooth, so `prefers-reduced-motion` is respected by construction.
+ * It is a no-op when the entry is already visible; the scroll is never smooth,
+ * so `prefers-reduced-motion` is respected by construction. See `reveal.ts` for
+ * why this moves the container's `scrollTop` instead of calling `scrollIntoView`.
  */
 function scrollToActive(): void {
   const el = root.value?.querySelector<HTMLElement>('[aria-current="page"]');
-  if (el && typeof el.scrollIntoView === "function") el.scrollIntoView({ block: "nearest" });
+  if (el) revealInScroller(el);
 }
 provide(NAV_RAIL_KEY, { scrollToActive });
 
