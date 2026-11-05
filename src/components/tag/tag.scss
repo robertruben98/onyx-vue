@@ -12,6 +12,30 @@
   font-weight: var(--ui-tag-font-weight);
   line-height: 1;
   border-radius: var(--ui-tag-radius);
+  // Un tag es una etiqueta corta: en una celda estrecha no se parte a mitad
+  // de palabra ("viej / a"). `wrap` lo devuelve al comportamiento normal.
+  white-space: nowrap;
+}
+
+.ui-tag--wrap {
+  white-space: normal;
+}
+
+// `maxWidth`: el texto se corta con elipsis. El icono y el boton de quitar no
+// encogen; solo el label.
+.ui-tag--truncate {
+  min-width: 0;
+}
+.ui-tag--truncate .ui-tag__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-tag__icon {
+  flex: none;
+  display: inline-flex;
+  line-height: 1;
 }
 
 .ui-tag__remove {
