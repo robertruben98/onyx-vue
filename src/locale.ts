@@ -47,6 +47,8 @@ export interface OnyxMessages {
   filterBarSearchLabel: string;
   filterBarLabel: string;
   paginationLabel: string;
+  paginationRange: string;
+  paginationPageSizeLabel: string;
   stateBarLabel: string;
   keyHintsLabel: string;
   ansiTerminalLabel: string;
@@ -139,6 +141,8 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "filterBarSearchLabel": "Filter",
   "filterBarLabel": "Filters",
   "paginationLabel": "Pagination",
+  "paginationRange": "{from}–{to} of {total}",
+  "paginationPageSizeLabel": "Rows per page",
   "stateBarLabel": "Run progress",
   "keyHintsLabel": "Keyboard shortcuts",
   "ansiTerminalLabel": "Terminal output",
@@ -309,6 +313,8 @@ export const ES_MESSAGES: OnyxMessages = {
   "filterBarSearchLabel": "Filtrar",
   "filterBarLabel": "Filtros",
   "paginationLabel": "Paginación",
+  "paginationRange": "{from}–{to} de {total}",
+  "paginationPageSizeLabel": "Filas por página",
   "stateBarLabel": "Progreso de la ejecución",
   "keyHintsLabel": "Atajos de teclado",
   "ansiTerminalLabel": "Salida del terminal",

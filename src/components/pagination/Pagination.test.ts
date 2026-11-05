@@ -66,3 +66,52 @@ describe("Pagination (Vue)", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 });
+
+describe("Pagination: range summary and page size (#149)", () => {
+  it("shows the range of the current page and derives the page count", () => {
+    render(Pagination, { props: { total: 43, pageSize: 20, page: 1 } });
+    expect(screen.getByText("1–20 of 43")).toBeTruthy();
+    expect(labels()).toEqual(["‹", "1", "2", "3", "›"]);
+  });
+
+  it("updates the summary in a polite live region when the page changes", async () => {
+    render(Pagination, { props: { total: 43, pageSize: 20, page: 1 } });
+    await fireEvent.click(screen.getByRole("button", { name: "Page 3" }));
+    const summary = screen.getByText("41–43 of 43");
+    expect(summary.getAttribute("aria-live")).toBe("polite");
+  });
+
+  it("has no summary without total and page size", () => {
+    const { container } = render(Pagination, { props: { pageCount: 3 } });
+    expect(container.querySelector(".ui-pagination__range")).toBeNull();
+  });
+
+  it("an explicit pageCount wins over total / pageSize", () => {
+    render(Pagination, { props: { pageCount: 2, total: 43, pageSize: 20 } });
+    expect(labels()).toEqual(["‹", "1", "2", "›"]);
+  });
+
+  it("renders nothing for an empty list", () => {
+    const { container } = render(Pagination, { props: { total: 0, pageSize: 20 } });
+    expect(container.querySelector("nav")).toBeNull();
+  });
+
+  it("offers the page sizes and emits update:pageSize, keeping the first shown item in view", async () => {
+    const { emitted } = render(Pagination, {
+      props: { total: 130, pageSize: 20, page: 3, pageSizeOptions: [20, 50] },
+    });
+    // Pagina 3 de 20 empieza en el elemento 41; con 50 por pagina esta en la 1.
+    const trigger = screen.getByRole("combobox", { name: "Rows per page" });
+    await fireEvent.click(trigger);
+    await fireEvent.click(screen.getByRole("option", { name: "50" }));
+    expect(emitted()["update:pageSize"]).toEqual([[50]]);
+    expect(emitted()["update:page"]).toEqual([[1]]);
+  });
+
+  it("has no axe violations with summary and page-size select", async () => {
+    const { container } = render(Pagination, {
+      props: { total: 43, pageSize: 20, pageSizeOptions: [20, 50] },
+    });
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

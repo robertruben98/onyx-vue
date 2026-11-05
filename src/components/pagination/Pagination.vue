@@ -2,28 +2,55 @@
 import { useOnyxLocale } from "../../locale";
 import { computed } from "vue";
 import { UiButton } from "../button";
+import { UiSelect } from "../select";
 import "./pagination.scss";
 
 const messages = useOnyxLocale();
 
 const props = withDefaults(
   defineProps<{
-    /** Number of pages. */
-    pageCount: number;
+    /**
+     * Number of pages. Optional when `total` and `pageSize` are given: it is
+     * then `ceil(total / pageSize)`.
+     */
+    pageCount?: number;
+    /**
+     * Items in the whole list. With `pageSize` it shows the range summary
+     * ("1–20 of 43", locale `paginationRange`), announced on page change.
+     */
+    total?: number;
+    /** Page sizes offered in a compact select (needs `v-model:page-size`). */
+    pageSizeOptions?: number[];
     /** Pages shown on each side of the current one. */
     siblings?: number;
     /** Accessible name of the navigation. */
     label?: string;
   }>(),
-  { siblings: 1, label: () => useOnyxLocale().paginationLabel },
+  {
+    pageCount: undefined,
+    total: undefined,
+    pageSizeOptions: () => [],
+    siblings: 1,
+    label: () => useOnyxLocale().paginationLabel,
+  },
 );
 
 /** The current page, from 1 (v-model:page). */
 const page = defineModel<number>("page", { default: 1 });
 
+/** Items per page (v-model:page-size). Unset, there is no range summary. */
+const pageSize = defineModel<number | undefined>("pageSize", { default: undefined });
+
 const emit = defineEmits<{ pageChanged: [page: number] }>();
 
-const count = computed(() => Math.max(0, Math.floor(props.pageCount)));
+const size = computed(() => (pageSize.value && pageSize.value > 0 ? Math.floor(pageSize.value) : 0));
+const total = computed(() => (props.total !== undefined && props.total >= 0 ? Math.floor(props.total) : undefined));
+
+const count = computed(() => {
+  if (props.pageCount !== undefined) return Math.max(0, Math.floor(props.pageCount));
+  if (total.value !== undefined && size.value) return Math.ceil(total.value / size.value);
+  return 0;
+});
 const current = computed(() => Math.min(Math.max(1, Math.floor(page.value)), Math.max(1, count.value)));
 
 /**
@@ -48,6 +75,37 @@ const items = computed<(number | "gap")[]>(() => {
   return out;
 });
 
+/** "1–20 of 43"; null without `total` and `pageSize`. */
+const range = computed(() => {
+  if (total.value === undefined || !size.value) return null;
+  const from = total.value === 0 ? 0 : (current.value - 1) * size.value + 1;
+  const to = Math.min(current.value * size.value, total.value);
+  return messages.paginationRange
+    .replace("{from}", String(from))
+    .replace("{to}", String(to))
+    .replace("{total}", String(total.value));
+});
+
+const sizeOptions = computed(() =>
+  props.pageSizeOptions.filter((n) => n > 0).map((n) => ({ value: String(n), label: String(n) })),
+);
+
+/**
+ * Cambiar el tamano de pagina mantiene a la vista el primer elemento que se
+ * estaba viendo: la pagina nueva es la que lo contiene.
+ */
+function changeSize(value: string | null): void {
+  const next = Number(value);
+  if (!next || next === size.value) return;
+  const firstShown = (current.value - 1) * (size.value || next);
+  pageSize.value = next;
+  const target = Math.floor(firstShown / next) + 1;
+  if (target !== current.value) {
+    page.value = target;
+    emit("pageChanged", target);
+  }
+}
+
 function go(target: number): void {
   if (target < 1 || target > count.value || target === current.value) return;
   page.value = target;
@@ -56,7 +114,8 @@ function go(target: number): void {
 </script>
 
 <template>
-  <nav v-if="count > 0" class="ui-pagination" :aria-label="label">
+  <nav v-if="count > 0" class="ui-pagination" :class="{ 'ui-pagination--extras': range || sizeOptions.length }" :aria-label="label">
+    <p v-if="range" class="ui-pagination__range" aria-live="polite">{{ range }}</p>
     <ul class="ui-pagination__list">
       <li>
         <UiButton
@@ -91,5 +150,13 @@ function go(target: number): void {
         >
       </li>
     </ul>
+    <div v-if="sizeOptions.length" class="ui-pagination__size">
+      <UiSelect
+        :model-value="size ? String(size) : null"
+        :options="sizeOptions"
+        :aria-label="messages.paginationPageSizeLabel"
+        @changed="changeSize"
+      />
+    </div>
   </nav>
 </template>
