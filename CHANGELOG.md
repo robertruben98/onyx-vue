@@ -13,6 +13,7 @@ Consumers that build from source (the control-panel dashboard aliases
 
 ### Added
 
+- `UiProgressBar`: `delta` draws a projected change as a second segment after `value` (token `--ui-progress-delta-bg`); the part past `max` is clamped and drawn with `--ui-progress-overflow-bg` (danger). `aria-valuetext` then says both values (new locale key `progressBarDeltaValueText`, ES "{value} de {max}, {total} con el cambio"); `valueText` overrides it. (#148)
 - `UiNavRailItem`: an entry with `href` is a real link and, on a plain left click, emits `selected` with the `MouseEvent` so a single-page app can `preventDefault()` and route; Ctrl/Cmd/Shift/Alt and middle clicks are left to the browser and do not emit. Button entries still emit `selected` with no argument. (A link entry used to emit nothing.)
 - `UiNavRailGroup`: `collapsible`, `v-model:open` (default open), `storageKey` (open state in `localStorage`, used as given, tolerant of blocked storage), `count` / `countTone` shown on the heading while folded. The heading is a button with `aria-expanded` / `aria-controls`; a folded group holding the `active` entry opens by itself.
 - `UiNavRail` scrolls the active entry into view (`scrollIntoView({ block: "nearest" })`) on mount and when it changes; never smooth.
