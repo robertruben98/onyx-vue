@@ -9,7 +9,7 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
-## Unreleased
+## 0.19.0 — 2026-11-05
 
 ### Added
 
