@@ -1,0 +1,44 @@
+// Note styles. References ONLY semantic / component tokens.
+
+.ui-note {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-note-font-size-md);
+}
+
+.ui-note--sm {
+  font-size: var(--ui-note-font-size-sm);
+}
+.ui-note--md {
+  font-size: var(--ui-note-font-size-md);
+}
+.ui-note--lg {
+  font-size: var(--ui-note-font-size-lg);
+}
+
+.ui-note--success {
+  color: var(--ui-color-success);
+}
+.ui-note--warning {
+  color: var(--ui-color-warning);
+}
+.ui-note--danger {
+  color: var(--ui-color-danger);
+}
+
+.ui-note--inline {
+  display: inline;
+}
+.ui-note--block {
+  display: block;
+  margin: 0;
+}
+.ui-note--empty {
+  display: block;
+  margin: 0;
+  padding: var(--ui-note-empty-padding-y) var(--ui-note-empty-padding-x);
+}
+
+.ui-note--mono {
+  font-family: var(--ui-font-family-mono, var(--ui-font-family, ui-monospace, monospace));
+  overflow-wrap: anywhere;
+}

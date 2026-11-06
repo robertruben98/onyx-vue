@@ -226,6 +226,11 @@
   --ui-tabs-font-size: var(--ui-font-size-md);
   --ui-tabs-font-weight: var(--ui-font-weight-medium);
   --ui-progress-radius: var(--ui-radii-full);
+  --ui-note-font-size-sm: 0.6875rem;
+  --ui-note-font-size-md: 0.75rem;
+  --ui-note-font-size-lg: 0.78125rem;
+  --ui-note-empty-padding-y: var(--ui-space-5);
+  --ui-note-empty-padding-x: var(--ui-space-4);
   --ui-tag-radius: var(--ui-radii-sm);
   --ui-tag-padding-x: var(--ui-space-2);
   --ui-tag-padding-y: var(--ui-space-1);
