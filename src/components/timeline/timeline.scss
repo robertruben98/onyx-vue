@@ -76,3 +76,80 @@
   font-size: var(--ui-timeline-font-size);
   color: var(--ui-color-text-muted);
 }
+
+// Status history (`items`): a marker per entry with a tone colour AND an icon,
+// joined by a connector. Not the dated, newest-first story above.
+.ui-timeline__step {
+  position: relative;
+  display: flex;
+  gap: var(--ui-space-3);
+  padding-bottom: var(--ui-timeline-gap);
+}
+.ui-timeline__step:last-child {
+  padding-bottom: 0;
+}
+.ui-timeline__step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: var(--ui-timeline-status-size);
+  bottom: 0;
+  left: calc(var(--ui-timeline-status-size) / 2 - var(--ui-border-width-thick) / 2);
+  border-left: var(--ui-border-width-thick) solid var(--ui-timeline-rule);
+}
+.ui-timeline__step-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.ui-timeline__status {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--ui-timeline-status-size);
+  height: var(--ui-timeline-status-size);
+  border-radius: 50%;
+  font-size: var(--ui-font-size-sm);
+  line-height: 1;
+  color: var(--ui-color-text-muted);
+  background: var(--ui-color-surface-hover);
+  border: var(--ui-border-width-thick) solid currentColor;
+}
+.ui-timeline__status--success { color: var(--ui-color-success); background: var(--ui-color-success-surface); }
+.ui-timeline__status--warning { color: var(--ui-color-warning); background: var(--ui-color-warning-surface); }
+.ui-timeline__status--danger { color: var(--ui-color-danger); background: var(--ui-color-danger-surface); }
+.ui-timeline__status--info { color: var(--ui-color-info); background: var(--ui-color-info-surface); }
+
+.ui-timeline__status--active {
+  animation: ui-timeline-pulse 1.6s ease-out infinite;
+}
+@keyframes ui-timeline-pulse {
+  0% { box-shadow: 0 0 0 0 currentColor; }
+  70% { box-shadow: 0 0 0 0.4rem transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+// Compact: ●●○ on one line, for table cells.
+.ui-timeline--compact {
+  --ui-timeline-status-size: var(--ui-timeline-status-size-compact);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+}
+.ui-timeline--compact .ui-timeline__step {
+  padding: 0;
+}
+.ui-timeline--compact .ui-timeline__step::before {
+  content: none;
+}
+.ui-timeline--compact .ui-timeline__status {
+  background: currentColor;
+}
+.ui-timeline--compact .ui-timeline__status--muted {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-timeline__status--active { animation: none; }
+}
