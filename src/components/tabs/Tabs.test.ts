@@ -459,6 +459,14 @@ describe("Tabs (Vue): count badge and warning state", () => {
     expect(tab.classList.contains("ui-tabs__tab--warn")).toBe(true);
   });
 
+  it("accepts the kebab-case warn-text a compiled template passes", async () => {
+    renderWith(() => [h(Tab, { label: "Ready", warn: "", "warn-text": "2 stuck" } as never, () => "p")]);
+    await nextTick();
+    const tab = screen.getByRole("tab", { name: /Ready/ });
+    const id = tab.getAttribute("aria-describedby") as string;
+    expect(document.getElementById(id)?.textContent).toBe("2 stuck");
+  });
+
   it("warn without warnText falls back to the default locale text", async () => {
     renderWith(() => [h(Tab, { label: "Ready", warn: true }, () => "p")]);
     await nextTick();
