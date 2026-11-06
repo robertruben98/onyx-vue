@@ -140,6 +140,32 @@ export const dataTableDoc: ComponentDoc = {
       description:
         "The drawer under an expanded row. The row itself carries no aria-expanded — that is only valid on a treegrid row — so put the disclosure on the control the user actually activates.",
     },
+    {
+      name: "role",
+      type: "'grid' | 'table'",
+      default: "'grid'",
+      description:
+        "`table` is native table semantics: no roving tabindex or arrow keys, the natural Tab order reaches every link, button and row checkbox, and the checked checkbox replaces `aria-selected`. For tables whose cells hold their own controls.",
+    },
+    {
+      name: "rowLabel",
+      type: "(row: T) => string",
+      default: "undefined",
+      description: "Accessible name of each row's checkbox (\"Select ia-api#74\"). Without it they are all \"Select row\".",
+    },
+    {
+      name: "total / offset",
+      type: "number / number",
+      default: "undefined / 0",
+      description:
+        "For a server-paginated list: `rows` is one page, `total` the whole list. `aria-rowcount` is `total + 1` and the first row's `aria-rowindex` is `offset + 2`. No client-side paging and no footer.",
+    },
+    {
+      name: "actionsLabel",
+      type: "string",
+      default: "''",
+      description: "Visually hidden header text for the trailing column whose `header` is empty (the row actions).",
+    },
     { name: "@rowActivated", type: "(row: T, event: Event) => void", default: "—", description: "A row was opened: clicked, or Enter on a cell without its own control. Needs `activatable`." },
     { name: "v-model:expanded", type: "Set<RowKey>", default: "new Set()", description: "Keys of the expanded rows (emits `update:expanded`); see `expanded`." },
   ],
@@ -229,6 +255,30 @@ export const dataTableDoc: ComponentDoc = {
       code: `<UiDataTable caption="Team" :columns="columns" :rows="[]" empty-text="No members yet" />
 <UiDataTable caption="Team" :columns="columns" :rows="[]" loading />`,
       setup: () => ({ columns: PLAIN }),
+    },
+    {
+      title: "Table semantics, named checkboxes and external pagination",
+      description:
+        "`role=\"table\"` keeps the natural Tab order, so every row checkbox and button is reachable; `row-label` names each checkbox; `total` and `offset` say these rows are the third page of 74.",
+      code: `<UiDataTable
+  caption="Publish tray"
+  role="table"
+  row-key="id"
+  mode="plain"
+  selectable="multiple"
+  :columns="columns"
+  :rows="rows"
+  :row-label="(row) => 'Select ' + row.name"
+  actions-label="Actions"
+  :total="74"
+  :offset="20"
+>
+  <template #cell-actions="{ row }"><button type="button">Open</button></template>
+</UiDataTable>`,
+      setup: () => ({
+        columns: [...SORTABLE.slice(0, 2), { id: "actions", header: "", width: "6rem" }],
+        rows: ROWS,
+      }),
     },
     {
       title: "A drawer under its own row",
