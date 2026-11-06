@@ -149,3 +149,12 @@ describe("Tag: no-wrap, truncation and status icon (#144)", () => {
     },
   );
 });
+
+describe("Tag mono flag", () => {
+  it("adds the mono modifier only when asked", () => {
+    const a = render(Tag, { props: { mono: true }, slots: { default: "a1b2c3" } });
+    expect(a.container.querySelector(".ui-tag")!.classList.contains("ui-tag--mono")).toBe(true);
+    const b = render(Tag, { slots: { default: "plain" } });
+    expect(b.container.querySelector(".ui-tag")!.classList.contains("ui-tag--mono")).toBe(false);
+  });
+});

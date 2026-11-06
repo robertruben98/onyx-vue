@@ -63,10 +63,14 @@
 
 .ui-theme-chat {
   /* --- tipografia ------------------------------------------------------- */
-  --ui-font-family: "Roboto Variable", Roboto, "Helvetica Neue", Helvetica, sans-serif;
+  /* Role tokens: `body` is the reading family, `data` is for identifiers, hashes,
+     numbers and code. `--ui-font-family` stays as an alias of body. */
+  --ui-font-family-body: "Roboto Variable", Roboto, "Helvetica Neue", Helvetica, sans-serif;
+  --ui-font-family-data: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --ui-font-family: var(--ui-font-family-body);
   --ui-font-family-display: var(--ui-font-family);
 
-  font-family: var(--ui-font-family);
+  font-family: var(--ui-font-family-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;

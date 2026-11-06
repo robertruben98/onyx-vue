@@ -44,7 +44,7 @@ export const dataTableDoc: ComponentDoc = {
       name: "columns",
       type: "DataTableColumn<T>[]",
       default: "— (required)",
-      description: "`{ id, header, field?, sortable?, align?, width?, hideBelow? }` per column. `hideBelow` (px) drops the column, header and cells together, on narrower viewports.",
+      description: "`{ id, header, field?, sortable?, align?, mono?, width?, hideBelow? }` per column. `mono` sets the cells in the data font family (`--ui-font-family-data`) with tabular numerals. `hideBelow` (px) drops the column, header and cells together, on narrower viewports.",
     },
     {
       name: "activatable",

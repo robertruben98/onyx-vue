@@ -38,15 +38,20 @@
   /* Tokens nuevos, definidos aqui y no en la capa base por el mismo motivo que
      en `console`: una `font-family` global cambiaria el aspecto de los
      consumidores que hoy heredan la fuente de su propia pagina. */
-  --ui-font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+  /* Role tokens: `body` is the reading family, `data` is for identifiers, hashes,
+     numbers and code. `--ui-font-family` stays as an alias of body. */
+  --ui-font-family-body: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
     Consolas, "Liberation Mono", monospace;
+  --ui-font-family-data: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+  --ui-font-family: var(--ui-font-family-body);
   /* Share Tech Mono tiene un solo grosor y una caja muy estrecha: sirve para
      rotulos y lecturas grandes, y es ilegible en un parrafo. Por eso es la
      familia de display y nunca la del cuerpo. */
   --ui-font-family-display: "Share Tech Mono", "JetBrains Mono", ui-monospace,
     monospace;
 
-  font-family: var(--ui-font-family);
+  font-family: var(--ui-font-family-body);
   /* Una mono con ligaduras junta `!=` y `->` en un glifo. En un log de fallos
      hay que poder leer los caracteres de uno en uno. */
   font-variant-ligatures: none;

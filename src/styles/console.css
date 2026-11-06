@@ -29,12 +29,17 @@
   /* Tokens nuevos, definidos aqui y no en la capa base a proposito: anadir una
      regla `font-family` global habria cambiado el aspecto de los consumidores
      que hoy heredan la fuente de su propia pagina. */
-  --ui-font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+  /* Role tokens: `body` is the reading family, `data` is for identifiers, hashes,
+     numbers and code. `--ui-font-family` stays as an alias of body. */
+  --ui-font-family-body: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
     Consolas, "Liberation Mono", monospace;
+  --ui-font-family-data: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+  --ui-font-family: var(--ui-font-family-body);
   --ui-font-family-display: "Martian Mono", "IBM Plex Mono", ui-monospace,
     monospace;
 
-  font-family: var(--ui-font-family);
+  font-family: var(--ui-font-family-body);
   /* Las ligaduras de una mono en una tabla de puertos y codigos HTTP juntan
      glifos que hay que poder leer de uno en uno. */
   font-variant-ligatures: none;
@@ -146,6 +151,21 @@
      con la clase en <html> esto pinta la pagina. */
   background-color: var(--ui-console-bg);
   color: var(--ui-color-text);
+}
+
+/* Opt-in mixed typography: sans body, monospace data. The default console look
+   stays all-mono; set `data-typography="mixed"` on the root (or on any
+   container inside it) to read paragraphs and titles in a proportional face
+   while identifiers, hashes, numbers and code stay monospaced. It redeclares
+   the alias and `font-family` so it also works on an inner container. */
+.ui-theme-console[data-typography="mixed"],
+.ui-theme-console [data-typography="mixed"] {
+  --ui-font-family-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ui-font-family-data: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+  --ui-font-family: var(--ui-font-family-body);
+  font-family: var(--ui-font-family-body);
 }
 
 /* La cabecera de la tabla y los titulos de seccion en versalitas espaciadas:

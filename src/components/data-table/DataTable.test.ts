@@ -1480,3 +1480,23 @@ describe("DataTable (Vue) — stacked rows (stackBelow)", () => {
     expect(body).toMatch(/overflow-x:\s*auto/);
   });
 });
+
+describe("DataTable (Vue) — mono columns", () => {
+  it("marks the cells of a `mono` column and no others", () => {
+    const { container } = render(DataTable, {
+      props: {
+        caption: "t",
+        columns: [
+          { id: "name", header: "Name", field: "name" },
+          { id: "id", header: "Id", field: "id", mono: true, align: "end" },
+        ] as DataTableColumn<Person>[],
+        rows: ROWS,
+        rowKey: "id",
+      },
+    });
+    const mono = container.querySelectorAll(".ui-dt__td.ui-dt__cell--mono");
+    expect(mono.length).toBe(ROWS.length);
+    expect(mono[0].textContent?.trim()).toBe("1");
+    expect(container.querySelectorAll(".ui-dt__th.ui-dt__cell--mono").length).toBe(0);
+  });
+});

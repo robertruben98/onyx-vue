@@ -136,6 +136,12 @@
   text-align: right;
 }
 
+// Identifiers, hashes and numbers: the data family, tabular so columns align.
+.ui-dt__cell--mono {
+  font-family: var(--ui-font-family-data, inherit);
+  font-variant-numeric: tabular-nums;
+}
+
 // La fila del aviso ocupa la rejilla entera, sea cual sea su plantilla.
 .ui-dt__status-row {
   display: block;

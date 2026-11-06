@@ -20,6 +20,12 @@ export const tagDoc: ComponentDoc = {
       description: "Outline draws only a hairline in the variant's colour, for small facts inside table cells.",
     },
     {
+      name: "mono",
+      type: "boolean",
+      default: "false",
+      description: "Sets the label in the data font family (`--ui-font-family-data`): hashes, ids, numbers.",
+    },
+    {
       name: "removable",
       type: "boolean",
       default: "false",
@@ -75,6 +81,11 @@ export const tagDoc: ComponentDoc = {
 <UiTag variant="success">Success</UiTag>
 <UiTag variant="warning">Warning</UiTag>
 <UiTag variant="danger">Danger</UiTag>`,
+    },
+    {
+      title: "Mono",
+      description: "Identifiers keep the data family even when the preset uses a proportional body.",
+      code: `<UiTag mono appearance="outline">a1b2c3d</UiTag>`,
     },
     {
       title: "Muted",

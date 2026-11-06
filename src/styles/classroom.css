@@ -24,12 +24,16 @@
  */
 .ui-theme-classroom {
   /* --- tipografia ------------------------------------------------------- */
-  --ui-font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system,
+  /* Role tokens: `body` is the reading family, `data` is for identifiers, hashes,
+     numbers and code. `--ui-font-family` stays as an alias of body. */
+  --ui-font-family-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system,
     "Noto Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ui-font-family-data: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --ui-font-family: var(--ui-font-family-body);
   --ui-font-family-display: "Iowan Old Style", "Palatino Linotype", Palatino,
     "Book Antiqua", Georgia, "Noto Serif", serif;
 
-  font-family: var(--ui-font-family);
+  font-family: var(--ui-font-family-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 
