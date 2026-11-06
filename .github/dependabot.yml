@@ -8,3 +8,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # TypeScript 7 drops typescript/lib/tsc, which vue-tsc 3.3.x still requires (#129, 2026-11-06).
+      # Lift this once a vue-tsc release supports TypeScript 7.
+      - dependency-name: "typescript"
+        versions: [">=7"]
