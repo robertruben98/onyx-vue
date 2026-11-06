@@ -88,6 +88,7 @@ export * from "./components/relative-time";
 export * from "./components/run-state";
 export * from "./components/section-header";
 export * from "./components/segmented";
+export * from "./components/simple-table";
 export * from "./components/select";
 export * from "./components/sequence-grid";
 export * from "./components/severity-badge";

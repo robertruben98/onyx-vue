@@ -14,6 +14,7 @@ Consumers that build from source (the control-panel dashboard aliases
 ### Added
 
 - `UiNote`: the small text line the panel hand-writes as `.dim`, `.hint`, `.nota` and `.vacio`. `tone` (`muted` default, `success`, `warning`, `danger`) routes to the semantic colour tokens; `size` (`sm` 11px, `md` 12px, `lg` 12.5px, tokens `--ui-note-font-size-*`); `variant` (`inline` default, `block` with no margin, `empty` with the padded "nothing here" spacing from `--ui-note-empty-padding-*`, which map to `--ui-space-*`); `mono` (monospace, `overflow-wrap: anywhere`); `as` (element, default `p`); `live` sets `role="status"` on `variant="empty"` only. (#136)
+- `UiSimpleTable`: a semantic, read-only native `<table>` (`<th scope="col">`) inside a focusable, labelled `role="region"` that scrolls sideways (`overflow-x: auto; max-width: 100%`), so a 360px phone scrolls the table, not the page. Props `columns` (`key`, `label`, `align`, `mono`, `muted`, `hideBelow`), `rows`, `rowKey`, `ariaLabel` (required), `dense` and a `tone(row, column)` callback; slots `cell-<key>` and `empty` (the body is omitted when there are no rows). Token-only styles; `hideBelow` follows the viewport like `UiDataTable`. (#137)
 
 ## 0.20.0 — 2026-11-06
 

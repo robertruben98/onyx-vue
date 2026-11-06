@@ -1,0 +1,59 @@
+// Simple table — a semantic, read-only native <table>. The wrapper scrolls
+// sideways so a narrow screen never scrolls the page. References ONLY
+// semantic / component tokens.
+
+.ui-simple-table {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.ui-simple-table:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-simple-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ui-font-size-sm);
+}
+
+.ui-simple-table__head,
+.ui-simple-table__cell {
+  padding: var(--ui-space-2) var(--ui-space-4);
+  vertical-align: top;
+}
+
+.ui-simple-table__table--dense .ui-simple-table__head,
+.ui-simple-table__table--dense .ui-simple-table__cell {
+  padding-top: var(--ui-space-1);
+  padding-bottom: var(--ui-space-1);
+}
+
+.ui-simple-table__head {
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text-muted);
+  white-space: nowrap;
+}
+
+tbody .ui-simple-table__cell {
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+}
+
+.ui-simple-table__cell--start { text-align: start; }
+.ui-simple-table__cell--center { text-align: center; }
+.ui-simple-table__cell--end { text-align: end; }
+
+.ui-simple-table__cell--mono {
+  font-family: var(--ui-font-family-mono, ui-monospace, monospace);
+}
+.ui-simple-table__cell--muted { color: var(--ui-color-text-muted); }
+.ui-simple-table__cell--success { color: var(--ui-color-success); }
+.ui-simple-table__cell--warning { color: var(--ui-color-warning); }
+.ui-simple-table__cell--danger { color: var(--ui-color-danger); }
+
+.ui-simple-table__empty {
+  padding: var(--ui-space-4);
+  color: var(--ui-color-text-muted);
+  border-top: var(--ui-border-width) solid var(--ui-color-border);
+}
