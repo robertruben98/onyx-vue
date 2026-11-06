@@ -9,6 +9,13 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiTab`: `count` renders a badge after the label (part of the trigger's accessible name; `0` is shown), and `warn` + `warnText` add a warning marker plus a visually hidden description wired with `aria-describedby` on the trigger (default text: locale `tabWarnText`, ES "Requiere atención"). New tokens `--ui-tabs-badge-*` and `--ui-tabs-warn-*`. (#135)
+- `UiTabs`: `panels="none"` renders only the tab list and no `role="tabpanel"`; the consumer renders one panel with `id = panelId(selectedIndex)` and `aria-labelledby = tabId(selectedIndex)`, both exposed on the component ref. Default `panels="own"` is unchanged. (#135)
+
 ## 0.20.0 — 2026-11-06
 
 ### Added
