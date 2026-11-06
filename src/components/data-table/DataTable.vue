@@ -53,6 +53,11 @@ export interface DataTableColumn<T> {
   value?(row: T): unknown;
   /** Horizontal alignment. */
   align?: CellAlign;
+  /**
+   * Renders the column's cells in the data font family (`--ui-font-family-data`,
+   * tabular numerals): for identifiers, hashes and numbers.
+   */
+  mono?: boolean;
   /** CSS track size for this column (e.g. '8rem', 'minmax(0,2fr)'). */
   width?: string;
   /** Whether the column can be sorted. */
@@ -764,6 +769,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                   :class="{
                     'ui-dt__cell--center': col.align === 'center',
                     'ui-dt__cell--end': col.align === 'end',
+                    'ui-dt__cell--mono': col.mono,
                   }"
                   :data-row="item.index + 1"
                   :data-col="dataColOf(ci)"
@@ -825,6 +831,7 @@ function onGridKeydown(event: KeyboardEvent): void {
               :class="{
                 'ui-dt__cell--center': col.align === 'center',
                 'ui-dt__cell--end': col.align === 'end',
+                'ui-dt__cell--mono': col.mono,
               }"
               :data-row="i + 1"
               :data-col="dataColOf(ci)"

@@ -6,7 +6,7 @@
   margin: 0;
   padding: var(--ui-space-3) var(--ui-space-3);
   overflow: auto;
-  font-family: var(--ui-font-family-mono, var(--ui-font-family, ui-monospace, monospace));
+  font-family: var(--ui-font-family-data, var(--ui-font-family-mono, var(--ui-font-family, ui-monospace, monospace)));
   font-size: var(--ui-code-block-font-size);
   line-height: 1.55;
   color: var(--ui-color-text);

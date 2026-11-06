@@ -47,6 +47,8 @@ const props = withDefaults(
      * (WCAG 1.4.1). The `icon` slot replaces the glyph with your own.
      */
     showIcon?: boolean;
+    /** Sets the label in the data font family (`--ui-font-family-data`): hashes, ids, numbers. */
+    mono?: boolean;
   }>(),
   {
     variant: "neutral",
@@ -57,6 +59,7 @@ const props = withDefaults(
     maxWidth: "",
     title: "",
     showIcon: false,
+    mono: false,
   },
 );
 
@@ -73,6 +76,7 @@ const rootClasses = computed(() => ({
   "ui-tag--danger": props.variant === "danger",
   "ui-tag--outline": props.appearance === "outline",
   "ui-tag--wrap": props.wrap,
+  "ui-tag--mono": props.mono,
   "ui-tag--truncate": !!props.maxWidth,
 }));
 

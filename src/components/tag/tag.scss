@@ -17,6 +17,10 @@
   white-space: nowrap;
 }
 
+.ui-tag--mono {
+  font-family: var(--ui-font-family-data, inherit);
+}
+
 .ui-tag--wrap {
   white-space: normal;
 }

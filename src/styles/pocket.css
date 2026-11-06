@@ -20,12 +20,16 @@
  */
 .ui-theme-pocket {
   /* --- tipografia ------------------------------------------------------- */
-  --ui-font-family: system-ui, -apple-system, "SF Pro Text", "Segoe UI Variable Text",
+  /* Role tokens: `body` is the reading family, `data` is for identifiers, hashes,
+     numbers and code. `--ui-font-family` stays as an alias of body. */
+  --ui-font-family-body: system-ui, -apple-system, "SF Pro Text", "Segoe UI Variable Text",
     "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --ui-font-family-data: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --ui-font-family: var(--ui-font-family-body);
   --ui-font-family-display: system-ui, -apple-system, "SF Pro Display", "Segoe UI Variable Display",
     "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
 
-  font-family: var(--ui-font-family);
+  font-family: var(--ui-font-family-body);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;

@@ -139,7 +139,7 @@ describe("chat preset", () => {
   });
 
   it("the font is Roboto Variable, served by the preset only", () => {
-    expect(value(light, "--ui-font-family")).toBe('"robotovariable",roboto,"helveticaneue",helvetica,sans-serif');
+    expect(value(light, "--ui-font-family-body")).toBe('"robotovariable",roboto,"helveticaneue",helvetica,sans-serif');
     expect(chat).toContain('@import "@fontsource-variable/roboto/wght.css"');
     // (index.css imports chat.css, which brings the font along: not listed.)
     for (const other of ["acme", "classroom", "console", "matrix", "pocket", "base", "dark", "tokens"]) {
