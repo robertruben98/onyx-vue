@@ -119,6 +119,7 @@
 
   --ui-color-surface: var(--ui-pocket-card);
   --ui-color-surface-hover: var(--ui-pocket-card-hover);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-pocket-ink);
   --ui-color-text-muted: var(--ui-pocket-ink-soft);
   --ui-color-border: var(--ui-pocket-line);
@@ -172,6 +173,7 @@
   --ui-color-on-primary: #0b0c14;
   --ui-color-surface: var(--ui-pocket-card);
   --ui-color-surface-hover: var(--ui-pocket-card-hover);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-pocket-ink);
   --ui-color-text-muted: var(--ui-pocket-ink-soft);
   --ui-color-border: var(--ui-pocket-line);

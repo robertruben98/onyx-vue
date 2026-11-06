@@ -104,6 +104,7 @@
 
   --ui-color-surface: var(--ui-classroom-sheet);
   --ui-color-surface-hover: var(--ui-classroom-sheet-hover);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-classroom-ink);
   --ui-color-text-muted: var(--ui-classroom-ink-soft);
   --ui-color-border: var(--ui-classroom-rule);
@@ -156,6 +157,7 @@
   --ui-color-on-primary: var(--ui-classroom-paper);
   --ui-color-surface: var(--ui-classroom-sheet);
   --ui-color-surface-hover: var(--ui-classroom-sheet-hover);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-classroom-ink);
   --ui-color-text-muted: var(--ui-classroom-ink-soft);
   --ui-color-border: var(--ui-classroom-rule);

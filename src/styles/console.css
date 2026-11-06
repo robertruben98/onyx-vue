@@ -124,6 +124,7 @@
 
   --ui-color-surface: var(--ui-console-band);
   --ui-color-surface-hover: var(--ui-console-raise);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-console-txt);
   --ui-color-text-muted: var(--ui-console-txt-dim);
   --ui-color-border: var(--ui-console-rule);

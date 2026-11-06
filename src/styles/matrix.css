@@ -159,6 +159,7 @@
 
   --ui-color-surface: var(--ui-matrix-panel);
   --ui-color-surface-hover: var(--ui-matrix-raise);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-matrix-green);
   --ui-color-text-muted: var(--ui-matrix-mid);
   --ui-color-border: var(--ui-matrix-edge);

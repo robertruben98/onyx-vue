@@ -65,7 +65,7 @@ it("keeps user-facing prop defaults and template prose in the messages module", 
     // Reviewed implementation tokens, not copy: reject new literal defaults even
     // when a new prop has an unfamiliar name (including arrays and factories).
     const tokens = new Set(["400px", "F8", "absolute", "auto", "bottom", "boxed", "button",
-      "card", "cells", "circle", "danger", "date", "default", "div", "elevated", "end",
+      "card", "cells", "circle", "comfortable", "danger", "date", "default", "div", "elevated", "end",
       "filled", "grid", "h3", "higher-is-better", "horizontal", "info", "inline", "known", "lg", "list", "long", "md", "medium", "muted", "neutral", "none", "own", "p", "paginated", "pending", "plain", "primary",
       "region", "right", "secondary", "sm", "stacked", "start", "stretch", "text",
       "top", "unknown", "vertical", "wrap", "xl"]);

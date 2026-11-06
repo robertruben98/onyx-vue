@@ -15,6 +15,7 @@ export interface OnyxMessages {
   drawerCloseLabel: string;
   dialogCloseLabel: string;
   dataTableEmptyText: string;
+  dataTableColumnsLabel: string;
   alertDismissLabel: string;
   confirmButtonConfirmLabel: string;
   confirmButtonArmedHint: string;
@@ -111,6 +112,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "drawerCloseLabel": "Close",
   "dialogCloseLabel": "Close",
   "dataTableEmptyText": "No data",
+  "dataTableColumnsLabel": "Columns",
   "alertDismissLabel": "Dismiss",
   "confirmButtonConfirmLabel": "confirm?",
   "confirmButtonArmedHint": "press again to confirm",
@@ -285,6 +287,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "drawerCloseLabel": "Cerrar",
   "dialogCloseLabel": "Cerrar",
   "dataTableEmptyText": "Sin datos",
+  "dataTableColumnsLabel": "Columnas",
   "alertDismissLabel": "Descartar",
   "confirmButtonConfirmLabel": "¿confirmar?",
   "confirmButtonArmedHint": "pulsa otra vez para confirmar",

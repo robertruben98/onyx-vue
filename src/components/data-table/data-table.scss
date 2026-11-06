@@ -124,8 +124,33 @@
   justify-content: center;
 }
 
+// Stripe first, with the same weight as hover and selection, which come after
+// it and win.
+.ui-dt__tr--striped {
+  background-color: var(--ui-data-table-stripe-bg);
+}
+
 .ui-dt__tr--selected {
   background-color: var(--ui-data-table-row-selected-bg);
+}
+
+.ui-data-table--compact {
+  --ui-data-table-cell-padding-y: var(--ui-data-table-cell-padding-y-compact);
+}
+
+.ui-dt__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: var(--ui-data-table-cell-padding-y);
+}
+
+// At most `--ui-dt-clamp` lines; the rest is clipped (full text in the title).
+.ui-dt__clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--ui-dt-clamp);
+  line-clamp: var(--ui-dt-clamp);
+  overflow: hidden;
 }
 
 .ui-dt__cell--center {
@@ -139,6 +164,12 @@
 // Identifiers, hashes and numbers: the data family, tabular so columns align.
 .ui-dt__cell--mono {
   font-family: var(--ui-font-family-data, inherit);
+  font-variant-numeric: tabular-nums;
+}
+
+// Numbers: tabular figures in the body font (the data family is `mono`).
+// End alignment comes from `ui-dt__cell--end`, which the component adds.
+.ui-dt__cell--numeric {
   font-variant-numeric: tabular-nums;
 }
 

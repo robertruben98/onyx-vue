@@ -14,6 +14,7 @@
   --ui-color-on-primary: var(--ui-slate-950);
   --ui-color-surface: var(--ui-slate-900);
   --ui-color-surface-hover: var(--ui-slate-800);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-slate-50);
   --ui-color-text-muted: var(--ui-slate-400);
   --ui-color-border: var(--ui-slate-700);
