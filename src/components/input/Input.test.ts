@@ -182,4 +182,98 @@ describe("Input (Vue)", () => {
     await fireEvent.click(container.querySelector(".ui-input__field")!);
     expect(document.activeElement).toBe(container.querySelector("input"));
   });
+  describe("leading / trailing / clearable", () => {
+    it('icon="search" renders a decorative leading icon inside the field', () => {
+      const { container } = render(Input, { props: { ariaLabel: "Q", icon: "search" } });
+      const glyph = container.querySelector(".ui-input__field .ui-input__glyph");
+      expect(glyph).toBeTruthy();
+      expect(glyph!.getAttribute("aria-hidden")).toBe("true");
+    });
+
+    it("has no icon by default", () => {
+      const { container } = render(Input, { props: { ariaLabel: "Q" } });
+      expect(container.querySelector(".ui-input__glyph")).toBeNull();
+    });
+
+    it("pill + icon=search renders a single glyph", () => {
+      const { container } = render(Input, {
+        props: { ariaLabel: "Q", variant: "pill", icon: "search" },
+      });
+      expect(container.querySelectorAll(".ui-input__glyph").length).toBe(1);
+    });
+
+    it("renders the leading and trailing slots; leading replaces the icon", () => {
+      const { container } = render(Input, {
+        props: { ariaLabel: "Q", icon: "search" },
+        slots: {
+          leading: '<b data-testid="lead">L</b>',
+          trailing: '<i data-testid="trail">T</i>',
+        },
+      });
+      expect(screen.getByTestId("lead")).toBeTruthy();
+      expect(screen.getByTestId("trail")).toBeTruthy();
+      expect(container.querySelector(".ui-input__glyph")).toBeNull();
+    });
+
+    it("clearable shows a button named by the locale text when the value is not empty", () => {
+      render(Input, { props: { ariaLabel: "Q", clearable: true, modelValue: "abc" } });
+      expect(screen.getByRole("button", { name: "Clear" })).toBeTruthy();
+    });
+
+    it("does not render the clear button when the value is empty", () => {
+      render(Input, { props: { ariaLabel: "Q", clearable: true, modelValue: "" } });
+      expect(screen.queryByRole("button")).toBeNull();
+    });
+
+    it("does not render the clear button without clearable", () => {
+      render(Input, { props: { ariaLabel: "Q", modelValue: "abc" } });
+      expect(screen.queryByRole("button")).toBeNull();
+    });
+
+    it("does not render the clear button when disabled or readonly", () => {
+      const a = render(Input, { props: { ariaLabel: "A", clearable: true, modelValue: "x", disabled: true } });
+      expect(a.queryByRole("button")).toBeNull();
+      a.unmount();
+      const b = render(Input, { props: { ariaLabel: "B", clearable: true, modelValue: "x", readonly: true } });
+      expect(b.queryByRole("button")).toBeNull();
+    });
+
+    it("clicking clear empties the value, emits cleared and focuses the input", async () => {
+      const { emitted } = render(Input, {
+        props: { ariaLabel: "Q", clearable: true, modelValue: "abc" },
+      });
+      await fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+      expect(emitted()["update:modelValue"].at(-1)).toEqual([""]);
+      expect(emitted().valueChanged.at(-1)).toEqual([""]);
+      expect(emitted().cleared).toHaveLength(1);
+      expect(document.activeElement).toBe(screen.getByRole("textbox"));
+    });
+
+    it("Escape clears when clearable and the value is not empty", async () => {
+      const { emitted } = render(Input, {
+        props: { ariaLabel: "Q", clearable: true, modelValue: "abc" },
+      });
+      await fireEvent.keyDown(screen.getByRole("textbox"), { key: "Escape" });
+      expect(emitted()["update:modelValue"].at(-1)).toEqual([""]);
+      expect(emitted().cleared).toHaveLength(1);
+    });
+
+    it("Escape does nothing without clearable", async () => {
+      const { emitted } = render(Input, { props: { ariaLabel: "Q", modelValue: "abc" } });
+      await fireEvent.keyDown(screen.getByRole("textbox"), { key: "Escape" });
+      expect(emitted().cleared).toBeUndefined();
+    });
+
+    it("keeps type=search semantics", () => {
+      render(Input, { props: { ariaLabel: "Q", type: "search", clearable: true, modelValue: "a" } });
+      expect(screen.getByRole("searchbox")).toBeTruthy();
+    });
+
+    it("has no axe violations with icon + clearable", async () => {
+      const { container } = render(Input, {
+        props: { ariaLabel: "Q", icon: "search", clearable: true, modelValue: "abc" },
+      });
+      expect(await axe(container, axeOptions)).toHaveNoViolations();
+    });
+  });
 });

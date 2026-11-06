@@ -2,8 +2,9 @@
 import { isDev } from "../../internal/dev";
 import { useDeprecatedEvents } from "../../internal/deprecated-events";
 
-import { computed, ref, useId } from "vue";
+import { computed, ref, useId, useSlots } from "vue";
 import { useForwardedAttrs } from "../../internal/forward-attrs";
+import { useOnyxLocale } from "../../locale";
 import "./input.scss";
 
 export type InputType =
@@ -20,6 +21,8 @@ export type InputType =
 export type InputSize = "sm" | "md" | "lg";
 /** `pill` is the rounded search field: full radius, filled, no border, search glyph. */
 export type InputVariant = "default" | "pill";
+/** Built-in leading icon shortcut. */
+export type InputIcon = "search";
 
 const props = withDefaults(
   defineProps<{
@@ -50,6 +53,13 @@ const props = withDefaults(
      * sitting inline at its intrinsic width.
      */
     fluid?: boolean;
+    /** Decorative leading icon shortcut (`search`). The `leading` slot replaces it. */
+    icon?: InputIcon;
+    /**
+     * Shows a clear button while the value is not empty (not when disabled or
+     * readonly); Escape clears too. Emits `cleared` and returns focus to the input.
+     */
+    clearable?: boolean;
   }>(),
   {
     type: "text",
@@ -62,12 +72,16 @@ const props = withDefaults(
     disabled: false,
     readonly: false,
     fluid: false,
+    icon: undefined,
+    clearable: false,
   },
 );
 
 /** Emitted on every value change (in addition to v-model). */
 const emit = defineEmits<{
   valueChanged: [value: string];
+  /** Emitted after the clear button or Escape emptied the value. */
+  cleared: [];
   /** @deprecated Use `valueChanged`; still emitted until 1.0. */
   valueChange: [value: string];
 }>();
@@ -75,6 +89,8 @@ const emit = defineEmits<{
 /** Two-way bound value (v-model). */
 const value = defineModel<string>({ default: "" });
 
+const messages = useOnyxLocale();
+const slots = useSlots();
 const uid = useId();
 const inputId = `ui-input-${uid}`;
 
@@ -85,6 +101,15 @@ const { rootAttrs, controlAttrs, controlId, fieldInvalid } = useForwardedAttrs(i
 /** Invalido por su prop o por el UiFormField que lo envuelve. */
 const isInvalid = (): boolean => props.invalid || fieldInvalid();
 
+const showGlyph = computed(
+  () => !slots.leading && (props.variant === "pill" || props.icon === "search"),
+);
+const hasLeading = computed(() => !!slots.leading || showGlyph.value);
+const canClear = computed(
+  () => props.clearable && !props.disabled && !props.readonly && value.value !== "",
+);
+const hasTrailing = computed(() => !!slots.trailing || canClear.value);
+
 const rootClasses = computed(() => ({
   "ui-input": true,
   "ui-input--sm": props.size === "sm",
@@ -93,6 +118,8 @@ const rootClasses = computed(() => ({
   "ui-input--invalid": isInvalid(),
   "ui-input--disabled": props.disabled,
   "ui-input--fluid": props.fluid,
+  "ui-input--has-leading": hasLeading.value,
+  "ui-input--has-trailing": hasTrailing.value,
 }));
 
 function handleInput(event: Event): void {
@@ -103,6 +130,20 @@ function handleInput(event: Event): void {
   value.value = next;
   emit("valueChanged", next);
   emit("valueChange", next); // obsoleto, ver src/deprecations.ts
+}
+function clear(): void {
+  value.value = "";
+  emit("valueChanged", "");
+  emit("valueChange", "");
+  emit("cleared");
+  elemento.value?.focus();
+}
+
+function handleKeydown(event: KeyboardEvent): void {
+  if (event.key === "Escape" && canClear.value) {
+    event.preventDefault();
+    clear();
+  }
 }
 /**
  * Foco programatico. Sin esto, quien quiera enfocar la caja tiene que sacar el
@@ -133,8 +174,9 @@ if (isDev()) useDeprecatedEvents();
       label
     }}</label>
     <span class="ui-input__field" @click="focus()">
+      <span v-if="slots.leading" class="ui-input__leading"><slot name="leading" /></span>
       <svg
-        v-if="variant === 'pill'"
+        v-else-if="showGlyph"
         class="ui-input__glyph"
         viewBox="0 0 24 24"
         aria-hidden="true"
@@ -155,7 +197,22 @@ if (isDev()) useDeprecatedEvents();
         :aria-label="!label && ariaLabel ? ariaLabel : undefined"
         :aria-invalid="isInvalid() ? 'true' : undefined"
         @input="handleInput"
+        @keydown="handleKeydown"
       />
+      <span v-if="hasTrailing" class="ui-input__trailing">
+        <slot name="trailing" />
+        <button
+          v-if="canClear"
+          type="button"
+          class="ui-input__clear"
+          :aria-label="messages.inputClearLabel"
+          @click.stop="clear"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6L19 6.4 17.6 5 12 10.6 6.4 5Z" />
+          </svg>
+        </button>
+      </span>
     </span>
   </span>
 </template>

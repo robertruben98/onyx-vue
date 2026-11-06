@@ -43,6 +43,7 @@ export interface OnyxMessages {
   skeletonLabel: string;
   tagRemoveLabel: string;
   tabWarnText: string;
+  inputClearLabel: string;
   kpiStripLabel: string;
   filterBarSearchPlaceholder: string;
   filterBarSearchLabel: string;
@@ -138,6 +139,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "skeletonLabel": "Loading…",
   "tagRemoveLabel": "Remove",
   "tabWarnText": "Needs attention",
+  "inputClearLabel": "Clear",
   "kpiStripLabel": "Summary",
   "filterBarSearchPlaceholder": "filter",
   "filterBarSearchLabel": "Filter",
@@ -311,6 +313,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "skeletonLabel": "Cargando…",
   "tagRemoveLabel": "Eliminar",
   "tabWarnText": "Requiere atención",
+  "inputClearLabel": "Borrar",
   "kpiStripLabel": "Resumen",
   "filterBarSearchPlaceholder": "filtrar",
   "filterBarSearchLabel": "Filtrar",

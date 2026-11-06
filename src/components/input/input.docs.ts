@@ -43,6 +43,10 @@ export const inputDoc: ComponentDoc = {
     { name: "disabled", type: "boolean", default: "false", description: "Disabled state. Greys the text out; to show a value that cannot change, use `readonly`." },
     { name: "readonly", type: "boolean", default: "false", description: "The value can be read, selected and copied but not edited, in the normal text colour (a learner's answer after a check)." },
     { name: "fluid", type: "boolean", default: "false", description: "Block and full width: fills its column instead of sitting inline at its intrinsic width." },
+    { name: "icon", type: "'search'", default: "—", description: "Decorative leading icon (`aria-hidden`) inside the field. The `leading` slot replaces it; with `variant=\"pill\"` the pill's own glyph is used (never two)." },
+    { name: "clearable", type: "boolean", default: "false", description: "Shows a clear button (named by the locale `inputClearLabel`, \"Clear\") while the value is not empty and the field is neither disabled nor readonly. Clicking it, or pressing Escape, empties the value, emits `cleared` and returns focus to the input. Pair with `type=\"search\"` to keep native semantics." },
+    { name: "leading / trailing", type: "slots", default: "—", description: "Content placed inside the field before / after the text (an icon, a unit, a button). Trailing content sits before the clear button." },
+    { name: "@cleared", type: "() => void", default: "—", description: "Emitted after the clear button or Escape emptied the value (`v-model` and `@valueChanged` fire with `''` first)." },
     {
       name: "@valueChanged / @valueChange",
       type: "(value: string) => void",
@@ -74,6 +78,16 @@ export const inputDoc: ComponentDoc = {
       title: "Invalid and disabled",
       code: `<UiInput label="Invalid" invalid placeholder="Required" />
 <UiInput label="Disabled" disabled model-value="Read only" />`,
+    },
+    {
+      title: "Search icon and clearable",
+      code: `<UiInput v-model="q" type="search" icon="search" clearable aria-label="Search" placeholder="Search by repo, number or title" @cleared="n++" />
+<UiInput v-model="q" clearable label="Name with slots">
+  <template #leading>@</template>
+  <template #trailing>.com</template>
+</UiInput>
+<span>cleared {{ n }} times</span>`,
+      setup: () => ({ q: "onyx-vue", n: 0 }),
     },
     {
       title: "Programmatic focus",
