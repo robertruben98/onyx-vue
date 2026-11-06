@@ -2,6 +2,8 @@
 import { useOnyxLocale } from "../../locale";
 import { computed, ref, watch, nextTick, onBeforeUnmount, onMounted, useSlots } from "vue";
 import UiCheckbox from "../checkbox/Checkbox.vue";
+import UiMenu from "../menu/Menu.vue";
+import type { MenuItem } from "../menu/Menu.vue";
 import "./data-table.scss";
 
 export type RowKey = string | number;
@@ -21,6 +23,8 @@ export type SortDirection = "asc" | "desc";
  */
 export type DataTableMode = "paginated" | "virtual" | "plain";
 export type SelectionMode = "none" | "single" | "multiple";
+/** Vertical padding of the cells: `compact` uses a smaller space token. */
+export type DataTableDensity = "compact" | "comfortable";
 
 /** One level of the (multi-)column sort. */
 export interface SortState {
@@ -58,6 +62,17 @@ export interface DataTableColumn<T> {
    * tabular numerals): for identifiers, hashes and numbers.
    */
   mono?: boolean;
+  /**
+   * Numbers: end-aligned (unless `align` says otherwise) with tabular figures
+   * so digits line up. Unlike `mono` it keeps the body font family.
+   */
+  numeric?: boolean;
+  /**
+   * Maximum number of text lines the cell shows; the rest is clipped and the
+   * full text is in the cell's `title`. For a long secondary line that would
+   * otherwise stretch every row.
+   */
+  clamp?: number;
   /** CSS track size for this column (e.g. '8rem', 'minmax(0,2fr)'). */
   width?: string;
   /** Whether the column can be sorted. */
@@ -164,6 +179,15 @@ const props = withDefaults(
      * empty (the row actions), so that column is not an unnamed header.
      */
     actionsLabel?: string;
+    /** Cell vertical padding: `compact` maps to a smaller `--ui-space-*` token. */
+    density?: DataTableDensity;
+    /** Paints alternate body rows with `--ui-data-table-stripe-bg`. */
+    striped?: boolean;
+    /**
+     * Shows a "Columns" menu above the grid to show or hide columns. The
+     * choice is `v-model:hiddenColumns`; the last visible column cannot be hidden.
+     */
+    columnsMenu?: boolean;
   }>(),
   {
     rows: () => [],
@@ -186,6 +210,9 @@ const props = withDefaults(
     total: undefined,
     offset: 0,
     actionsLabel: "",
+    density: "comfortable",
+    striped: false,
+    columnsMenu: false,
   },
 );
 
@@ -236,6 +263,12 @@ const selected = defineModel<Set<RowKey>>("selected", {
 const expanded = defineModel<Set<RowKey>>("expanded", {
   default: () => new Set(),
 });
+
+/**
+ * Ids of the columns the user hid. Two-way bindable via v-model:hiddenColumns,
+ * so the app can persist the choice. Applies with or without `columnsMenu`.
+ */
+const hiddenColumns = defineModel<string[]>("hiddenColumns", { default: () => [] });
 
 const root = ref<HTMLElement | null>(null);
 
@@ -339,12 +372,46 @@ onBeforeUnmount(() => {
   if (typeof window !== "undefined") window.removeEventListener("resize", onResize);
 });
 
-/** The columns that fit the current viewport. */
-const shownColumns = computed<DataTableColumn<T>[]>(() =>
-  wantsWidth.value
-    ? props.columns.filter((c) => c.hideBelow == null || viewportWidth.value >= c.hideBelow)
-    : props.columns,
-);
+/** The columns that fit the current viewport and were not hidden by the user. */
+const shownColumns = computed<DataTableColumn<T>[]>(() => {
+  const hidden = hiddenColumns.value;
+  const cols = hidden.length ? props.columns.filter((c) => !hidden.includes(c.id)) : props.columns;
+  return wantsWidth.value
+    ? cols.filter((c) => c.hideBelow == null || viewportWidth.value >= c.hideBelow)
+    : cols;
+});
+
+/** Entries of the columns menu: every column with a header, checked when shown. */
+const columnMenuItems = computed<MenuItem[]>(() => {
+  const labelled = props.columns.filter((c) => c.header !== "");
+  const visible = labelled.filter((c) => !hiddenColumns.value.includes(c.id));
+  return labelled.map((c) => {
+    const checked = !hiddenColumns.value.includes(c.id);
+    return { id: c.id, label: c.header, checked, disabled: checked && visible.length <= 1 };
+  });
+});
+
+function onColumnToggled(item: MenuItem): void {
+  if (item.id == null || item.disabled) return;
+  hiddenColumns.value = hiddenColumns.value.includes(item.id)
+    ? hiddenColumns.value.filter((id) => id !== item.id)
+    : [...hiddenColumns.value, item.id];
+}
+
+/** `numeric` end-aligns unless the column states its own alignment. */
+function alignOf(col: DataTableColumn<T>): CellAlign | undefined {
+  return col.align ?? (col.numeric ? "end" : undefined);
+}
+
+/** Style of the clamp wrapper: the column's line count as a custom property. */
+function clampStyle(col: DataTableColumn<T>): Record<string, string> {
+  return { "--ui-dt-clamp": String(col.clamp) };
+}
+
+/** `title` of the clamp wrapper: the full text when the value is plain. */
+function clampTitle(value: unknown): string | undefined {
+  return typeof value === "string" || typeof value === "number" ? String(value) : undefined;
+}
 
 /** CSS grid track template derived from column widths (+ selection column). */
 const templateColumns = computed(() => {
@@ -677,7 +744,22 @@ function onGridKeydown(event: KeyboardEvent): void {
 </script>
 
 <template>
-  <span ref="root" :class="['ui-data-table', { 'ui-data-table--stacked': stacked }]">
+  <span
+    ref="root"
+    :class="[
+      'ui-data-table',
+      {
+        'ui-data-table--stacked': stacked,
+        'ui-data-table--compact': density === 'compact',
+        'ui-data-table--striped': striped,
+      },
+    ]"
+  >
+    <div v-if="columnsMenu" class="ui-dt__toolbar">
+      <UiMenu :items="columnMenuItems" :label="messages.dataTableColumnsLabel" @item-selected="onColumnToggled">
+        {{ messages.dataTableColumnsLabel }}
+      </UiMenu>
+    </div>
     <div
       class="ui-dt__grid"
       :role="role"
@@ -723,8 +805,8 @@ function onGridKeydown(event: KeyboardEvent): void {
           role="columnheader"
           class="ui-dt__th"
           :class="{
-            'ui-dt__cell--center': col.align === 'center',
-            'ui-dt__cell--end': col.align === 'end',
+            'ui-dt__cell--center': alignOf(col) === 'center',
+            'ui-dt__cell--end': alignOf(col) === 'end',
           }"
           :aria-sort="ariaSort(col)"
           data-row="0"
@@ -798,6 +880,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                     'ui-dt__tr--selected':
                       selectable !== 'none' && isSelected(item.row),
                     'ui-dt__tr--activatable': activatable,
+                    'ui-dt__tr--striped': striped && item.index % 2 === 1,
                   },
                   rowClass ? rowClass(item.row) : undefined,
                 ]"
@@ -828,16 +911,32 @@ function onGridKeydown(event: KeyboardEvent): void {
                   :role="cellRole"
                   class="ui-dt__td"
                   :class="{
-                    'ui-dt__cell--center': col.align === 'center',
-                    'ui-dt__cell--end': col.align === 'end',
+                    'ui-dt__cell--center': alignOf(col) === 'center',
+                    'ui-dt__cell--end': alignOf(col) === 'end',
                     'ui-dt__cell--mono': col.mono,
+                    'ui-dt__cell--numeric': col.numeric,
                   }"
                   :data-row="item.index + 1"
                   :data-col="dataColOf(ci)"
                   :data-label="col.header"
                   :tabindex="cellTabindex(item.index + 1, dataColOf(ci))"
                 >
+                  <span
+                    v-if="col.clamp"
+                    class="ui-dt__clamp"
+                    :style="clampStyle(col)"
+                    :title="clampTitle(cellValue(col, item.row))"
+                  >
+                    <slot
+                      :name="'cell-' + col.id"
+                      :row="item.row"
+                      :value="cellValue(col, item.row)"
+                    >
+                      {{ cellValue(col, item.row) }}
+                    </slot>
+                  </span>
                   <slot
+                    v-else
                     :name="'cell-' + col.id"
                     :row="item.row"
                     :value="cellValue(col, item.row)"
@@ -863,6 +962,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                 'ui-dt__tr--selected': selectable !== 'none' && isSelected(row),
                 'ui-dt__tr--expanded': isExpanded(row),
                 'ui-dt__tr--activatable': activatable,
+                'ui-dt__tr--striped': striped && i % 2 === 1,
               },
               rowClass ? rowClass(row) : undefined,
             ]"
@@ -890,16 +990,32 @@ function onGridKeydown(event: KeyboardEvent): void {
               :role="cellRole"
               class="ui-dt__td"
               :class="{
-                'ui-dt__cell--center': col.align === 'center',
-                'ui-dt__cell--end': col.align === 'end',
+                'ui-dt__cell--center': alignOf(col) === 'center',
+                'ui-dt__cell--end': alignOf(col) === 'end',
                 'ui-dt__cell--mono': col.mono,
+                'ui-dt__cell--numeric': col.numeric,
               }"
               :data-row="i + 1"
               :data-col="dataColOf(ci)"
               :data-label="col.header"
               :tabindex="cellTabindex(i + 1, dataColOf(ci))"
             >
+              <span
+                v-if="col.clamp"
+                class="ui-dt__clamp"
+                :style="clampStyle(col)"
+                :title="clampTitle(cellValue(col, row))"
+              >
+                <slot
+                  :name="'cell-' + col.id"
+                  :row="row"
+                  :value="cellValue(col, row)"
+                >
+                  {{ cellValue(col, row) }}
+                </slot>
+              </span>
               <slot
+                v-else
                 :name="'cell-' + col.id"
                 :row="row"
                 :value="cellValue(col, row)"

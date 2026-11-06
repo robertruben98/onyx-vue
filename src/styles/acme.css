@@ -9,4 +9,6 @@
   --ui-color-primary-active: #5b21b6;
   --ui-focus-ring: #8b5cf6;
   --ui-radius: 9999px;
+  /* Surfaces are not re-mapped here, but the preset states its stripe. */
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
 }

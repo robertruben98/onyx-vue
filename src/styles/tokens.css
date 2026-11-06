@@ -172,6 +172,7 @@
   --ui-data-table-header-font-weight: var(--ui-font-weight-medium);
   --ui-data-table-cell-padding-x: var(--ui-space-3);
   --ui-data-table-cell-padding-y: var(--ui-space-2);
+  --ui-data-table-cell-padding-y-compact: var(--ui-space-1);
   --ui-data-table-empty-padding: var(--ui-space-5);
   --ui-data-table-footer-gap: var(--ui-space-3);
   --ui-data-table-control-padding-x: var(--ui-space-2);
@@ -378,6 +379,7 @@
   --ui-data-table-header-bg: var(--ui-color-surface-hover);
   --ui-data-table-header-text: var(--ui-color-text);
   --ui-data-table-row-hover-bg: var(--ui-color-surface-hover);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-data-table-row-selected-bg: var(--ui-color-info-surface);
   --ui-data-table-sort-indicator: var(--ui-color-text-muted);
   --ui-data-table-sort-indicator-active: var(--ui-color-primary);

@@ -185,6 +185,7 @@
   --ui-color-on-primary: var(--ui-chat-on-accent);
   --ui-color-surface: var(--ui-chat-surface);
   --ui-color-surface-hover: var(--ui-chat-surface-hover);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-color-text: var(--ui-chat-ink);
   --ui-color-text-muted: var(--ui-chat-ink-soft);
   --ui-color-border: var(--ui-chat-line);
@@ -216,6 +217,7 @@
   --ui-chat-outer-bg: #262524;
   --ui-chat-surface: #161717;
   --ui-chat-surface-hover: rgba(255, 255, 255, 0.1);
+  --ui-data-table-stripe-bg: color-mix(in srgb, var(--ui-color-surface-hover) 50%, var(--ui-color-surface));
   --ui-chat-line: rgba(255, 255, 255, 0.1);
   --ui-chat-outline: rgba(255, 255, 255, 0.1);
   --ui-chat-ink: #fafafa;
