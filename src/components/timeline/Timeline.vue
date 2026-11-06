@@ -18,6 +18,26 @@ export interface TimelineEvent {
   tagTone?: TagVariant;
 }
 
+/** Tone of a status item's marker. */
+export type TimelineTone = "success" | "warning" | "danger" | "info" | "muted";
+
+/** `list` is the vertical history; `compact` is one inline marker per item. */
+export type TimelineVariant = "list" | "compact";
+
+/** One entry of the status history (`items`): what happened, with a state. */
+export interface TimelineItem {
+  id: string | number;
+  title: string;
+  /** Secondary line under the title. */
+  meta?: string;
+  /** When it happened, shown beside the title (any text). */
+  time?: string;
+  /** Colour and icon of the marker. Default `muted`. */
+  tone?: TimelineTone;
+  /** The event in progress: pulsing marker and `aria-current="step"`. */
+  active?: boolean;
+}
+
 /** How each event's date is written. */
 export type TimelineDateFormat = "absolute" | "relative";
 
@@ -58,7 +78,14 @@ import "./timeline.scss";
 const props = withDefaults(
   defineProps<{
     /** The events, in any order: the timeline sorts them newest first. */
-    events: TimelineEvent[];
+    events?: TimelineEvent[];
+    /**
+     * Status history instead of dated events: items keep the order given, each
+     * with a tone marker (colour plus icon). When set, `events` is ignored.
+     */
+    items?: TimelineItem[];
+    /** With `items`: `compact` renders one inline marker per item (tooltip + accessible name). */
+    variant?: TimelineVariant;
     /** `absolute` writes the date; `relative` writes its age (`3d`) with the date as tooltip. */
     dateFormat?: TimelineDateFormat;
     /** Locale for absolute dates. Defaults to the browser's. */
@@ -77,6 +104,9 @@ const props = withDefaults(
     emptyText?: string;
   }>(),
   {
+    events: () => [],
+    items: undefined,
+    variant: "list",
     dateFormat: "absolute",
     locale: undefined,
     dateOptions: () => ({ dateStyle: "medium" }),
@@ -91,16 +121,39 @@ const props = withDefaults(
 defineSlots<{
   /** The body of one event. Replaces `body`. */
   event?: (props: { event: TimelineEvent; index: number }) => unknown;
+  /** With `items`: replaces the title / time / meta of one item. */
+  item?: (props: { item: TimelineItem }) => unknown;
   /** Replaces the empty text. */
   empty?: () => unknown;
 }>();
 
-const items = computed(() =>
+const sorted = computed(() =>
   sortNewestFirst(props.events).map((event, index) => {
     const date = toDate(event.date);
     return { event, index, date, key: event.id ?? `${index}:${event.title}` };
   }),
 );
+
+/** Glyph per tone, so the state is not told by colour alone (WCAG 1.4.1). */
+const TONE_ICONS: Record<TimelineTone, string> = {
+  success: "✓",
+  warning: "⚠",
+  danger: "✕",
+  info: "ℹ",
+  muted: "•",
+};
+const statusMode = computed(() => props.items !== undefined);
+const compact = computed(() => props.variant === "compact");
+function icon(item: TimelineItem): string {
+  return TONE_ICONS[item.tone ?? "muted"];
+}
+function statusClasses(item: TimelineItem) {
+  return [
+    "ui-timeline__status",
+    `ui-timeline__status--${item.tone ?? "muted"}`,
+    { "ui-timeline__status--active": !!item.active },
+  ];
+}
 
 const formatter = computed(() => new Intl.DateTimeFormat(props.locale, props.dateOptions));
 
@@ -114,8 +167,40 @@ function absolute(date: Date): string {
     An ordered list, because the order is the content: newest first, and the
     story reads differently in any other order.
   -->
-  <ol v-if="items.length" class="ui-timeline" :aria-label="label">
-    <li v-for="item in items" :key="item.key" class="ui-timeline__event">
+  <ol
+    v-if="statusMode"
+    :class="['ui-timeline', 'ui-timeline--status', { 'ui-timeline--compact': compact }]"
+    :aria-label="label"
+  >
+    <li
+      v-for="item in items"
+      :key="item.id"
+      class="ui-timeline__step"
+      :aria-current="item.active ? 'step' : undefined"
+    >
+      <span
+        v-if="compact"
+        :class="statusClasses(item)"
+        role="img"
+        :title="item.title"
+        :aria-label="item.title"
+      />
+      <template v-else>
+        <span :class="statusClasses(item)" aria-hidden="true">{{ icon(item) }}</span>
+        <div class="ui-timeline__step-body">
+          <slot name="item" :item="item">
+            <div class="ui-timeline__head">
+              <span class="ui-timeline__title">{{ item.title }}</span>
+              <span v-if="item.time" class="ui-timeline__date">{{ item.time }}</span>
+            </div>
+            <div v-if="item.meta" class="ui-timeline__body">{{ item.meta }}</div>
+          </slot>
+        </div>
+      </template>
+    </li>
+  </ol>
+  <ol v-else-if="sorted.length" class="ui-timeline" :aria-label="label">
+    <li v-for="item in sorted" :key="item.key" class="ui-timeline__event">
       <span class="ui-timeline__marker" aria-hidden="true" />
       <div class="ui-timeline__head">
         <template v-if="item.date">

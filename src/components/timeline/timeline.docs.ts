@@ -16,6 +16,9 @@ export const timelineDoc: ComponentDoc = {
     { name: "units", type: "RelativeUnits", default: "m / h / d / mo", description: "Suffixes of relative dates, for a page in another language." },
     { name: "label", type: "string", default: "'History'", description: "Accessible name of the list." },
     { name: "emptyText", type: "string", default: "'Nothing has happened yet'", description: "Shown when there are no events." },
+    { name: "items", type: "TimelineItem[]", default: "—", description: "Status history instead of `events`: `{ id, title, meta?, time?, tone?, active? }` in the given order. `tone` is `success | warning | danger | info | muted` (default `muted`); each marker carries an icon as well as its colour. `active` pulses the marker (not under `prefers-reduced-motion`) and sets `aria-current=\"step\"`." },
+    { name: "variant", type: "'list' | 'compact'", default: "'list'", description: "With `items`: `compact` renders one inline marker per item (●●○) for table cells; its title is the tooltip and the accessible name." },
+    { name: "#item", type: "slot { item }", default: "title / time / meta", description: "With `items`: replaces the content of one item (list variant)." },
     { name: "#event", type: "slot { event, index }", default: "body", description: "The body of one event. Replaces `body`." },
     { name: "#empty", type: "slot", default: "emptyText", description: "Replaces the empty text." },
   ],
@@ -46,6 +49,31 @@ export const timelineDoc: ComponentDoc = {
           ],
         };
       },
+    },
+    {
+      title: "Status history",
+      description: "`items` keeps the order given; each marker has an icon besides its colour and the active one pulses.",
+      code: `<UiTimeline :items="items" label="Lifecycle" />`,
+      setup: () => ({
+        items: [
+          { id: 1, title: "Opened", time: "10:02", tone: "info" },
+          { id: 2, title: "Round 1", meta: "2 findings · tests: OK · 5.4 s", time: "10:20", tone: "warning" },
+          { id: 3, title: "Round 2", meta: "0 findings · tests: OK", time: "10:41", tone: "success" },
+          { id: 4, title: "Publishing", meta: "waiting for CI", time: "10:50", tone: "info", active: true },
+        ],
+      }),
+    },
+    {
+      title: "Compact",
+      description: "Inline markers for a table cell; hover a marker for its title.",
+      code: `<UiTimeline variant="compact" label="Rounds" :items="items" />`,
+      setup: () => ({
+        items: [
+          { id: 1, title: "Round 1: 2 findings", tone: "warning" },
+          { id: 2, title: "Round 2: 0 findings", tone: "success" },
+          { id: 3, title: "Round 3: pending" },
+        ],
+      }),
     },
     {
       title: "Empty",
