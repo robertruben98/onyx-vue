@@ -135,6 +135,35 @@ const props = withDefaults(
      * and plain modes only: virtual scroll needs rows of one fixed height.
      */
     stackBelow?: number;
+    /**
+     * Semantics of the container. `grid` (default) is an interactive widget:
+     * roving focus over every cell, arrow-key navigation, one Tab stop.
+     * `table` is native table semantics: no roving tabindex, no arrow keys,
+     * the natural Tab order reaches every link, button and row checkbox, and
+     * the checked checkbox (not `aria-selected`) carries the selection. Use it
+     * when the cells hold their own controls and the table is read, not
+     * navigated like a spreadsheet.
+     */
+    role?: "grid" | "table";
+    /**
+     * Accessible name of each row's selection checkbox, e.g.
+     * `(row) => "Select " + row.title`. Without it every checkbox is named
+     * "Select row" and a screen reader cannot tell them apart.
+     */
+    rowLabel?(row: T): string;
+    /**
+     * The whole list's size when `rows` is only one page of it (server-side
+     * pagination): `aria-rowcount` becomes `total + 1`. The rows are then
+     * rendered as given: no client-side paging and no footer.
+     */
+    total?: number;
+    /** Index of the first row in `rows` within the whole list (with `total`). */
+    offset?: number;
+    /**
+     * Visually hidden header text for the trailing column whose `header` is
+     * empty (the row actions), so that column is not an unnamed header.
+     */
+    actionsLabel?: string;
   }>(),
   {
     rows: () => [],
@@ -152,6 +181,11 @@ const props = withDefaults(
     rowClass: undefined,
     activatable: false,
     stackBelow: 0,
+    role: "grid",
+    rowLabel: undefined,
+    total: undefined,
+    offset: 0,
+    actionsLabel: "",
   },
 );
 
@@ -253,9 +287,9 @@ const sorted = computed<T[]>(() => {
   });
 });
 
-const total = computed(() => sorted.value.length);
+const totalRows = computed(() => sorted.value.length);
 const pageCount = computed(() =>
-  Math.max(1, Math.ceil(total.value / pageSize.value)),
+  Math.max(1, Math.ceil(totalRows.value / pageSize.value)),
 );
 const currentPage = computed(() =>
   Math.min(Math.max(0, pageIndex.value), pageCount.value - 1),
@@ -265,18 +299,20 @@ const currentPage = computed(() =>
 const visibleRows = computed<T[]>(() => {
   // `virtual` recorta luego, por scroll; `plain` no recorta nunca.
   if (props.mode === "virtual" || props.mode === "plain") return sorted.value;
+  // Externally paginated: `rows` already is the page.
+  if (props.total != null) return sorted.value;
   const start = currentPage.value * pageSize.value;
   return sorted.value.slice(start, start + pageSize.value);
 });
 
 const showFooter = computed(
-  () => props.mode === "paginated" && !props.loading && total.value > 0,
+  () => props.mode === "paginated" && props.total == null && !props.loading && totalRows.value > 0,
 );
 const rangeStart = computed(() =>
-  total.value ? currentPage.value * pageSize.value + 1 : 0,
+  totalRows.value ? currentPage.value * pageSize.value + 1 : 0,
 );
 const rangeEnd = computed(() =>
-  Math.min((currentPage.value + 1) * pageSize.value, total.value),
+  Math.min((currentPage.value + 1) * pageSize.value, totalRows.value),
 );
 
 // ----------------------------------------------------------------------------
@@ -323,7 +359,29 @@ const colCount = computed(
   () => shownColumns.value.length + (props.selectable !== "none" ? 1 : 0),
 );
 
-const ariaRowCount = computed(() => props.rows.length + 1);
+const ariaRowCount = computed(() => (props.total ?? props.rows.length) + 1);
+
+const isTable = computed(() => props.role === "table");
+/** Role of a body cell: `cell` in a table, `gridcell` in a grid. */
+const cellRole = computed(() => (isTable.value ? "cell" : "gridcell"));
+/** Offset added to a row's position for `aria-rowindex` (external pagination). */
+const rowIndexBase = computed(() => (props.total != null ? props.offset : 0));
+
+/** Roving tabindex of a cell; a table has none (natural Tab order). */
+function cellTabindex(row: number, col: number): 0 | -1 | undefined {
+  if (isTable.value) return undefined;
+  return isActiveCell(row, col) ? 0 : -1;
+}
+
+function rowCheckboxLabel(row: T): string {
+  return props.rowLabel ? props.rowLabel(row) : messages.selectRow;
+}
+
+/** Header text for the actions column (the last one, when its header is empty). */
+function actionsText(col: DataTableColumn<T>, ci: number): string {
+  if (!props.actionsLabel || col.header !== "") return "";
+  return ci === shownColumns.value.length - 1 ? props.actionsLabel : "";
+}
 
 // ----------------------------------------------------------------------------
 // Selection
@@ -622,7 +680,7 @@ function onGridKeydown(event: KeyboardEvent): void {
   <span ref="root" :class="['ui-data-table', { 'ui-data-table--stacked': stacked }]">
     <div
       class="ui-dt__grid"
-      role="grid"
+      :role="role"
       :aria-label="caption || undefined"
       :aria-rowcount="ariaRowCount"
       :aria-colcount="colCount"
@@ -631,8 +689,8 @@ function onGridKeydown(event: KeyboardEvent): void {
         maxHeight: maxHeight || undefined,
         overflowY: maxHeight ? 'auto' : undefined,
       }"
-      @keydown="onGridKeydown"
-      @focusin="onGridFocusin"
+      @keydown="!isTable && onGridKeydown($event)"
+      @focusin="!isTable && onGridFocusin($event)"
     >
       <!-- Header row -->
       <div
@@ -647,12 +705,12 @@ function onGridKeydown(event: KeyboardEvent): void {
           class="ui-dt__th ui-dt__cell--select"
           data-row="0"
           data-col="0"
-          :tabindex="isActiveCell(0, 0) ? 0 : -1"
+          :tabindex="cellTabindex(0, 0)"
         >
           <UiCheckbox
             v-if="selectable === 'multiple'"
             :aria-label="messages.selectAllRows"
-            :tabindex="-1"
+            :tabindex="isTable ? undefined : -1"
             :model-value="allSelected"
             :indeterminate="someSelected"
             @update:model-value="toggleAll($event)"
@@ -671,13 +729,13 @@ function onGridKeydown(event: KeyboardEvent): void {
           :aria-sort="ariaSort(col)"
           data-row="0"
           :data-col="dataColOf(ci)"
-          :tabindex="isActiveCell(0, dataColOf(ci)) ? 0 : -1"
+          :tabindex="cellTabindex(0, dataColOf(ci))"
         >
           <button
             v-if="col.sortable"
             type="button"
             class="ui-dt__sort"
-            tabindex="-1"
+            :tabindex="isTable ? undefined : -1"
             @click="toggleSort(col, $event)"
           >
             <span>{{ col.header }}</span>
@@ -687,6 +745,9 @@ function onGridKeydown(event: KeyboardEvent): void {
               <template v-else>↕</template>
             </span>
           </button>
+          <template v-else-if="actionsText(col, ci)">
+            <span class="ui-dt__sr-only">{{ actionsText(col, ci) }}</span>
+          </template>
           <template v-else>{{ col.header }}</template>
         </div>
       </div>
@@ -699,13 +760,13 @@ function onGridKeydown(event: KeyboardEvent): void {
              aria-required-children, critico). El aviso de carga sigue siendo
              un `status` para que se anuncie. -->
         <div v-if="loading" class="ui-dt__status-row" role="row">
-          <div class="ui-dt__status" role="gridcell" :aria-colspan="colCount">
+          <div class="ui-dt__status" :role="cellRole" :aria-colspan="colCount">
             <span role="status">{{ messages.loadingEllipsis }}</span>
           </div>
         </div>
 
         <div v-else-if="!visibleRows.length" class="ui-dt__status-row" role="row">
-          <div class="ui-dt__status" role="gridcell" :aria-colspan="colCount">
+          <div class="ui-dt__status" :role="cellRole" :aria-colspan="colCount">
             {{ emptyText }}
           </div>
         </div>
@@ -728,9 +789,9 @@ function onGridKeydown(event: KeyboardEvent): void {
                 :key="rowKeyOf(item.row)"
                 role="row"
                 class="ui-dt__tr"
-                :aria-rowindex="item.index + 2"
+                :aria-rowindex="rowIndexBase + item.index + 2"
                 :aria-selected="
-                  selectable !== 'none' ? isSelected(item.row) : undefined
+                  selectable !== 'none' && !isTable ? isSelected(item.row) : undefined
                 "
                 :class="[
                   {
@@ -748,15 +809,15 @@ function onGridKeydown(event: KeyboardEvent): void {
               >
                 <div
                   v-if="selectable !== 'none'"
-                  role="gridcell"
+                  :role="cellRole"
                   class="ui-dt__td ui-dt__cell--select"
                   :data-row="item.index + 1"
                   data-col="0"
-                  :tabindex="isActiveCell(item.index + 1, 0) ? 0 : -1"
+                  :tabindex="cellTabindex(item.index + 1, 0)"
                 >
                   <UiCheckbox
-                    :aria-label="messages.selectRow"
-                    :tabindex="-1"
+                    :aria-label="rowCheckboxLabel(item.row)"
+                    :tabindex="isTable ? undefined : -1"
                     :model-value="isSelected(item.row)"
                     @update:model-value="toggleRow(item.row, $event)"
                   />
@@ -764,7 +825,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                 <div
                   v-for="(col, ci) in shownColumns"
                   :key="col.id"
-                  role="gridcell"
+                  :role="cellRole"
                   class="ui-dt__td"
                   :class="{
                     'ui-dt__cell--center': col.align === 'center',
@@ -774,7 +835,7 @@ function onGridKeydown(event: KeyboardEvent): void {
                   :data-row="item.index + 1"
                   :data-col="dataColOf(ci)"
                   :data-label="col.header"
-                  :tabindex="isActiveCell(item.index + 1, dataColOf(ci)) ? 0 : -1"
+                  :tabindex="cellTabindex(item.index + 1, dataColOf(ci))"
                 >
                   <slot
                     :name="'cell-' + col.id"
@@ -795,8 +856,8 @@ function onGridKeydown(event: KeyboardEvent): void {
           <div
             role="row"
             class="ui-dt__tr"
-            :aria-rowindex="i + 2"
-            :aria-selected="selectable !== 'none' ? isSelected(row) : undefined"
+            :aria-rowindex="rowIndexBase + i + 2"
+            :aria-selected="selectable !== 'none' && !isTable ? isSelected(row) : undefined"
             :class="[
               {
                 'ui-dt__tr--selected': selectable !== 'none' && isSelected(row),
@@ -810,15 +871,15 @@ function onGridKeydown(event: KeyboardEvent): void {
           >
             <div
               v-if="selectable !== 'none'"
-              role="gridcell"
+              :role="cellRole"
               class="ui-dt__td ui-dt__cell--select"
               :data-row="i + 1"
               data-col="0"
-              :tabindex="isActiveCell(i + 1, 0) ? 0 : -1"
+              :tabindex="cellTabindex(i + 1, 0)"
             >
               <UiCheckbox
-                :aria-label="messages.selectRow"
-                :tabindex="-1"
+                :aria-label="rowCheckboxLabel(row)"
+                :tabindex="isTable ? undefined : -1"
                 :model-value="isSelected(row)"
                 @update:model-value="toggleRow(row, $event)"
               />
@@ -826,7 +887,7 @@ function onGridKeydown(event: KeyboardEvent): void {
             <div
               v-for="(col, ci) in shownColumns"
               :key="col.id"
-              role="gridcell"
+              :role="cellRole"
               class="ui-dt__td"
               :class="{
                 'ui-dt__cell--center': col.align === 'center',
@@ -836,7 +897,7 @@ function onGridKeydown(event: KeyboardEvent): void {
               :data-row="i + 1"
               :data-col="dataColOf(ci)"
               :data-label="col.header"
-              :tabindex="isActiveCell(i + 1, dataColOf(ci)) ? 0 : -1"
+              :tabindex="cellTabindex(i + 1, dataColOf(ci))"
             >
               <slot
                 :name="'cell-' + col.id"
@@ -855,7 +916,7 @@ function onGridKeydown(event: KeyboardEvent): void {
             metido dentro de una tabla sin pensarlo.
           -->
           <div v-if="isExpanded(row)" role="row" class="ui-dt__detail">
-            <div role="gridcell" class="ui-dt__detail-cell">
+            <div :role="cellRole" class="ui-dt__detail-cell">
               <slot name="row-detail" :row="row" />
             </div>
           </div>
@@ -880,7 +941,7 @@ function onGridKeydown(event: KeyboardEvent): void {
       </label>
 
       <span class="ui-dt__range" aria-live="polite">
-        {{ rangeStart }}–{{ rangeEnd }} of {{ total }}
+        {{ rangeStart }}–{{ rangeEnd }} of {{ totalRows }}
       </span>
 
       <div class="ui-dt__pager">

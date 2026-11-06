@@ -271,3 +271,16 @@
 .ui-data-table--stacked .ui-dt__td[data-label=""]::before {
   display: none;
 }
+
+// Visually hidden but still in the accessibility tree (the actions column's name).
+.ui-dt__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

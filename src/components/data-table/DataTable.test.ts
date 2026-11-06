@@ -1500,3 +1500,119 @@ describe("DataTable (Vue) — mono columns", () => {
     expect(container.querySelectorAll(".ui-dt__th.ui-dt__cell--mono").length).toBe(0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// role="table" mode, named row checkboxes, external pagination
+// ---------------------------------------------------------------------------
+describe("DataTable (Vue) — role=table mode", () => {
+  const tableColumns: DataTableColumn<Person>[] = [
+    { id: "name", header: "Name", field: "name", sortable: true },
+    { id: "role", header: "Role", field: "role" },
+    { id: "actions", header: "", width: "6rem" },
+  ];
+  const rowLabel = (row: Person) => `Select ${row.name}#${row.id}`;
+
+  function renderTable(props: Record<string, unknown> = {}) {
+    return render(DataTable, {
+      props: {
+        caption: "People",
+        columns: tableColumns,
+        rows: ROWS,
+        rowKey: "id",
+        role: "table",
+        selectable: "multiple",
+        rowLabel,
+        actionsLabel: "Actions",
+        ...props,
+      },
+      slots: { "cell-actions": '<button type="button">Open</button>' },
+    });
+  }
+
+  it("renders role=table and no cell has a tabindex", () => {
+    const { container } = renderTable();
+    expect(screen.getByRole("table", { name: "People" })).toBeTruthy();
+    expect(screen.queryByRole("grid")).toBeNull();
+    expect(container.querySelectorAll("[role=cell], [role=columnheader], [role=gridcell]").length).toBeGreaterThan(0);
+    expect(container.querySelectorAll("[role=gridcell]")).toHaveLength(0);
+    for (const cell of container.querySelectorAll("[role=cell], [role=columnheader]")) {
+      expect(cell.hasAttribute("tabindex")).toBe(false);
+    }
+  });
+
+  it("keeps role=grid as the default", () => {
+    render(DataTable, { props: { caption: "People", columns: COLUMNS, rows: ROWS } });
+    expect(screen.getByRole("grid", { name: "People" })).toBeTruthy();
+  });
+
+  it("names each row checkbox from rowLabel and Tab reaches it", async () => {
+    const user = (await import("@testing-library/user-event")).default.setup();
+    renderTable();
+    const first = screen.getByRole("checkbox", { name: "Select Ada#1" }) as HTMLInputElement;
+    const second = screen.getByRole("checkbox", { name: "Select Grace#2" }) as HTMLInputElement;
+    expect(first.getAttribute("tabindex")).not.toBe("-1");
+    expect(second.getAttribute("tabindex")).not.toBe("-1");
+    await user.tab(); // select all
+    await user.tab(); // sort button
+    await user.tab(); // row 1 checkbox
+    expect(document.activeElement).toBe(first);
+    await user.tab(); // row 1 action button
+    await user.tab();
+    expect(document.activeElement).toBe(second);
+  });
+
+  it("falls back to the default row label without rowLabel", () => {
+    renderTable({ rowLabel: undefined });
+    expect(screen.getAllByRole("checkbox", { name: "Select row" })).toHaveLength(2);
+  });
+
+  it("does not put aria-selected on rows; the checkbox carries the state", async () => {
+    const { container } = renderTable({ selected: new Set([1]) });
+    expect(container.querySelectorAll("[aria-selected]")).toHaveLength(0);
+    expect((screen.getByRole("checkbox", { name: "Select Ada#1" }) as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByRole("checkbox", { name: "Select Grace#2" }) as HTMLInputElement).checked).toBe(false);
+  });
+
+  it("does not run roving grid navigation", async () => {
+    renderTable();
+    const sort = screen.getByRole("button", { name: /Name/ });
+    expect(sort.getAttribute("tabindex")).not.toBe("-1");
+    sort.focus();
+    await fireEvent.keyDown(sort, { key: "ArrowDown" });
+    expect(document.activeElement).toBe(sort);
+  });
+
+  it("names the actions column header with a visually hidden label", () => {
+    renderTable();
+    const headers = screen.getAllByRole("columnheader");
+    expect(headers[headers.length - 1].textContent?.trim()).toBe("Actions");
+    expect(screen.getByRole("columnheader", { name: "Actions" })).toBeTruthy();
+  });
+
+  it("reports the whole list with total and offset", () => {
+    const { container } = renderTable({ total: 74, offset: 20 });
+    expect(screen.getByRole("table").getAttribute("aria-rowcount")).toBe("75");
+    const rows = container.querySelectorAll(".ui-dt__body [role=row]");
+    expect(rows[0].getAttribute("aria-rowindex")).toBe("22");
+    expect(rows[1].getAttribute("aria-rowindex")).toBe("23");
+  });
+
+  it("does not page rows client-side nor draw a footer when total is given", () => {
+    const many = Array.from({ length: 12 }, (_, i) => ({ id: i + 1, name: `P${i}`, role: "x" }));
+    const { container } = renderTable({ rows: many, total: 74, offset: 0, pageSize: 5 });
+    expect(container.querySelectorAll(".ui-dt__body [role=row]")).toHaveLength(12);
+    expect(container.querySelector(".ui-dt__footer")).toBeNull();
+  });
+
+  it("has no axe violations with selection, sorting and an actions column", async () => {
+    const { container } = renderTable({ total: 74, offset: 20 });
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("has no axe violations in the grid role with total and offset", async () => {
+    const { container } = render(DataTable, {
+      props: { caption: "People", columns: COLUMNS, rows: ROWS, rowKey: "id", total: 74, offset: 20 },
+    });
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});

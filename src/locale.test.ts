@@ -66,7 +66,7 @@ it("keeps user-facing prop defaults and template prose in the messages module", 
     // when a new prop has an unfamiliar name (including arrays and factories).
     const tokens = new Set(["400px", "F8", "absolute", "auto", "bottom", "boxed", "button",
       "card", "cells", "circle", "danger", "date", "default", "div", "elevated", "end",
-      "filled", "h3", "higher-is-better", "horizontal", "info", "inline", "known", "lg", "list", "long", "md", "medium", "muted", "neutral", "none", "own", "p", "paginated", "pending", "plain", "primary",
+      "filled", "grid", "h3", "higher-is-better", "horizontal", "info", "inline", "known", "lg", "list", "long", "md", "medium", "muted", "neutral", "none", "own", "p", "paginated", "pending", "plain", "primary",
       "region", "right", "secondary", "sm", "stacked", "start", "stretch", "text",
       "top", "unknown", "vertical", "wrap", "xl"]);
     for (const script of source.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)) {
