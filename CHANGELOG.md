@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiNote`: the small text line the panel hand-writes as `.dim`, `.hint`, `.nota` and `.vacio`. `tone` (`muted` default, `success`, `warning`, `danger`) routes to the semantic colour tokens; `size` (`sm` 11px, `md` 12px, `lg` 12.5px, tokens `--ui-note-font-size-*`); `variant` (`inline` default, `block` with no margin, `empty` with the padded "nothing here" spacing from `--ui-note-empty-padding-*`, which map to `--ui-space-*`); `mono` (monospace, `overflow-wrap: anywhere`); `as` (element, default `p`); `live` sets `role="status"` on `variant="empty"` only. (#136)
+
 ## 0.20.0 — 2026-11-06
 
 ### Added
