@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiInput`: `leading` and `trailing` slots, an `icon="search"` shortcut (decorative, `aria-hidden`) and `clearable`, which shows a clear button (locale `inputClearLabel`, ES "Borrar") while the value is not empty. Clicking it or pressing Escape empties the value, emits `cleared` and returns focus to the input; it is not rendered when disabled or readonly. (#147)
+
 ## 0.20.0 — 2026-11-06
 
 ### Added
