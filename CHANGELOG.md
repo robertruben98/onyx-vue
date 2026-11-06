@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiSimpleTable`: a semantic, read-only native `<table>` (`<th scope="col">`) inside a focusable, labelled `role="region"` that scrolls sideways (`overflow-x: auto; max-width: 100%`), so a 360px phone scrolls the table, not the page. Props `columns` (`key`, `label`, `align`, `mono`, `muted`, `hideBelow`), `rows`, `rowKey`, `ariaLabel` (required), `dense` and a `tone(row, column)` callback; slots `cell-<key>` and `empty` (the body is omitted when there are no rows). Token-only styles; `hideBelow` follows the viewport like `UiDataTable`. (#137)
+
 ## 0.20.0 — 2026-11-06
 
 ### Added
