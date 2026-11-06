@@ -225,6 +225,9 @@
   --ui-tabs-radius: var(--ui-radii-sm);
   --ui-tabs-font-size: var(--ui-font-size-md);
   --ui-tabs-font-weight: var(--ui-font-weight-medium);
+  --ui-tabs-badge-gap: var(--ui-space-2);
+  --ui-tabs-badge-padding-x: var(--ui-space-2);
+  --ui-tabs-badge-font-size: var(--ui-font-size-sm);
   --ui-progress-radius: var(--ui-radii-full);
   --ui-note-font-size-sm: 0.6875rem;
   --ui-note-font-size-md: 0.75rem;
@@ -416,6 +419,11 @@
   --ui-tabs-text: var(--ui-color-text-muted);
   --ui-tabs-text-active: var(--ui-color-text);
   --ui-tabs-text-disabled: var(--ui-color-disabled-text);
+  --ui-tabs-badge-bg: var(--ui-color-neutral-surface);
+  --ui-tabs-badge-text: var(--ui-color-text-muted);
+  --ui-tabs-badge-text-active: var(--ui-color-text);
+  --ui-tabs-warn-color: var(--ui-color-warning);
+  --ui-tabs-warn-bg: var(--ui-color-warning-surface);
   --ui-progress-track-bg: var(--ui-color-neutral-surface);
   --ui-progress-fill-bg: var(--ui-color-primary);
   /* Delta: the fill colour, lighter, so it reads as "more of the same, not yet". */

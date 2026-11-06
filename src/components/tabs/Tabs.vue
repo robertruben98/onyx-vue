@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cloneVNode, computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useSlots, watch, type VNode } from "vue";
 import "./tabs.scss";
+import { useOnyxLocale } from "../../locale";
 import { TABS_CONTEXT, type TabRegistration, type TabsContext } from "./context";
 import Tab from "./Tab.vue";
 
@@ -14,10 +15,18 @@ const props = withDefaults(
      * read as two separate menus).
      */
     overflow?: "wrap" | "scroll";
+    /**
+     * `own` (default): one `role="tabpanel"` per `Tab`. `none`: only the tab
+     * list is rendered; the consumer renders ONE panel itself (so a heavy body
+     * is not remounted on every switch) with `id = panelId(selectedIndex)` and
+     * `aria-labelledby = tabId(selectedIndex)`, both exposed by this component.
+     */
+    panels?: "own" | "none";
   }>(),
   {
     ariaLabel: "",
     overflow: "wrap",
+    panels: "own",
   },
 );
 
@@ -25,6 +34,7 @@ const props = withDefaults(
 const selectedIndex = defineModel<number>("selectedIndex", { default: 0 });
 
 const slots = useSlots();
+const locale = useOnyxLocale();
 
 /**
  * Derive the tab triggers directly from the default slot's `Tab` children.
@@ -42,6 +52,11 @@ const tabs = computed<TabRegistration[]>(() => {
     const tabProps = (vnode.props ?? {}) as {
       label?: string;
       disabled?: boolean | "";
+      count?: number | null;
+      warn?: boolean | "";
+      warnText?: string;
+      // A compiled template hands the attribute over as written (`warn-text`).
+      "warn-text"?: string;
     };
     return {
       uid,
@@ -49,6 +64,9 @@ const tabs = computed<TabRegistration[]>(() => {
       // `disabled` may arrive as a real boolean or as a valueless boolean attr
       // (`disabled` -> `""`); both mean disabled.
       disabled: ref(tabProps.disabled === "" || tabProps.disabled === true),
+      count: typeof tabProps.count === "number" ? tabProps.count : null,
+      warn: tabProps.warn === "" || tabProps.warn === true,
+      warnText: tabProps.warnText || tabProps["warn-text"] || locale.tabWarnText,
       tabId: `ui-tab-${uid}`,
       panelId: `ui-tabpanel-${uid}`,
     } satisfies TabRegistration;
@@ -62,6 +80,16 @@ const context: TabsContext = {
 };
 
 provide(TABS_CONTEXT, context);
+
+/** Id of the panel the tab at `index` controls (the consumer's, with `panels="none"`). */
+function panelId(index: number): string {
+  return `ui-tabpanel-${index}`;
+}
+/** Id of the trigger at `index` (for the consumer's panel `aria-labelledby`). */
+function tabId(index: number): string {
+  return `ui-tab-${index}`;
+}
+defineExpose({ panelId, tabId });
 
 const trigger = ref<HTMLButtonElement[]>([]);
 
@@ -187,7 +215,7 @@ function nextEnabled(from: number, step: number): number | null {
  * It is a function and not a `computed` on purpose: caching vnodes buys
  * nothing here and a stale entry would be a panel showing the previous run.
  */
-function panels(): VNode[] {
+function panelNodes(): VNode[] {
   return tabNodes().map((vnode, index) =>
     cloneVNode(vnode, { index, key: vnode.key ?? `ui-tabpanel-${index}` }),
   );
@@ -248,16 +276,22 @@ function flattenTabs(nodes: VNode[]): VNode[] {
         type="button"
         role="tab"
         class="ui-tabs__tab"
-        :class="{ 'ui-tabs__tab--active': i === selectedIndex }"
+        :class="{ 'ui-tabs__tab--active': i === selectedIndex, 'ui-tabs__tab--warn': tab.warn }"
         :id="tab.tabId"
         :aria-selected="i === selectedIndex"
         :aria-controls="tab.panelId"
+        :aria-describedby="tab.warn ? `${tab.tabId}-warn` : undefined"
         :tabindex="i === selectedIndex ? 0 : -1"
         :disabled="tab.disabled.value"
         @click="select(i)"
         @keydown="onKeydown($event, i)"
       >
         {{ tab.label.value }}
+        <span v-if="tab.count !== null" class="ui-tabs__count">{{ tab.count }}</span>
+        <template v-if="tab.warn">
+          <span class="ui-tabs__warn" aria-hidden="true">&#9888;</span>
+          <span :id="`${tab.tabId}-warn`" class="ui-tabs__sr-only">{{ tab.warnText }}</span>
+        </template>
       </button>
     </div>
     <button
@@ -271,8 +305,8 @@ function flattenTabs(nodes: VNode[]): VNode[] {
       <svg viewBox="0 0 24 24" focusable="false"><path d="m9 18 6-6-6-6" /></svg>
     </button>
     </div>
-    <div class="ui-tabs__panels">
-      <component :is="panel" v-for="panel in panels()" :key="panel.key ?? 0" />
+    <div v-if="panels !== 'none'" class="ui-tabs__panels">
+      <component :is="panel" v-for="panel in panelNodes()" :key="panel.key ?? 0" />
     </div>
   </div>
 </template>

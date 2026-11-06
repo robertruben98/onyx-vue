@@ -9,6 +9,19 @@ const props = withDefaults(
     /** Whether this tab is disabled. */
     disabled?: boolean;
     /**
+     * Count badge after the label ("Ready 3"). It is part of the trigger's
+     * accessible name. `0` is shown; `null`/`undefined` show nothing.
+     */
+    count?: number | null;
+    /** Marks the tab with a warning glyph and describes it (see `warnText`). */
+    warn?: boolean;
+    /**
+     * What the warning means ("2 stuck"). Rendered visually hidden and wired to
+     * the trigger with `aria-describedby`; defaults to the locale's
+     * `tabWarnText`. Read by `Tabs`, not by this component.
+     */
+    warnText?: string;
+    /**
      * Position in the tab list. INTERNAL: `Tabs` puts it here.
      *
      * It is not a number this component can work out on its own. A counter
@@ -22,6 +35,9 @@ const props = withDefaults(
   }>(),
   {
     disabled: false,
+    count: null,
+    warn: false,
+    warnText: "",
     index: 0,
   },
 );

@@ -419,3 +419,126 @@ describe("Tabs (Vue) — keyboard and markup details", () => {
     expect(container.querySelector(".ui-tabs__list--scroll")).toBeNull();
   });
 });
+
+describe("Tabs (Vue): count badge and warning state", () => {
+  function renderWith(tabs: () => unknown[], props: Record<string, unknown> = {}) {
+    const Harness = defineComponent({
+      render() {
+        return h(Tabs, { ariaLabel: "Trays", ...props }, () => tabs());
+      },
+    });
+    return render(Harness);
+  }
+
+  it("renders the count after the label and in the accessible name", async () => {
+    renderWith(() => [h(Tab, { label: "Ready", count: 3 }, () => "p")]);
+    await nextTick();
+    const tab = screen.getByRole("tab", { name: "Ready 3" });
+    expect(tab.querySelector(".ui-tabs__count")?.textContent).toBe("3");
+  });
+
+  it("renders a zero count but not null/undefined", async () => {
+    renderWith(() => [
+      h(Tab, { label: "A", count: 0 }, () => "p"),
+      h(Tab, { label: "B", count: null }, () => "p"),
+      h(Tab, { label: "C" }, () => "p"),
+    ]);
+    await nextTick();
+    expect(screen.getByRole("tab", { name: "A 0" })).toBeTruthy();
+    expect(document.querySelectorAll(".ui-tabs__count")).toHaveLength(1);
+  });
+
+  it("warn + warnText: the trigger's aria-describedby target contains the text", async () => {
+    renderWith(() => [h(Tab, { label: "Ready", count: 3, warn: true, warnText: "2 stuck" }, () => "p")]);
+    await nextTick();
+    const tab = screen.getByRole("tab", { name: /Ready/ });
+    const id = tab.getAttribute("aria-describedby");
+    expect(id).toBeTruthy();
+    expect(document.getElementById(id as string)?.textContent).toContain("2 stuck");
+    expect(tab.querySelector(".ui-tabs__warn")).toBeTruthy();
+    expect(tab.classList.contains("ui-tabs__tab--warn")).toBe(true);
+  });
+
+  it("accepts the kebab-case warn-text a compiled template passes", async () => {
+    renderWith(() => [h(Tab, { label: "Ready", warn: "", "warn-text": "2 stuck" } as never, () => "p")]);
+    await nextTick();
+    const tab = screen.getByRole("tab", { name: /Ready/ });
+    const id = tab.getAttribute("aria-describedby") as string;
+    expect(document.getElementById(id)?.textContent).toBe("2 stuck");
+  });
+
+  it("warn without warnText falls back to the default locale text", async () => {
+    renderWith(() => [h(Tab, { label: "Ready", warn: true }, () => "p")]);
+    await nextTick();
+    const tab = screen.getByRole("tab", { name: /Ready/ });
+    const id = tab.getAttribute("aria-describedby") as string;
+    expect(document.getElementById(id)?.textContent).toBe("Needs attention");
+  });
+
+  it("a tab without warn has no aria-describedby", async () => {
+    renderWith(() => [h(Tab, { label: "Ready" }, () => "p")]);
+    await nextTick();
+    expect(screen.getByRole("tab").hasAttribute("aria-describedby")).toBe(false);
+  });
+
+  it("count + warn pass axe", async () => {
+    const { container } = renderWith(() => [
+      h(Tab, { label: "Ready", count: 3, warn: true, warnText: "2 stuck" }, () => "p"),
+      h(Tab, { label: "Done", count: 0 }, () => "p"),
+    ]);
+    await nextTick();
+    expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+describe("Tabs (Vue): panels none", () => {
+  const mk = (extra: Record<string, unknown> = {}) => {
+    const tabsRef = ref<InstanceType<typeof Tabs> | null>(null);
+    const Harness = defineComponent({
+      render() {
+        return h("div", [
+          h(Tabs, { ariaLabel: "Trays", panels: "none", ref: tabsRef, ...extra }, () => [
+            h(Tab, { label: "One" }),
+            h(Tab, { label: "Two" }),
+          ]),
+          h("div", { id: "ui-tabpanel-0", role: "tabpanel", "aria-labelledby": "ui-tab-0" }, "mine"),
+        ]);
+      },
+    });
+    return { ...render(Harness), tabsRef };
+  };
+
+  it("renders no tabpanel of its own and keeps aria-controls", async () => {
+    const { container } = mk();
+    await nextTick();
+    expect(container.querySelector(".ui-tabs__panels")).toBeNull();
+    // only the consumer's panel exists
+    expect(screen.getAllByRole("tabpanel")).toHaveLength(1);
+    expect(screen.getByRole("tab", { name: "One" }).getAttribute("aria-controls")).toBe("ui-tabpanel-0");
+  });
+
+  it("passes axe", async () => {
+    const { container } = mk();
+    await nextTick();
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("still switches tabs and exposes panelId/tabId", async () => {
+    const { tabsRef } = mk();
+    await nextTick();
+    await fireEvent.click(screen.getByRole("tab", { name: "Two" }));
+    expect(screen.getByRole("tab", { name: "Two" }).getAttribute("aria-selected")).toBe("true");
+    expect(tabsRef.value?.panelId(1)).toBe("ui-tabpanel-1");
+    expect(tabsRef.value?.tabId(1)).toBe("ui-tab-1");
+  });
+
+  it("default panels=own still renders one tabpanel per Tab", async () => {
+    render(
+      defineComponent({
+        render: () => h(Tabs, null, () => [h(Tab, { label: "A" }, () => "a"), h(Tab, { label: "B" }, () => "b")]),
+      }),
+    );
+    await nextTick();
+    expect(document.querySelectorAll('[role="tabpanel"]')).toHaveLength(2);
+  });
+});
