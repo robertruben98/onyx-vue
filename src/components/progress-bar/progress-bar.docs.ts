@@ -49,9 +49,9 @@ export const progressBarDoc: ComponentDoc = {
     },
     {
       title: "Live",
-      code: `<div style="width: 100%; display: grid; gap: 10px; justify-items: start">
+      code: `<div style="width: 100%; display: grid; gap: 10px">
   <UiProgressBar :value="value" label="Upload" />
-  <UiButton size="sm" @clicked="value = (value + 20) % 120">Advance</UiButton>
+  <UiButton size="sm" style="justify-self: start" @clicked="value = (value + 20) % 120">Advance</UiButton>
 </div>`,
       setup: () => ({ value: 20 }),
     },
