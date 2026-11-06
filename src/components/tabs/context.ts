@@ -8,6 +8,12 @@ export interface TabRegistration {
   readonly label: Ref<string>;
   /** Reactive disabled state of the tab. */
   readonly disabled: Ref<boolean>;
+  /** Count badge shown after the label (`null`/`undefined`: none; 0 is shown). */
+  readonly count: number | null;
+  /** Whether the tab carries the warning marker. */
+  readonly warn: boolean;
+  /** Text describing the warning (visually hidden, wired with `aria-describedby`). */
+  readonly warnText: string;
   /** Trigger element id (links tab -> panel). */
   readonly tabId: string;
   /** Panel element id (links panel -> tab). */
