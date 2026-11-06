@@ -72,9 +72,78 @@
   outline-color: var(--ui-input-border-invalid);
 }
 
+// --- Leading / trailing adornments -----------------------------------------
+// With an adornment the field becomes a positioned flex row; the adornments
+// sit over the input's padding, which grows to make room.
+.ui-input--has-leading .ui-input__field,
+.ui-input--has-trailing .ui-input__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.ui-input--has-leading .ui-input__el,
+.ui-input--has-trailing .ui-input__el {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.ui-input--has-leading:not(.ui-input--pill) .ui-input__el {
+  padding-left: calc(var(--ui-space-4) + var(--ui-input-pill-glyph-size) + var(--ui-space-2));
+}
+.ui-input--has-trailing .ui-input__el {
+  padding-right: calc(var(--ui-space-4) + var(--ui-input-pill-glyph-size) + var(--ui-space-2));
+}
+.ui-input__leading,
+.ui-input__trailing {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  color: var(--ui-input-placeholder);
+}
+.ui-input__leading {
+  left: var(--ui-space-4);
+}
+.ui-input__trailing {
+  right: var(--ui-space-2);
+}
+.ui-input__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-space-1);
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: var(--ui-radii-full);
+  cursor: pointer;
+}
+.ui-input__clear:hover {
+  color: var(--ui-input-text);
+}
+.ui-input__clear:focus-visible {
+  outline: var(--ui-focus-ring-width) solid var(--ui-focus-ring);
+  outline-offset: 0;
+}
+.ui-input__clear svg {
+  width: var(--ui-input-pill-glyph-size);
+  height: var(--ui-input-pill-glyph-size);
+  fill: currentColor;
+}
+.ui-input--pill .ui-input__trailing {
+  right: var(--ui-space-3);
+}
+.ui-input--pill.ui-input--has-trailing .ui-input__el {
+  padding-right: 3rem;
+}
+
 // The field wrapper only exists to anchor the pill's glyph; it adds no box.
 .ui-input__field {
   display: contents;
+}
+.ui-input--has-leading .ui-input__field,
+.ui-input--has-trailing .ui-input__field {
+  display: flex;
 }
 
 // --- Pill (search field) ---------------------------------------------------
@@ -117,4 +186,10 @@
   .ui-input--pill .ui-input__field {
     padding-block: 2px;
   }
+}
+
+// With our own clear button, hide the browser's native one on type="search".
+.ui-input--has-trailing .ui-input__el::-webkit-search-cancel-button {
+  appearance: none;
+  display: none;
 }

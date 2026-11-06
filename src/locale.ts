@@ -42,6 +42,7 @@ export interface OnyxMessages {
   recordButtonLabel: string;
   skeletonLabel: string;
   tagRemoveLabel: string;
+  inputClearLabel: string;
   kpiStripLabel: string;
   filterBarSearchPlaceholder: string;
   filterBarSearchLabel: string;
@@ -136,6 +137,7 @@ export const DEFAULT_MESSAGES: OnyxMessages = {
   "recordButtonLabel": "Record",
   "skeletonLabel": "Loading…",
   "tagRemoveLabel": "Remove",
+  "inputClearLabel": "Clear",
   "kpiStripLabel": "Summary",
   "filterBarSearchPlaceholder": "filter",
   "filterBarSearchLabel": "Filter",
@@ -308,6 +310,7 @@ export const ES_MESSAGES: OnyxMessages = {
   "recordButtonLabel": "Grabar",
   "skeletonLabel": "Cargando…",
   "tagRemoveLabel": "Eliminar",
+  "inputClearLabel": "Borrar",
   "kpiStripLabel": "Resumen",
   "filterBarSearchPlaceholder": "filtrar",
   "filterBarSearchLabel": "Filtrar",
