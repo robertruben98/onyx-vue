@@ -44,7 +44,25 @@ export const dataTableDoc: ComponentDoc = {
       name: "columns",
       type: "DataTableColumn<T>[]",
       default: "— (required)",
-      description: "`{ id, header, field?, sortable?, align?, mono?, width?, hideBelow? }` per column. `mono` sets the cells in the data font family (`--ui-font-family-data`) with tabular numerals. `hideBelow` (px) drops the column, header and cells together, on narrower viewports.",
+      description: "`{ id, header, field?, sortable?, align?, mono?, numeric?, clamp?, width?, hideBelow? }` per column. `mono` sets the cells in the data font family (`--ui-font-family-data`) with tabular numerals. `numeric` end-aligns (unless `align` is set) with tabular figures in the body font: for amounts and counts. `clamp: n` shows at most n lines per cell and puts the full text in its `title`. `hideBelow` (px) drops the column, header and cells together, on narrower viewports.",
+    },
+    {
+      name: "density",
+      type: '"compact" | "comfortable"',
+      default: '"comfortable"',
+      description: "`compact` swaps the cell vertical padding for `--ui-data-table-cell-padding-y-compact` (`--ui-space-1`). In `virtual` mode keep `rowHeight` in step with it.",
+    },
+    {
+      name: "striped",
+      type: "boolean",
+      default: "false",
+      description: "Alternate body rows take `--ui-data-table-stripe-bg` (defined by the base tokens and every preset). Hover and selection still win.",
+    },
+    {
+      name: "columnsMenu / v-model:hiddenColumns",
+      type: "boolean / string[]",
+      default: "false / []",
+      description: "`columnsMenu` shows a Columns menu (a `UiMenu` of checkable items) above the grid. Hiding a column drops its header and cells and emits `update:hiddenColumns` with the hidden ids, so the app can persist them; the last visible column cannot be hidden. `hiddenColumns` also works without the menu.",
     },
     {
       name: "activatable",
@@ -183,6 +201,37 @@ export const dataTableDoc: ComponentDoc = {
   :stack-below="100000"
 />`,
       setup: () => ({ columns: PLAIN, rows: ROWS }),
+    },
+    {
+      title: "Density, stripes, clamp, numeric columns and a columns menu",
+      description:
+        "`density=\"compact\"` and `striped` for long lists; `clamp: 2` keeps a long secondary line to two lines; `numeric` aligns amounts; `columns-menu` lets the reader hide columns.",
+      code: `<UiDataTable
+  caption="Publish tray"
+  row-key="id"
+  mode="plain"
+  density="compact"
+  striped
+  columns-menu
+  v-model:hidden-columns="hidden"
+  :columns="columns"
+  :rows="rows"
+/>
+<p>hidden: {{ hidden.join(', ') || '(none)' }}</p>`,
+      setup: () => ({
+        hidden: [],
+        columns: [
+          { id: "title", header: "Title", field: "title" },
+          { id: "note", header: "Note", field: "note", clamp: 2 },
+          { id: "amount", header: "Amount", field: "amount", numeric: true, width: "7rem" },
+        ],
+        rows: [
+          { id: 1, title: "feat: commit counter", note: "A long secondary line that would stretch the row to three or four lines of text if it were not clamped to two, with the full text one hover away in the title attribute.", amount: 12 },
+          { id: 2, title: "fix: worktree dedupe", note: "Short note", amount: 1840 },
+          { id: 3, title: "docs: tray guide", note: "Another quite long note about the change, its tests and the follow-ups that are still open in the tray, which also gets clamped at two lines.", amount: 305 },
+          { id: 4, title: "chore: bump deps", note: "Short note", amount: 7 },
+        ],
+      }),
     },
     {
       title: "Sorting",
