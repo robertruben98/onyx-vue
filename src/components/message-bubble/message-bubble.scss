@@ -19,8 +19,15 @@
   line-height: 19px;
   min-width: 0;
 
-  a {
+  // Links in the body, meta and footer: the token, visited included (the UA blue / purple is unreadable on dark bubbles).
+  a,
+  a:visited {
     color: var(--ui-chat-link, var(--ui-color-primary));
+  }
+
+  a:hover,
+  a:focus-visible {
+    text-decoration: underline;
   }
 }
 
