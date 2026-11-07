@@ -25,6 +25,7 @@ export const selectDoc: ComponentDoc = {
       default: "'Select…'",
       description: "Shown when nothing is selected. Used as the accessible name only without a UiFormField label, ariaLabel or ariaLabelledby.",
     },
+    { name: "label", type: "string", default: "''", description: "Visible label: renders a `<label>` associated with the combobox (like UiInput) and replaces the placeholder as its accessible name. An explicit ariaLabel or ariaLabelledby still wins." },
     { name: "ariaLabel", type: "string", default: "''", description: "Explicit accessible name; overrides the placeholder and UiFormField label. ariaLabelledby takes precedence." },
     {
       name: "ariaLabelledby",
@@ -41,6 +42,19 @@ export const selectDoc: ComponentDoc = {
     },
   ],
   demos: [
+    {
+      title: "Visible label",
+      description: "`label` renders a `<label>` tied to the combobox, so no aria-label is needed.",
+      code: `<UiSelect v-model="day" label="Día" :options="days" style="width: 280px; max-width: 100%" />`,
+      setup: () => ({
+        day: null,
+        days: [
+          { value: "mon", label: "Lunes" },
+          { value: "tue", label: "Martes" },
+          { value: "wed", label: "Miércoles" },
+        ],
+      }),
+    },
     {
       title: "Long list and type-ahead",
       description: "Try c repeatedly, dr quickly, or un for Única. Scroll or use Home/End to see the clipped-edge fades disappear at each end.",

@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiSelect`: `label` prop renders a visible `<label>` associated with the combobox (like `UiInput`); it replaces the placeholder as the accessible name, so no `aria-label` is needed. An explicit `ariaLabel` / `ariaLabelledby` still wins. Backwards compatible.
+
 ## 0.21.0 — 2026-11-06
 
 ### Added
