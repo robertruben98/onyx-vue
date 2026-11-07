@@ -9,6 +9,16 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Changed
+
+- `UiSegmented`: the selection is a thumb that slides behind the segments (`transform`, 200 ms, none
+  under `prefers-reduced-motion`) instead of the background jumping. New token
+  `--ui-segmented-thumb-shadow` (`none` by default, and in `console` and `matrix`).
+- `pocket`: the segmented track is neutral (`--ui-color-neutral-surface`) and the thumb is a raised
+  surface-coloured pill with dark text, so the selection no longer looks like the primary button.
+
 ## 0.21.0 — 2026-11-06
 
 ### Added
