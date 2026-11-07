@@ -3,7 +3,7 @@ import { computed } from "vue";
 import "./stack.scss";
 
 /** Step of the spacing scale (`--ui-space-N`); 0 is no gap. */
-export type StackGap = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+export type StackGap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export type StackDirection = "vertical" | "horizontal";
 export type StackAlign = "start" | "center" | "end" | "stretch" | "baseline";
 export type StackJustify = "start" | "center" | "end" | "between";
