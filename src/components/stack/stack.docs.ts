@@ -8,7 +8,7 @@ export const stackDoc: ComponentDoc = {
   imports: ["UiStack"],
   api: [
     { name: "direction", type: "'vertical' | 'horizontal'", default: "'vertical'", description: "Main axis." },
-    { name: "gap", type: "0 | 1 | 2 | 3 | 4 | 5 | 6", default: "3", description: "Space between children: a step of the `--ui-space-*` scale." },
+    { name: "gap", type: "0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10", default: "3", description: "Space between children: a step of the `--ui-space-*` scale." },
     { name: "align", type: "'start' | 'center' | 'end' | 'stretch' | 'baseline'", default: "'stretch'", description: "Cross-axis alignment." },
     { name: "justify", type: "'start' | 'center' | 'end' | 'between'", default: "'start'", description: "Main-axis distribution." },
     { name: "wrap", type: "boolean", default: "false", description: "Lets children wrap onto new lines." },
@@ -30,6 +30,14 @@ export const stackDoc: ComponentDoc = {
   <UiButton>Save</UiButton>
   <UiButton variant="secondary">Cancel</UiButton>
   <UiTag>draft</UiTag>
+</UiStack>`,
+    },
+    {
+      title: "Large gap",
+      description: "Steps 6 to 10 of the scale (1.5rem to 4rem) separate whole page sections.",
+      code: `<UiStack :gap="8">
+  <UiAlert variant="info">Section one</UiAlert>
+  <UiAlert variant="success">Section two</UiAlert>
 </UiStack>`,
     },
     {

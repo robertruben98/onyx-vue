@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Fixed
+
+- Spacing scale: `--ui-space-6` was referenced by `--ui-fab-bottom`, `--ui-check-tree-indent` and `UiStack gap={6}` (the definition already landed in 0.13+); the scale now continues to `--ui-space-7` (2rem), `-8` (2.5rem), `-9` (3rem) and `-10` (4rem), and `StackGap` accepts 7 to 10. A new test (`src/styles/undefined-tokens.test.ts`) fails when a `var(--ui-*)` without fallback has no definition in `src/`. (#63)
+
 ## 0.21.0 — 2026-11-06
 
 ### Added
