@@ -68,6 +68,11 @@ Consumers that build from source (the control-panel dashboard aliases
 ### Changed (docs site)
 
 - Search (`/` or Ctrl/Cmd+K, `UiDialog` + `UiInput`), grouped sidebar, a drawer sidebar under 900px, a skip link, the library focus ring and a System/Light/Dark `UiSegmented`; a Copy button on every code block and backtick code in API tables and descriptions rendered as `<code>`; the Theming page generates its snippets and a token table from `src/styles` and shows the six presets; the Fab demos are visible inside their box. (#74)
+## Unreleased
+
+### Fixed
+
+- `UiMessageBubble`: links in the body, meta and footer slots use `--ui-chat-link` (fallback `--ui-color-primary`) also when visited, and are underlined on hover and keyboard focus. The token itself (AA on both bubble colours, dark and light) and its contrast check were already in 0.20/0.21. (#131)
 
 ## 0.21.0 — 2026-11-06
 
