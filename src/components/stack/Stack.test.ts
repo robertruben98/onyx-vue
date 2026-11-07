@@ -30,6 +30,11 @@ describe("Stack (Vue)", () => {
     expect(b.style.getPropertyValue("--ui-stack-gap")).toBe("0");
   });
 
+  it.each([7, 8, 9, 10] as const)("accepts gap %i from the extended scale", (gap) => {
+    const el = render(Stack, { props: { gap } }).container.firstElementChild as HTMLElement;
+    expect(el.style.getPropertyValue("--ui-stack-gap")).toBe(`var(--ui-space-${gap})`);
+  });
+
   it("renders the element given in `as`", () => {
     const { container } = render(Stack, { props: { as: "ul" }, slots: { default: "<li>x</li>" } });
     expect(container.firstElementChild?.tagName).toBe("UL");
