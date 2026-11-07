@@ -24,6 +24,16 @@ function copyStyles(): Plugin {
 
 export default defineConfig({
   plugins: [vue(), copyStyles()],
+  // Los mismos alias que la app de documentacion (docs/vite.config.ts), para
+  // que sus paginas y sus pruebas se resuelvan bajo vitest desde la raiz.
+  resolve: {
+    alias: {
+      "@onyx/vue/styles": resolve(__dirname, "src/styles"),
+      "@onyx/vue": resolve(__dirname, "src/index.ts"),
+      "@lib": resolve(__dirname, "src"),
+      "@": resolve(__dirname, "docs/src"),
+    },
+  },
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
@@ -40,6 +50,8 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test-setup.ts"],
-    css: false,
+    // `?raw` de las hojas de tokens (la pagina de Theming) tiene que devolver el
+    // texto, no una cadena vacia; el resto del CSS sigue desactivado.
+    css: { include: [/src\/styles\/.*\.css\?raw/] },
   },
 });
