@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CodeBlock from "../CodeBlock.vue";
 import { DEPRECATED_EVENTS } from "../../../src/deprecations";
 import { LEGACY_TONES } from "../../../src/internal/tone";
 // Installation guide page.
@@ -54,22 +55,22 @@ document.documentElement.classList.toggle('app-dark');`;
     </p>
 
     <h2>1. Install</h2>
-    <pre class="code"><code>{{ install }}</code></pre>
+    <CodeBlock :code="install" />
 
     <h2>2. Register the styles</h2>
     <p>Import the token stylesheet once at your application entry.</p>
-    <pre class="code"><code>{{ register }}</code></pre>
+    <CodeBlock :code="register" />
 
     <h2>3. Use a component</h2>
     <p>Import components directly into any SFC — no global registration needed.</p>
-    <pre class="code"><code>{{ usage }}</code></pre>
+    <CodeBlock :code="usage" />
 
     <h2>4. Enable dark mode</h2>
     <p>
       Dark mode is a class on the document root that re-maps semantic tokens —
       components never branch on theme.
     </p>
-    <pre class="code"><code>{{ dark }}</code></pre>
+    <CodeBlock :code="dark" />
 
     <h2 id="localization">Localization</h2>
     <p>
@@ -79,13 +80,13 @@ document.documentElement.classList.toggle('app-dark');`;
       (English). This covers visible defaults and accessible names, including
       teleported dialogs, table controls, state announcements and time units.
     </p>
-    <pre class="code"><code>{{ localization }}</code></pre>
+    <CodeBlock :code="localization" />
     <p>
       Alternatively, call it synchronously in a root or ancestor component's setup.
       It applies to descendants; the nearest provider wins. Explicit component
       text props and slots take precedence; existing empty-string fallbacks are unchanged.
     </p>
-    <pre class="code"><code>{{ localeSetup }}</code></pre>
+    <CodeBlock :code="localeSetup" />
     <p>
       Configure the locale before mounting consumers. Prop defaults are resolved
       when a component is created; changing the catalog is not a live language

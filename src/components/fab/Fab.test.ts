@@ -74,4 +74,11 @@ describe("Fab hide-on-scroll", () => {
     await scrollTo(2190); // 2190 + 800 >= 3000 - 80: al final
     expect(btn.classList.contains("ui-fab--hidden")).toBe(false);
   });
+
+  it("contained: positioned inside the nearest positioned ancestor instead of the viewport", () => {
+    render(Fab, { props: { label: "Ask", contained: true } });
+    expect(screen.getByRole("button", { name: "Ask" }).classList.contains("ui-fab--contained")).toBe(true);
+    render(Fab, { props: { label: "Other" } });
+    expect(screen.getByRole("button", { name: "Other" }).classList.contains("ui-fab--contained")).toBe(false);
+  });
 });

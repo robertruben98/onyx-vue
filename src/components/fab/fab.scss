@@ -30,6 +30,10 @@
   left: var(--ui-fab-inset);
 }
 
+.ui-fab--contained {
+  position: absolute;
+}
+
 .ui-fab:hover {
   background: var(--ui-fab-bg-hover);
 }
