@@ -7,6 +7,14 @@
   display: block;
 }
 
+.ui-select__label {
+  display: block;
+  margin-block-end: var(--ui-input-label-gap);
+  font-size: var(--ui-input-label-font-size);
+  font-weight: var(--ui-input-label-font-weight);
+  color: var(--ui-input-text);
+}
+
 .ui-select__trigger {
   display: flex;
   align-items: center;

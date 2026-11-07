@@ -31,6 +31,29 @@ describe("Select (Vue)", () => {
     expect(screen.getByRole("combobox", { name: "Estado" })).toBe(trigger);
   });
 
+  it("renders a visible label associated with the combobox and passes axe without aria-label", async () => {
+    const { container } = renderSelect({ label: "día" });
+    const label = container.querySelector("label.ui-select__label") as HTMLLabelElement;
+    expect(label.textContent).toBe("día");
+    const trigger = screen.getByRole("combobox", { name: "día" });
+    expect(trigger.hasAttribute("aria-label")).toBe(false);
+    expect(trigger.id).toBeTruthy();
+    expect(label.htmlFor).toBe(trigger.id);
+    expect(await axe(container, axeOptions)).toHaveNoViolations();
+  });
+
+  it("points the visible label at a consumer-supplied id", async () => {
+    const { container } = renderSelect({ label: "día", id: "my-select" });
+    const trigger = screen.getByRole("combobox", { name: "día" });
+    expect(trigger.id).toBe("my-select");
+    expect((container.querySelector("label") as HTMLLabelElement).htmlFor).toBe("my-select");
+  });
+
+  it("renders no label element without the label prop", () => {
+    const { container } = renderSelect();
+    expect(container.querySelector("label")).toBeNull();
+  });
+
   it.each(["Select…", "Choose a state"])("keeps the bare placeholder name %s and passes axe", async (placeholder) => {
     const { container } = renderSelect({ placeholder });
     expect(screen.getByRole("combobox", { name: placeholder })).toBeTruthy();

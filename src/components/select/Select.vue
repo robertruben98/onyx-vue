@@ -20,6 +20,8 @@ const props = withDefaults(
     options?: SelectOption[];
     /** Placeholder shown when nothing is selected. */
     placeholder?: string;
+    /** Visible label: renders a `<label>` linked to the combobox, like `UiInput`. */
+    label?: string;
     /** Accessible name for the combobox (placeholder fallback only without a field label). */
     ariaLabel?: string;
     /**
@@ -33,6 +35,7 @@ const props = withDefaults(
   {
     options: () => [],
     placeholder: () => useOnyxLocale().selectPlaceholder,
+    label: "",
     ariaLabel: "",
     ariaLabelledby: "",
     disabled: false,
@@ -55,6 +58,8 @@ const uid = useId();
 // (ver internal/forward-attrs.ts).
 defineOptions({ inheritAttrs: false });
 const { rootAttrs, controlAttrs, controlId, fieldLabelId } = useForwardedAttrs(undefined, { field: true });
+// A visible label needs an id to point at; without one the control stays id-less as before.
+const triggerId = () => controlId() ?? (props.label ? `ui-select-trigger-${uid}` : undefined);
 const listboxId = `ui-select-listbox-${uid}`;
 
 const open = ref(false);
@@ -281,9 +286,10 @@ if (isDev()) useDeprecatedEvents();
 
 <template>
   <div :class="['ui-select', rootAttrs().class]" :style="rootAttrs().style">
+    <label v-if="label" class="ui-select__label" :for="triggerId()">{{ label }}</label>
     <button
       v-bind="controlAttrs()"
-      :id="controlId()"
+      :id="triggerId()"
       ref="triggerEl"
       type="button"
       role="combobox"
@@ -292,7 +298,7 @@ if (isDev()) useDeprecatedEvents();
       :aria-expanded="open ? 'true' : 'false'"
       :aria-controls="open ? listboxId : undefined"
       :aria-labelledby="ariaLabelledby || undefined"
-      :aria-label="ariaLabelledby ? undefined : ariaLabel || (fieldLabelId() ? undefined : placeholder)"
+      :aria-label="ariaLabelledby ? undefined : ariaLabel || (fieldLabelId() || label ? undefined : placeholder)"
       :disabled="isDisabled"
       @click="toggle"
       @keydown="onTriggerKeydown"

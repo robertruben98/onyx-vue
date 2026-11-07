@@ -16,6 +16,9 @@ Consumers that build from source (the control-panel dashboard aliases
 - `UiEmptyState` centres itself horizontally (`margin-inline: auto`) when its container is wider than
   `--ui-empty-state-max-width`; before it sat at the left edge.
 - `UiTab` `warn`: the visually hidden warn description no longer widens the page when the tab list scrolls (`overflow="scroll"`). It was absolutely positioned against the bar outside the scrolling row, so nothing clipped it; the trigger is now its containing block. `aria-describedby` is unchanged.
+### Added
+
+- `UiSelect`: `label` prop renders a visible `<label>` associated with the combobox (like `UiInput`); it replaces the placeholder as the accessible name, so no `aria-label` is needed. An explicit `ariaLabel` / `ariaLabelledby` still wins. Backwards compatible.
 
 ## 0.21.0 — 2026-11-06
 
