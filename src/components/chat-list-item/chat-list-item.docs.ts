@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const chatListItemDoc: ComponentDoc = {
   id: "chat-list-item",
+  category: "Messaging",
   title: "Chat List Item",
   description:
     "One row of a conversation list: avatar, name, last message cut to one line, time, unread count, channel mark and tag. The root is a button (keyboard, 44 px tall); the open chat carries aria-current. Colours come from the chat preset (`.ui-theme-chat`) and fall back to the generic tokens elsewhere.",

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const logLinesDoc: ComponentDoc = {
   id: "log-lines",
+  category: "Data display",
   title: "Log Lines",
   description:
     "What was tried and what came back, newest first. Three columns that start in the same place on every line, so the log can be read by running an eye down one of them. An empty log says so in words rather than rendering nothing. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

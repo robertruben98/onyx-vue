@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const dividerDoc: ComponentDoc = {
   id: "divider",
+  category: "Layout",
   title: "Divider",
   description:
     "Separator with an optional centered label. Renders `role=\"separator\"` with the matching `aria-orientation`.",

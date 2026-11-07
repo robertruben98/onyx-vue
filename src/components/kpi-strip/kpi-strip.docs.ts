@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const kpiStripDoc: ComponentDoc = {
   id: "kpi-strip",
+  category: "Data display",
   title: "KPI Strip",
   description:
     "A row of headline figures above a list, drawn as one bordered instrument rather than separate cards. Folds to two columns below 1080px. Each cell reads label first, then value, then its sub-line. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

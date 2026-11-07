@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const stateBarDoc: ComponentDoc = {
   id: "state-bar",
+  category: "Feedback",
   title: "State Bar",
   description:
     "A run's progress and its composition in one track. UiProgressBar answers 'how far along'; this also answers 'how is it going', which is what a run view is really asked. Segments are ordered worst-first from runStateRank, so a red sliver sits at the left edge instead of hiding between two greens, and the gap at the right is what is still pending. The legend doubles as the filter, so counts, segments and selection cannot disagree. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
@@ -63,6 +64,10 @@ export const stateBarDoc: ComponentDoc = {
   :selected="filtro"
   @selected="filtro = $event"
 />`,
+      setup: () => ({
+        counts: { ok: 12, aviso: 3, defecto: 2, omitido: 1 },
+        filtro: null,
+      }),
     },
   ],
 };

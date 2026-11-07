@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const panelHeaderDoc: ComponentDoc = {
   id: "panel-header",
+  category: "Layout",
   title: "Panel Header",
   description:
     "The header of a list panel: a 64 px bar with the panel title (22/28) on the left and a row of action buttons on the right. Its colours come from `--ui-panel-header-*` tokens, which the chat preset feeds from `--ui-chat-surface` and `--ui-chat-ink`.",

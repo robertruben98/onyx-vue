@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const textareaDoc: ComponentDoc = {
   id: "textarea",
+  category: "Forms",
   title: "Textarea",
   description: "Multi-line text field. Same label, invalid and disabled contract as Input. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",
   imports: ["UiTextarea"],

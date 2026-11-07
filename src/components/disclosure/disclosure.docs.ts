@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const disclosureDoc: ComponentDoc = {
   id: "disclosure",
+  category: "Layout",
   title: "Disclosure",
   description:
     "A native <details> fold with its open state as a model, so a page that repaints does not close what the reader opened. For long explanations, raw prompts, the table twin of a chart, one item among many.",

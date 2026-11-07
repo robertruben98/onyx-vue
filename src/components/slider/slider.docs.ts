@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const sliderDoc: ComponentDoc = {
   id: "slider",
+  category: "Forms",
   title: "Slider",
   description:
     "A value picked along a range: a playback speed, a threshold, a number of replicas. A native range input underneath, so keys, touch and screen readers work as the browser does them.",

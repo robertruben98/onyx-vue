@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const gridDoc: ComponentDoc = {
   id: "grid",
+  category: "Layout",
   title: "Grid",
   description:
     "Equal columns, either a fixed number or as many as fit a minimum item width. With `minItemWidth` it reflows by itself and never scrolls sideways on a phone.",

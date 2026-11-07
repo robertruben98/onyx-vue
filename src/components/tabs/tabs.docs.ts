@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const tabsDoc: ComponentDoc = {
   id: "tabs",
+  category: "Navigation",
   title: "Tabs",
   description:
     "Tab list plus panels. Triggers and panels are numbered from the same list, by position, so a list that grows while it is on screen keeps every trigger's `aria-controls` on its own panel; arrow keys move between tabs and skip the disabled ones.",

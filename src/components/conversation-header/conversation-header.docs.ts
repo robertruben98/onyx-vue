@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const conversationHeaderDoc: ComponentDoc = {
   id: "conversation-header",
+  category: "Messaging",
   title: "Conversation Header",
   description:
     "The header of an open conversation: 64 px high, a `leading` slot (the back arrow on a phone), a 40 px avatar, the name (16/21) with the subtitle (13/20) stacked under it, and an `actions` slot. It floats over the wallpaper with a soft shadow (`--ui-chat-shadow-header`) instead of a border line.",

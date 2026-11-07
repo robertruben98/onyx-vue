@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const taskRowDoc: ComponentDoc = {
   id: "task-row",
+  category: "Data display",
   title: "Task Row",
   description:
     "A to-do row: a checkbox labelled with the task text and an optional meta line. Ticking emits `toggle` with the next state; the parent updates `done` (optimistically) and sets `busy` while the request runs, which disables the checkbox and shows a spinner. Done rows are struck through and dimmed to `--ui-task-row-done-text`, which keeps 4.5:1 text contrast. The whole row is at least 44 px tall.",
@@ -20,6 +21,7 @@ export const taskRowDoc: ComponentDoc = {
       code: `<UiTaskRow text="mandame por whatsapp el valor de X" meta="Robert · OpenID-Payment-Seguridad · hace 2 h" @toggle="done = $event" :done="done" />
 <UiTaskRow text="Revisar el informe" meta="Robert · hace 1 d" done />
 <UiTaskRow text="Guardando…" busy />`,
+      setup: () => ({ done: false }),
     },
   ],
 };

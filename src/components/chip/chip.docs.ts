@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const chipDoc: ComponentDoc = {
   id: "chip",
+  category: "Forms",
   title: "Chip",
   description:
     "Suggestion chip: a small one-shot action shaped like a chip, such as a canned reply or a quick prompt. Unlike UiFilterChip it has no pressed state and no count: it does something once. Lay several out with UiChipRow.",

@@ -39,12 +39,33 @@ export interface Demo {
   setup?: () => Record<string, unknown>;
 }
 
+/**
+ * Los grupos de la barra lateral de la doc, en el orden en que se pintan. Con
+ * 100 componentes una lista alfabetica plana no se puede recorrer: el grupo
+ * dice para que sirve el componente antes de que haya que leer su nombre.
+ */
+export const DOC_CATEGORIES = [
+  "Actions",
+  "Forms",
+  "Navigation",
+  "Overlays",
+  "Data display",
+  "Feedback",
+  "Layout",
+  "Messaging",
+  "Effects",
+] as const;
+
+export type DocCategory = (typeof DOC_CATEGORIES)[number];
+
 /** Todo lo que hace falta para pintar la pagina de un componente. */
 export interface ComponentDoc {
   /** Segmento de ruta en kebab-case, p. ej. `radio-group`. */
   id: string;
   /** Nombre visible, p. ej. `Radio Group`. */
   title: string;
+  /** Grupo de la barra lateral de la doc. */
+  category: DocCategory;
   /** Una a tres frases. */
   description: string;
   /** Exports que hay que importar para los ejemplos, en orden de aparicion. */

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const weekBlocksDoc: ComponentDoc = {
   id: "week-blocks",
+  category: "Data display",
   title: "Week Blocks",
   description:
     "A work week of time blocks: one column per day with blocks positioned by time over an hour grid, or, in a narrow container, one list per day with rows \"09:00–10:30 · title · detail\". A day without blocks shows its `note`. Fills are the `--ui-week-block-*` tokens; the label comes from the locale catalog.",

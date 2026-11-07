@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const badgeDoc: ComponentDoc = {
   id: "badge",
+  category: "Data display",
   title: "Badge",
   description:
     "Small status label with neutral, info, success, warning and danger variants.",

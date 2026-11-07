@@ -116,6 +116,14 @@ a {
   color: var(--ui-color-primary);
 }
 
+/* Foco de la libreria en todo el cromo de la doc: sin esto los enlaces, los
+   botones y los resumenes usaban el anillo por defecto del navegador, que no
+   sigue al preset. */
+:where(a, button, summary, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--ui-focus-ring);
+  outline-offset: 2px;
+}
+
 code,
 pre {
   font-family: var(--docs-mono);

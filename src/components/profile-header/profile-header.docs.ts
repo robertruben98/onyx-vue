@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const profileHeaderDoc: ComponentDoc = {
   id: "profile-header",
+  category: "Layout",
   title: "Profile Header",
   description:
     "The identity hero of a profile page: an xl avatar (initials on the name's gradient, optional progress ring), the name as a heading, a subtitle, actions and a row of 2–4 compact stats. It answers to its own width: under 26rem it stacks and centres, and the stats go two by two. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

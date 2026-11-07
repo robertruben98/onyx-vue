@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const statusDotDoc: ComponentDoc = {
   id: "status-dot",
+  category: "Feedback",
   title: "Status Dot",
   description:
     "A small coloured dot reporting a state. Carries an accessible name so the state never depends on colour alone; without a name it is treated as decorative and hidden from assistive technology.",

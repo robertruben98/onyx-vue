@@ -3,6 +3,7 @@ import { useToast } from "./toast-store";
 
 export const toastDoc: ComponentDoc = {
   id: "toast",
+  category: "Overlays",
   title: "Toast",
   description:
     "Transient messages about something that just happened. Call useToast().show() from anywhere — a click handler, a polling composable — and mount one UiToastHost per page to render them. Danger toasts go to an assertive live region, the rest to a polite one; at most three are shown. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const actionClusterDoc: ComponentDoc = {
   id: "action-cluster",
+  category: "Actions",
   title: "Action Cluster",
   description:
     "The actions at the end of a dense list row. Dimmed until hovered or focused, so twenty rows of icons do not compete with the data beside them — and revealed on focus-within, so a keyboard can still reach them.",

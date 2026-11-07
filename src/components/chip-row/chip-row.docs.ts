@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const chipRowDoc: ComponentDoc = {
   id: "chip-row",
+  category: "Forms",
   title: "Chip Row",
   description:
     "Lays out a set of chips (UiChip or UiFilterChip). `wrap` flows onto more lines; `scroll` keeps one line that slides sideways and leaves room around the first and last chip and the focus ring, so neither is clipped by the scroll box.",

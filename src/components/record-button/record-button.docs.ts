@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const recordButtonDoc: ComponentDoc = {
   id: "record-button",
+  category: "Actions",
   title: "Record Button",
   description:
     "The big microphone toggle of a spoken answer, with idle, recording and busy states. It is a toggle button (`aria-pressed` while recording); recording pulses (a static halo under reduced motion) and busy shows a spinner with `aria-busy`. A level meter and a timer go in slots that are hidden from assistive tech. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

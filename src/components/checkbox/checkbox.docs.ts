@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const checkboxDoc: ComponentDoc = {
   id: "checkbox",
+  category: "Forms",
   title: "Checkbox",
   description:
     "Boolean control with an optional tri-state dash. `indeterminate` is a DOM property, not an attribute, so it is applied imperatively the moment the native input is patched in — it is correct on the very first render, not one tick later. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",

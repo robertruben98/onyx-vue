@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const skeletonDoc: ComponentDoc = {
   id: "skeleton",
+  category: "Feedback",
   title: "Skeleton",
   description:
     "A placeholder in the shape of the content that is loading, so the page does not jump when it arrives. Announced once as a status; still for anyone who prefers reduced motion. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

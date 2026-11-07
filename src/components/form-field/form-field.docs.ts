@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const formFieldDoc: ComponentDoc = {
   id: "form-field",
+  category: "Forms",
   title: "Form Field",
   description:
     "A control with its label, a hint and an error, wired together. The library's form controls inside it pick up its id, the hint and error ids for `aria-describedby`, and whether it is invalid or required, so screen readers read the hint and the error with the field and you write no bindings.",

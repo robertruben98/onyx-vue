@@ -1,24 +1,53 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { UiCrtOverlay, UiDigitalRain } from "@onyx/vue";
+import { UiCrtOverlay, UiDigitalRain, UiSegmented } from "@onyx/vue";
 import { NAV } from "./nav";
+import DocSearch from "./DocSearch.vue";
 
-// Dark-mode toggle, persisted (the pre-paint script in index.html reads this).
-const dark = ref(
-  typeof localStorage !== "undefined" &&
-    localStorage.getItem("onyx-dark") === "true",
-);
+// Modo de color: System / Light / Dark, persistido (el script de pre-pintado de
+// index.html lee la misma clave). "true"/"false" son los valores historicos de
+// la clave; cualquier otra cosa, o ninguna, es "seguir al sistema".
+type Mode = "system" | "light" | "dark";
+const MODES = [
+  { value: "system", label: "System" },
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+];
 
-function toggleDark() {
-  dark.value = !dark.value;
-  document.documentElement.classList.toggle("app-dark", dark.value);
+function modeFromStored(v: string | null): Mode {
+  return v === "true" ? "dark" : v === "false" ? "light" : "system";
+}
+function read(key: string): string | null {
   try {
-    localStorage.setItem("onyx-dark", String(dark.value));
+    return typeof localStorage !== "undefined" ? localStorage.getItem(key) : null;
+  } catch {
+    return null;
+  }
+}
+
+const mode = ref<Mode>(modeFromStored(read("onyx-dark")));
+const prefersDark =
+  typeof window !== "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-color-scheme: dark)")
+    : null;
+
+function applyMode() {
+  const dark = mode.value === "dark" || (mode.value === "system" && !!prefersDark?.matches);
+  document.documentElement.classList.toggle("app-dark", dark);
+}
+
+function setMode(value: string) {
+  mode.value = value as Mode;
+  applyMode();
+  try {
+    localStorage.setItem("onyx-dark", value === "dark" ? "true" : value === "light" ? "false" : "system");
   } catch {
     /* ignore */
   }
 }
+prefersDark?.addEventListener?.("change", applyMode);
+onBeforeUnmount(() => prefersDark?.removeEventListener?.("change", applyMode));
 
 // Presets de cliente. La clase va en <html>, no en un contenedor de aqui
 // dentro: Dialog, Select, Tooltip, Popover y Menu hacen `<Teleport to="body">`
@@ -76,8 +105,8 @@ function applyPreset(id: string) {
 function onStorage(event: StorageEvent) {
   if (event.key === "onyx-preset") setPresetClass(event.newValue || "default");
   if (event.key === "onyx-dark") {
-    dark.value = event.newValue === "true";
-    document.documentElement.classList.toggle("app-dark", dark.value);
+    mode.value = modeFromStored(event.newValue);
+    applyMode();
   }
 }
 window.addEventListener("storage", onStorage);
@@ -86,6 +115,37 @@ onBeforeUnmount(() => window.removeEventListener("storage", onStorage));
 // El marco de un pattern (`meta.bare`) se pinta sin la barra lateral.
 const route = useRoute();
 const bare = computed(() => route.meta.bare === true);
+
+// Menu movil: por debajo de 900 px la barra lateral es un cajon. Cerrado, esta
+// `visibility: hidden` (ni foco ni lector de pantalla), y se cierra solo al
+// navegar o con Escape.
+const menuOpen = ref(false);
+const sidebar = ref<HTMLElement | null>(null);
+const search = ref<{ openSearch: () => void } | null>(null);
+const mainEl = ref<HTMLElement | null>(null);
+
+watch(
+  () => route.fullPath,
+  () => (menuOpen.value = false),
+);
+watch(menuOpen, async (isOpen) => {
+  if (!isOpen) return;
+  await nextTick();
+  sidebar.value?.querySelector<HTMLElement>("a, button, select")?.focus();
+});
+
+function onKey(event: KeyboardEvent) {
+  if (event.key === "Escape" && menuOpen.value) menuOpen.value = false;
+}
+onMounted(() => document.addEventListener("keydown", onKey));
+onBeforeUnmount(() => document.removeEventListener("keydown", onKey));
+
+/** Salto al contenido. Un `href="#..."` en un router de historial navegaria, asi que se enfoca a mano. */
+function skipToContent(event: Event) {
+  event.preventDefault();
+  mainEl.value?.focus();
+  mainEl.value?.scrollIntoView?.();
+}
 </script>
 
 <template>
@@ -103,11 +163,41 @@ const bare = computed(() => route.meta.bare === true);
   <RouterView v-if="bare" />
 
   <div v-else class="docs">
-    <aside class="docs__sidebar">
-      <RouterLink class="docs__brand" to="/introduction">Onyx UI</RouterLink>
-      <button type="button" class="docs__theme" @click="toggleDark">
-        {{ dark ? "Light mode" : "Dark mode" }}
+    <a class="docs__skip" href="#main-content" @click="skipToContent">Skip to content</a>
+
+    <header class="docs__topbar">
+      <button
+        type="button"
+        class="docs__menu"
+        aria-controls="docs-sidebar"
+        :aria-expanded="menuOpen"
+        @click="menuOpen = !menuOpen"
+      >
+        {{ menuOpen ? "Close menu" : "Menu" }}
       </button>
+      <RouterLink class="docs__brand" to="/introduction">Onyx UI</RouterLink>
+      <button type="button" class="docs__search docs__search--top" @click="search?.openSearch()">
+        Search
+      </button>
+    </header>
+    <div v-if="menuOpen" class="docs__scrim" @click="menuOpen = false"></div>
+
+    <aside id="docs-sidebar" ref="sidebar" class="docs__sidebar" :class="{ 'docs__sidebar--open': menuOpen }">
+      <RouterLink class="docs__brand docs__brand--side" to="/introduction">Onyx UI</RouterLink>
+      <button type="button" class="docs__search" @click="search?.openSearch()">
+        <span>Search</span>
+        <kbd class="docs__kbd" aria-hidden="true">/</kbd>
+      </button>
+      <div class="docs__mode">
+        <UiSegmented
+          :model-value="mode"
+          :options="MODES"
+          aria-label="Color mode"
+          size="sm"
+          fluid
+          @update:model-value="setMode"
+        />
+      </div>
       <label class="docs__preset">
         <span class="docs__preset-label">Preset</span>
         <select
@@ -137,10 +227,12 @@ const bare = computed(() => route.meta.bare === true);
       </nav>
     </aside>
 
-    <main class="docs__main">
+    <main id="main-content" ref="mainEl" class="docs__main" tabindex="-1">
       <RouterView />
     </main>
   </div>
+
+  <DocSearch ref="search" />
 </template>
 
 <style scoped>
@@ -190,16 +282,72 @@ const bare = computed(() => route.meta.bare === true);
   text-decoration: none;
   color: var(--ui-color-text);
 }
-.docs__theme {
-  margin: 0.75rem 0 1.25rem;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.8rem;
+.docs__mode {
+  margin: 0.75rem 0 0.5rem;
+}
+.docs__search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--ui-color-text-muted);
+  background: transparent;
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius);
+}
+.docs__search:hover {
+  color: var(--ui-color-text);
+  border-color: var(--ui-color-primary);
+}
+.docs__search--top {
+  width: auto;
+  margin: 0 0 0 auto;
+}
+.docs__kbd {
+  padding: 0 0.4rem;
+  font-family: var(--docs-mono);
+  font-size: 0.75rem;
+  border: 1px solid var(--ui-color-border);
+  border-radius: 4px;
+}
+.docs__skip {
+  position: absolute;
+  top: 0;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  color: var(--ui-color-on-primary, #fff);
+  background: var(--ui-color-primary);
+  border-radius: 0 0 var(--ui-radius) var(--ui-radius);
+  transform: translateY(-120%);
+}
+.docs__skip:focus {
+  transform: translateY(0);
+}
+.docs__topbar,
+.docs__scrim {
+  display: none;
+}
+.docs__menu {
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   color: var(--ui-color-text);
   background: transparent;
   border: 1px solid var(--ui-color-border);
   border-radius: var(--ui-radius);
+}
+.docs__main:focus {
+  outline: none;
 }
 .docs__section + .docs__section {
   margin-top: 1.5rem;
@@ -237,13 +385,55 @@ const bare = computed(() => route.meta.bare === true);
   padding: 2rem clamp(1rem, 4vw, 3rem);
   max-width: 70rem;
 }
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .docs {
     grid-template-columns: minmax(0, 1fr);
   }
+  .docs__topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: var(--ui-color-surface);
+    border-bottom: 1px solid var(--ui-color-border);
+  }
+  .docs__brand--side {
+    display: none;
+  }
+  .docs__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: block;
+    background: rgba(0, 0, 0, 0.45);
+  }
   .docs__sidebar {
-    position: static;
-    height: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    width: min(20rem, 85vw);
+    height: 100vh;
+    height: 100dvh;
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease, visibility 0.2s;
+  }
+  .docs__sidebar--open {
+    visibility: visible;
+    transform: none;
+  }
+  .docs__search:not(.docs__search--top) {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .docs__sidebar {
+    transition: none;
   }
 }
 </style>

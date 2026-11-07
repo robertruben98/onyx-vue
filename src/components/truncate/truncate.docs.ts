@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const truncateDoc: ComponentDoc = {
   id: "truncate",
+  category: "Data display",
   title: "Truncate",
   description:
     "Text that ellipsizes on one line or clamps to several, with the full string in the title so nothing is lost. Sets min-width: 0 so it actually shrinks inside a flex or grid row.",

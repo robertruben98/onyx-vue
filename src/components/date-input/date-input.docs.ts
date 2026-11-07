@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const dateInputDoc: ComponentDoc = {
   id: "date-input",
+  category: "Forms",
   title: "Date Input",
   description:
     "A day, a time, both or a month, with the browser's own picker and the look of Input. The value is ISO (`2026-10-04`, `13:00`), whatever format the user's locale shows.",

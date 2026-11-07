@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const timelineDoc: ComponentDoc = {
   id: "timeline",
+  category: "Data display",
   title: "Timeline",
   description:
     "What happened to one thing, newest first: the versions of an idea, the decisions taken on it. Each event has a date, a title, an optional state tag and a body (text or a slot). It sorts the events itself, so the caller can pass them in the order they were stored. It is not a gantt — nothing has a duration, so nothing is drawn to scale. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

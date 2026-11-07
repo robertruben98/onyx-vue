@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const switchDoc: ComponentDoc = {
   id: "switch",
+  category: "Forms",
   title: "Switch",
   description:
     "On/off control for a setting that applies immediately. Use a Checkbox instead when the value is submitted with a form. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",

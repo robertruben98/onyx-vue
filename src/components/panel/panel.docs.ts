@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const panelDoc: ComponentDoc = {
   id: "panel",
+  category: "Layout",
   title: "Panel",
   description:
     "A titled block of a console page: a Section Header band over a body that runs edge to edge. An empty panel stays on screen and says so, because 'nothing is waiting' is an answer. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const countdownDoc: ComponentDoc = {
   id: "countdown",
+  category: "Data display",
   title: "Countdown",
   description:
     "A live countdown to a moment: \"13 h 18 min to the written exam\". The figure updates every tick, but it is a role=timer that is not a chatty live region: a screen reader reads the whole sentence when it gets there, and `announce` speaks only at coarse steps. Emits `ended` once at zero and stops its timer, also when unmounted. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

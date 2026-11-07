@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const codeBlockDoc: ComponentDoc = {
   id: "code-block",
+  category: "Data display",
   title: "Code Block",
   description:
     "Monospaced output in a box: an HTTP response, the tail of a log, a prompt. With followTail it keeps the end in view as text arrives — but only while the reader is at the end, so scrolling up to read an error keeps your place. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0.",

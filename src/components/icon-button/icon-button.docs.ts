@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const iconButtonDoc: ComponentDoc = {
   id: "icon-button",
+  category: "Actions",
   title: "Icon Button",
   description:
     "A button that is only a glyph. The label is required: it is the accessible name and the tooltip, so mouse and screen reader get the same word. Pass an SVG path for a 24×24 stroke icon, or use the slot for any other glyph. Pairs with Action Cluster for row actions.",

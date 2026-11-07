@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const hudFrameDoc: ComponentDoc = {
   id: "hud-frame",
+  category: "Effects",
   title: "HUD Frame",
   description:
     "A panel with corner brackets and an optional titled header — a chassis rather than a content surface. Deliberately not a UiCard variant: a card brings padding and a shadow, and every use here would have had to override them. The brackets are two diagonal corners, because a closed frame reads as a box and two corners read as an instrument.",

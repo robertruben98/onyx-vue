@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const spinnerDoc: ComponentDoc = {
   id: "spinner",
+  category: "Feedback",
   title: "Spinner",
   description:
     "Indeterminate loading indicator. It carries `role=\"status\"` and an accessible label, so screen readers announce it without any extra markup. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
