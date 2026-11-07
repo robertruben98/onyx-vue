@@ -9,6 +9,21 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Added
+
+- `UiFab`: `contained` anchors the button to the nearest positioned ancestor (`position: absolute`) instead of the viewport, for demos and framed previews. Default unchanged. (#74)
+- `ComponentDoc.category` (required) and `DOC_CATEGORIES`: the docs sidebar groups the components (Actions, Forms, Navigation, Overlays, Data display, Feedback, Layout, Messaging, Effects) instead of one flat list. (#74)
+
+### Fixed
+
+- Docs: `/components/state-bar` no longer crashes ("Legend as filter" had no `setup()`); the Nav Rail, Menu (deprecated `@item-select`) and Task Row demos had the same kind of defect. A test now mounts every `*.docs.ts` demo and fails on any Vue warning or error. (#74)
+
+### Changed (docs site)
+
+- Search (`/` or Ctrl/Cmd+K, `UiDialog` + `UiInput`), grouped sidebar, a drawer sidebar under 900px, a skip link, the library focus ring and a System/Light/Dark `UiSegmented`; a Copy button on every code block and backtick code in API tables and descriptions rendered as `<code>`; the Theming page generates its snippets and a token table from `src/styles` and shows the six presets; the Fab demos are visible inside their box. (#74)
+
 ## 0.21.0 — 2026-11-06
 
 ### Added
