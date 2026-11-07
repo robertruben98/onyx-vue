@@ -148,3 +148,14 @@ describe("EmptyState (Vue)", () => {
     expect(await axe(container, axeOptions)).toHaveNoViolations();
   });
 });
+
+describe("EmptyState layout", () => {
+  it("centres itself horizontally when its container is wider than max-width", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const scss = readFileSync(join(__dirname, "empty-state.scss"), "utf8");
+    const root = scss.match(/\.ui-empty-state\s*\{([^}]*)\}/);
+    expect(root).not.toBeNull();
+    expect(root![1]).toMatch(/margin-inline:\s*auto\s*;/);
+  });
+});
