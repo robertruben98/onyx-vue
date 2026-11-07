@@ -9,6 +9,13 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Fixed
+
+- `UiEmptyState` centres itself horizontally (`margin-inline: auto`) when its container is wider than
+  `--ui-empty-state-max-width`; before it sat at the left edge.
+
 ## 0.21.0 — 2026-11-06
 
 ### Added
