@@ -75,8 +75,27 @@ function dismiss(): void {
 <template>
   <div :class="rootClasses" :hidden="hidden || undefined">
     <div class="ui-alert__el" :role="role">
-      <span v-if="$slots.icon" class="ui-alert__icon" aria-hidden="true">
-        <slot name="icon" />
+      <span class="ui-alert__icon" aria-hidden="true">
+        <slot name="icon">
+          <svg class="ui-alert__icon-svg" viewBox="0 0 24 24" focusable="false">
+            <template v-if="variant === 'success'">
+              <circle cx="12" cy="12" r="9" />
+              <path d="m8 12.5 2.8 2.8L16 9.5" />
+            </template>
+            <template v-else-if="variant === 'warning'">
+              <path d="M12 3.5 21.5 20h-19z" />
+              <path d="M12 10v4.5M12 17.4v.1" />
+            </template>
+            <template v-else-if="variant === 'danger'">
+              <circle cx="12" cy="12" r="9" />
+              <path d="m9 9 6 6M15 9l-6 6" />
+            </template>
+            <template v-else>
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 11v5.5M12 7.6v.1" />
+            </template>
+          </svg>
+        </slot>
       </span>
       <div class="ui-alert__body">
         <p v-if="title" class="ui-alert__title">{{ title }}</p>
@@ -92,7 +111,9 @@ function dismiss(): void {
         :aria-label="dismissLabel"
         @click="dismiss"
       >
-        <span aria-hidden="true">&times;</span>
+        <svg class="ui-alert__close-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="m6 6 12 12M18 6 6 18" />
+        </svg>
       </button>
     </div>
   </div>

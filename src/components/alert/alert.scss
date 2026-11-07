@@ -16,7 +16,7 @@
   font-size: var(--ui-alert-font-size);
   color: var(--ui-alert-text);
   border-radius: var(--ui-alert-radius);
-  border-left: var(--ui-alert-accent-width) solid transparent;
+  border: var(--ui-border-width) solid transparent;
 }
 
 .ui-alert__body {
@@ -33,15 +33,36 @@
 }
 
 .ui-alert__close {
-  flex-shrink: 0;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--ui-alert-close-hit);
+  height: var(--ui-alert-close-hit);
+  // The box grows, the alert does not: the margin gives back what the glyph
+  // does not need.
+  margin: calc((var(--ui-alert-close-glyph) - var(--ui-alert-close-hit)) / 2);
   padding: 0;
-  font-size: var(--ui-alert-close-size);
   line-height: 1;
   color: inherit;
   background: transparent;
   border: none;
-  border-radius: var(--ui-alert-radius);
+  border-radius: var(--ui-radii-full);
   cursor: pointer;
+}
+
+.ui-alert__close:hover {
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.ui-alert__close-svg {
+  width: var(--ui-alert-close-glyph);
+  height: var(--ui-alert-close-glyph);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
 }
 
 .ui-alert__close:focus-visible {
@@ -52,23 +73,23 @@
 // --- Variants -------------------------------------------------------------
 .ui-alert--neutral .ui-alert__el {
   background-color: var(--ui-alert-neutral-bg);
-  border-left-color: var(--ui-alert-neutral-accent);
+  border-color: var(--ui-alert-neutral-border);
 }
 .ui-alert--info .ui-alert__el {
   background-color: var(--ui-alert-info-bg);
-  border-left-color: var(--ui-alert-info-accent);
+  border-color: var(--ui-alert-info-border);
 }
 .ui-alert--success .ui-alert__el {
   background-color: var(--ui-alert-success-bg);
-  border-left-color: var(--ui-alert-success-accent);
+  border-color: var(--ui-alert-success-border);
 }
 .ui-alert--warning .ui-alert__el {
   background-color: var(--ui-alert-warning-bg);
-  border-left-color: var(--ui-alert-warning-accent);
+  border-color: var(--ui-alert-warning-border);
 }
 .ui-alert--danger .ui-alert__el {
   background-color: var(--ui-alert-danger-bg);
-  border-left-color: var(--ui-alert-danger-accent);
+  border-color: var(--ui-alert-danger-border);
 }
 
 .ui-alert--info .ui-alert__title {
@@ -90,6 +111,29 @@
   align-items: center;
 }
 
+.ui-alert__icon-svg {
+  width: var(--ui-alert-icon-size);
+  height: var(--ui-alert-icon-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ui-alert--info .ui-alert__icon {
+  color: var(--ui-alert-info-accent);
+}
+.ui-alert--success .ui-alert__icon {
+  color: var(--ui-alert-success-accent);
+}
+.ui-alert--warning .ui-alert__icon {
+  color: var(--ui-alert-warning-accent);
+}
+.ui-alert--danger .ui-alert__icon {
+  color: var(--ui-alert-danger-accent);
+}
+
 .ui-alert__action {
   flex: none;
   display: inline-flex;
@@ -101,36 +145,14 @@
 // stack of cards.
 .ui-alert--band .ui-alert__el {
   padding: var(--ui-alert-band-padding-y) var(--ui-alert-band-padding-x);
-  border-left: 0;
+  border-width: 0;
   border-radius: 0;
   border-bottom: var(--ui-border-width) solid var(--ui-alert-band-border);
 }
 
-// WCAG 2.5.8: at least 24px to hit (it was 12x20), without growing the alert.
-.ui-alert__close {
-  position: relative;
-}
-
-.ui-alert__close::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: max(100%, 24px);
-  height: max(100%, 24px);
-  transform: translate(-50%, -50%);
-}
-
-// Con puntero grueso (dedo), un area invisible de 44px alrededor del control,
-// como UiCheckbox y UiSwitch, sin mover nada del diseno.
+// A finger needs 44px whatever the theme (WCAG 2.5.8 asks 24, Apple 44pt).
 @media (pointer: coarse) {
-  .ui-alert__close::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: max(100%, 44px);
-    height: max(100%, 44px);
-    transform: translate(-50%, -50%);
+  .ui-alert {
+    --ui-alert-close-hit: 44px;
   }
 }

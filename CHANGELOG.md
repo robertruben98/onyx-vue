@@ -49,6 +49,11 @@ Consumers that build from source (the control-panel dashboard aliases
   real, focusable control. New tokens: `--ui-radio-bg`, `--ui-radio-border`, `--ui-radio-border-checked`,
   `--ui-radio-border-width`, `--ui-radio-dot-color`. `--ui-checkbox-border` now defaults to
   `--ui-color-border-strong` (it was the faint divider colour, which a drawn box would have shown).
+## Unreleased
+
+### Changed
+
+- `UiAlert`: the dismiss button is now a real round 32px box (`--ui-alert-close-hit`; 44px in the pocket preset and with `pointer: coarse`) with an SVG cross, instead of an 11.7x20px text glyph with a hit area bolted on; a negative margin (`--ui-alert-close-glyph`) keeps the alert's size. The boxed alert drops the 4px left stripe (a crescent on a rounded corner) for a tinted fill with a 1px tone border (new tokens `--ui-alert-<tone>-border`); the band keeps its bottom rule only. Every tone shows a default icon (info, check, warning triangle, x-circle) when no `#icon` is given, so `.ui-alert__icon` is always rendered. Removed tokens `--ui-alert-accent-width` and `--ui-alert-close-size`. (#68)
 
 ## 0.21.0 — 2026-11-06
 

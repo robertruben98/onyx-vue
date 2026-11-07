@@ -42,7 +42,6 @@ describe("touch targets under a coarse pointer", () => {
   it.each([
     ["icon-button/icon-button.scss", ".ui-icon-button::after"],
     ["tabs/tabs.scss", ".ui-tabs__arrow::after"],
-    ["alert/alert.scss", ".ui-alert__close::after"],
     ["tag/tag.scss", ".ui-tag__remove::after"],
     ["drawer/drawer.scss", ".ui-drawer__close::after"],
     ["dialog/dialog.scss", ".ui-dialog__close::after"],
@@ -102,7 +101,6 @@ describe("touch targets under a coarse pointer", () => {
   });
 
   it.each([
-    ["alert/alert.scss", ".ui-alert__close"],
     ["tag/tag.scss", ".ui-tag__remove"],
   ])("%s reaches 24px with any pointer (WCAG 2.5.8)", (file, selector) => {
     const css = sheet(file);

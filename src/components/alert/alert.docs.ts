@@ -4,7 +4,7 @@ export const alertDoc: ComponentDoc = {
   id: "alert",
   title: "Alert",
   description:
-    "Inline message with an optional title and a dismiss button. The `danger` variant announces itself assertively (`role=\"alert\"`); every other variant is polite (`role=\"status\"`), so a success message never interrupts what is being read. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
+    "Inline message with a tone icon, an optional title and a dismiss button (a round 32px target, 44px in the pocket preset and with a coarse pointer). The boxed alert is a tinted fill with a 1px tone border, no side stripe. The `danger` variant announces itself assertively (`role=\"alert\"`); every other variant is polite (`role=\"status\"`), so a success message never interrupts what is being read. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
   imports: ["UiAlert"],
   api: [
     {
@@ -46,7 +46,7 @@ export const alertDoc: ComponentDoc = {
       description: "Emitted after dismissal. The alert hides itself.",
     },
     { name: "#default", type: "slot", default: "—", description: "Message body." },
-    { name: "#icon", type: "slot", default: "—", description: "Optional icon, typically a spinner in a band appearance." },
+    { name: "#icon", type: "slot", default: "—", description: "Replaces the default tone icon (info, check, warning triangle, x-circle), e.g. a spinner in a band appearance." },
     { name: "#action", type: "slot", default: "—", description: "Optional action button or control, typically in a band appearance." },
   ],
   demos: [
