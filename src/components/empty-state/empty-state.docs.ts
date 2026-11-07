@@ -39,5 +39,14 @@ export const emptyStateDoc: ComponentDoc = {
   <template #secondaryAction>Opciones</template>
 </UiEmptyState>`,
     },
+    {
+      title: "Centred in a wide container",
+      code: `<div style="width: 100%; border: 1px dashed var(--ui-color-border, #999)">
+  <UiEmptyState>
+    <template #title>Nada que publicar</template>
+    <template #description>The root centres itself when its container is wider than its max-width.</template>
+  </UiEmptyState>
+</div>`,
+    },
   ],
 };
