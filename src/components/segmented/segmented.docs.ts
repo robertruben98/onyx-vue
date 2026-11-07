@@ -32,5 +32,10 @@ export const segmentedDoc: ComponentDoc = {
       code: `<UiSegmented v-model="range" size="sm" aria-label="Period" :options="[{ value: '24h', label: '24 h' }, { value: '7d', label: '7 days' }, { value: '30d', label: '30 days' }, { value: '1y', label: '1 year', disabled: true }]" />`,
       setup: () => ({ range: "7d" }),
     },
+    {
+      title: "Fluid, with short labels (the selection slides)",
+      code: `<UiSegmented v-model="part" fluid aria-label="Speaking part" :options="[{ value: '1', label: '1 · Interview', short: 'Interview' }, { value: '2', label: '2 · Long turn', short: 'Long turn' }, { value: '3', label: '3 · Role-play', short: 'Role-play' }, { value: '4', label: '4 · Step by step', short: 'Steps' }]" />`,
+      setup: () => ({ part: "2" }),
+    },
   ],
 };

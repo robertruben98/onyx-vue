@@ -842,6 +842,7 @@
   --ui-segmented-divider: var(--ui-segmented-border);
   --ui-segmented-inset: 0px;
   --ui-segmented-item-radius: 0px;
+  --ui-segmented-thumb-shadow: none;
   /* --- Floating action button (0.4) ----------------------------------- */
   --ui-fab-size: 3.25rem;
   --ui-fab-size-compact: 3rem;

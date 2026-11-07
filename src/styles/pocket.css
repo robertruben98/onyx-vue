@@ -56,6 +56,11 @@
   --ui-segmented-divider: transparent;
   --ui-segmented-inset: 3px;
   --ui-segmented-item-radius: var(--ui-radii-full);
+  /* Neutral track with a raised surface-coloured thumb, not a second primary button. */
+  --ui-segmented-bg: var(--ui-color-neutral-surface);
+  --ui-segmented-selected-bg: var(--ui-color-surface);
+  --ui-segmented-selected-text: var(--ui-color-text);
+  --ui-segmented-thumb-shadow: 0 1px 2px rgba(15, 23, 42, 0.12), 0 1px 3px rgba(15, 23, 42, 0.1);
   --ui-fab-bg: linear-gradient(135deg, var(--ui-pocket-accent), var(--ui-pocket-accent-2));
   --ui-fab-bg-hover: linear-gradient(135deg, var(--ui-pocket-accent-hover), var(--ui-pocket-accent-2));
   --ui-record-button-bg: var(--ui-fab-bg);

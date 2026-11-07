@@ -24,6 +24,15 @@ Consumers that build from source (the control-panel dashboard aliases
 ### Fixed
 
 - Spacing scale: `--ui-space-6` was referenced by `--ui-fab-bottom`, `--ui-check-tree-indent` and `UiStack gap={6}` (the definition already landed in 0.13+); the scale now continues to `--ui-space-7` (2rem), `-8` (2.5rem), `-9` (3rem) and `-10` (4rem), and `StackGap` accepts 7 to 10. A new test (`src/styles/undefined-tokens.test.ts`) fails when a `var(--ui-*)` without fallback has no definition in `src/`. (#63)
+## Unreleased
+
+### Changed
+
+- `UiSegmented`: the selection is a thumb that slides behind the segments (`transform`, 200 ms, none
+  under `prefers-reduced-motion`) instead of the background jumping. New token
+  `--ui-segmented-thumb-shadow` (`none` by default, and in `console` and `matrix`).
+- `pocket`: the segmented track is neutral (`--ui-color-neutral-surface`) and the thumb is a raised
+  surface-coloured pill with dark text, so the selection no longer looks like the primary button.
 
 ## 0.21.0 — 2026-11-06
 

@@ -81,22 +81,47 @@ async function measure(): Promise<void> {
   if (!overflows()) return;
   fit.value = "wrap";
 }
+/**
+ * The thumb: one element behind the segments that slides (transform) to the
+ * selected one instead of the background jumping. Placed from the selected
+ * item's box; hidden while nothing is selected. No transition on the first
+ * placement, so it does not fly in from the corner on mount.
+ */
+const thumb = ref({ x: 0, y: 0, w: 0, h: 0, shown: false, ready: false });
+function placeThumb(): void {
+  const item = root.value?.querySelector<HTMLElement>(".ui-segmented__item--selected");
+  if (!item) { thumb.value = { ...thumb.value, shown: false }; return; }
+  thumb.value = { x: item.offsetLeft, y: item.offsetTop, w: item.offsetWidth, h: item.offsetHeight, shown: true, ready: thumb.value.ready };
+}
+const thumbStyle = computed(() => ({
+  width: `${thumb.value.w}px`,
+  height: `${thumb.value.h}px`,
+  transform: `translate(${thumb.value.x}px, ${thumb.value.y}px)`,
+}));
+
 let observer: ResizeObserver | null = null;
 let lastWidth = -1;
 onMounted(() => {
-  if (!props.fluid) return;
-  void measure();
+  if (props.fluid) void measure();
+  placeThumb();
+  // Animate only the moves after the first paint.
+  requestAnimationFrame(() => { thumb.value = { ...thumb.value, ready: true }; });
   if (typeof ResizeObserver !== "undefined" && root.value) {
     // Solo los cambios de ANCHO: el alto cambia al partir, y medir por eso daria vueltas.
     observer = new ResizeObserver(([e]) => {
       const w = Math.round(e.contentRect.width);
-      if (w !== lastWidth) { lastWidth = w; void measure(); }
+      if (w === lastWidth) return;
+      lastWidth = w;
+      if (props.fluid) void measure().then(placeThumb);
+      else placeThumb();
     });
     observer.observe(root.value);
   }
 });
 onBeforeUnmount(() => observer?.disconnect());
-watch(() => props.options.map((o) => o.label + (o.short ?? "")).join("|"), () => void measure());
+watch(() => props.options.map((o) => o.label + (o.short ?? "")).join("|"), () => void measure().then(placeThumb));
+watch(() => model.value, () => void nextTick(placeThumb));
+watch(fit, () => void nextTick(placeThumb));
 
 const shown = (opt: SegmentedOption) => (fit.value !== "full" && opt.short ? opt.short : opt.label);
 /**
@@ -146,6 +171,11 @@ function syncChecked(): void {
     role="radiogroup"
     :aria-label="ariaLabel || undefined"
   >
+    <span
+      :class="['ui-segmented__thumb', { 'ui-segmented__thumb--shown': thumb.shown, 'ui-segmented__thumb--ready': thumb.ready }]"
+      :style="thumbStyle"
+      aria-hidden="true"
+    />
     <label
       v-for="opt in options"
       :key="opt.value"
