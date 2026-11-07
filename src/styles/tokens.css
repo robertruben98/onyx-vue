@@ -3,6 +3,9 @@
  */
 
 :root {
+  /* Native controls (checkbox, date picker, scrollbars) follow the theme; dark.css and the
+     night presets flip it. Without this a dark theme keeps white native boxes. */
+  color-scheme: light;
   --ui-dialog-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.28), 0 8px 18px -10px rgba(15, 23, 42, 0.18);
   --ui-dialog-width-sm: 20rem;
   --ui-dialog-width-md: 32rem;
@@ -135,6 +138,7 @@
   --ui-switch-thumb-travel: var(--ui-size-switch-travel);
   --ui-switch-padding: var(--ui-border-width-thick);
   --ui-switch-thumb-color: var(--ui-white);
+  --ui-switch-thumb-shadow: none;
   --ui-switch-radius: var(--ui-radii-full);
   --ui-switch-label-gap: var(--ui-space-2);
   --ui-switch-label-font-size: var(--ui-font-size-md);
@@ -321,7 +325,7 @@
   --ui-input-disabled-text: var(--ui-color-disabled-text);
   --ui-checkbox-bg: var(--ui-color-surface);
   --ui-checkbox-bg-checked: var(--ui-color-primary);
-  --ui-checkbox-border: var(--ui-color-border);
+  --ui-checkbox-border: var(--ui-color-border-strong);
   --ui-checkbox-border-checked: var(--ui-color-primary);
   --ui-checkbox-border-invalid: var(--ui-color-danger);
   --ui-checkbox-check-color: var(--ui-color-on-primary);
@@ -340,7 +344,12 @@
   --ui-switch-track-bg-checked: var(--ui-color-primary);
   --ui-switch-border-invalid: var(--ui-color-danger);
   --ui-switch-disabled-text: var(--ui-color-disabled-text);
+  --ui-radio-bg: var(--ui-color-surface);
   --ui-radio-bg-checked: var(--ui-color-primary);
+  --ui-radio-border: var(--ui-color-border-strong);
+  --ui-radio-border-checked: var(--ui-color-primary);
+  --ui-radio-border-width: var(--ui-border-width);
+  --ui-radio-dot-color: var(--ui-color-on-primary);
   --ui-radio-border-invalid: var(--ui-color-danger);
   --ui-radio-disabled-text: var(--ui-color-disabled-text);
   --ui-badge-neutral-bg: var(--ui-color-neutral-surface);
@@ -466,6 +475,7 @@
   --ui-card-bg: var(--ui-color-surface);
   --ui-card-text: var(--ui-color-text);
   --ui-card-border: var(--ui-color-border);
+  --ui-card-outlined-border: var(--ui-card-border);
   --ui-focus-ring: var(--ui-color-primary);
   --ui-severity-badge-padding-x: var(--ui-space-2);
   --ui-severity-badge-padding-y: var(--ui-space-1);

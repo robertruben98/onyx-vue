@@ -2,8 +2,8 @@
 
 // Radio group styles — ported from the Angular lib. References ONLY semantic /
 // component tokens (CLAUDE.md §3). Native radios share a name so the browser
-// provides roving focus + arrow-key navigation and full a11y. accent-color
-// renders the selected dot. Angular `:host` selectors are mapped to the root
+// provides roving focus + arrow-key navigation and full a11y. the radio is drawn
+// with tokens (`appearance: none`). Angular `:host` selectors are mapped to the root
 // class `.ui-radio-group` and its modifier classes.
 
 .ui-radio-group {
@@ -35,12 +35,39 @@
 }
 
 .ui-radio__el {
+  // Drawn, not native (see checkbox.scss): the size, border and fill are tokens.
+  appearance: none;
+  position: relative;
+  box-sizing: border-box;
   flex: none;
   width: var(--ui-radio-size);
   height: var(--ui-radio-size);
   margin: 0;
-  accent-color: var(--ui-radio-bg-checked);
+  background-color: var(--ui-radio-bg);
+  border: var(--ui-radio-border-width) solid var(--ui-radio-border);
+  border-radius: 50%;
   cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.ui-radio__el::after {
+  content: "";
+  position: absolute;
+  inset: 25%;
+  border-radius: 50%;
+  background-color: var(--ui-radio-dot-color);
+  opacity: 0;
+}
+
+.ui-radio__el:checked {
+  background-color: var(--ui-radio-bg-checked);
+  border-color: var(--ui-radio-border-checked);
+}
+
+.ui-radio__el:checked::after {
+  opacity: 1;
 }
 
 .ui-radio__el:focus-visible {
@@ -62,7 +89,7 @@
 // --- Invalid --------------------------------------------------------------
 .ui-radio-group--invalid .ui-radio__el {
   flex: none;
-  accent-color: var(--ui-radio-border-invalid);
+  border-color: var(--ui-radio-border-invalid);
 }
 
 // --- Disabled -------------------------------------------------------------
