@@ -14,6 +14,7 @@
   box-sizing: border-box;
   width: var(--ui-empty-state-full-width);
   max-width: var(--ui-empty-state-max-width);
+  margin-inline: auto;
   padding: var(--ui-empty-state-padding-y) var(--ui-empty-state-padding-x);
   gap: var(--ui-empty-state-gap);
   color: var(--ui-empty-state-color);
