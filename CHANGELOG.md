@@ -33,6 +33,22 @@ Consumers that build from source (the control-panel dashboard aliases
   `--ui-segmented-thumb-shadow` (`none` by default, and in `console` and `matrix`).
 - `pocket`: the segmented track is neutral (`--ui-color-neutral-surface`) and the thumb is a raised
   surface-coloured pill with dark text, so the selection no longer looks like the primary button.
+## Unreleased
+
+### Fixed
+
+- Pocket: controls are visible at rest. The switch off-track, the input and textarea border and the
+  checkbox and radio box reach 3:1 against the floor and the card (WCAG 1.4.11), light and dark. The switch
+  takes the iOS size (51x31) and a thumb shadow (`--ui-switch-thumb-shadow`, `none` in the other presets). The
+  skeleton base is darker, and the outlined card has its own border (`--ui-card-outlined-border`) so it no
+  longer looks like the elevated one. The info tag has an opaque surface in night mode (4.22:1 became 5:1).
+- `color-scheme` follows the theme: `light` on `:root`, `dark` under `.app-dark` and the Pocket night mode, so
+  native pickers and scrollbars no longer stay white in dark.
+- UiCheckbox and UiRadioGroup draw their box with `appearance: none` and tokens (radius, border, fill, SVG
+  check/dash mask) instead of the native control, so `--ui-checkbox-radius` is honoured. The input is still the
+  real, focusable control. New tokens: `--ui-radio-bg`, `--ui-radio-border`, `--ui-radio-border-checked`,
+  `--ui-radio-border-width`, `--ui-radio-dot-color`. `--ui-checkbox-border` now defaults to
+  `--ui-color-border-strong` (it was the faint divider colour, which a drawn box would have shown).
 
 ## 0.21.0 — 2026-11-06
 

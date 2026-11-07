@@ -72,6 +72,22 @@ export const checkboxDoc: ComponentDoc = {
 </div>`,
     },
     {
+      title: "Controls at rest",
+      description:
+        "The resting edge of a control reaches 3:1 against its surface in the Pocket preset, light and dark (switch off-track, field border, checkbox and radio box). Switch the preset and the mode in the header to compare.",
+      code: `<div style="display: grid; gap: 12px; max-width: 20rem">
+  <UiSwitch label="Notifications" />
+  <UiCheckbox label="Unchecked" />
+  <UiCheckbox label="Checked" :model-value="true" />
+  <UiCheckbox indeterminate label="Some selected" />
+  <UiRadioGroup label="Plan" :options="[{ value: 'a', label: 'Free' }, { value: 'b', label: 'Pro' }]" model-value="a" />
+  <UiInput label="Email" placeholder="you@example.com" />
+  <UiCard variant="elevated"><div style="padding: 12px">Elevated card</div></UiCard>
+  <UiCard variant="outlined"><div style="padding: 12px">Outlined card</div></UiCard>
+  <UiSkeleton />
+</div>`,
+    },
+    {
       title: "Invalid and disabled",
       code: `<UiCheckbox invalid label="Invalid" />
 <UiCheckbox disabled label="Disabled" />`,

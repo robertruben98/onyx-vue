@@ -101,6 +101,11 @@
   --ui-pocket-card-hover: #f5f6fb;
   --ui-pocket-glass: rgba(255, 255, 255, 0.72); /* barras translucidas */
   --ui-pocket-line: #e3e5ef;          /* filete casi invisible */
+  /* Borde de un control en reposo (interruptor apagado, campo, casilla): 3.5:1 sobre el
+     suelo y la tarjeta (WCAG 1.4.11 pide 3:1). El filete de arriba es decoracion, esto no. */
+  --ui-pocket-control-edge: #7c8099;
+  --ui-pocket-outline: #b4b9cd;       /* tarjeta "outlined": se distingue de la elevada */
+  --ui-pocket-skeleton: #d5d9e8;
   --ui-pocket-ink: #12142b;           /* texto */
   --ui-pocket-ink-soft: #5d6079;      /* texto suave: 6.1:1 sobre blanco */
   --ui-pocket-ink-faint: #80849e;   /* deshabilitado: 3.4:1 sobre card-hover */
@@ -129,6 +134,26 @@
   --ui-color-text-muted: var(--ui-pocket-ink-soft);
   --ui-color-border: var(--ui-pocket-line);
 
+  /* Controles: borde a 3:1, interruptor estilo iOS con sombra en la bolita, casillas
+     de 24px (de 20) y el skeleton con base visible. */
+  --ui-switch-track-bg: var(--ui-pocket-control-edge);
+  --ui-switch-track-width: 3.1875rem;
+  --ui-switch-track-height: 1.9375rem;
+  --ui-switch-thumb-size: 1.6875rem;
+  --ui-switch-thumb-travel: 1.25rem;
+  --ui-switch-thumb-shadow: 0 1px 3px rgba(23, 26, 52, 0.35), 0 1px 1px rgba(23, 26, 52, 0.2);
+  --ui-input-border: var(--ui-pocket-control-edge);
+  --ui-textarea-border: var(--ui-pocket-control-edge);
+  --ui-checkbox-border: var(--ui-pocket-control-edge);
+  --ui-radio-border: var(--ui-pocket-control-edge);
+  --ui-checkbox-radius: 0.4375rem;
+  --ui-checkbox-size-sm: 1.25rem;
+  --ui-checkbox-size: 1.5rem;
+  --ui-checkbox-size-lg: 1.75rem;
+  --ui-radio-size: 1.5rem;
+  --ui-skeleton-bg: var(--ui-pocket-skeleton);
+  --ui-card-outlined-border: var(--ui-pocket-outline);
+
   --ui-color-success: var(--ui-pocket-right);
   --ui-color-success-surface: #e4f6ec;
   --ui-color-warning: var(--ui-pocket-careful);
@@ -154,11 +179,15 @@
 
 /* De noche: casi negro azulado, tarjetas un punto mas claras, indigo encendido. */
 .ui-theme-pocket.app-dark {
+  color-scheme: dark;
   --ui-pocket-floor: #0b0c14;
   --ui-pocket-card: #161826;
   --ui-pocket-card-hover: #1e2133;
   --ui-pocket-glass: rgba(22, 24, 38, 0.72);
   --ui-pocket-line: #262a3f;
+  --ui-pocket-control-edge: #6e7396;
+  --ui-pocket-outline: #454b6b;
+  --ui-pocket-skeleton: #33385a;
   --ui-pocket-ink: #eceef8;
   --ui-pocket-ink-soft: #a2a6c0;
   --ui-pocket-ink-faint: #737894;   /* deshabilitado: 3.7:1 sobre card-hover */
@@ -182,6 +211,16 @@
   --ui-color-text: var(--ui-pocket-ink);
   --ui-color-text-muted: var(--ui-pocket-ink-soft);
   --ui-color-border: var(--ui-pocket-line);
+  --ui-switch-track-bg: var(--ui-pocket-control-edge);
+  --ui-switch-thumb-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(0, 0, 0, 0.4);
+  --ui-input-border: var(--ui-pocket-control-edge);
+  --ui-textarea-border: var(--ui-pocket-control-edge);
+  --ui-checkbox-border: var(--ui-pocket-control-edge);
+  --ui-radio-border: var(--ui-pocket-control-edge);
+  --ui-skeleton-bg: var(--ui-pocket-skeleton);
+  --ui-card-outlined-border: var(--ui-pocket-outline);
+  /* Opaque: the translucent info surface took the colour of the tinted row below and fell to 4.22:1. */
+  --ui-tag-info-bg: #23264a;
   --ui-color-success: var(--ui-pocket-right);
   --ui-color-success-surface: rgba(74, 222, 128, 0.12);
   --ui-color-warning: var(--ui-pocket-careful);

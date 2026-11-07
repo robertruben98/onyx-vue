@@ -61,6 +61,7 @@
   height: var(--ui-switch-thumb-size);
   background-color: var(--ui-switch-thumb-color);
   border-radius: var(--ui-switch-radius);
+  box-shadow: var(--ui-switch-thumb-shadow);
   transition: transform 150ms ease;
 }
 

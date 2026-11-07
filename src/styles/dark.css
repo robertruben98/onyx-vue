@@ -4,6 +4,7 @@
  * No se toca ningún componente.
  */
 .app-dark {
+  color-scheme: dark;
   /* Colores ANSI vivos: el terminal sobre fondo oscuro. Los de tokens.css son
      los de un tema claro, oscurecidos para leerse sobre blanco. */
   --ui-terminal-magenta: #c58af9;

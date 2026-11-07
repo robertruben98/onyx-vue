@@ -92,6 +92,7 @@
   --ui-kpi-strip-plain-shadow: none;
   --ui-panel-card-shadow: none;
   --ui-profile-header-shadow: none;
+  --ui-switch-thumb-shadow: none;
 
   /* --- primitivos del tema ---------------------------------------------- */
   /* Los mismos valores que `:root` en el style.css del dashboard, con el nombre
