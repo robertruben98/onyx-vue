@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Fixed
+
+- `UiMessageBubble`: links in the body, meta and footer slots use `--ui-chat-link` (fallback `--ui-color-primary`) also when visited, and are underlined on hover and keyboard focus. The token itself (AA on both bubble colours, dark and light) and its contrast check were already in 0.20/0.21. (#131)
+
 ## 0.21.0 — 2026-11-06
 
 ### Added
