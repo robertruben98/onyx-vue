@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const appBarDoc: ComponentDoc = {
   id: "app-bar",
+  category: "Navigation",
   title: "App Bar",
   description:
     "The bar across the top of a console page: title on the left, the state of things in the middle, actions on the right. Sticky by default, and it wraps onto a second row instead of overflowing when the page gets narrow. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

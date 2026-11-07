@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const sequenceGridDoc: ComponentDoc = {
   id: "sequence-grid",
+  category: "Data display",
   title: "Sequence Grid",
   description:
     "A numbered run of things, each one there or not: the episodes of a season on disk, the chapters done, the days of a streak. Every number is printed, and a gap differs from a present cell in colour, text and a dashed outline, so it does not depend on telling red from green. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

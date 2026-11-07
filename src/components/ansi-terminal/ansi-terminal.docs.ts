@@ -4,6 +4,7 @@ const ESC = "\u001b";
 
 export const ansiTerminalDoc: ComponentDoc = {
   id: "ansi-terminal",
+  category: "Data display",
   title: "ANSI Terminal",
   description:
     "The raw output of another program with its ANSI colours, live while it runs. It only appends: when lines grows, only the new tail is parsed, continuing the colour state the previous chunk left open. Text goes in as text, never markup. createAnsiParser() and stripAnsi() are exported for other renderers and downloads. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

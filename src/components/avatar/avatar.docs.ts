@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const avatarDoc: ComponentDoc = {
   id: "avatar",
+  category: "Data display",
   title: "Avatar",
   description:
     "Person or entity image with an initials fallback. If the image fails to load it falls back on its own, so a broken URL never leaves a hole in the layout.",

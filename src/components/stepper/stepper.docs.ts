@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const stepperDoc: ComponentDoc = {
   id: "stepper",
+  category: "Forms",
   title: "Stepper",
   description:
     "The steps of a flow and where each one stands, one row per step so the notes get the width. Every state has a glyph as well as a colour, is spoken to assistive tech, and the step in progress is aria-current. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

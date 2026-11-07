@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const drawerDoc: ComponentDoc = {
   id: "drawer",
+  category: "Overlays",
   title: "Drawer",
   description:
     "A modal side sheet for the detail of something picked from a list. It behaves as a dialog: focus moves into it, is trapped while open and returns to the trigger on close; Esc and the backdrop close it. Its backdrop uses --ui-drawer-z (1150), above dialogs and below menus, selects and popovers. Only the body scrolls, so the heading, the toolbar and the footer stay in reach. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

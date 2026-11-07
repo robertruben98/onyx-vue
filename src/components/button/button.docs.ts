@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const buttonDoc: ComponentDoc = {
   id: "button",
+  category: "Actions",
   title: "Button",
   description:
     "Action control with primary, secondary, danger and text variants, three sizes, and disabled and loading states.",

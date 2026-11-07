@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const digitalRainDoc: ComponentDoc = {
   id: "digital-rain",
+  category: "Effects",
   title: "Digital Rain",
   description:
     "The falling-glyph backdrop of the matrix preset, on a canvas. Decoration only: fixed, behind the page, aria-hidden, and inert to the pointer. It reads its colours from the live theme tokens, so it follows whatever preset is on the root instead of hard-coding a green, and it renders nothing at all when the viewer asks for reduced motion.",

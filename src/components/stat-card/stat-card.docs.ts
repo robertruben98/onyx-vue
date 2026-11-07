@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const statCardDoc: ComponentDoc = {
   id: "stat-card",
+  category: "Data display",
   title: "Stat Card",
   description:
     "One prominent figure — a streak, a level, the days left — with its label, an optional hint and a trend that is said in words, not only shown by an arrow or a colour. The value dominates; the label is read first. `as=\"button\"` or `as=\"a\"` makes it tappable like UiCard. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

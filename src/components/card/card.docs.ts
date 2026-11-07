@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const cardDoc: ComponentDoc = {
   id: "card",
+  category: "Layout",
   title: "Card",
   description:
     "Surface with an optional header and footer. Both are rendered only when their slot is filled, so an empty header leaves no stray padding.",

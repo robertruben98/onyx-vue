@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const fieldsetDoc: ComponentDoc = {
   id: "fieldset",
+  category: "Forms",
   title: "Fieldset",
   description:
     "A group of settings under a caption, with a note slot underneath for what the settings really do. UiFieldRow lays out one setting as label + control and hands the control its label id through the slot, so non-native controls get a name too.",

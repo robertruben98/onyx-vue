@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const sparkBarsDoc: ComponentDoc = {
   id: "spark-bars",
+  category: "Data display",
   title: "Spark Bars",
   description:
     "A short labelled series — the context a single number does not carry. A 20 on its own says nothing about whether it was a good day; with the six days behind it, it does. One bar can be marked as the one the reader is standing on, and it is the only one that takes colour. Meant for short series (about a dozen points): for more, or for an axis, use Bar Chart. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

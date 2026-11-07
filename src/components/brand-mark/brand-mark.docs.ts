@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const brandMarkDoc: ComponentDoc = {
   id: "brand-mark",
+  category: "Navigation",
   title: "Brand Mark",
   description:
     "The head of a rail: a letter tile and the tool's name, with an optional secondary line. The tile is decorative; with href the whole mark becomes a link back to the tool's home.",

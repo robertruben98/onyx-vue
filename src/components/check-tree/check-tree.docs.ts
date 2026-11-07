@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const checkTreeDoc: ComponentDoc = {
   id: "check-tree",
+  category: "Forms",
   title: "Check Tree",
   description:
     "Two levels of checkboxes for choosing what counts: a group, and what hangs off it. The model is the list of keys that are OFF, never the selection — storing what is excluded is what makes tomorrow's new item count by default instead of disappearing because it was not in a preference written last month. Unchecking the last child promotes the exception to its group, so `all children off` and `group off` are never two different stored states that look identical on screen.",

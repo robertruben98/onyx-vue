@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const stackDoc: ComponentDoc = {
   id: "stack",
+  category: "Layout",
   title: "Stack",
   description:
     "A column or row of children with a gap from the spacing scale. The layout primitive behind most page sections, so pages stop re-writing flex and gap by hand.",

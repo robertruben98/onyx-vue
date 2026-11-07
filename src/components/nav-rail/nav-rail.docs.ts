@@ -1,7 +1,13 @@
+import { h } from "vue";
 import type { ComponentDoc } from "../../docs-model";
+
+/** A 24px decorative SVG glyph, the shape an icon rail entry expects. */
+const glyph = (d: string) => () =>
+  h("svg", { viewBox: "0 0 24 24", width: 20, height: 20, fill: "currentColor", "aria-hidden": "true" }, [h("path", { d })]);
 
 export const navRailDoc: ComponentDoc = {
   id: "nav-rail",
+  category: "Navigation",
   title: "Nav Rail",
   description:
     "The standing navigation of a console page, where every entry carries how many things are behind it — the count is what tells you whether a section is worth opening, so it keeps its own tri-state and never shows a zero for 'not loaded yet'. Entries that stay in the app are buttons; one that leaves is a real link. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
@@ -100,6 +106,12 @@ export const navRailDoc: ComponentDoc = {
     <UiNavRailItem label="Settings" :icon="GearIcon" />
   </template>
 </UiNavRail>`,
+      setup: () => ({
+        ChatIcon: glyph("M4 5h16v11H8l-4 4z"),
+        CallIcon: glyph("M6 4l4 1-1 4 3 3 4-1 1 4-3 2C9 21 3 15 4 7z"),
+        StatusIcon: glyph("M12 4a8 8 0 100 16 8 8 0 000-16z"),
+        GearIcon: glyph("M12 8a4 4 0 100 8 4 4 0 000-8zM11 2h2v3h-2zM11 19h2v3h-2z"),
+      }),
     },
     {
       title: "Views and repositories",
@@ -127,6 +139,12 @@ export const navRailDoc: ComponentDoc = {
       @selected="(e) => { e.preventDefault(); go('/log') }" />
   </UiNavRailGroup>
 </UiNavRail>`,
+      setup: () => ({
+        route: "/",
+        go(this: { route: string }, path: string) {
+          this.route = path;
+        },
+      }),
     },
     {
       title: "Entries with meta",

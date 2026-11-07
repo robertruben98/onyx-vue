@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const emptyStateDoc: ComponentDoc = {
   id: "empty-state",
+  category: "Feedback",
   title: "Empty State",
   description:
     "Placeholder for empty and zero-data views: a decorative visual, structured copy, and up to two actions. Ported from the Angular library, with the actions built on UiButton and the description wired only when one is actually given. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const messageBubbleDoc: ComponentDoc = {
   id: "message-bubble",
+  category: "Messaging",
   title: "Message Bubble",
   description:
     "A chat message: incoming aligns to the start, outgoing to the end. Slots for media (above the text), meta lines (under it) and a footer link. The text keeps its line breaks and wraps long words and URLs. The time floats inline at the end of the text (WhatsApp spacer technique). The bubble uses WhatsApp geometry: 7.5px radius, 6/7/8/9px padding, 14.2px text, max width 65/75/85/95% by viewport. A draft has a dashed accent border and can offer a copy pill; a context bubble is dimmed and smaller. Colours come from the chat preset (`.ui-theme-chat`) with generic fallbacks.",

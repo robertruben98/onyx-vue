@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const loadMoreRowDoc: ComponentDoc = {
   id: "load-more-row",
+  category: "Navigation",
   title: "Load More Row",
   description:
     "Closes a truncated list with a button that names how many rows are still hidden. Renders nothing when nothing remains — a row offering to load zero says the list is truncated when it is complete. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

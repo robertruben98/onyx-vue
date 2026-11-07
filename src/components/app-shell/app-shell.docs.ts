@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const appShellDoc: ComponentDoc = {
   id: "app-shell",
+  category: "Navigation",
   title: "App Shell",
   description:
     "The frame of a console page: a sticky navigation rail and the content beside it. The rail scrolls on its own and never sideways; below 900px it stacks above the content. The shell paints no background, so a preset's atmosphere shows through the rail. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

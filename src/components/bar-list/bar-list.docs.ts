@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const barListDoc: ComponentDoc = {
   id: "bar-list",
+  category: "Data display",
   title: "Bar List",
   description:
     "Horizontal bars, one row per category. A row is one bar with its value after the end, or a stack of segments with counts inside those that fit and a summary in a right-hand column. Labels are cut to their column; the full text stays in the tooltip and the table twin. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

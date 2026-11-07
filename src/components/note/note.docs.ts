@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const noteDoc: ComponentDoc = {
   id: "note",
+  category: "Feedback",
   title: "Note",
   description:
     "A small line of text: a muted hint, an inline \"nothing here\" line or a tone word (ok, warning, error). Colours come only from semantic tokens, so every preset re-routes them. Heavier than this (title, icon, actions) is `UiEmptyState`.",

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const checkRowDoc: ComponentDoc = {
   id: "check-row",
+  category: "Forms",
   title: "Check Row",
   description:
     "One requirement and where it stands: a state, a name, the evidence, and whatever you can do about it. The same row in `dense` covers the steps of a running job — one vocabulary for both, because a checklist item and a job step are the same row and separate state names are how two identical lists drift apart. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

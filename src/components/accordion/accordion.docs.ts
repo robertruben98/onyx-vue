@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const accordionDoc: ComponentDoc = {
   id: "accordion",
+  category: "Layout",
   title: "Accordion",
   description:
     "Collapsible sections. By default opening one closes the rest; `multi` lets several stay open. The parent tracks its items through provide/inject, so items can be nested in any markup.",

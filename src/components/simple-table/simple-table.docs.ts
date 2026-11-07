@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const simpleTableDoc: ComponentDoc = {
   id: "simple-table",
+  category: "Data display",
   title: "Simple Table",
   description:
     "A semantic, read-only native table (`<th scope=\"col\">`) inside a labelled, keyboard-focusable region that scrolls sideways, so a narrow screen never scrolls the page. For sorting, selection or virtualisation use UiDataTable.",

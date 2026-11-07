@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const paginationDoc: ComponentDoc = {
   id: "pagination",
+  category: "Navigation",
   title: "Pagination",
   description:
     "Previous, next and the pages around the current one, with gaps for the rest. The current page is announced as such (`aria-current`). Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const conversationDoc: ComponentDoc = {
   id: "conversation",
+  category: "Messaging",
   title: "Conversation",
   description:
     "The scrolling pane of a chat. Items render through the scoped `item` slot (put a UiMessageBubble there) and a day separator is inserted whenever `day` changes. Scrolling within 200 px of the top emits `load-older` once per load. Prepending items keeps the visual position; appending scrolls to the bottom only if the reader was within 80 px of it, otherwise a \"↓ N new\" pill appears. Background is `--ui-chat-bg` from the chat preset (`.ui-theme-chat`) under an original line-icon doodle wallpaper (a mask coloured by `--ui-chat-wallpaper-ink` at .6). Rows have 63 px side padding (25/19 px up to 968 px); an item whose `group` differs from the previous one (or whose day changed) is the start of a run (`first` in the slot scope): 12 px above it, 2 px inside a run. Each day chip is sticky at the top while its day is on screen. The `footer` slot, or `composerText` for a read-only bar, renders the floating composer pill (52 px, radius 26).",

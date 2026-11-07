@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const mediaCardDoc: ComponentDoc = {
   id: "media-card",
+  category: "Data display",
   title: "Media Card",
   description:
     "Hover a card: its picture zooms inside its box. A thing best known by its picture — a series by its poster, a book by its cover. The image leads at a fixed aspect ratio, so a grid of them lines up whatever size each file is, and loads lazily. A missing or broken image becomes the title's initials on the gradient UiAvatar gives the same name. Lay several out with UiGrid `min-item-width`.",

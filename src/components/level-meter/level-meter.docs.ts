@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const levelMeterDoc: ComponentDoc = {
   id: "level-meter",
+  category: "Data display",
   title: "Level Meter",
   description:
     "A live input level (a microphone while recording) as a row of bars that rise with the voice and stay at a low floor in silence. Smoothed with a short transition, without it under reduced motion. Drawn in currentColor, so it fits inside UiRecordButton's #meter slot.",

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const inputDoc: ComponentDoc = {
   id: "input",
+  category: "Forms",
   title: "Input",
   description:
     "Single-line text field with a visible label or an accessible name. Exposes `focus()` and `select()`, because a `ref` on the component is not an element and `ref.querySelector('input')` throws. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",

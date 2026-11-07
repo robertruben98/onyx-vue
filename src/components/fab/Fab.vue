@@ -30,8 +30,14 @@ const props = withDefaults(
     hideOnScroll?: boolean;
     /** Corner it sits in. */
     placement?: "end" | "start";
+    /**
+     * Anchors to the nearest positioned ancestor (`position: absolute`) instead
+     * of the viewport. For a demo or a framed preview, where a fixed button
+     * would leave its box.
+     */
+    contained?: boolean;
   }>(),
-  { icon: "", extended: true, collapseOnScroll: false, hideOnScroll: false, placement: "end" },
+  { icon: "", extended: true, collapseOnScroll: false, hideOnScroll: false, placement: "end", contained: false },
 );
 
 const emit = defineEmits<{ clicked: [event: MouseEvent] }>();
@@ -68,7 +74,7 @@ const showLabel = computed(() => props.extended && !collapsed.value);
 const rootClasses = computed(() => [
   "ui-fab",
   `ui-fab--${props.placement}`,
-  { "ui-fab--compact": !showLabel.value, "ui-fab--hidden": hidden.value },
+  { "ui-fab--compact": !showLabel.value, "ui-fab--hidden": hidden.value, "ui-fab--contained": props.contained },
 ]);
 </script>
 

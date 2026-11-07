@@ -1,3 +1,4 @@
+import { DOC_CATEGORIES } from "@onyx/vue";
 import { COMPONENT_DOCS } from "./registry";
 import { PATTERN_DOCS } from "./patterns/registry";
 
@@ -43,11 +44,13 @@ export const NAV: NavSection[] = [
       label: p.title,
     })),
   },
-  {
-    title: "Components",
-    items: COMPONENT_DOCS.map((d) => ({
+  // Un grupo por categoria, en el orden de DOC_CATEGORIES. Cien componentes en
+  // una lista alfabetica plana no se pueden recorrer.
+  ...DOC_CATEGORIES.map((category) => ({
+    title: category,
+    items: COMPONENT_DOCS.filter((d) => d.category === category).map((d) => ({
       path: `/components/${d.id}`,
       label: d.title,
     })),
-  },
+  })).filter((section) => section.items.length > 0),
 ];

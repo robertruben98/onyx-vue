@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const selectDoc: ComponentDoc = {
   id: "select",
+  category: "Forms",
   title: "Select",
   description:
     "Type to find enabled options by label, ignoring case and accents. Characters typed within 500 ms form a prefix; repeating one letter cycles matches. On the closed, focused trigger, typing selects immediately and emits changed without opening. In the open list, typing moves the active option; Enter confirms it; Space confirms when no search is in progress. Keyboard navigation keeps the active option visible, and clipped edges fade when more options are available. Escape closes only the most recently opened overlay; a containing dialog remains open until the next Escape. The open list follows its trigger on scroll and resize. Single-choice combobox with a listbox that teleports to `body`, so it escapes any ancestor's `overflow: hidden`. That teleport is also why a theme preset has to be applied on the root element and not on a wrapper. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",

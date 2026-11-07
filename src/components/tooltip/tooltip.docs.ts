@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const tooltipDoc: ComponentDoc = {
   id: "tooltip",
+  category: "Overlays",
   title: "Tooltip",
   description:
     "Escape dismisses the most recently opened overlay first. Tooltips participate in that order without moving focus or adding a backdrop. Text attached to a trigger, shown on hover and on focus. It teleports to `body` and positions itself against the trigger's box, so it is never clipped by an ancestor's overflow. Listening to a deprecated event warns once per name per page load in development; old events remain until 1.0.",

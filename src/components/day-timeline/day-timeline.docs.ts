@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const dayTimelineDoc: ComponentDoc = {
   id: "day-timeline",
+  category: "Data display",
   title: "Day Timeline",
   description:
     "A horizontal bar for one day, cut into probability bands (free, likely, busy, past, no data) with a \"now\" marker, hour labels and a legend of the bands present. The bar is role=\"img\" and a visually hidden list reads every segment. Colours are the `--ui-band-*` tokens; texts come from the locale catalog.",

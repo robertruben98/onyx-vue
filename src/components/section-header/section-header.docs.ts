@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const sectionHeaderDoc: ComponentDoc = {
   id: "section-header",
+  category: "Layout",
   title: "Section Header",
   description:
     "The band above a list: an uppercase title, an optional count, actions beside it and controls pushed to the far end. The title is a real heading, so a page of sections keeps a usable outline.",

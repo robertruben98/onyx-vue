@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const progressRingDoc: ComponentDoc = {
   id: "progress-ring",
+  category: "Feedback",
   title: "Progress Ring",
   description:
     "Circular progress for a level, a daily goal or exam readiness. A progressbar with aria-valuenow/min/max (role=img when indeterminate), sizes from 40 to 128px or any px, five tones or the brand gradient, and a centre for the percentage or your own content. The arc animates to its value, and stands still under reduced motion.",

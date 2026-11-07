@@ -21,7 +21,12 @@
       // Apply persisted theme before first paint to avoid a flash.
       (function () {
         try {
-          if (localStorage.getItem("onyx-dark") === "true") {
+          var dark = localStorage.getItem("onyx-dark");
+          if (
+            dark === "true" ||
+            (dark !== "false" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches)
+          ) {
             document.documentElement.classList.add("app-dark");
           }
           var preset = localStorage.getItem("onyx-preset");

@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const groupHeaderDoc: ComponentDoc = {
   id: "group-header",
+  category: "Layout",
   title: "Group Header",
   description:
     "The band that opens a group inside a list: a short name, any marks the group carries, and its long form pushed to the end and dropped on narrow viewports. The interactive form is a real button, not a clickable div.",

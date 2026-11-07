@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const progressBarDoc: ComponentDoc = {
   id: "progress-bar",
+  category: "Feedback",
   title: "Progress Bar",
   description:
     "Determinate or indeterminate progress. In indeterminate mode `aria-valuenow` is omitted rather than set to zero, which is what tells assistive tech the progress is unknown instead of stalled.",

@@ -9,9 +9,11 @@
 // son el mismo texto, asi que no pueden separarse. Es lo que hace la libreria
 // de Angular, donde el `code` de la demo es literalmente el template del
 // componente que se renderiza.
-import { computed, ref, type Component } from "vue";
-import type { Demo } from "@onyx/vue";
+import { computed, ref } from "vue";
 import { docPorId } from "../registry";
+import { demoComponent } from "../demo";
+import CodeBlock from "../CodeBlock.vue";
+import InlineText from "../InlineText.vue";
 
 const props = defineProps<{ id: string }>();
 
@@ -21,24 +23,8 @@ const importSnippet = computed(() =>
   doc.value ? `import { ${doc.value.imports.join(", ")} } from '@onyx/vue';` : "",
 );
 
-/**
- * Un componente por demo.
- *
- * Los datos de `setup` viajan por `data()` para que sean reactivos: una demo
- * con `v-model` tiene que poder cambiar en pantalla. Los componentes `Ui*`
- * estan registrados globalmente en main.ts, que es lo que hace que
- * `<UiButton>` signifique algo dentro de una plantilla compilada al vuelo.
- */
-function componenteDe(demo: Demo): Component {
-  const datos = demo.setup ? demo.setup() : {};
-  return {
-    data: () => ({ ...datos }),
-    template: `<div class="demo__preview">${demo.code}</div>`,
-  };
-}
-
 const demos = computed(() =>
-  (doc.value?.demos ?? []).map((d) => ({ ...d, comp: componenteDe(d) })),
+  (doc.value?.demos ?? []).map((d) => ({ ...d, comp: demoComponent(d) })),
 );
 
 const open = ref<Record<string, boolean>>({});
@@ -50,7 +36,7 @@ function toggle(key: string) {
 <template>
   <article v-if="doc" class="docs-page">
     <h1>{{ doc.title }}</h1>
-    <p class="docs-lead">{{ doc.description }}</p>
+    <p class="docs-lead"><InlineText :text="doc.description" /></p>
 
     <nav class="toc" aria-label="On this page">
       <a class="toc__link" href="#import">Import</a>
@@ -59,7 +45,7 @@ function toggle(key: string) {
     </nav>
 
     <h2 id="import">Import</h2>
-    <pre class="code"><code>{{ importSnippet }}</code></pre>
+    <CodeBlock :code="importSnippet" />
 
     <h2 id="examples">Examples</h2>
     <section
@@ -79,11 +65,11 @@ function toggle(key: string) {
           {{ open[demo.title] ? "Hide code" : "Show code" }}
         </button>
       </header>
-      <p v-if="demo.description" class="demo__desc">{{ demo.description }}</p>
+      <p v-if="demo.description" class="demo__desc"><InlineText :text="demo.description" /></p>
 
       <component :is="demo.comp" />
 
-      <pre v-if="open[demo.title]" class="code"><code>{{ demo.code }}</code></pre>
+      <CodeBlock v-if="open[demo.title]" class="demo__code" :code="demo.code" />
     </section>
 
     <h2 id="api">API</h2>
@@ -104,7 +90,7 @@ function toggle(key: string) {
           <td><code>{{ row.name }}</code></td>
           <td><code>{{ row.type }}</code></td>
           <td><code>{{ row.default }}</code></td>
-          <td>{{ row.description }}</td>
+          <td><InlineText :text="row.description" /></td>
         </tr>
       </tbody>
     </table>
@@ -217,20 +203,9 @@ h2 {
   align-items: center;
   padding: 1.25rem 0.9rem;
 }
-.code {
+.demo__code {
   margin: 0;
-  padding: 0.9rem;
-  overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--ui-color-text);
-  background: var(--ui-color-surface);
-  border-top: 1px solid var(--ui-color-border);
-}
-h2 + .code {
-  border: 1px solid var(--ui-color-border);
-  border-radius: var(--ui-radius);
+  padding: 0 0.9rem 0.9rem;
 }
 .api-wrap {
   overflow-x: auto;

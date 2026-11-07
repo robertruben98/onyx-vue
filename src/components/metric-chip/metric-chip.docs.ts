@@ -2,6 +2,7 @@ import type { ComponentDoc } from "../../docs-model";
 
 export const metricChipDoc: ComponentDoc = {
   id: "metric-chip",
+  category: "Data display",
   title: "Metric Chip",
   description:
     "One number and its caption, sized for a top bar. It takes four states, not a bare number: a failed measurement shows as failed and never as a zero, and a value being recomputed fades instead of disappearing. Optionally a button, for a chip that opens the screen behind the number. Passing a deprecated tone warns once per name per page load in development; aliases remain until 1.0. Default library texts use provideOnyxLocale; explicit text props and slots take precedence. The defaults listed below are English.",
