@@ -9,6 +9,12 @@ Consumers that build from source (the control-panel dashboard aliases
 `@onyx/vue` to `onyx-vue/src`) pin a version and check out its tag; see
 "Consuming a tagged version" below.
 
+## Unreleased
+
+### Fixed
+
+- `UiTab` `warn`: the visually hidden warn description no longer widens the page when the tab list scrolls (`overflow="scroll"`). It was absolutely positioned against the bar outside the scrolling row, so nothing clipped it; the trigger is now its containing block. `aria-describedby` is unchanged.
+
 ## 0.21.0 — 2026-11-06
 
 ### Added

@@ -98,6 +98,17 @@ export const tabsDoc: ComponentDoc = {
 </div>`,
     },
     {
+      title: "Scrolling list with warnings (360 px)",
+      code: `<div style="width: 360px; max-width: 100%" data-demo="tabs-warn-scroll">
+  <UiTabs overflow="scroll" aria-label="Trays">
+    <UiTab label="Ready" :count="3" warn warn-text="2 packages are stuck in this tray">Ready.</UiTab>
+    <UiTab label="Running" :count="1" warn warn-text="1 package has been running for hours">Running.</UiTab>
+    <UiTab label="Failed" :count="4" warn warn-text="4 packages failed and need a retry">Failed.</UiTab>
+    <UiTab label="Done" :count="128" warn warn-text="Some finished packages were not published">Done.</UiTab>
+  </UiTabs>
+</div>`,
+    },
+    {
       title: "Without panels",
       code: `<div style="width: 100%">
   <UiTabs panels="none" v-model:selected-index="index" aria-label="Filter">
