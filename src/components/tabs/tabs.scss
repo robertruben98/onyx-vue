@@ -35,6 +35,10 @@
 }
 
 .ui-tabs__tab {
+  // Containing block of the visually hidden warn text (`.ui-tabs__sr-only` is
+  // absolute). Without it the text resolved against `.ui-tabs__bar`, outside the
+  // scrolling list, so nothing clipped it and it widened the whole page.
+  position: relative;
   // Ni encoge ni parte la etiqueta: un boton es una etiqueta entera o no se
   // lee. Con el encogido por defecto, "Sin concluir" caia en dos lineas para
   // ganar unos pixeles que de todas formas no bastaban, asi que la tira seguia
