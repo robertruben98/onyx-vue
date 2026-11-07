@@ -12,12 +12,32 @@
   border-radius: var(--ui-segmented-radius);
   background: var(--ui-segmented-bg);
   overflow: hidden;
+  position: relative;
   gap: var(--ui-segmented-inset);
   padding: var(--ui-segmented-inset);
 }
 
+// The selection: a surface behind the segments that slides to the chosen one.
+.ui-segmented__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  background: var(--ui-segmented-selected-bg);
+  border-radius: var(--ui-segmented-item-radius);
+  box-shadow: var(--ui-segmented-thumb-shadow);
+  pointer-events: none;
+}
+.ui-segmented__thumb--shown {
+  display: block;
+}
+.ui-segmented__thumb--ready {
+  transition: transform 200ms ease, width 200ms ease, height 200ms ease;
+}
+
 .ui-segmented__item {
   position: relative;
+  z-index: 1;
   display: inline-flex;
   min-width: 0;
   cursor: pointer;
@@ -59,7 +79,7 @@
 
 .ui-segmented__item--selected .ui-segmented__label,
 .ui-segmented__item--selected:hover .ui-segmented__label {
-  background: var(--ui-segmented-selected-bg);
+  background: transparent;
   color: var(--ui-segmented-selected-text);
 }
 
@@ -117,4 +137,10 @@
   overflow-wrap: normal;
   word-break: normal;
   hyphens: manual;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-segmented__thumb--ready {
+    transition: none;
+  }
 }
