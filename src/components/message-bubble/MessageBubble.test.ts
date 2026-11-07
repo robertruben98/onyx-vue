@@ -176,6 +176,12 @@ describe("MessageBubble (Vue)", () => {
     for (const w of ["65%", "75%", "85%", "95%"]) expect(scss).toContain(`max-width: ${w}`);
   });
 
+  it("links in the body, meta and footer use the link token, visited the same, underlined on hover and focus", () => {
+    // The `a` rule sits on the bubble root, so it reaches the text, meta and footer slots alike.
+    expect(scss).toMatch(/\.ui-message-bubble\s*\{[^]*?\n  a,\s*a:visited\s*\{[^}]*color:\s*var\(--ui-chat-link,\s*var\(--ui-color-primary\)\)/);
+    expect(scss).toMatch(/a:hover,\s*a:focus-visible\s*\{[^}]*text-decoration:\s*underline/);
+  });
+
   it("has no axe violations", async () => {
     Object.defineProperty(navigator, "clipboard", { value: { writeText: vi.fn() }, configurable: true });
     const { container } = render(MessageBubble, {
